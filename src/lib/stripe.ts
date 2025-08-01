@@ -1,0 +1,71 @@
+import Stripe from 'stripe'
+
+if (!process.env.STRIPE_SECRET_KEY) {
+  throw new Error('STRIPE_SECRET_KEY n\'est pas défini')
+}
+
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: '2023-10-16',
+  typescript: true,
+})
+
+// Configuration des produits Stripe
+export const STRIPE_CONFIG = {
+  // Prix mensuels
+  MONTHLY_PRICE_ID: process.env.STRIPE_MONTHLY_PRICE_ID || 'price_monthly_999',
+  
+  // Prix à vie 
+  LIFETIME_PRICE_ID: process.env.STRIPE_LIFETIME_PRICE_ID || 'price_lifetime_9900',
+  
+  // URLs de retour
+  SUCCESS_URL: process.env.NODE_ENV === 'production' 
+    ? 'https://judgemyjpeg.com/success'
+    : 'http://localhost:3003/success',
+    
+  CANCEL_URL: process.env.NODE_ENV === 'production'
+    ? 'https://judgemyjpeg.com/pricing'
+    : 'http://localhost:3003/pricing',
+    
+  // Webhook endpoint
+  WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET || '',
+}
+
+export const createCheckoutSession = async (
+  customerId: string,
+  priceId: string,
+  metadata: Record<string, string> = {}
+) => {
+  return await stripe.checkout.sessions.create({
+    customer: customerId,
+    mode: priceId === STRIPE_CONFIG.LIFETIME_PRICE_ID ? 'payment' : 'subscription',
+    payment_method_types: ['card'],
+    line_items: [
+      {
+        price: priceId,
+        quantity: 1,
+      },
+    ],
+    // Pas d'essai gratuit - paiement immédiat
+    subscription_data: priceId !== STRIPE_CONFIG.LIFETIME_PRICE_ID ? {
+      trial_period_days: 0
+    } : undefined,
+    success_url: STRIPE_CONFIG.SUCCESS_URL + '?session_id={CHECKOUT_SESSION_ID}',
+    cancel_url: STRIPE_CONFIG.CANCEL_URL,
+    metadata,
+    allow_promotion_codes: true, // Codes promo
+  })
+}
+
+export const createStripeCustomer = async (email: string, name?: string) => {
+  return await stripe.customers.create({
+    email,
+    name: name || undefined,
+    metadata: {
+      source: 'judgemyjpeg'
+    }
+  })
+}
+
+export const getStripeCustomer = async (customerId: string) => {
+  return await stripe.customers.retrieve(customerId)
+}
