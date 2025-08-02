@@ -200,12 +200,20 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}. All text, comments, and t
     const prompt = `
     ${basePrompt}
     
-    CRITÈRES D'ÉVALUATION (mêmes pour les deux modes) :
-    - Composition/Cadrage : /25
-    - Lumière/Exposition : /25  
-    - Netteté/Technique : /20
-    - Impact émotionnel/Créativité : /20
-    - Couleurs/Post-traitement : /10
+    CRITÈRES D'ÉVALUATION (correspondance directe avec l'interface) :
+    
+    SECTION TECHNIQUE (/60 points) :
+    - Composition : /15 points
+    - Lumière : /15 points  
+    - Mise au point : /15 points
+    - Exposition : /15 points
+    
+    SECTION ARTISTIQUE (/40 points) :
+    - Créativité : /15 points
+    - Émotion : /15 points
+    - Narration : /10 points
+    
+    TOTAL : /100
 
     IMPORTANT : Les deux modes doivent aboutir au MÊME score final, seule la forme change.
     
@@ -221,15 +229,20 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}. All text, comments, and t
     PROCESSUS D'ANALYSE EN 3 ÉTAPES :
     
     1️⃣ ANALYSE DÉTAILLÉE PAR CRITÈRE :
-    - Composition/Cadrage : donnez une note /25 précise
-    - Lumière/Exposition : donnez une note /25 précise  
-    - Netteté/Technique : donnez une note /20 précise
-    - Impact émotionnel/Créativité : donnez une note /20 précise
-    - Couleurs/Post-traitement : donnez une note /10 précise
+    TECHNIQUE :
+    - Composition : donnez une note /15 précise
+    - Lumière : donnez une note /15 précise  
+    - Mise au point : donnez une note /15 précise
+    - Exposition : donnez une note /15 précise
+    ARTISTIQUE :
+    - Créativité : donnez une note /15 précise
+    - Émotion : donnez une note /15 précise
+    - Narration : donnez une note /10 précise
     
     2️⃣ CALCUL DU SCORE TOTAL :
-    - Additionnez les 5 notes partielles pour obtenir le score final
-    - Ne donnez JAMAIS 70/100 par paresse - calculez vraiment
+    - Additionnez les 7 notes partielles : 15+15+15+15+15+15+10 = /100
+    - Le score final DOIT correspondre exactement à cette addition
+    - VÉRIFIEZ votre calcul avant de donner le score final
     
     3️⃣ FORMULATION DES COMMENTAIRES :
     - Mode PRO : ton professionnel et pédagogique
