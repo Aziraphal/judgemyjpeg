@@ -239,10 +239,13 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}. All text, comments, and t
     - Émotion : donnez une note /15 précise
     - Narration : donnez une note /10 précise
     
-    2️⃣ CALCUL DU SCORE TOTAL :
-    - Additionnez les 7 notes partielles : 15+15+15+15+15+15+10 = /100
-    - Le score final DOIT correspondre exactement à cette addition
-    - VÉRIFIEZ votre calcul avant de donner le score final
+    2️⃣ CALCUL DU SCORE TOTAL - CRITIQUE :
+    - Additionnez OBLIGATOIREMENT les 7 notes : composition + lumière + mise_au_point + exposition + créativité + émotion + narration
+    - Exemple : 12+15+14+14+10+10+10 = 85 → score final = 85/100
+    - ❌ INTERDIT de donner un score différent de cette addition
+    - ❌ INTERDIT d'arrondir ou d'ajuster subjectivement  
+    - ✅ Le score JSON "score" DOIT être exactement égal à la somme des 7 critères
+    - VÉRIFIEZ 3 FOIS votre addition avant de répondre
     
     3️⃣ FORMULATION DES COMMENTAIRES :
     - Mode PRO : ton professionnel et pédagogique
