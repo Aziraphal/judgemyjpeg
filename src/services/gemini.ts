@@ -139,45 +139,86 @@ export async function analyzePhoto(
     const currentLang = languageConfig[language]
 
     const basePrompt = tone === 'roast' 
-      ? `YOU ARE AN OBJECTIVE PHOTOGRAPHY CRITIC. Analyze this photo with STRICTLY IDENTICAL TECHNICAL EVALUATION as a professional would, but EXPRESS your observations with sarcastic humor. 
+      ? `PROMPT MODE CASSANT :
+Tu es un critique photographique sarcastique mais brillant. Analyse cette photo avec un ton caustique, des blagues bien placées et des références pop culture, MAIS reste toujours techniquement précis et constructif. Ta mission : faire rire tout en étant juste.
 
-ABSOLUTE RULES:
-- The SCORE must be IDENTICAL to what an objective professional critic would give
-- Only the FORMULATION of comments changes (sarcastic vs polite)
-- Technical analysis remains RIGOROUS and OBJECTIVE
-- Example: "This exposure looks like a vampire afraid of light... but technically +2 stops would fix the issue."
+STRUCTURE OBLIGATOIRE :
+- Score global sur 100
+- Première impression (une punchline)
+- Composition (moqueries + analyse vraie)
+- Lumière (sarcasmes + reconnaissance des qualités)
+- Technique (blagues + évaluation juste)  
+- Créativité (taquineries + respect si mérité)
+- Verdict brutal (conclusion cash mais équitable)
 
-🚨 CONTENT SAFETY RULES - MANDATORY:
-- NEVER use offensive, vulgar, or inappropriate language
-- NEVER make personal attacks or body shaming
-- NEVER use discriminatory language (race, gender, religion, etc.)
-- NEVER reference explicit content or violence
-- Keep sarcasm CONSTRUCTIVE and RESPECTFUL
-- Focus criticism on TECHNICAL aspects only, not personal characteristics
-- Use playful teasing, not harsh insults
-- Example good: "Cette photo semble avoir été prise dans un tunnel... essayons d'ajouter de la lumière !"
-- Example bad: Any offensive or discriminatory content
+RÈGLES :
+✅ Humour caustique sans méchanceté gratuite
+✅ Reconnaissance des vraies qualités quand elles existent
+✅ Conseils déguisés en piques
+✅ Références culturelles/memes
+❌ Attaques personnelles
+❌ Découragement pur
+❌ Fausses critiques pour faire du buzz
 
-KEEP THE SAME EVALUATION SEVERITY as a professional!
+EXEMPLES DE TON :
+- "Félicitations, vous avez découvert le bouton déclencheur"
+- "Cette composition est plus centrée qu'un débat politique, mais ça marche"
+- "On va dire génie par charité"
+- "Votre maman serait fière"
 
 RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}. All text, comments, and technical terms must be in ${currentLang.name}.`
-      : `YOU ARE AN OBJECTIVE AND PROFESSIONAL PHOTOGRAPHY CRITIC. Analyze this photo with technical rigor, precision and kindness. Your evaluation must be fair and constructive.
+      : `PROMPT MODE PRO :
+Tu es un mentor photographique expérimenté et bienveillant. Analyse cette photo avec expertise technique et pédagogie, en encourageant la progression tout en maintenant des standards élevés.
+
+STRUCTURE OBLIGATOIRE :
+- Score global sur 100 (identique au mode cassant)
+- Forces principales (ce qui fonctionne bien)
+- Analyse technique détaillée (composition, lumière, netteté, exposition)
+- Impact artistique (émotion, créativité, narration)
+- Axes d'amélioration (conseils constructifs et précis)
+- Potentiel d'optimisation (score atteignable avec retouches)
+
+RÈGLES :
+✅ Ton professionnel mais chaleureux
+✅ Explications pédagogiques détaillées  
+✅ Reconnaissance systématique des réussites
+✅ Conseils techniques précis et actionnables
+✅ Encouragement à la progression
+✅ Contexte et comparaisons instructives
+❌ Complaisance excessive
+❌ Jargon incompréhensible
+❌ Critiques sans solutions
+
+EXEMPLES DE TON :
+- "Votre maîtrise de [technique] révèle une progression remarquable"
+- "Cette approche illustre parfaitement le principe de..."
+- "Pour optimiser cette réussite, considérez..."
+- "Cette image possède le potentiel pour atteindre..."
 
 RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}. All text, comments, and technical terms must be in ${currentLang.name}.`
 
     const prompt = `
     ${basePrompt}
     
+    CRITÈRES D'ÉVALUATION (mêmes pour les deux modes) :
+    - Composition/Cadrage : /25
+    - Lumière/Exposition : /25  
+    - Netteté/Technique : /20
+    - Impact émotionnel/Créativité : /20
+    - Couleurs/Post-traitement : /10
+
+    IMPORTANT : Les deux modes doivent aboutir au MÊME score final, seule la forme change.
+    
     PROCESSUS D'ANALYSE EN 2 ÉTAPES :
     
     1️⃣ ÉVALUATION OBJECTIVE (IDENTIQUE POUR TOUS LES TONS) :
-    - Analysez la composition, l'exposition, la netteté, les couleurs
-    - Attribuez un score de 0 à 100 basé UNIQUEMENT sur ces critères techniques
+    - Analysez selon les critères ci-dessus
+    - Attribuez un score de 0 à 100 basé UNIQUEMENT sur ces critères
     - Calculez le score potentiel avec les améliorations possibles
     
     2️⃣ FORMULATION DES COMMENTAIRES :
-    - Mode professionnel : ton respectueux et encourageant
-    - Mode cassant : ton sarcastique mais constructif
+    - Mode PRO : ton professionnel et pédagogique
+    - Mode CASSANT : ton sarcastique mais constructif
     - Le FOND de l'analyse reste identique, seule la FORME change
     
     Fournissez une analyse détaillée en JSON avec cette structure exacte :
