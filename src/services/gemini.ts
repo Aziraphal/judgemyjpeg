@@ -209,14 +209,29 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}. All text, comments, and t
 
     IMPORTANT : Les deux modes doivent aboutir au MÊME score final, seule la forme change.
     
-    PROCESSUS D'ANALYSE EN 2 ÉTAPES :
+    🚨 RÈGLES DE NOTATION STRICTES :
+    - BANNISSEZ le score de 70/100 par défaut - soyez PRÉCIS et VARIÉ
+    - Une photo floue/mal exposée = 20-40/100
+    - Photo amateur correcte = 45-60/100  
+    - Photo bien réalisée = 65-75/100
+    - Excellente photo = 80-90/100
+    - Chef d'œuvre = 95-100/100
+    - ANALYSEZ VRAIMENT chaque critère et additionnez les notes partielles
     
-    1️⃣ ÉVALUATION OBJECTIVE (IDENTIQUE POUR TOUS LES TONS) :
-    - Analysez selon les critères ci-dessus
-    - Attribuez un score de 0 à 100 basé UNIQUEMENT sur ces critères
-    - Calculez le score potentiel avec les améliorations possibles
+    PROCESSUS D'ANALYSE EN 3 ÉTAPES :
     
-    2️⃣ FORMULATION DES COMMENTAIRES :
+    1️⃣ ANALYSE DÉTAILLÉE PAR CRITÈRE :
+    - Composition/Cadrage : donnez une note /25 précise
+    - Lumière/Exposition : donnez une note /25 précise  
+    - Netteté/Technique : donnez une note /20 précise
+    - Impact émotionnel/Créativité : donnez une note /20 précise
+    - Couleurs/Post-traitement : donnez une note /10 précise
+    
+    2️⃣ CALCUL DU SCORE TOTAL :
+    - Additionnez les 5 notes partielles pour obtenir le score final
+    - Ne donnez JAMAIS 70/100 par paresse - calculez vraiment
+    
+    3️⃣ FORMULATION DES COMMENTAIRES :
     - Mode PRO : ton professionnel et pédagogique
     - Mode CASSANT : ton sarcastique mais constructif
     - Le FOND de l'analyse reste identique, seule la FORME change
