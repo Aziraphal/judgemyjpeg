@@ -255,18 +255,18 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}. All text, comments, and t
     Fournissez une analyse détaillée en JSON avec cette structure exacte :
 
     {
-      "score": [note actuelle de 0 à 100],
+      "score": [OBLIGATOIRE: addition exacte des 7 notes ci-dessous],
       "potentialScore": [score potentiel après retouches optimales],
       "technical": {
-        "composition": "[analyse de la composition, règle des tiers, lignes directrices]",
-        "lighting": "[qualité de la lumière, direction, température de couleur]",
-        "focus": "[netteté, profondeur de champ, mise au point]",
-        "exposure": "[exposition, hautes lumières, ombres, contraste]"
+        "composition": "[NOTE/15] [analyse de la composition, règle des tiers, lignes directrices]",
+        "lighting": "[NOTE/15] [qualité de la lumière, direction, température de couleur]",
+        "focus": "[NOTE/15] [netteté, profondeur de champ, mise au point]",
+        "exposure": "[NOTE/15] [exposition, hautes lumières, ombres, contraste]"
       },
       "artistic": {
-        "creativity": "[originalité, innovation, angle unique]",
-        "emotion": "[impact émotionnel, atmosphère, ressenti]",
-        "storytelling": "[narration, message, histoire racontée]"
+        "creativity": "[NOTE/15] [originalité, innovation, angle unique]",
+        "emotion": "[NOTE/15] [impact émotionnel, atmosphère, ressenti]",
+        "storytelling": "[NOTE/10] [narration, message, histoire racontée]"
       },
       "suggestions": [
         "suggestion concrète 1",
