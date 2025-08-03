@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { withAuth, AuthenticatedRequest } from '@/lib/auth-middleware'
 import { logger, getClientIP } from '@/lib/logger'
-import { analyzePhoto, AnalysisTone, AnalysisLanguage } from '@/services/gemini'
+import { analyzePhoto, AnalysisTone, AnalysisLanguage } from '@/services/openai'
 import { uploadPhoto } from '@/services/cloudinary'
 import { prisma } from '@/lib/prisma'
 import { getUserSubscription, incrementAnalysisCount } from '@/services/subscription'
@@ -67,7 +67,7 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     // Upload vers Cloudinary
     const uploadResult = await uploadPhoto(fileBuffer, file.originalFilename || 'photo')
 
-    // Analyser avec Gemini avec le ton sélectionné
+    // Analyser avec OpenAI GPT-4o-mini avec le ton sélectionné
     const analysis = await analyzePhoto(base64Image, analysisTone, analysisLanguage)
 
     // Sauvegarder en base - utilisateur déjà disponible via middleware
