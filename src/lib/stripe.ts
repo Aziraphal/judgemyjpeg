@@ -45,6 +45,10 @@ export const createCheckoutSession = async (
         quantity: 1,
       },
     ],
+    // Calcul automatique des taxes (TVA française)
+    automatic_tax: {
+      enabled: true,
+    },
     // Pas d'essai gratuit - paiement immédiat
     subscription_data: priceId !== STRIPE_CONFIG.LIFETIME_PRICE_ID ? {
       trial_period_days: 0

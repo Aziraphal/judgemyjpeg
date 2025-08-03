@@ -1,4 +1,4 @@
-import { PhotoAnalysis, AnalysisTone } from '@/services/gemini'
+import { PhotoAnalysis, AnalysisTone } from '@/services/openai'
 import Image from 'next/image'
 import FavoriteButton from '@/components/FavoriteButton'
 import AddToCollectionModal from '@/components/AddToCollectionModal'
@@ -111,7 +111,7 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional' 
             
             <div className="glass-card p-4">
               <p className="text-text-gray text-sm leading-relaxed mb-4">
-                <span className="text-neon-pink font-semibold">Gemini AI</span> a analysé votre photo selon des critères techniques et artistiques professionnels
+                <span className="text-neon-pink font-semibold">Intelligence Artificielle</span> a analysé votre photo selon des critères techniques et artistiques professionnels
               </p>
               
               {/* Actions */}

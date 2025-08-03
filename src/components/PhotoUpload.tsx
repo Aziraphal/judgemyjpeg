@@ -141,7 +141,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
                 Analyse en cours...
               </p>
               <p className="text-text-gray">
-                L'IA Gemini analyse votre photo avec précision
+                L'IA avancée analyse votre photo avec précision
               </p>
               <div className="flex justify-center space-x-1 mt-4">
                 <div className="w-2 h-2 bg-neon-pink rounded-full animate-bounce"></div>
@@ -181,7 +181,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
             
             <div className="text-xs text-text-muted">
               Powered by{' '}
-              <span className="text-neon-pink font-semibold">Gemini AI</span> ✨
+              <span className="text-neon-pink font-semibold">Intelligence Artificielle</span> ✨
             </div>
           </div>
         )}
