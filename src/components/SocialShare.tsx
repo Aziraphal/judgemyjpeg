@@ -1,4 +1,4 @@
-import { PhotoAnalysis } from '@/services/gemini'
+import { PhotoAnalysis } from '@/services/openai'
 import ShareableImageGenerator from '@/components/ShareableImageGenerator'
 
 interface SocialShareProps {

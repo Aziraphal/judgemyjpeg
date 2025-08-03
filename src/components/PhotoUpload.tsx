@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { PhotoAnalysis, AnalysisTone, AnalysisLanguage } from '@/services/gemini'
+import { PhotoAnalysis, AnalysisTone, AnalysisLanguage } from '@/services/openai'
 
 interface PhotoUploadProps {
   onAnalysisComplete: (result: { photo: any; analysis: PhotoAnalysis }) => void
@@ -105,8 +105,9 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     <div className="w-full max-w-2xl mx-auto">
       <div
         className={`
-          relative glass-card p-12 text-center cursor-pointer
+          relative glass-card p-6 sm:p-12 text-center cursor-pointer
           transition-all duration-500 transform hover:scale-105
+          min-h-[280px] sm:min-h-[320px] flex items-center justify-center
           ${dragActive 
             ? 'neon-border shadow-neon-cyan bg-cosmic-glassborder' 
             : 'hover:shadow-neon-pink border-cosmic-glassborder'
@@ -152,12 +153,12 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
           </div>
         ) : (
           <div className="space-y-6">
-            <div className="text-8xl animate-float">📸</div>
-            <div className="space-y-4">
-              <h3 className="text-3xl font-bold text-glow">
+            <div className="text-6xl sm:text-8xl animate-float">📸</div>
+            <div className="space-y-2 sm:space-y-4">
+              <h3 className="text-xl sm:text-3xl font-bold text-glow">
                 Glissez votre photo ici
               </h3>
-              <p className="text-xl text-text-gray">
+              <p className="text-base sm:text-xl text-text-gray px-4">
                 ou{' '}
                 <span className="text-neon-cyan font-semibold cursor-pointer hover:text-neon-pink transition-colors">
                   cliquez pour sélectionner

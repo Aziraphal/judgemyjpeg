@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { PhotoAnalysis, analyzePhoto } from '@/services/gemini'
+import { PhotoAnalysis, analyzePhoto } from '@/services/openai'
 
 interface ScoreTestProps {
   imageBase64: string

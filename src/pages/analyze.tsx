@@ -7,7 +7,7 @@ import AnalysisResult from '@/components/AnalysisResult'
 import ToneSelector from '@/components/ToneSelector'
 import LanguageSelector from '@/components/LanguageSelector'
 import SubscriptionStatus from '@/components/SubscriptionStatus'
-import { PhotoAnalysis, AnalysisTone, AnalysisLanguage } from '@/services/gemini'
+import { PhotoAnalysis, AnalysisTone, AnalysisLanguage } from '@/services/openai'
 
 export default function AnalyzePage() {
   const { data: session, status } = useSession()
