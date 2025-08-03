@@ -49,6 +49,12 @@ export const createCheckoutSession = async (
     automatic_tax: {
       enabled: true,
     },
+    // Collecter automatiquement l'adresse pour la taxe
+    customer_update: {
+      address: 'auto',
+    },
+    // Collecter l'adresse de facturation
+    billing_address_collection: 'required',
     // Pas de subscription_data = paiement immédiat par défaut
     success_url: STRIPE_CONFIG.SUCCESS_URL + '?session_id={CHECKOUT_SESSION_ID}',
     cancel_url: STRIPE_CONFIG.CANCEL_URL,
