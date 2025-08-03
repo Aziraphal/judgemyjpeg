@@ -42,7 +42,10 @@ export default function Home() {
                   📊 Dashboard
                 </button>
                 <button
-                  onClick={() => signOut({ callbackUrl: '/' })}
+                  onClick={async () => {
+                    await signOut({ redirect: false })
+                    window.location.href = '/'
+                  }}
                   className="btn-neon-secondary text-sm"
                 >
                   Déconnexion
