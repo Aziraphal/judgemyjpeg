@@ -72,6 +72,12 @@ export const authOptions: NextAuthOptions = {
       }
       return session
     },
+    redirect: async ({ url, baseUrl }) => {
+      // Toujours rediriger vers la page d'accueil après connexion
+      if (url.startsWith(baseUrl)) return url
+      else if (url.startsWith('/')) return `${baseUrl}${url}`
+      return baseUrl
+    },
   },
   pages: {
     signIn: '/auth/signin',
