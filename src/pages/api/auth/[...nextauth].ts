@@ -17,6 +17,13 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          redirect_uri: process.env.NODE_ENV === 'production' 
+            ? 'https://judgemyjpeg.fr/api/auth/callback/google'
+            : 'http://localhost:3005/api/auth/callback/google'
+        }
+      }
     }),
     CredentialsProvider({
       name: 'credentials',
