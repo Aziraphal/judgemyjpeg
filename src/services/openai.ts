@@ -244,7 +244,9 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}. All text, comments, and t
     return analysis
 
   } catch (error) {
-    console.error('Erreur analyse OpenAI:', error)
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Erreur analyse OpenAI:', error)
+    }
     throw new Error('Impossible d\'analyser la photo')
   }
 }

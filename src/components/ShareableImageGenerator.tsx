@@ -58,7 +58,7 @@ export default function ShareableImageGenerator({ photo, analysis, tone }: Share
       ctx.strokeRect(imgX, imgY, imgSize, imgSize)
 
     } catch (error) {
-      console.log('Erreur chargement image:', error)
+      // Erreur silencieuse pour la production
     }
 
     // Textes

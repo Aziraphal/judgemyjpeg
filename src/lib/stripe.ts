@@ -19,12 +19,12 @@ export const STRIPE_CONFIG = {
   
   // URLs de retour
   SUCCESS_URL: process.env.NODE_ENV === 'production' 
-    ? 'https://judgemyjpeg.com/success'
-    : 'http://localhost:3003/success',
+    ? 'https://judgemyjpeg.fr/success'
+    : 'http://localhost:3005/success',
     
   CANCEL_URL: process.env.NODE_ENV === 'production'
-    ? 'https://judgemyjpeg.com/pricing'
-    : 'http://localhost:3003/pricing',
+    ? 'https://judgemyjpeg.fr/pricing'
+    : 'http://localhost:3005/pricing',
     
   // Webhook endpoint
   WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET || '',
@@ -49,10 +49,7 @@ export const createCheckoutSession = async (
     automatic_tax: {
       enabled: true,
     },
-    // Pas d'essai gratuit - paiement immédiat
-    subscription_data: priceId !== STRIPE_CONFIG.LIFETIME_PRICE_ID ? {
-      trial_period_days: 0
-    } : undefined,
+    // Pas de subscription_data = paiement immédiat par défaut
     success_url: STRIPE_CONFIG.SUCCESS_URL + '?session_id={CHECKOUT_SESSION_ID}',
     cancel_url: STRIPE_CONFIG.CANCEL_URL,
     metadata,

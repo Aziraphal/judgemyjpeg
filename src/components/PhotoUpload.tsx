@@ -47,7 +47,10 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
       onAnalysisComplete(result)
 
     } catch (error) {
-      console.error('Erreur:', error)
+      // Log pour debug uniquement
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Erreur:', error)
+      }
       
       // Message d'erreur plus précis
       let errorMessage = 'Erreur lors de l\'analyse de la photo'
