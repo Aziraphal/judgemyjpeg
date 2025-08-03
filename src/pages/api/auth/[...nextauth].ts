@@ -8,10 +8,26 @@ import bcrypt from 'bcryptjs'
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: {
-    strategy: 'jwt'
+    strategy: 'jwt',
+    maxAge: 24 * 60 * 60, // 24 heures
+    updateAge: 60 * 60, // 1 heure
   },
   // Forcer l'utilisation du domaine custom
   useSecureCookies: process.env.NODE_ENV === 'production',
+  cookies: {
+    sessionToken: {
+      name: process.env.NODE_ENV === 'production' 
+        ? '__Secure-next-auth.session-token' 
+        : 'next-auth.session-token',
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        domain: process.env.NODE_ENV === 'production' ? '.judgemyjpeg.fr' : undefined,
+      }
+    }
+  },
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
     GoogleProvider({
@@ -60,15 +76,26 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    jwt: async ({ token, user }) => {
+    jwt: async ({ token, user, account }) => {
       if (user) {
         token.id = user.id
+        token.email = user.email
+      }
+      if (account) {
+        token.provider = account.provider
+        token.providerAccountId = account.providerAccountId
       }
       return token
     },
     session: async ({ session, token }) => {
-      if (session?.user) {
+      if (session?.user && token) {
         session.user.id = token.id as string
+        session.user.email = token.email as string
+        
+        // Vérification de cohérence de session
+        if (session.user.email !== token.email) {
+          throw new Error('Session mismatch detected')
+        }
       }
       return session
     },
