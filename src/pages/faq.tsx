@@ -19,7 +19,7 @@ export default function FAQ() {
       id: '1',
       category: 'general',
       question: 'Qu\'est-ce que JudgeMyJPEG ?',
-      answer: 'JudgeMyJPEG est un service d\'analyse photographique utilisant l\'IA Gemini de Google. Il évalue vos photos selon des critères techniques (composition, éclairage, netteté) et artistiques (créativité, émotion) puis vous donne un score sur 100 avec des conseils personnalisés.'
+      answer: 'JudgeMyJPEG est un service d\'analyse photographique utilisant une IA avancée. Il évalue vos photos selon des critères techniques (composition, éclairage, netteté) et artistiques (créativité, émotion) puis vous donne un score sur 100 avec des conseils personnalisés.'
     },
     {
       id: '2', 
@@ -93,7 +93,7 @@ export default function FAQ() {
       id: '12',
       category: 'privacy',
       question: 'Que faites-vous de mes photos ?',
-      answer: 'Vos photos sont temporairement envoyées à Google Gemini pour analyse, puis supprimées de leurs serveurs. Chez nous : 30 jours (gratuit), 1 an (premium), illimité (lifetime). Vous pouvez supprimer vos photos à tout moment. Nous ne les utilisons JAMAIS à d\'autres fins.',
+      answer: 'Vos photos sont temporairement envoyées à notre service d\'IA pour analyse, puis supprimées des serveurs. Chez nous : 30 jours (gratuit), 1 an (premium), illimité (lifetime). Vous pouvez supprimer vos photos à tout moment. Nous ne les utilisons JAMAIS à d\'autres fins.',
       important: true
     },
     {

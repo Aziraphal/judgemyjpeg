@@ -118,7 +118,7 @@ export default function Home() {
               <div className="text-4xl mb-4">📸</div>
               <h3 className="text-lg font-bold mb-3 text-neon-cyan">Analyse IA</h3>
               <p className="text-text-gray text-sm">
-                Analyse complète par <span className="text-neon-pink">Gemini AI</span>
+                Analyse complète par <span className="text-neon-pink">Intelligence Artificielle</span>
               </p>
             </div>
             

@@ -10,6 +10,15 @@ export type AnalysisLanguage = 'fr' | 'en' | 'es' | 'de' | 'it' | 'pt'
 export interface PhotoAnalysis {
   score: number
   potentialScore: number
+  partialScores: {
+    composition: number
+    lighting: number
+    focus: number
+    exposure: number
+    creativity: number
+    emotion: number
+    storytelling: number
+  }
   technical: {
     composition: string
     lighting: string
@@ -130,27 +139,34 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}. All text, comments, and t
     
     TOTAL : /100
 
-    🚨 RÈGLES DE NOTATION STRICTES :
-    - CALCULEZ précisément chaque critère
-    - Le score final = EXACTEMENT la somme des 7 notes partielles
-    - Exemple : 12+15+14+14+10+10+5 = 80 → score final = 80
-    - INTERDIT de donner un score différent de cette addition
+    🚨 RÈGLES DE NOTATION :
+    - Donnez une note précise pour chaque critère
+    - Les notes seront additionnées automatiquement côté serveur
+    - Concentrez-vous sur l'analyse qualitative, pas le calcul final
     
     Fournissez une analyse détaillée en JSON avec cette structure exacte :
 
     {
-      "score": [somme exacte des 7 notes ci-dessous],
       "potentialScore": [score potentiel après retouches optimales],
+      "partialScores": {
+        "composition": [note de 0 à 15],
+        "lighting": [note de 0 à 15],
+        "focus": [note de 0 à 15],
+        "exposure": [note de 0 à 15],
+        "creativity": [note de 0 à 15],
+        "emotion": [note de 0 à 15],
+        "storytelling": [note de 0 à 10]
+      },
       "technical": {
-        "composition": "[NOTE/15] [analyse de la composition]",
-        "lighting": "[NOTE/15] [analyse de la lumière]",
-        "focus": "[NOTE/15] [analyse mise au point]",
-        "exposure": "[NOTE/15] [analyse exposition]"
+        "composition": "[analyse de la composition]",
+        "lighting": "[analyse de la lumière]",
+        "focus": "[analyse mise au point]",
+        "exposure": "[analyse exposition]"
       },
       "artistic": {
-        "creativity": "[NOTE/15] [analyse créativité]",
-        "emotion": "[NOTE/15] [analyse émotion]",
-        "storytelling": "[NOTE/10] [analyse narration]"
+        "creativity": "[analyse créativité]",
+        "emotion": "[analyse émotion]",
+        "storytelling": "[analyse narration]"
       },
       "suggestions": [
         "suggestion concrète 1",
@@ -207,7 +223,23 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}. All text, comments, and t
       throw new Error('Réponse OpenAI invalide - pas de JSON')
     }
 
-    const analysis: PhotoAnalysis = JSON.parse(jsonMatch[0])
+    const rawAnalysis = JSON.parse(jsonMatch[0])
+    
+    // Calculer le score total côté serveur
+    const partialScores = rawAnalysis.partialScores
+    const calculatedScore = 
+      partialScores.composition +
+      partialScores.lighting +
+      partialScores.focus +
+      partialScores.exposure +
+      partialScores.creativity +
+      partialScores.emotion +
+      partialScores.storytelling
+    
+    const analysis: PhotoAnalysis = {
+      ...rawAnalysis,
+      score: calculatedScore
+    }
     
     return analysis
 
