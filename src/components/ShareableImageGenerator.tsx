@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { PhotoAnalysis } from '@/services/gemini'
+import { PhotoAnalysis } from '@/services/openai'
 
 interface ShareableImageGeneratorProps {
   photo: {
