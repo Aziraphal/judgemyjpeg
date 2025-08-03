@@ -25,7 +25,7 @@ export default function FAQ() {
       id: '2', 
       category: 'general',
       question: 'Comment fonctionne l\'analyse IA ?',
-      answer: 'Notre IA analyse votre photo selon plusieurs critères : composition (règle des tiers, lignes directrices), qualité technique (exposition, netteté, couleurs), impact artistique (créativité, émotion, storytelling). Elle compare votre photo à des milliers d\'exemples pour vous donner un score objectif et des conseils précis.',
+      answer: 'Notre IA utilise GPT-4o-mini d\'OpenAI pour analyser votre photo selon plusieurs critères : composition (règle des tiers, lignes directrices), qualité technique (exposition, netteté, couleurs), impact artistique (créativité, émotion, storytelling). Elle vous donne un score objectif et des conseils précis.',
       important: true
     },
     {

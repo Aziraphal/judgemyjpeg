@@ -1,12 +1,17 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-// Simple in-memory rate limiter (production: utiliser Redis)
+// Simple in-memory rate limiter par endpoint (production: utiliser Redis)
 const rateLimit = new Map<string, { count: number; resetTime: number }>()
 
 export function middleware(request: NextRequest) {
   // Rate limiting uniquement sur les APIs sensibles
   if (!request.nextUrl.pathname.startsWith('/api/')) {
+    return NextResponse.next()
+  }
+
+  // Exclure les endpoints d'authentification du rate limiting
+  if (request.nextUrl.pathname.startsWith('/api/auth/')) {
     return NextResponse.next()
   }
 
@@ -24,11 +29,14 @@ export function middleware(request: NextRequest) {
   const endpoint = request.nextUrl.pathname
   const maxRequests = limits[endpoint as keyof typeof limits] || limits.default
 
-  if (!rateLimit.has(ip)) {
-    rateLimit.set(ip, { count: 0, resetTime: now + timeWindow })
+  // Clé unique par IP + endpoint pour éviter les conflits
+  const rateLimitKey = `${ip}:${endpoint}`
+  
+  if (!rateLimit.has(rateLimitKey)) {
+    rateLimit.set(rateLimitKey, { count: 0, resetTime: now + timeWindow })
   }
 
-  const user = rateLimit.get(ip)!
+  const user = rateLimit.get(rateLimitKey)!
 
   // Reset si fenêtre expirée
   if (now > user.resetTime) {
