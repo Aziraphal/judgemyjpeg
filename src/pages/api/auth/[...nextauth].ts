@@ -10,6 +10,9 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt'
   },
+  // Forcer l'utilisation du domaine custom
+  useSecureCookies: process.env.NODE_ENV === 'production',
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
