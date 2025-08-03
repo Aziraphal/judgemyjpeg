@@ -42,6 +42,12 @@
     @apply border border-neon-pink/30 backdrop-blur-sm;
   }
   
+  .btn-neon-cyan {
+    @apply bg-gradient-to-r from-neon-cyan to-neon-pink text-text-white font-bold py-3 px-8 rounded-full;
+    @apply hover:shadow-neon-cyan transition-all duration-300 transform hover:scale-105;
+    @apply border border-neon-cyan/30 backdrop-blur-sm;
+  }
+  
   .btn-neon-secondary {
     @apply bg-cosmic-glass border border-cosmic-glassborder text-text-gray font-medium py-3 px-6 rounded-full;
     @apply hover:bg-cosmic-glassborder hover:text-text-white transition-all duration-300;
