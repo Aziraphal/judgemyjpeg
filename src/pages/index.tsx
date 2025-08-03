@@ -42,7 +42,7 @@ export default function Home() {
                   📊 Dashboard
                 </button>
                 <button
-                  onClick={() => signOut()}
+                  onClick={() => signOut({ callbackUrl: '/' })}
                   className="btn-neon-secondary text-sm"
                 >
                   Déconnexion
