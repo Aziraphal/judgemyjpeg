@@ -98,6 +98,29 @@ export default function Home() {
                 >
                   Déconnexion
                 </button>
+                <button
+                  onClick={() => {
+                    // DÉCONNEXION D'URGENCE - Solution radicale
+                    console.log('EMERGENCY LOGOUT')
+                    
+                    // Vider TOUT brutalement
+                    document.cookie.split(";").forEach(c => {
+                      const eqPos = c.indexOf("=")
+                      const name = eqPos > -1 ? c.substr(0, eqPos).trim() : c.trim()
+                      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.judgemyjpeg.fr`
+                      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`
+                    })
+                    
+                    localStorage.clear()
+                    sessionStorage.clear()
+                    
+                    // Redirection brutale avec nettoyage cache
+                    window.location.replace('/?emergency_logout=' + Date.now())
+                  }}
+                  className="btn-neon-secondary text-xs bg-red-600 hover:bg-red-700 px-2"
+                >
+                  🚨
+                </button>
               </div>
             </div>
           )}
