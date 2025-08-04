@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     ]
 
     // Effacer avec TOUTES les combinaisons possibles
-    const clearInstructions = []
+    const clearInstructions: string[] = []
     
     allPossibleCookies.forEach(cookieName => {
       // Sans domaine
