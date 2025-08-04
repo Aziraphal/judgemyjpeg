@@ -105,17 +105,22 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
+    <div className="w-full max-w-lg sm:max-w-2xl mx-auto">
       <div
         className={`
-          relative glass-card p-6 sm:p-12 text-center cursor-pointer
+          relative glass-card p-4 sm:p-6 md:p-12 text-center cursor-pointer
           transition-all duration-500 transform hover:scale-105
-          min-h-[280px] sm:min-h-[320px] flex items-center justify-center
+          min-h-[200px] sm:min-h-[280px] md:min-h-[320px] flex items-center justify-center
           ${dragActive 
             ? 'neon-border shadow-neon-cyan bg-cosmic-glassborder' 
             : 'hover:shadow-neon-pink border-cosmic-glassborder'
           }
-          ${isUploading ? 'pointer-events-none opacity-50' : 'hover-glow'}
+          ${isUploading && tone === 'sarcastic' 
+            ? 'pointer-events-none animate-pulse bg-red-900/20 border-red-500/50 shadow-red-500/30' 
+            : isUploading 
+            ? 'pointer-events-none opacity-50' 
+            : 'hover-glow'
+          }
         `}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
@@ -133,35 +138,46 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
         />
 
         {isUploading ? (
-          <div className="space-y-6">
-            <div className="relative mx-auto w-20 h-20">
-              <div className="spinner-neon w-20 h-20"></div>
-              <div className="absolute inset-0 flex items-center justify-center text-2xl">
+          <div className="space-y-4 sm:space-y-6">
+            <div className="relative mx-auto w-16 sm:w-20 h-16 sm:h-20">
+              <div className={`spinner-neon w-16 sm:w-20 h-16 sm:h-20 ${tone === 'sarcastic' ? 'border-red-500' : ''}`}></div>
+              <div className="absolute inset-0 flex items-center justify-center text-xl sm:text-2xl">
                 🤖
               </div>
             </div>
             <div className="space-y-2">
-              <p className="text-2xl font-bold text-neon-cyan text-glow">
-                Analyse en cours...
+              <p className={`text-xl sm:text-2xl font-bold text-glow ${
+                tone === 'sarcastic' ? 'text-red-400' : 'text-neon-cyan'
+              }`}>
+                {tone === 'sarcastic' ? '🔥 Préparation du massacre...' : 'Analyse en cours...'}
               </p>
-              <p className="text-text-gray">
-                L'IA avancée analyse votre photo avec précision
+              <p className="text-sm sm:text-base text-text-gray">
+                {tone === 'sarcastic' 
+                  ? 'L\'IA se prépare à détruire votre photo' 
+                  : 'L\'IA avancée analyse votre photo avec précision'
+                }
               </p>
               <div className="flex justify-center space-x-1 mt-4">
-                <div className="w-2 h-2 bg-neon-pink rounded-full animate-bounce"></div>
-                <div className="w-2 h-2 bg-neon-cyan rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                <div className="w-2 h-2 bg-neon-pink rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                <div className={`w-2 h-2 rounded-full animate-bounce ${
+                  tone === 'sarcastic' ? 'bg-red-500' : 'bg-neon-pink'
+                }`}></div>
+                <div className={`w-2 h-2 rounded-full animate-bounce ${
+                  tone === 'sarcastic' ? 'bg-red-400' : 'bg-neon-cyan'
+                }`} style={{animationDelay: '0.1s'}}></div>
+                <div className={`w-2 h-2 rounded-full animate-bounce ${
+                  tone === 'sarcastic' ? 'bg-red-500' : 'bg-neon-pink'
+                }`} style={{animationDelay: '0.2s'}}></div>
               </div>
             </div>
           </div>
         ) : (
-          <div className="space-y-6">
-            <div className="text-6xl sm:text-8xl animate-float">📸</div>
+          <div className="space-y-4 sm:space-y-6">
+            <div className="text-4xl sm:text-6xl md:text-8xl animate-float">📸</div>
             <div className="space-y-2 sm:space-y-4">
-              <h3 className="text-xl sm:text-3xl font-bold text-glow">
+              <h3 className="text-lg sm:text-xl md:text-3xl font-bold text-glow">
                 Glissez votre photo ici
               </h3>
-              <p className="text-base sm:text-xl text-text-gray px-4">
+              <p className="text-sm sm:text-base md:text-xl text-text-gray px-2 sm:px-4">
                 ou{' '}
                 <span className="text-neon-cyan font-semibold cursor-pointer hover:text-neon-pink transition-colors">
                   cliquez pour sélectionner
@@ -169,8 +185,8 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
               </p>
             </div>
             
-            <div className="glass-card p-4 max-w-md mx-auto">
-              <div className="flex items-center justify-center space-x-4 text-sm text-text-muted">
+            <div className="glass-card p-3 sm:p-4 max-w-xs sm:max-w-md mx-auto">
+              <div className="flex items-center justify-center space-x-2 sm:space-x-4 text-xs sm:text-sm text-text-muted">
                 <div className="flex items-center space-x-1">
                   <span className="text-neon-pink">✓</span>
                   <span>JPG, PNG, WebP</span>

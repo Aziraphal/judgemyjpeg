@@ -19,6 +19,14 @@ interface AnalysisResultProps {
 
 export default function AnalysisResult({ photo, analysis, tone = 'professional' }: AnalysisResultProps) {
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false)
+  
+  const getAIPersonality = (score: number) => {
+    if (score <= 30) return { name: 'Gordon Ramsay', emoji: '🔥', color: 'text-red-500' }
+    if (score <= 60) return { name: 'GLaDOS', emoji: '😐', color: 'text-gray-400' }
+    if (score <= 85) return { name: 'Critique Snob', emoji: '🎭', color: 'text-purple-400' }
+    return { name: 'GLaDOS Impressionnée', emoji: '🤖', color: 'text-green-400' }
+  }
+  
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-neon-cyan'
     if (score >= 60) return 'text-yellow-400'
@@ -107,6 +115,18 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional' 
                 {analysis.score >= 80 ? '🏆' : analysis.score >= 60 ? '⭐' : '💪'}
               </span>
             </div>
+            
+            {/* Indicateur de personnalité IA en mode cassant */}
+            {tone === 'roast' && (
+              <div className="glass-card p-3 border border-cosmic-glassborder/50">
+                <div className="flex items-center justify-center space-x-2">
+                  <span className="text-xs text-text-muted">Mode IA activé :</span>
+                  <span className={`text-sm font-semibold ${getAIPersonality(analysis.score).color}`}>
+                    {getAIPersonality(analysis.score).emoji} {getAIPersonality(analysis.score).name}
+                  </span>
+                </div>
+              </div>
+            )}
             
             <div className="glass-card p-4">
               <p className="text-text-gray text-sm leading-relaxed mb-4">

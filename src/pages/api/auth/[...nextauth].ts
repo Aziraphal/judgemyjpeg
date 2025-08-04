@@ -12,6 +12,19 @@ export const authOptions: NextAuthOptions = {
     maxAge: 24 * 60 * 60, // 24 heures
     updateAge: 60 * 60, // 1 heure
   },
+  events: {
+    async signOut({ token }) {
+      // Log pour debug
+      console.log('SignOut event triggered for:', token?.email)
+    },
+    async session({ session, token }) {
+      // Empêcher la reconnexion automatique après signOut
+      if (!token || !session) {
+        console.log('Session or token missing, preventing auto-reconnect')
+        return
+      }
+    }
+  },
   // Forcer l'utilisation du domaine custom
   useSecureCookies: process.env.NODE_ENV === 'production',
   cookies: {

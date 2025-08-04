@@ -65,28 +65,33 @@ export default function Home() {
                     try {
                       console.log('Logout attempt for:', session?.user?.email)
                       
-                      // Appeler notre API de logout personnalisée d'abord
-                      await fetch('/api/auth/logout', { method: 'POST' })
-                      
-                      // Nettoyer tous les cookies NextAuth manuellement
-                      const cookies = document.cookie.split(';')
-                      cookies.forEach(cookie => {
+                      // Nettoyer TOUS les cookies du domaine
+                      const allCookies = document.cookie.split(';')
+                      allCookies.forEach(cookie => {
                         const eqPos = cookie.indexOf('=')
                         const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim()
-                        if (name.includes('next-auth') || name.includes('__Secure-next-auth')) {
-                          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.judgemyjpeg.fr`
-                          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`
-                        }
+                        // Supprimer tous les cookies, pas seulement NextAuth
+                        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.judgemyjpeg.fr; secure`
+                        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; secure`
+                        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`
                       })
                       
+                      // Vider le localStorage et sessionStorage
+                      localStorage.clear()
+                      sessionStorage.clear()
+                      
+                      // Déconnexion NextAuth
                       await signOut({ redirect: false })
                       
-                      // Force un rechargement complet avec cache clear
-                      window.location.replace('/')
+                      // Attendre un peu puis forcer le rechargement avec cache bust
+                      setTimeout(() => {
+                        window.location.href = '/?_=' + Date.now()
+                      }, 100)
+                      
                     } catch (error) {
                       console.error('Logout error:', error)
-                      // Force reload même en cas d'erreur
-                      window.location.replace('/')
+                      // Force reload avec cache bust
+                      window.location.href = '/?_=' + Date.now()
                     }
                   }}
                   className="btn-neon-secondary text-sm"
