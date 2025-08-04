@@ -150,7 +150,7 @@ export default function PricingPage() {
               </div>
 
               <div className="text-center mb-8">
-                <div className="text-4xl font-bold text-neon-pink mb-2">9,99€</div>
+                <div className="text-4xl font-bold text-neon-pink mb-2">9,98€</div>
                 <div className="text-text-muted">par mois</div>
               </div>
 

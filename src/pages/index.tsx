@@ -1,9 +1,20 @@
 import Head from 'next/head'
 import { useSession, signIn, signOut } from 'next-auth/react'
+import { useState, useEffect } from 'react'
 import Footer from '@/components/Footer'
 
 export default function Home() {
   const { data: session, status } = useSession()
+  const [userSubscription, setUserSubscription] = useState<any>(null)
+
+  useEffect(() => {
+    if (session?.user?.id) {
+      fetch('/api/subscription/status')
+        .then(res => res.json())
+        .then(data => setUserSubscription(data))
+        .catch(err => console.error('Error fetching subscription:', err))
+    }
+  }, [session])
 
   if (status === 'loading') {
     return (
@@ -32,7 +43,15 @@ export default function Home() {
           {session && (
             <div className="flex justify-between items-center mb-8">
               <div className="text-sm text-text-gray">
-                Bonjour, <span className="text-neon-cyan font-semibold">{session.user?.name}</span>
+                Bonjour, <span className={`font-semibold ${
+                  userSubscription?.subscriptionStatus === 'premium' || userSubscription?.subscriptionStatus === 'lifetime'
+                    ? 'text-yellow-400 drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]' // Effet doré brillant
+                    : 'text-neon-cyan'
+                }`}>
+                  {session.user?.name}
+                  {userSubscription?.subscriptionStatus === 'lifetime' && ' ✨'}
+                  {userSubscription?.subscriptionStatus === 'premium' && ' 💎'}
+                </span>
               </div>
               <div className="flex items-center space-x-3">
                 <button 
@@ -43,8 +62,32 @@ export default function Home() {
                 </button>
                 <button
                   onClick={async () => {
-                    await signOut({ redirect: false })
-                    window.location.href = '/'
+                    try {
+                      console.log('Logout attempt for:', session?.user?.email)
+                      
+                      // Appeler notre API de logout personnalisée d'abord
+                      await fetch('/api/auth/logout', { method: 'POST' })
+                      
+                      // Nettoyer tous les cookies NextAuth manuellement
+                      const cookies = document.cookie.split(';')
+                      cookies.forEach(cookie => {
+                        const eqPos = cookie.indexOf('=')
+                        const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim()
+                        if (name.includes('next-auth') || name.includes('__Secure-next-auth')) {
+                          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.judgemyjpeg.fr`
+                          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`
+                        }
+                      })
+                      
+                      await signOut({ redirect: false })
+                      
+                      // Force un rechargement complet avec cache clear
+                      window.location.replace('/')
+                    } catch (error) {
+                      console.error('Logout error:', error)
+                      // Force reload même en cas d'erreur
+                      window.location.replace('/')
+                    }
                   }}
                   className="btn-neon-secondary text-sm"
                 >
