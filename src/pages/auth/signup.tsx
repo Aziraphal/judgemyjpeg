@@ -58,7 +58,7 @@ export default function SignUpPage() {
           })
           
           if (!result?.error) {
-            router.push('/analyze')
+            router.push('/')
           }
         }, 1500)
       } else {

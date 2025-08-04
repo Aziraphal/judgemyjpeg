@@ -28,8 +28,8 @@ export default function SignInPage() {
       if (result?.error) {
         setError('Email ou mot de passe incorrect')
       } else {
-        // Rediriger vers la page d'analyse
-        router.push('/analyze')
+        // Rediriger vers la page d'accueil comme Google OAuth
+        router.push('/')
       }
     } catch (error) {
       setError('Erreur de connexion')
