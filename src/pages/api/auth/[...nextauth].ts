@@ -39,6 +39,18 @@ export const authOptions: NextAuthOptions = {
         secure: process.env.NODE_ENV === 'production',
         domain: process.env.NODE_ENV === 'production' ? '.judgemyjpeg.fr' : undefined,
       }
+    },
+    csrfToken: {
+      name: process.env.NODE_ENV === 'production' 
+        ? '__Secure-next-auth.csrf-token' 
+        : 'next-auth.csrf-token',
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        domain: process.env.NODE_ENV === 'production' ? '.judgemyjpeg.fr' : undefined,
+      }
     }
   },
   secret: process.env.NEXTAUTH_SECRET,

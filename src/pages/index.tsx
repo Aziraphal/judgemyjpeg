@@ -99,23 +99,36 @@ export default function Home() {
                   Déconnexion
                 </button>
                 <button
-                  onClick={() => {
-                    // DÉCONNEXION D'URGENCE - Solution radicale
-                    console.log('EMERGENCY LOGOUT')
-                    
-                    // Vider TOUT brutalement
-                    document.cookie.split(";").forEach(c => {
-                      const eqPos = c.indexOf("=")
-                      const name = eqPos > -1 ? c.substr(0, eqPos).trim() : c.trim()
-                      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.judgemyjpeg.fr`
-                      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`
-                    })
-                    
-                    localStorage.clear()
-                    sessionStorage.clear()
-                    
-                    // Redirection brutale avec nettoyage cache
-                    window.location.replace('/?emergency_logout=' + Date.now())
+                  onClick={async () => {
+                    try {
+                      console.log('NUCLEAR LOGOUT - Server-side cookie destruction')
+                      
+                      // Appeler l'endpoint de déconnexion forcée côté serveur
+                      const response = await fetch('/api/auth/force-logout', { method: 'POST' })
+                      const result = await response.json()
+                      console.log('Force logout result:', result)
+                      
+                      // Vider TOUT côté client aussi
+                      document.cookie.split(";").forEach(c => {
+                        const eqPos = c.indexOf("=")
+                        const name = eqPos > -1 ? c.substr(0, eqPos).trim() : c.trim()
+                        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.judgemyjpeg.fr`
+                        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`
+                      })
+                      
+                      localStorage.clear()
+                      sessionStorage.clear()
+                      
+                      // Attendre un peu puis redirection BRUTALE
+                      setTimeout(() => {
+                        window.location.replace('/?nuclear_logout=' + Date.now())
+                      }, 500)
+                      
+                    } catch (error) {
+                      console.error('Nuclear logout failed:', error)
+                      // Plan B : redirection brutale
+                      window.location.replace('/?fallback_logout=' + Date.now())
+                    }
                   }}
                   className="btn-neon-secondary text-xs bg-red-600 hover:bg-red-700 px-2"
                 >
