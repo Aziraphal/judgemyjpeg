@@ -115,7 +115,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
             ? 'neon-border shadow-neon-cyan bg-cosmic-glassborder' 
             : 'hover:shadow-neon-pink border-cosmic-glassborder'
           }
-          ${isUploading && tone === 'sarcastic' 
+          ${isUploading && tone === 'roast' 
             ? 'pointer-events-none animate-pulse bg-red-900/20 border-red-500/50 shadow-red-500/30' 
             : isUploading 
             ? 'pointer-events-none opacity-50' 
@@ -140,32 +140,32 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
         {isUploading ? (
           <div className="space-y-4 sm:space-y-6">
             <div className="relative mx-auto w-16 sm:w-20 h-16 sm:h-20">
-              <div className={`spinner-neon w-16 sm:w-20 h-16 sm:h-20 ${tone === 'sarcastic' ? 'border-red-500' : ''}`}></div>
+              <div className={`spinner-neon w-16 sm:w-20 h-16 sm:h-20 ${tone === 'roast' ? 'border-red-500' : ''}`}></div>
               <div className="absolute inset-0 flex items-center justify-center text-xl sm:text-2xl">
                 🤖
               </div>
             </div>
             <div className="space-y-2">
               <p className={`text-xl sm:text-2xl font-bold text-glow ${
-                tone === 'sarcastic' ? 'text-red-400' : 'text-neon-cyan'
+                tone === 'roast' ? 'text-red-400' : 'text-neon-cyan'
               }`}>
-                {tone === 'sarcastic' ? '🔥 Préparation du massacre...' : 'Analyse en cours...'}
+                {tone === 'roast' ? '🔥 Préparation du massacre...' : 'Analyse en cours...'}
               </p>
               <p className="text-sm sm:text-base text-text-gray">
-                {tone === 'sarcastic' 
+                {tone === 'roast' 
                   ? 'L\'IA se prépare à détruire votre photo' 
                   : 'L\'IA avancée analyse votre photo avec précision'
                 }
               </p>
               <div className="flex justify-center space-x-1 mt-4">
                 <div className={`w-2 h-2 rounded-full animate-bounce ${
-                  tone === 'sarcastic' ? 'bg-red-500' : 'bg-neon-pink'
+                  tone === 'roast' ? 'bg-red-500' : 'bg-neon-pink'
                 }`}></div>
                 <div className={`w-2 h-2 rounded-full animate-bounce ${
-                  tone === 'sarcastic' ? 'bg-red-400' : 'bg-neon-cyan'
+                  tone === 'roast' ? 'bg-red-400' : 'bg-neon-cyan'
                 }`} style={{animationDelay: '0.1s'}}></div>
                 <div className={`w-2 h-2 rounded-full animate-bounce ${
-                  tone === 'sarcastic' ? 'bg-red-500' : 'bg-neon-pink'
+                  tone === 'roast' ? 'bg-red-500' : 'bg-neon-pink'
                 }`} style={{animationDelay: '0.2s'}}></div>
               </div>
             </div>
