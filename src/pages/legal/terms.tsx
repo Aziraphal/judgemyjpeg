@@ -113,7 +113,7 @@ export default function Terms() {
                     <li>Support communautaire</li>
                   </ul>
                   
-                  <h3 className="text-lg font-semibold text-neon-pink mt-6">5.2 Plan Premium (9.99€/mois)</h3>
+                  <h3 className="text-lg font-semibold text-neon-pink mt-6">5.2 Plan Premium (9.98€/mois)</h3>
                   <ul className="list-disc list-inside ml-4 space-y-1">
                     <li>Analyses illimitées</li>
                     <li>Génération d'images partageables</li>
