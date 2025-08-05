@@ -30,10 +30,10 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
 
   try {
 
-    // Parse le fichier uploadé avec configuration étendue
+    // Parse le fichier uploadé avec limite Vercel-friendly
     const form = formidable({
-      maxFileSize: 10 * 1024 * 1024, // 10MB max
-      maxTotalFileSize: 10 * 1024 * 1024,
+      maxFileSize: 4.5 * 1024 * 1024, // 4.5MB max (Vercel limit)
+      maxTotalFileSize: 4.5 * 1024 * 1024,
       keepExtensions: true,
       allowEmptyFiles: false,
       filter: (part) => part.mimetype?.startsWith('image/') || false,

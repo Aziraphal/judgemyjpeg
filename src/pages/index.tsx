@@ -63,44 +63,6 @@ export default function Home() {
                 <button
                   onClick={async () => {
                     try {
-                      console.log('Logout attempt for:', session?.user?.email)
-                      
-                      // Nettoyer TOUS les cookies du domaine
-                      const allCookies = document.cookie.split(';')
-                      allCookies.forEach(cookie => {
-                        const eqPos = cookie.indexOf('=')
-                        const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim()
-                        // Supprimer tous les cookies, pas seulement NextAuth
-                        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.judgemyjpeg.fr; secure`
-                        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; secure`
-                        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`
-                      })
-                      
-                      // Vider le localStorage et sessionStorage
-                      localStorage.clear()
-                      sessionStorage.clear()
-                      
-                      // Déconnexion NextAuth
-                      await signOut({ redirect: false })
-                      
-                      // Attendre un peu puis forcer le rechargement avec cache bust
-                      setTimeout(() => {
-                        window.location.href = '/?_=' + Date.now()
-                      }, 100)
-                      
-                    } catch (error) {
-                      console.error('Logout error:', error)
-                      // Force reload avec cache bust
-                      window.location.href = '/?_=' + Date.now()
-                    }
-                  }}
-                  className="btn-neon-secondary text-sm"
-                >
-                  Déconnexion
-                </button>
-                <button
-                  onClick={async () => {
-                    try {
                       console.log('NUCLEAR LOGOUT - Server-side cookie destruction')
                       
                       // Appeler l'endpoint de déconnexion forcée côté serveur
@@ -121,7 +83,7 @@ export default function Home() {
                       
                       // Attendre un peu puis redirection BRUTALE
                       setTimeout(() => {
-                        window.location.replace('/?nuclear_logout=' + Date.now())
+                        window.location.replace('/?logout_success=' + Date.now())
                       }, 500)
                       
                     } catch (error) {
@@ -130,9 +92,9 @@ export default function Home() {
                       window.location.replace('/?fallback_logout=' + Date.now())
                     }
                   }}
-                  className="btn-neon-secondary text-xs bg-red-600 hover:bg-red-700 px-2"
+                  className="btn-neon-secondary text-sm"
                 >
-                  🚨
+                  Déconnexion
                 </button>
               </div>
             </div>
