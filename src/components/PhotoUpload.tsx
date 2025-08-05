@@ -18,8 +18,8 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
       return
     }
 
-    if (file.size > 10 * 1024 * 1024) {
-      alert('L\'image doit faire moins de 10MB')
+    if (file.size > 4.5 * 1024 * 1024) {
+      alert('L\'image doit faire moins de 4.5MB (limite Vercel)')
       return
     }
 
@@ -194,7 +194,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
                 <div className="w-1 h-1 bg-text-muted rounded-full"></div>
                 <div className="flex items-center space-x-1">
                   <span className="text-neon-cyan">✓</span>
-                  <span>Max 10MB</span>
+                  <span>Max 4.5MB</span>
                 </div>
               </div>
             </div>

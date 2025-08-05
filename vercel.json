@@ -1,6 +1,11 @@
 {
   "buildCommand": "prisma generate && npm run build",
   "framework": "nextjs",
+  "functions": {
+    "src/pages/api/photos/analyze.ts": {
+      "maxDuration": 60
+    }
+  },
   "redirects": [
     {
       "source": "/(.*)",
