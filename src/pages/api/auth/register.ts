@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
+import { validatePassword } from '@/lib/password-validation'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -10,13 +11,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const { name, email, password } = req.body
 
-    // Validation
+    // Validation des champs
     if (!name || !email || !password) {
       return res.status(400).json({ error: 'Tous les champs sont requis' })
     }
 
-    if (password.length < 6) {
-      return res.status(400).json({ error: 'Le mot de passe doit contenir au moins 6 caractères' })
+    // Validation email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: 'Format d\'email invalide' })
+    }
+
+    // Validation robuste du mot de passe
+    const passwordValidation = validatePassword(password, email)
+    if (!passwordValidation.isValid) {
+      return res.status(400).json({ 
+        error: 'Mot de passe trop faible',
+        details: passwordValidation.errors,
+        strength: passwordValidation.strength,
+        score: passwordValidation.score
+      })
     }
 
     // Vérifier si l'email existe déjà

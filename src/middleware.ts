@@ -46,6 +46,9 @@ export function middleware(request: NextRequest) {
 
   // Vérifier limite
   if (user.count >= maxRequests) {
+    // Log rate limit exceeded (can't use audit here as middleware isn't async)
+    console.warn(`[SECURITY] Rate limit exceeded for ${endpoint} from IP ${ip} (${user.count}/${maxRequests})`)
+    
     return new NextResponse(
       JSON.stringify({ 
         error: 'Trop de requêtes. Réessayez dans une minute.',

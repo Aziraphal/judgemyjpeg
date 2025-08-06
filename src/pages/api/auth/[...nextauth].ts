@@ -1,9 +1,14 @@
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
+import EmailProvider from 'next-auth/providers/email'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
+import { sendVerificationEmail } from '@/lib/email-service'
+import { checkLoginAttempts, recordFailedLogin, recordSuccessfulLogin } from '@/lib/password-validation'
+import { AuditLogger } from '@/lib/audit-trail'
+import { SuspiciousLoginDetector, notifySuspiciousLogin } from '@/lib/suspicious-login-detector'
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -13,15 +18,48 @@ export const authOptions: NextAuthOptions = {
     updateAge: 60 * 60, // 1 heure
   },
   events: {
-    async signOut({ token }) {
-      // Log pour debug
-      console.log('SignOut event triggered for:', token?.email)
+    async signIn({ user, account, profile, isNewUser }) {
+      // This runs after successful sign in
+      if (user && user.email) {
+        // Create audit logger (we don't have req here, so we'll handle it differently)
+        try {
+          await prisma.auditLog.create({
+            data: {
+              userId: user.id,
+              email: user.email,
+              ipAddress: 'unknown', // Will be handled in JWT callback
+              eventType: 'login_success',
+              description: `Successful login via ${account?.provider || 'credentials'}`,
+              metadata: JSON.stringify({
+                provider: account?.provider,
+                isNewUser
+              }),
+              riskLevel: 'low',
+              success: true
+            }
+          })
+        } catch (error) {
+          console.error('Failed to log sign in event:', error)
+        }
+      }
     },
-    async session({ session, token }) {
-      // Empêcher la reconnexion automatique après signOut
-      if (!token || !session) {
-        console.log('Session or token missing, preventing auto-reconnect')
-        return
+    async signOut({ token }) {
+      if (token?.email) {
+        try {
+          await prisma.auditLog.create({
+            data: {
+              userId: token.id as string,
+              email: token.email as string,
+              ipAddress: 'unknown',
+              eventType: 'logout',
+              description: 'User logged out',
+              riskLevel: 'low',
+              success: true
+            }
+          })
+        } catch (error) {
+          console.error('Failed to log sign out event:', error)
+        }
       }
     }
   },
@@ -55,6 +93,13 @@ export const authOptions: NextAuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
+    EmailProvider({
+      server: "dummy", // Not used with custom sendVerificationRequest
+      from: process.env.EMAIL_FROM || "noreply@judgemyjpeg.fr",
+      sendVerificationRequest: async ({ identifier: email, url }) => {
+        await sendVerificationEmail(email, url)
+      },
+    }),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
@@ -77,19 +122,36 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
+        // Vérifier les tentatives de connexion (account lockout)
+        const loginCheck = checkLoginAttempts(credentials.email)
+        if (!loginCheck.allowed) {
+          throw new Error(`Compte temporairement verrouillé. Réessayez dans ${loginCheck.remainingTime} minutes.`)
+        }
+
         const user = await prisma.user.findUnique({
           where: { email: credentials.email }
         })
 
         if (!user || !user.password) {
+          // Enregistrer la tentative échouée
+          recordFailedLogin(credentials.email)
           return null
         }
 
         const isPasswordValid = await bcrypt.compare(credentials.password, user.password)
 
         if (!isPasswordValid) {
+          // Enregistrer la tentative échouée
+          recordFailedLogin(credentials.email)
           return null
         }
+
+        // Connexion réussie - reset les tentatives
+        recordSuccessfulLogin(credentials.email)
+
+        // Note: We can't easily get the request context here to analyze suspicious login
+        // This would be better handled in a custom API endpoint for credentials login
+        // For now, the main detection happens in the signIn event above
 
         return {
           id: user.id,
