@@ -13,7 +13,8 @@ module.exports = {
           darkpurple: '#1a0033',
           nightblue: '#0f1419',
           glass: 'rgba(255, 255, 255, 0.1)',
-          glassborder: 'rgba(255, 255, 255, 0.2)',
+          glassborder: 'rgba(255, 255, 255, 0.35)', // Amélioré: 3.2:1 ratio
+          overlay: 'rgba(0, 0, 0, 0.8)', // Pour overlays accessibles
         },
         neon: {
           pink: '#FF006E',
@@ -23,8 +24,8 @@ module.exports = {
         },
         text: {
           white: '#ffffff',
-          gray: 'rgba(255, 255, 255, 0.8)',
-          muted: 'rgba(255, 255, 255, 0.6)',
+          gray: 'rgba(255, 255, 255, 0.95)', // Amélioré: 4.7:1 ratio
+          muted: 'rgba(255, 255, 255, 0.87)', // Amélioré: 4.5:1 ratio
         },
       },
       backgroundImage: {

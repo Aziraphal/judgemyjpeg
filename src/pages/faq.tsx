@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import Head from 'next/head'
+import Link from 'next/link'
+import { useAccessibility } from '@/components/AccessibilityProvider'
 
 interface FAQItem {
   id: string
@@ -7,11 +9,14 @@ interface FAQItem {
   question: string
   answer: string
   important?: boolean
+  tags?: string[]
 }
 
 export default function FAQ() {
   const [openItems, setOpenItems] = useState<string[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
+  const [searchQuery, setSearchQuery] = useState('')
+  const { announceToScreenReader } = useAccessibility()
 
   const faqData: FAQItem[] = [
     // Général
@@ -25,7 +30,7 @@ export default function FAQ() {
       id: '2', 
       category: 'general',
       question: 'Comment fonctionne l\'analyse IA ?',
-      answer: 'Notre IA utilise GPT-4o-mini d\'OpenAI pour analyser votre photo selon plusieurs critères : composition (règle des tiers, lignes directrices), qualité technique (exposition, netteté, couleurs), impact artistique (créativité, émotion, storytelling). Elle vous donne un score objectif et des conseils précis.',
+      answer: 'Notre IA utilise Google Gemini, un modèle de vision avancé, pour analyser votre photo selon plusieurs critères : composition (règle des tiers, lignes directrices), qualité technique (exposition, netteté, couleurs), impact artistique (créativité, émotion, storytelling). Elle vous donne un score objectif et des conseils précis.',
       important: true
     },
     {
@@ -66,7 +71,7 @@ export default function FAQ() {
       id: '8',
       category: 'subscription',
       question: 'Combien d\'analyses ai-je avec le plan gratuit ?',
-      answer: '3 analyses par mois calendaire. Le compteur se remet à zéro le 1er de chaque mois. Vous gardez accès à toutes vos analyses passées même après avoir atteint la limite.',
+      answer: '5 analyses par mois calendaire. Le compteur se remet à zéro le 1er de chaque mois. Vous gardez accès à toutes vos analyses passées même après avoir atteint la limite.',
       important: true
     },
     {
@@ -146,7 +151,82 @@ export default function FAQ() {
       id: '20',
       category: 'troubleshooting',
       question: 'Mon paiement a échoué',
-      answer: 'Vérifiez : carte valide, fonds suffisants, paiements internationaux autorisés. Stripe (notre processeur) bloque parfois les paiements suspects. Contactez votre banque ou essayez une autre carte. Support disponible 24/7.'
+      answer: 'Vérifiez : carte valide, fonds suffisants, paiements internationaux autorisés. Stripe (notre processeur) bloque parfois les paiements suspects. Contactez votre banque ou essayez une autre carte. Support disponible 24/7.',
+      tags: ['paiement', 'stripe', 'problème']
+    },
+
+    // PWA & Mobile (nouvelles questions 2025)
+    {
+      id: '21',
+      category: 'mobile',
+      question: 'Puis-je installer JudgeMyJPEG comme une app sur mon téléphone ?',
+      answer: 'Oui ! JudgeMyJPEG est une PWA (Progressive Web App). Sur Android/Desktop : cliquez sur "Installer" dans le navigateur. Sur iOS Safari : Bouton Partager → "Ajouter à l\'écran d\'accueil". Vous aurez alors un accès direct depuis votre bureau avec mode hors ligne.',
+      important: true,
+      tags: ['pwa', 'installation', 'mobile', 'app']
+    },
+    {
+      id: '22',
+      category: 'mobile',
+      question: 'Que se passe-t-il si j\'utilise l\'app hors ligne ?',
+      answer: 'Mode PWA hors ligne : vous pouvez naviguer dans vos analyses précédentes, préparer des photos pour analyse (elles seront traitées automatiquement au retour en ligne), et modifier vos préférences. Vous recevez une notification quand vos analyses en attente sont terminées.',
+      tags: ['offline', 'pwa', 'hors ligne', 'cache']
+    },
+    {
+      id: '23',
+      category: 'mobile',
+      question: 'Comment activer les notifications push ?',
+      answer: 'Les notifications se configurent automatiquement après installation de la PWA. Lors de votre première analyse, acceptez les notifications. Vous serez alerté quand vos analyses hors ligne sont terminées. Gérer dans : Paramètres téléphone → JudgeMyJPEG → Notifications.',
+      tags: ['notifications', 'push', 'alertes', 'pwa']
+    },
+
+    // Sécurité avancée (nouvelles questions 2025)
+    {
+      id: '24',
+      category: 'security',
+      question: 'JudgeMyJPEG est-il sécurisé ? Quelles sont vos mesures de protection ?',
+      answer: 'Sécurité renforcée 2025 : chiffrement HTTPS/TLS, 2FA obligatoire Premium, sessions sécurisées, monitoring anti-intrusion, conformité RGPD complète, données bancaires JAMAIS stockées (Stripe PCI-DSS niveau 1), audits sécurité réguliers.',
+      important: true,
+      tags: ['sécurité', '2fa', 'chiffrement', 'rgpd']
+    },
+    {
+      id: '25', 
+      category: 'security',
+      question: 'Qu\'est-ce que l\'authentification à deux facteurs (2FA) ?',
+      answer: 'La 2FA ajoute une couche de sécurité : après votre mot de passe, vous devez confirmer via app mobile (Google Authenticator) ou SMS. Obligatoire pour les comptes Premium. Active dans Paramètres → Sécurité → Configurer 2FA. Protège même si votre mot de passe est compromis.',
+      tags: ['2fa', 'sécurité', 'authenticator', 'protection']
+    },
+    
+    // Accessibilité (nouvelles questions 2025)
+    {
+      id: '26',
+      category: 'accessibility',
+      question: 'JudgeMyJPEG est-il accessible aux personnes handicapées ?',
+      answer: 'Totalement ! Conformité WCAG 2.1 AA : navigation clavier complète, lecteurs d\'écran compatibles, contrastes élevés, taille de police ajustable, skip links, messages d\'erreur accessibles. Panneau d\'accessibilité en haut à droite.',
+      tags: ['accessibilité', 'wcag', 'handicap', 'lecteur écran']
+    },
+    {
+      id: '27',
+      category: 'accessibility', 
+      question: 'Comment ajuster l\'interface pour mieux voir ?',
+      answer: 'Options d\'accessibilité (panneau en haut à droite) : Mode contraste élevé, 3 tailles de police (A/A+/A++), réduction des mouvements. Compatible avec les réglages de votre système (préférences d\'accessibilité). Toutes les modifications sont sauvegardées.',
+      tags: ['contraste', 'police', 'vision', 'accessibilité']
+    },
+
+    // Juridique et conformité (nouvelles questions 2025)
+    {
+      id: '28',
+      category: 'legal',
+      question: 'JudgeMyJPEG respecte-t-il le RGPD et mes droits ?',
+      answer: 'Conformité RGPD 2025 complète : consentement explicite cookies, droit à l\'effacement (suppression compte), portabilité des données (export JSON/PDF), transparence totale sur l\'usage. Contact DPO : privacy@judgemyjpeg.com. Possibilité de saisine CNIL.',
+      important: true,
+      tags: ['rgpd', 'droits', 'données', 'conformité']
+    },
+    {
+      id: '29',
+      category: 'legal',
+      question: 'Puis-je utiliser JudgeMyJPEG à des fins commerciales ?',
+      answer: 'Oui pour les plans payants ! Premium/Lifetime : usage commercial autorisé, analyses pour clients, intégration en agence photo. Plan gratuit : usage personnel uniquement. Les analyses générées vous appartiennent. Consultez nos CGU pour les détails.',
+      tags: ['commercial', 'professionnel', 'licence', 'usage']
     }
   ]
 
@@ -155,14 +235,25 @@ export default function FAQ() {
     { id: 'general', name: 'Général', icon: '🎯' },
     { id: 'technical', name: 'Technique', icon: '⚙️' },
     { id: 'subscription', name: 'Abonnements', icon: '💎' },
-    { id: 'privacy', name: 'Confidentialité', icon: '🔒' },
+    { id: 'mobile', name: 'Mobile/PWA', icon: '📱' },
+    { id: 'security', name: 'Sécurité', icon: '🔒' },
+    { id: 'accessibility', name: 'Accessibilité', icon: '♿' },
+    { id: 'legal', name: 'Juridique', icon: '⚖️' },
+    { id: 'privacy', name: 'Confidentialité', icon: '🔐' },
     { id: 'usage', name: 'Utilisation', icon: '📸' },
     { id: 'troubleshooting', name: 'Problèmes', icon: '🔧' }
   ]
 
-  const filteredFAQ = selectedCategory === 'all' 
-    ? faqData 
-    : faqData.filter(item => item.category === selectedCategory)
+  // Filtrer selon catégorie et recherche
+  const filteredFAQ = faqData.filter(item => {
+    const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory
+    const matchesSearch = searchQuery === '' || 
+      item.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.answer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (item.tags && item.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())))
+    
+    return matchesCategory && matchesSearch
+  })
 
   const toggleItem = (id: string) => {
     setOpenItems(prev => 
@@ -170,6 +261,23 @@ export default function FAQ() {
         ? prev.filter(item => item !== id)
         : [...prev, id]
     )
+    announceToScreenReader(openItems.includes(id) ? 'Section fermée' : 'Section ouverte')
+  }
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category)
+    announceToScreenReader(`Catégorie ${categories.find(c => c.id === category)?.name} sélectionnée`)
+  }
+
+  // Ouvrir/fermer tout
+  const toggleAll = () => {
+    if (openItems.length === filteredFAQ.length) {
+      setOpenItems([])
+      announceToScreenReader('Toutes les sections fermées')
+    } else {
+      setOpenItems(filteredFAQ.map(item => item.id))
+      announceToScreenReader('Toutes les sections ouvertes')
+    }
   }
 
   return (
@@ -184,14 +292,45 @@ export default function FAQ() {
           
           {/* Header */}
           <div className="text-center mb-12">
+            <div className="text-6xl mb-4" aria-hidden="true">❓</div>
             <h1 className="text-4xl font-bold mb-4">
               <span className="text-transparent bg-gradient-to-r from-neon-pink to-neon-cyan bg-clip-text">
                 Questions Fréquentes
               </span>
             </h1>
             <p className="text-text-gray max-w-2xl mx-auto">
-              Trouvez rapidement les réponses à vos questions sur JudgeMyJPEG
+              Toutes les réponses à vos questions sur JudgeMyJPEG - Version 2025 mise à jour
             </p>
+          </div>
+
+          {/* Barre de recherche */}
+          <div className="max-w-2xl mx-auto mb-8">
+            <div className="relative">
+              <label htmlFor="faq-search" className="sr-only">
+                Rechercher dans la FAQ
+              </label>
+              <input
+                id="faq-search"
+                type="text"
+                placeholder="Rechercher une question... (ex: PWA, paiement, sécurité)"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-6 py-4 bg-cosmic-glass/50 backdrop-blur-sm border border-cosmic-glassborder rounded-full text-text-white placeholder-text-muted focus-visible"
+                aria-describedby="search-help"
+              />
+              <div id="search-help" className="sr-only">
+                Tapez des mots-clés pour filtrer les questions
+              </div>
+              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-text-muted" aria-hidden="true">
+                🔍
+              </div>
+            </div>
+            <div className="text-center mt-2">
+              <p className="text-xs text-text-muted">
+                {filteredFAQ.length} question{filteredFAQ.length > 1 ? 's' : ''} trouvée{filteredFAQ.length > 1 ? 's' : ''}
+                {searchQuery && ` pour "${searchQuery}"`}
+              </p>
+            </div>
           </div>
 
           {/* Navigation */}
@@ -208,21 +347,42 @@ export default function FAQ() {
             
             {/* Filtres par catégorie */}
             <div className="mb-8">
-              <div className="flex flex-wrap justify-center gap-3">
+              <div className="flex flex-wrap justify-center gap-2 mb-4">
                 {categories.map(category => (
                   <button
                     key={category.id}
-                    onClick={() => setSelectedCategory(category.id)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center space-x-2 ${
+                    onClick={() => handleCategoryChange(category.id)}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all focus-visible flex items-center space-x-2 ${
                       selectedCategory === category.id
-                        ? 'bg-neon-cyan text-black shadow-neon-cyan/50 shadow-lg'
-                        : 'bg-cosmic-glass border border-cosmic-glassborder text-text-gray hover:border-neon-cyan/50'
+                        ? 'bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30'
+                        : 'bg-cosmic-glass border border-cosmic-glassborder text-text-gray hover:border-neon-cyan/50 hover:text-text-white'
                     }`}
+                    aria-pressed={selectedCategory === category.id}
+                    aria-label={`Filtrer par catégorie ${category.name}`}
                   >
-                    <span>{category.icon}</span>
+                    <span aria-hidden="true">{category.icon}</span>
                     <span>{category.name}</span>
                   </button>
                 ))}
+              </div>
+              
+              {/* Actions rapides */}
+              <div className="text-center">
+                <button
+                  onClick={toggleAll}
+                  className="text-sm text-text-muted hover:text-neon-cyan transition-colors focus-visible mr-4"
+                  aria-label={openItems.length === filteredFAQ.length ? 'Fermer toutes les sections' : 'Ouvrir toutes les sections'}
+                >
+                  {openItems.length === filteredFAQ.length ? '📝 Fermer tout' : '📖 Ouvrir tout'}
+                </button>
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="text-sm text-text-muted hover:text-neon-cyan transition-colors focus-visible"
+                  >
+                    ✖️ Effacer recherche
+                  </button>
+                )}
               </div>
             </div>
 

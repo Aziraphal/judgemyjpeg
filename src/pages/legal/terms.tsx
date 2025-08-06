@@ -107,28 +107,39 @@ export default function Terms() {
                 <div className="text-text-gray space-y-3">
                   <h3 className="text-lg font-semibold text-neon-pink">5.1 Plan Gratuit</h3>
                   <ul className="list-disc list-inside ml-4 space-y-1">
-                    <li>3 analyses par mois calendaire</li>
+                    <li>5 analyses par mois calendaire</li>
                     <li>Accès aux modes Pro et Cassant</li>
                     <li>Analyses en 6 langues</li>
+                    <li>Collections personnelles</li>
                     <li>Support communautaire</li>
                   </ul>
                   
-                  <h3 className="text-lg font-semibold text-neon-pink mt-6">5.2 Plan Premium (9.98€/mois)</h3>
+                  <h3 className="text-lg font-semibold text-neon-pink mt-6">5.2 Plan Premium (9,99€/mois)</h3>
                   <ul className="list-disc list-inside ml-4 space-y-1">
                     <li>Analyses illimitées</li>
                     <li>Génération d'images partageables</li>
-                    <li>Insights IA avancés</li>
-                    <li>Export de données</li>
+                    <li>Insights IA avancés et métriques</li>
+                    <li>Export de données et historique complet</li>
+                    <li>Collections illimitées et partage public</li>
+                    <li>Authentification à deux facteurs</li>
                     <li>Support prioritaire</li>
                   </ul>
 
-                  <h3 className="text-lg font-semibold text-neon-pink mt-6">5.3 Plan Lifetime (99€ unique)</h3>
+                  <h3 className="text-lg font-semibold text-neon-pink mt-6">5.3 Plan Lifetime (99,99€ unique)</h3>
                   <ul className="list-disc list-inside ml-4 space-y-1">
                     <li>Tous les avantages Premium à vie</li>
                     <li>Accès garanti aux futures fonctionnalités</li>
                     <li>Badge membre fondateur</li>
-                    <li>Support VIP</li>
+                    <li>Support VIP et accès anticipé aux nouveautés</li>
+                    <li>Pas de renouvellement - paiement unique</li>
                   </ul>
+                  
+                  <div className="bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-4 mt-4">
+                    <p className="text-yellow-300 text-sm">
+                      <strong>⚠️ Important :</strong> L'offre Lifetime est soumise à la continuité du service. 
+                      En cas d'arrêt définitif de JudgeMyJPEG, un remboursement au prorata sera effectué.
+                    </p>
+                  </div>
                 </div>
               </section>
 
@@ -154,19 +165,44 @@ export default function Terms() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-neon-cyan mb-4">7. Propriété Intellectuelle</h2>
+                <h2 className="text-2xl font-bold text-neon-cyan mb-4">7. Propriété Intellectuelle et Données</h2>
                 <div className="text-text-gray space-y-3">
                   <h3 className="text-lg font-semibold text-neon-pink">7.1 Vos contenus</h3>
                   <p>
                     Vous conservez tous les droits sur les images que vous uploadez. 
-                    Nous n'utilisons vos images que pour fournir le service d'analyse.
+                    Nous n'utilisons vos images que pour fournir le service d'analyse et améliorer nos algorithmes.
                   </p>
+                  <ul className="list-disc list-inside ml-4 space-y-1 mt-2">
+                    <li>Les images sont stockées de façon sécurisée et chiffrée</li>
+                    <li>Suppression automatique après 30 jours d'inactivité</li>
+                    <li>Aucun partage avec des tiers sans votre consentement explicite</li>
+                    <li>Droit à l'effacement garanti (RGPD)</li>
+                  </ul>
 
-                  <h3 className="text-lg font-semibold text-neon-pink mt-6">7.2 Nos contenus</h3>
+                  <h3 className="text-lg font-semibold text-neon-pink mt-6">7.2 Analyses générées par IA</h3>
                   <p>
-                    Les analyses générées par notre IA vous appartiennent. 
-                    Cependant, la technologie, le code et les algorithmes restent notre propriété exclusive.
+                    Les analyses générées par notre IA vous appartiennent et peuvent être :
                   </p>
+                  <ul className="list-disc list-inside ml-4 space-y-1">
+                    <li>Sauvegardées dans votre compte</li>
+                    <li>Exportées au format JSON ou PDF</li>
+                    <li>Partagées publiquement (avec votre autorisation)</li>
+                    <li>Utilisées à des fins commerciales (pour les plans payants)</li>
+                  </ul>
+
+                  <h3 className="text-lg font-semibold text-neon-pink mt-6">7.3 Notre technologie</h3>
+                  <p>
+                    La technologie JudgeMyJPEG, incluant nos algorithmes d'IA, le code source, 
+                    les modèles et l'infrastructure, reste notre propriété intellectuelle exclusive.
+                  </p>
+                  
+                  <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4 mt-4">
+                    <p className="text-blue-300 text-sm">
+                      <strong>🤖 IA Responsable :</strong> Nos analyses sont générées par intelligence artificielle. 
+                      Bien que nous nous efforcions d'assurer la qualité, les évaluations peuvent être subjectives 
+                      et ne constituent pas des conseils professionnels définitifs.
+                    </p>
+                  </div>
                 </div>
               </section>
 

@@ -1,5 +1,7 @@
 import { useState, useRef } from 'react'
 import { PhotoAnalysis, AnalysisTone, AnalysisLanguage } from '@/services/openai'
+import { AccessibleError, useAccessibility } from '@/components/AccessibilityProvider'
+import { usePWA } from '@/components/PWAManager'
 
 interface PhotoUploadProps {
   onAnalysisComplete: (result: { photo: any; analysis: PhotoAnalysis }) => void
@@ -10,20 +12,48 @@ interface PhotoUploadProps {
 export default function PhotoUpload({ onAnalysisComplete, tone, language }: PhotoUploadProps) {
   const [isUploading, setIsUploading] = useState(false)
   const [dragActive, setDragActive] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const { announceToScreenReader } = useAccessibility()
+  const { isOnline, queueAnalysis } = usePWA()
 
   const handleFile = async (file: File) => {
     if (!file.type.startsWith('image/')) {
-      alert('Veuillez sélectionner une image')
+      setErrorMessage('Veuillez sélectionner un fichier image valide (JPG, PNG, WebP)')
+      announceToScreenReader('Erreur : Format de fichier non supporté')
       return
     }
 
     if (file.size > 4.5 * 1024 * 1024) {
-      alert('L\'image doit faire moins de 4.5MB (limite Vercel)')
+      setErrorMessage('L\'image doit faire moins de 4.5MB. Veuillez compresser votre image.')
+      announceToScreenReader('Erreur : Fichier trop volumineux')
       return
     }
 
     setIsUploading(true)
+    setErrorMessage(null)
+    announceToScreenReader('Début de l\'analyse de la photo')
+
+    // Gestion mode hors ligne
+    if (!isOnline) {
+      try {
+        const formData = new FormData()
+        formData.append('photo', file)
+        formData.append('tone', tone)
+        formData.append('language', language)
+
+        const queueId = await queueAnalysis(formData)
+        announceToScreenReader('Photo ajoutée à la file d\'attente. Elle sera analysée dès que la connexion sera rétablie.')
+        
+        setErrorMessage('Mode hors ligne : Votre photo a été mise en file d\'attente et sera analysée automatiquement dès que la connexion sera rétablie.')
+        setIsUploading(false)
+        return
+      } catch (error) {
+        setErrorMessage('Impossible de mettre en file d\'attente en mode hors ligne')
+        setIsUploading(false)
+        return
+      }
+    }
 
     try {
       const formData = new FormData()
@@ -44,6 +74,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
       }
 
       const result = await response.json()
+      announceToScreenReader('Analyse de la photo terminée avec succès')
       onAnalysisComplete(result)
 
     } catch (error) {
@@ -67,7 +98,8 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
         }
       }
       
-      alert(errorMessage)
+      setErrorMessage(errorMessage)
+      announceToScreenReader(`Erreur : ${errorMessage}`)
     } finally {
       setIsUploading(false)
     }
@@ -104,12 +136,26 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     fileInputRef.current?.click()
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      openFileDialog()
+    }
+  }
+
+  const clearError = () => {
+    setErrorMessage(null)
+  }
+
   return (
     <div className="w-full max-w-lg sm:max-w-2xl mx-auto">
+      {errorMessage && (
+        <AccessibleError message={errorMessage} onRetry={clearError} />
+      )}
       <div
         className={`
           relative glass-card p-4 sm:p-6 md:p-12 text-center cursor-pointer
-          transition-all duration-500 transform hover:scale-105
+          transition-all duration-500 transform hover:scale-105 focus-visible
           min-h-[200px] sm:min-h-[280px] md:min-h-[320px] flex items-center justify-center
           ${dragActive 
             ? 'neon-border shadow-neon-cyan bg-cosmic-glassborder' 
@@ -122,26 +168,39 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
             : 'hover-glow'
           }
         `}
+        role="button"
+        tabIndex={0}
+        aria-label="Zone de téléchargement d'image. Cliquez pour sélectionner un fichier ou glissez une image ici."
+        aria-describedby="upload-instructions"
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
         onDrop={handleDrop}
         onClick={openFileDialog}
+        onKeyDown={handleKeyDown}
       >
+        <label htmlFor="photo-upload" className="sr-only">
+          Sélectionner une photo à analyser
+        </label>
         <input
+          id="photo-upload"
           ref={fileInputRef}
           type="file"
           accept="image/*"
           onChange={handleChange}
           className="hidden"
           disabled={isUploading}
+          aria-describedby="file-constraints"
         />
 
         {isUploading ? (
-          <div className="space-y-4 sm:space-y-6">
+          <div className="space-y-4 sm:space-y-6" role="status" aria-live="polite">
             <div className="relative mx-auto w-16 sm:w-20 h-16 sm:h-20">
-              <div className={`spinner-neon w-16 sm:w-20 h-16 sm:h-20 ${tone === 'roast' ? 'border-red-500' : ''}`}></div>
-              <div className="absolute inset-0 flex items-center justify-center text-xl sm:text-2xl">
+              <div 
+                className={`spinner-neon w-16 sm:w-20 h-16 sm:h-20 ${tone === 'roast' ? 'border-red-500' : ''}`}
+                aria-hidden="true"
+              ></div>
+              <div className="absolute inset-0 flex items-center justify-center text-xl sm:text-2xl" aria-hidden="true">
                 🤖
               </div>
             </div>
@@ -149,7 +208,8 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
               <p className={`text-xl sm:text-2xl font-bold text-glow ${
                 tone === 'roast' ? 'text-red-400' : 'text-neon-cyan'
               }`}>
-                {tone === 'roast' ? '🔥 Préparation du massacre...' : 'Analyse en cours...'}
+                <span aria-hidden="true">{tone === 'roast' ? '🔥 ' : ''}</span>
+                {tone === 'roast' ? 'Préparation du massacre...' : 'Analyse en cours...'}
               </p>
               <p className="text-sm sm:text-base text-text-gray">
                 {tone === 'roast' 
@@ -172,8 +232,8 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
           </div>
         ) : (
           <div className="space-y-4 sm:space-y-6">
-            <div className="text-4xl sm:text-6xl md:text-8xl animate-float">📸</div>
-            <div className="space-y-2 sm:space-y-4">
+            <div className="text-4xl sm:text-6xl md:text-8xl animate-float" aria-hidden="true">📸</div>
+            <div className="space-y-2 sm:space-y-4" id="upload-instructions">
               <h3 className="text-lg sm:text-xl md:text-3xl font-bold text-glow">
                 Glissez votre photo ici
               </h3>
@@ -185,16 +245,16 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
               </p>
             </div>
             
-            <div className="glass-card p-3 sm:p-4 max-w-xs sm:max-w-md mx-auto">
+            <div className="glass-card p-3 sm:p-4 max-w-xs sm:max-w-md mx-auto" id="file-constraints">
               <div className="flex items-center justify-center space-x-2 sm:space-x-4 text-xs sm:text-sm text-text-muted">
                 <div className="flex items-center space-x-1">
-                  <span className="text-neon-pink">✓</span>
-                  <span>JPG, PNG, WebP</span>
+                  <span className="text-neon-pink" aria-hidden="true">✓</span>
+                  <span>Formats: JPG, PNG, WebP</span>
                 </div>
-                <div className="w-1 h-1 bg-text-muted rounded-full"></div>
+                <div className="w-1 h-1 bg-text-muted rounded-full" aria-hidden="true"></div>
                 <div className="flex items-center space-x-1">
-                  <span className="text-neon-cyan">✓</span>
-                  <span>Max 4.5MB</span>
+                  <span className="text-neon-cyan" aria-hidden="true">✓</span>
+                  <span>Taille max: 4.5MB</span>
                 </div>
               </div>
             </div>
@@ -207,8 +267,8 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
         )}
         
         {/* Decorative elements */}
-        <div className="absolute top-4 right-4 w-8 h-8 bg-glow-pink rounded-full blur-md opacity-50"></div>
-        <div className="absolute bottom-4 left-4 w-6 h-6 bg-glow-cyan rounded-full blur-md opacity-30"></div>
+        <div className="absolute top-4 right-4 w-8 h-8 bg-glow-pink rounded-full blur-md opacity-50" aria-hidden="true"></div>
+        <div className="absolute bottom-4 left-4 w-6 h-6 bg-glow-cyan rounded-full blur-md opacity-30" aria-hidden="true"></div>
       </div>
     </div>
   )

@@ -111,6 +111,11 @@ export default function Footer() {
                   Mentions légales
                 </Link>
               </li>
+              <li>
+                <Link href="/legal/cookies" className="text-text-muted hover:text-neon-cyan transition-colors">
+                  Politique de cookies
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -136,12 +141,27 @@ export default function Footer() {
               <Link href="/legal/mentions" className="text-text-muted hover:text-neon-cyan transition-colors">
                 Mentions légales
               </Link>
+              <Link href="/legal/cookies" className="text-text-muted hover:text-neon-cyan transition-colors">
+                Cookies
+              </Link>
               <Link href="/faq" className="text-text-muted hover:text-neon-cyan transition-colors">
                 FAQ
               </Link>
               <Link href="/contact" className="text-text-muted hover:text-neon-cyan transition-colors">
                 Contact
               </Link>
+              <button
+                onClick={() => {
+                  // Effacer le consentement pour forcer l'affichage du banner
+                  localStorage.removeItem('cookie-consent')
+                  localStorage.removeItem('cookie-consent-date')
+                  window.location.reload()
+                }}
+                className="text-text-muted hover:text-neon-cyan transition-colors"
+                title="Gérer les préférences cookies"
+              >
+                🍪 Préférences
+              </button>
             </div>
 
           </div>
