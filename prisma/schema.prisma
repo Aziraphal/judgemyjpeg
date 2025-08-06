@@ -136,3 +136,23 @@ model Favorite {
 
   @@unique([userId, photoId])
 }
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  userId      String?
+  email       String?
+  ipAddress   String
+  userAgent   String?
+  eventType   String   // AuditEventType enum
+  description String
+  metadata    String?  @db.Text // JSON string
+  riskLevel   String   // low, medium, high, critical
+  success     Boolean
+  timestamp   DateTime @default(now())
+
+  // Index pour performance des requêtes de sécurité
+  @@index([userId, timestamp])
+  @@index([eventType, timestamp])
+  @@index([riskLevel, timestamp])
+  @@index([ipAddress, timestamp])
+}

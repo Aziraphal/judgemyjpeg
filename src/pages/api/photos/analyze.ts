@@ -7,7 +7,8 @@ import { prisma } from '@/lib/prisma'
 import { getUserSubscription, incrementAnalysisCount } from '@/services/subscription'
 import formidable, { File } from 'formidable'
 import { readFileSync } from 'fs'
-import { validateImageFile } from '@/lib/fileValidation'
+import { validateUpload } from '@/lib/file-validation'
+import { AuditLogger } from '@/lib/audit-trail'
 
 export const config = {
   api: {
@@ -23,6 +24,8 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
   }
 
   const ip = getClientIP(req)
+  const auditLogger = new AuditLogger(req, req.user.id, req.user.email)
+  
   logger.info('Photo analysis started', { 
     filename: 'analyze.ts',
     method: req.method 
@@ -49,10 +52,42 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     // Lire le fichier pour validation
     const fileBuffer = readFileSync(file.filepath)
     
-    // Validation sécurisée du fichier
-    const validation = validateImageFile(file, fileBuffer)
+    // Validation sécurisée du fichier avec magic bytes
+    const validation = validateUpload(fileBuffer, file.originalFilename || 'photo.jpg', {
+      maxSize: 4.5 * 1024 * 1024, // 4.5MB Vercel limit
+      allowedTypes: ['jpg', 'png', 'webp'],
+      strictMode: true // Mode strict pour la sécurité
+    })
+    
     if (!validation.isValid) {
-      return res.status(400).json({ error: validation.error })
+      logger.warn('File validation failed', {
+        filename: file.originalFilename,
+        errors: validation.errors,
+        detectedType: validation.detectedType,
+        isSuspicious: validation.isSuspicious
+      }, req.user.id, ip)
+      
+      // Audit: File upload rejected (security event)
+      await auditLogger.fileUploadRejected(
+        req.user.id, 
+        file.originalFilename || 'unknown', 
+        validation.errors.join(', ')
+      )
+      
+      return res.status(400).json({ 
+        error: 'Fichier invalide',
+        details: validation.errors,
+        type: validation.detectedType
+      })
+    }
+    
+    // Log warnings même si valide
+    if (validation.warnings.length > 0) {
+      logger.warn('File validation warnings', {
+        filename: file.originalFilename,
+        warnings: validation.warnings,
+        detectedType: validation.detectedType
+      }, req.user.id, ip)
     }
 
     // Récupérer le ton et la langue sélectionnés
@@ -110,6 +145,9 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
       }
     })
 
+    // Audit: Successful photo analysis
+    await auditLogger.photoAnalysis(req.user.id, photo.filename, analysis.score)
+    
     logger.info('Photo analysis completed successfully', {
       photoId: photo.id,
       score: analysis.score,

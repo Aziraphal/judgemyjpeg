@@ -360,26 +360,26 @@ export default function Contact() {
                   <div className="space-y-4 text-sm">
                     <div>
                       <div className="font-medium text-text-white mb-1">Support général</div>
-                      <a href="mailto:support@judgemyjpeg.com" className="text-neon-cyan hover:underline">
-                        support@judgemyjpeg.com
+                      <a href="mailto:contact.judgemyjpeg@gmail.com" className="text-neon-cyan hover:underline">
+                        contact.judgemyjpeg@gmail.com
                       </a>
                     </div>
                     <div>
                       <div className="font-medium text-text-white mb-1">Questions de facturation</div>
-                      <a href="mailto:billing@judgemyjpeg.com" className="text-neon-cyan hover:underline">
-                        billing@judgemyjpeg.com
+                      <a href="mailto:contact.judgemyjpeg@gmail.com" className="text-neon-cyan hover:underline">
+                        contact.judgemyjpeg@gmail.com
                       </a>
                     </div>
                     <div>
                       <div className="font-medium text-text-white mb-1">Partenariats</div>
-                      <a href="mailto:business@judgemyjpeg.com" className="text-neon-cyan hover:underline">
-                        business@judgemyjpeg.com
+                      <a href="mailto:contact.judgemyjpeg@gmail.com" className="text-neon-cyan hover:underline">
+                        contact.judgemyjpeg@gmail.com
                       </a>
                     </div>
                     <div>
                       <div className="font-medium text-text-white mb-1">Questions légales</div>
-                      <a href="mailto:legal@judgemyjpeg.com" className="text-neon-cyan hover:underline">
-                        legal@judgemyjpeg.com
+                      <a href="mailto:contact.judgemyjpeg@gmail.com" className="text-neon-cyan hover:underline">
+                        contact.judgemyjpeg@gmail.com
                       </a>
                     </div>
                   </div>

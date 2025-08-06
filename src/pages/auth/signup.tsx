@@ -3,12 +3,15 @@ import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Link from 'next/link'
+import PasswordStrengthIndicator from '@/components/PasswordStrengthIndicator'
 
 export default function SignUpPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+  const [passwordValidation, setPasswordValidation] = useState<any>(null)
+  const [showEmailVerification, setShowEmailVerification] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -28,8 +31,9 @@ export default function SignUpPage() {
       return
     }
 
-    if (formData.password.length < 6) {
-      setError('Le mot de passe doit contenir au moins 6 caractères')
+    // Validation robuste du mot de passe
+    if (!passwordValidation?.isValid) {
+      setError('Le mot de passe ne respecte pas les critères de sécurité')
       setIsLoading(false)
       return
     }
@@ -49,20 +53,14 @@ export default function SignUpPage() {
 
       if (response.ok) {
         setSuccess(true)
-        // Auto-connexion après inscription
-        setTimeout(async () => {
-          const result = await signIn('credentials', {
-            email: formData.email,
-            password: formData.password,
-            redirect: false,
-          })
-          
-          if (!result?.error) {
-            router.push('/')
-          }
-        }, 1500)
+        setShowEmailVerification(true)
+        // Pas d'auto-connexion - l'utilisateur doit vérifier son email
       } else {
         setError(data.error || 'Erreur lors de la création du compte')
+        // Afficher les détails de validation si disponibles
+        if (data.details && Array.isArray(data.details)) {
+          setError(data.details.join(', '))
+        }
       }
     } catch (error) {
       setError('Erreur de connexion au serveur')
@@ -75,17 +73,42 @@ export default function SignUpPage() {
     signIn('google', { callbackUrl: '/' })
   }
 
-  if (success) {
+  if (success && showEmailVerification) {
     return (
       <main className="min-h-screen bg-cosmic-overlay particles-container relative flex items-center justify-center">
-        <div className="w-full max-w-md px-4 relative z-10">
+        <div className="w-full max-w-lg px-4 relative z-10">
           <div className="glass-card p-8 text-center">
-            <div className="text-6xl mb-4">🎉</div>
-            <h2 className="text-2xl font-bold text-neon-cyan mb-4">Compte créé !</h2>
+            <div className="text-6xl mb-4">📧</div>
+            <h2 className="text-2xl font-bold text-neon-cyan mb-4">Vérifiez votre email</h2>
             <p className="text-text-gray mb-6">
-              Connexion automatique en cours...
+              Nous avons envoyé un lien de vérification à <br/>
+              <span className="text-neon-pink font-semibold">{formData.email}</span>
             </p>
-            <div className="spinner-neon w-8 h-8 mx-auto"></div>
+            <div className="bg-cosmic-glass/50 border border-cosmic-glassborder rounded-lg p-4 mb-6">
+              <div className="space-y-2 text-sm text-text-muted">
+                <p className="flex items-center justify-center space-x-2">
+                  <span>🔍</span>
+                  <span>Vérifiez votre boîte de réception et vos spams</span>
+                </p>
+                <p className="flex items-center justify-center space-x-2">
+                  <span>⏱️</span>
+                  <span>Le lien expire dans 24 heures</span>
+                </p>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <button
+                onClick={() => signIn('email', { email: formData.email })}
+                className="btn-neon-secondary text-sm"
+              >
+                📧 Renvoyer l'email
+              </button>
+              <div>
+                <Link href="/auth/signin" className="text-text-muted text-sm hover:text-neon-cyan transition-colors">
+                  ← Retour à la connexion
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </main>
@@ -166,8 +189,13 @@ export default function SignUpPage() {
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   className="w-full p-3 bg-cosmic-glass border border-cosmic-glassborder rounded-lg text-text-white placeholder-text-muted focus:outline-none focus:border-neon-cyan"
-                  placeholder="Au moins 6 caractères"
+                  placeholder="Au moins 12 caractères sécurisés"
                   required
+                />
+                <PasswordStrengthIndicator 
+                  password={formData.password}
+                  email={formData.email}
+                  onValidationChange={setPasswordValidation}
                 />
               </div>
 
@@ -188,8 +216,12 @@ export default function SignUpPage() {
 
               <button
                 type="submit"
-                disabled={isLoading}
-                className="w-full btn-neon-pink"
+                disabled={isLoading || !passwordValidation?.isValid}
+                className={`w-full ${
+                  !passwordValidation?.isValid && formData.password
+                    ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                    : 'btn-neon-pink'
+                }`}
               >
                 {isLoading ? (
                   <span className="flex items-center justify-center space-x-2">

@@ -21,7 +21,7 @@ export default function Footer() {
               L'IA qui analyse vos photos avec expertise et créativité
             </p>
             <div className="flex space-x-4 mt-4">
-              <a href="#" className="text-text-muted hover:text-neon-cyan transition-colors">
+              <a href="mailto:contact.judgemyjpeg@gmail.com" className="text-text-muted hover:text-neon-cyan transition-colors" title="Contactez-nous">
                 <span className="text-xl">📧</span>
               </a>
               <a href="#" className="text-text-muted hover:text-neon-cyan transition-colors">
@@ -85,7 +85,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <a href="mailto:support@judgemyjpeg.com" className="text-text-muted hover:text-neon-cyan transition-colors">
+                <a href="mailto:contact.judgemyjpeg@gmail.com" className="text-text-muted hover:text-neon-cyan transition-colors">
                   Email Support
                 </a>
               </li>
