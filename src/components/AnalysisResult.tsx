@@ -45,6 +45,24 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional' 
     return 'border-neon-pink/50'
   }
 
+  // Fonction pour extraire les notes des analyses
+  const extractScoreFromText = (text: string): number => {
+    const match = text.match(/\[(\d+)\/\d+\]/)
+    return match ? parseInt(match[1]) : 0
+  }
+
+  const getScoreBreakdown = () => {
+    return {
+      composition: { score: extractScoreFromText(analysis.technical.composition), max: 15 },
+      lighting: { score: extractScoreFromText(analysis.technical.lighting), max: 15 },
+      focus: { score: extractScoreFromText(analysis.technical.focus), max: 15 },
+      exposure: { score: extractScoreFromText(analysis.technical.exposure), max: 15 },
+      creativity: { score: extractScoreFromText(analysis.artistic.creativity), max: 15 },
+      emotion: { score: extractScoreFromText(analysis.artistic.emotion), max: 15 },
+      storytelling: { score: extractScoreFromText(analysis.artistic.storytelling), max: 10 }
+    }
+  }
+
   // Fonction pour obtenir les liens selon la région et stratégie
   const getToolLinks = () => {
     // Détection simple du pays via langue du navigateur
@@ -127,6 +145,85 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional' 
                 </div>
               </div>
             )}
+
+            {/* Scores détaillés */}
+            <div className="glass-card p-6">
+              <h4 className="text-lg font-semibold text-text-white mb-4 flex items-center">
+                <span className="text-xl mr-2">📊</span>
+                Détail des notes
+              </h4>
+              
+              <div className="space-y-3">
+                {/* Technique */}
+                <div>
+                  <h5 className="text-sm font-medium text-neon-cyan mb-2">Technique (/60)</h5>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    {(() => {
+                      const breakdown = getScoreBreakdown()
+                      return [
+                        { key: 'composition', label: 'Composition', data: breakdown.composition },
+                        { key: 'lighting', label: 'Lumière', data: breakdown.lighting },
+                        { key: 'focus', label: 'Mise au point', data: breakdown.focus },
+                        { key: 'exposure', label: 'Exposition', data: breakdown.exposure }
+                      ].map(item => (
+                        <div key={item.key} className="flex items-center justify-between p-2 bg-cosmic-glass rounded-lg">
+                          <span className="text-text-gray">{item.label}</span>
+                          <div className="flex items-center space-x-2">
+                            <div className="w-12 h-2 bg-cosmic-glassborder rounded-full overflow-hidden">
+                              <div 
+                                className={`h-full transition-all duration-500 ${
+                                  item.data.score >= item.data.max * 0.8 ? 'bg-neon-cyan' :
+                                  item.data.score >= item.data.max * 0.6 ? 'bg-yellow-400' :
+                                  'bg-neon-pink'
+                                }`}
+                                style={{ width: `${(item.data.score / item.data.max) * 100}%` }}
+                              />
+                            </div>
+                            <span className="text-text-white font-semibold min-w-[30px]">
+                              {item.data.score}/{item.data.max}
+                            </span>
+                          </div>
+                        </div>
+                      ))
+                    })()}
+                  </div>
+                </div>
+
+                {/* Artistique */}
+                <div>
+                  <h5 className="text-sm font-medium text-neon-pink mb-2">Artistique (/40)</h5>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    {(() => {
+                      const breakdown = getScoreBreakdown()
+                      return [
+                        { key: 'creativity', label: 'Créativité', data: breakdown.creativity },
+                        { key: 'emotion', label: 'Émotion', data: breakdown.emotion },
+                        { key: 'storytelling', label: 'Narration', data: breakdown.storytelling, span: true }
+                      ].map(item => (
+                        <div key={item.key} className={`flex items-center justify-between p-2 bg-cosmic-glass rounded-lg ${item.span ? 'col-span-2' : ''}`}>
+                          <span className="text-text-gray">{item.label}</span>
+                          <div className="flex items-center space-x-2">
+                            <div className="w-12 h-2 bg-cosmic-glassborder rounded-full overflow-hidden">
+                              <div 
+                                className={`h-full transition-all duration-500 ${
+                                  item.data.score >= item.data.max * 0.8 ? 'bg-neon-cyan' :
+                                  item.data.score >= item.data.max * 0.6 ? 'bg-yellow-400' :
+                                  'bg-neon-pink'
+                                }`}
+                                style={{ width: `${(item.data.score / item.data.max) * 100}%` }}
+                              />
+                            </div>
+                            <span className="text-text-white font-semibold min-w-[30px]">
+                              {item.data.score}/{item.data.max}
+                            </span>
+                          </div>
+                        </div>
+                      ))
+                    })()}
+                  </div>
+                </div>
+              </div>
+            </div>
             
             <div className="glass-card p-4">
               <p className="text-text-gray text-sm leading-relaxed mb-4">

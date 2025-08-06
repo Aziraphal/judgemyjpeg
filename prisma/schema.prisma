@@ -44,6 +44,7 @@ model User {
   password              String?
   accounts              Account[]
   sessions              Session[]
+  userSessions          UserSession[]
   photos                Photo[]
   collections           Collection[]
   favorites             Favorite[]
@@ -55,6 +56,12 @@ model User {
   currentPeriodEnd      DateTime?
   monthlyAnalysisCount  Int       @default(0)
   lastAnalysisReset     DateTime  @default(now())
+  
+  // 2FA fields
+  twoFactorEnabled      Boolean   @default(false)
+  twoFactorSecret       String?   // TOTP secret key (encrypted)
+  backupCodes           String[]  @default([]) // Recovery codes (hashed)
+  twoFactorVerified     DateTime? // When 2FA was first verified
   
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
@@ -155,4 +162,32 @@ model AuditLog {
   @@index([eventType, timestamp])
   @@index([riskLevel, timestamp])
   @@index([ipAddress, timestamp])
+}
+
+model UserSession {
+  id                  String    @id @default(uuid())
+  userId              String
+  deviceFingerprint   String
+  deviceName          String
+  browser             String
+  os                  String
+  ipAddress           String
+  location            String
+  createdAt           DateTime  @default(now())
+  lastActivity        DateTime  @default(now())
+  expiresAt           DateTime
+  isActive            Boolean   @default(true)
+  isSuspicious        Boolean   @default(false)
+  riskScore           Int       @default(0)
+  invalidatedAt       DateTime?
+  invalidationReason  String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Index pour performance
+  @@index([userId, isActive])
+  @@index([deviceFingerprint])
+  @@index([ipAddress, createdAt])
+  @@index([expiresAt])
+  @@index([lastActivity])
 }

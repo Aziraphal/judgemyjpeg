@@ -7,8 +7,12 @@ import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 import { sendVerificationEmail } from '@/lib/email-service'
 import { checkLoginAttempts, recordFailedLogin, recordSuccessfulLogin } from '@/lib/password-validation'
+import { sendNewDeviceLoginNotification } from '@/lib/email-service'
+import { getFullDeviceContext, generateDeviceFingerprint, isNewDevice, registerNewDevice } from '@/lib/device-detection'
 import { AuditLogger } from '@/lib/audit-trail'
 import { SuspiciousLoginDetector, notifySuspiciousLogin } from '@/lib/suspicious-login-detector'
+import { is2FAEnabled } from '@/lib/two-factor'
+import { createTempSession, verifyToken } from './verify-2fa-login'
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -96,8 +100,14 @@ export const authOptions: NextAuthOptions = {
     EmailProvider({
       server: "dummy", // Not used with custom sendVerificationRequest
       from: process.env.EMAIL_FROM || "noreply@judgemyjpeg.fr",
-      sendVerificationRequest: async ({ identifier: email, url }) => {
-        await sendVerificationEmail(email, url)
+      sendVerificationRequest: async ({ identifier: email, url, token }) => {
+        // Use our custom verification endpoint instead of NextAuth default
+        const customUrl = new URL(url)
+        customUrl.pathname = '/api/auth/verify-email'
+        customUrl.searchParams.set('email', email)
+        customUrl.searchParams.set('token', token)
+        
+        await sendVerificationEmail(email, customUrl.toString())
       },
     }),
     GoogleProvider({
@@ -111,6 +121,7 @@ export const authOptions: NextAuthOptions = {
         }
       }
     }),
+    // Provider pour connexion avec email/mot de passe (étape 1)
     CredentialsProvider({
       name: 'credentials',
       credentials: {
@@ -129,11 +140,21 @@ export const authOptions: NextAuthOptions = {
         }
 
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email }
+          where: { 
+            email: credentials.email 
+          },
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            image: true,
+            password: true,
+            twoFactorEnabled: true,
+            emailVerified: true
+          }
         })
 
         if (!user || !user.password) {
-          // Enregistrer la tentative échouée
           recordFailedLogin(credentials.email)
           return null
         }
@@ -141,24 +162,74 @@ export const authOptions: NextAuthOptions = {
         const isPasswordValid = await bcrypt.compare(credentials.password, user.password)
 
         if (!isPasswordValid) {
-          // Enregistrer la tentative échouée
           recordFailedLogin(credentials.email)
           return null
+        }
+
+        // Vérifier que l'email est vérifié
+        if (!user.emailVerified) {
+          throw new Error('Email non vérifié. Vérifiez votre boite email.')
         }
 
         // Connexion réussie - reset les tentatives
         recordSuccessfulLogin(credentials.email)
 
-        // Note: We can't easily get the request context here to analyze suspicious login
-        // This would be better handled in a custom API endpoint for credentials login
-        // For now, the main detection happens in the signIn event above
+        // Si 2FA activé, créer session temporaire et rediriger vers 2FA
+        if (user.twoFactorEnabled) {
+          const tempSessionId = createTempSession(user.id, user.email!)
+          // Utiliser un format spécial pour indiquer qu'il faut 2FA
+          throw new Error(`2FA_REQUIRED:${tempSessionId}:${user.email}`)
+        }
 
+        // Pas de 2FA, connexion normale
         return {
           id: user.id,
           email: user.email,
           name: user.name,
           image: user.image,
         }
+      }
+    }),
+    
+    // Provider pour finalisation après 2FA (étape 2)
+    CredentialsProvider({
+      id: 'credentials-2fa',
+      name: 'credentials-2fa',
+      credentials: {
+        email: { type: 'text' },
+        tempSessionId: { type: 'text' },
+        verificationToken: { type: 'text' }
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.verificationToken) {
+          return null
+        }
+
+        // Vérifier le token de vérification 2FA
+        const tokenData = verifyToken(credentials.verificationToken)
+        
+        if (!tokenData || tokenData.email !== credentials.email) {
+          return null
+        }
+
+        // Récupérer l'utilisateur
+        const user = await prisma.user.findUnique({
+          where: { 
+            id: tokenData.userId 
+          },
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            image: true
+          }
+        })
+
+        if (!user) {
+          return null
+        }
+
+        return user
       }
     }),
   ],

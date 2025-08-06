@@ -1,0 +1,131 @@
+{
+  "name": "JudgeMyJPEG - Analyse IA de Photos",
+  "short_name": "JudgeMyJPEG",
+  "description": "L'IA qui analyse vos photos avec expertise et créativité. Obtenez des critiques détaillées de vos photographies.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#FF006E",
+  "orientation": "portrait-primary",
+  "categories": ["photography", "entertainment", "productivity"],
+  "lang": "fr-FR",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-96x96.png", 
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-128x128.png",
+      "sizes": "128x128", 
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png", 
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-384x384.png",
+      "sizes": "384x384", 
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Interface principale sur desktop"
+    },
+    {
+      "src": "/screenshot-mobile.png", 
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Interface mobile optimisée"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Analyser une photo",
+      "short_name": "Analyser",
+      "description": "Démarrer directement une analyse de photo",
+      "url": "/analyze",
+      "icons": [
+        {
+          "src": "/icon-shortcut-analyze.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard", 
+      "description": "Voir vos analyses et statistiques",
+      "url": "/dashboard",
+      "icons": [
+        {
+          "src": "/icon-shortcut-dashboard.png",
+          "sizes": "192x192", 
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Top Photos",
+      "short_name": "Top",
+      "description": "Explorer les meilleures photos de la communauté", 
+      "url": "/gallery",
+      "icons": [
+        {
+          "src": "/icon-shortcut-gallery.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+judgemyjpeg",
+      "url": "/analyze?url=%s"
+    }
+  ]
+}

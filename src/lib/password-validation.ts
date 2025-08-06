@@ -1,7 +1,11 @@
 /**
  * Validation robuste des mots de passe
- * Phase 1 - Sécurité Immédiate
+ * Phase 1 - Sécurité Immédiate + Phase 2 - Notifications
  */
+
+import { sendAccountLockoutNotification } from './email-service'
+import { getFullDeviceContext } from './device-detection'
+import type { NextApiRequest } from 'next'
 
 export interface PasswordValidationResult {
   isValid: boolean
@@ -168,7 +172,7 @@ export function checkLoginAttempts(identifier: string): {
   return { allowed: attemptsLeft > 0, attemptsLeft }
 }
 
-export function recordFailedLogin(identifier: string): void {
+export async function recordFailedLogin(identifier: string, req?: NextApiRequest): Promise<void> {
   const key = identifier.toLowerCase()
   const now = Date.now()
   const attempt = loginAttempts.get(key) || { count: 0, lastAttempt: now }
@@ -178,7 +182,27 @@ export function recordFailedLogin(identifier: string): void {
 
   // Verrouillage après 5 tentatives
   if (attempt.count >= 5) {
-    attempt.lockedUntil = now + (30 * 60 * 1000) // 30 minutes
+    const lockoutDuration = 30 // minutes
+    attempt.lockedUntil = now + (lockoutDuration * 60 * 1000)
+
+    // Envoyer notification de verrouillage
+    try {
+      let deviceContext = null
+      if (req) {
+        deviceContext = await getFullDeviceContext(req)
+      }
+
+      await sendAccountLockoutNotification(identifier, {
+        attempts: attempt.count,
+        lockoutDuration,
+        lastAttemptIp: deviceContext?.location?.ip,
+        lastAttemptLocation: deviceContext?.location?.location,
+        unlockTime: new Date(attempt.lockedUntil)
+      })
+    } catch (error) {
+      console.error('Failed to send account lockout notification:', error)
+      // Ne pas faire échouer la fonction si l'email échoue
+    }
   }
 
   loginAttempts.set(key, attempt)

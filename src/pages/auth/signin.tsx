@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { signIn, getSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
@@ -8,10 +8,39 @@ export default function SignInPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [message, setMessage] = useState('')
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   })
+
+  useEffect(() => {
+    // Handle query parameters for messages
+    if (router.query.message === 'EmailVerified') {
+      setMessage('✅ Email vérifié avec succès ! Vous pouvez maintenant vous connecter.')
+    } else if (router.query.error) {
+      const errorType = router.query.error as string
+      switch (errorType) {
+        case 'InvalidToken':
+          setError('Lien de vérification invalide')
+          break
+        case 'TokenNotFound':
+          setError('Lien de vérification introuvable')
+          break
+        case 'TokenExpired':
+          setError('Lien de vérification expiré')
+          break
+        case 'EmailMismatch':
+          setError('Email ne correspond pas au lien')
+          break
+        case 'VerificationFailed':
+          setError('Erreur lors de la vérification')
+          break
+        default:
+          setError('Erreur de connexion')
+      }
+    }
+  }, [router.query])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -26,9 +55,24 @@ export default function SignInPage() {
       })
 
       if (result?.error) {
-        setError('Email ou mot de passe incorrect')
+        // Vérifier si c'est une erreur 2FA
+        if (result.error.startsWith('2FA_REQUIRED:')) {
+          const [, tempSessionId, email] = result.error.split(':')
+          // Rediriger vers la page de vérification 2FA
+          router.push(`/auth/verify-2fa?email=${encodeURIComponent(email)}&tempSessionId=${tempSessionId}`)
+          return
+        }
+        
+        // Autres erreurs
+        if (result.error.includes('verrouillé')) {
+          setError(result.error)
+        } else if (result.error.includes('Email non vérifié')) {
+          setError('Email non vérifié. Vérifiez votre boite email ou créez un nouveau compte.')
+        } else {
+          setError('Email ou mot de passe incorrect')
+        }
       } else {
-        // Rediriger vers la page d'accueil comme Google OAuth
+        // Connexion réussie sans 2FA
         router.push('/')
       }
     } catch (error) {
@@ -69,6 +113,12 @@ export default function SignInPage() {
 
           {/* Form */}
           <div className="glass-card p-8">
+            {message && (
+              <div className="mb-6 p-4 bg-green-500/20 border border-green-500/50 rounded-lg">
+                <p className="text-green-300 text-sm">{message}</p>
+              </div>
+            )}
+
             {error && (
               <div className="mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-lg">
                 <p className="text-red-300 text-sm">{error}</p>

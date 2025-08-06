@@ -14,8 +14,16 @@ export type AuditEventType =
   | 'logout'
   | 'account_locked'
   | 'password_changed'
+  | 'password_change_failed'
   | 'email_verified'
   | 'registration'
+  | '2fa_setup_initiated'
+  | '2fa_enabled'
+  | '2fa_enable_failed'
+  | '2fa_disabled'
+  | '2fa_backup_codes_regenerated'
+  | '2fa_login_success'
+  | '2fa_login_failed'
   
   // Account Events
   | 'subscription_upgrade'
@@ -35,6 +43,10 @@ export type AuditEventType =
   | 'multiple_failed_logins'
   | 'file_upload_rejected'
   | 'rate_limit_exceeded'
+  | 'session_created'
+  | 'session_invalidated'
+  | 'sessions_bulk_invalidated'
+  | 'suspicious_session_blocked'
   
   // Admin Events
   | 'admin_login'
@@ -224,6 +236,16 @@ export class AuditLogger {
       metadata: { action, targetUserId },
       riskLevel: 'high',
       success: true
+    }))
+  }
+
+  // Generic security event logger for 2FA and other security events
+  async logSecurity(eventType: AuditEventType, data: Partial<AuditEventData>) {
+    await logAuditEvent(this.createEventData({
+      eventType,
+      riskLevel: 'medium',
+      success: true,
+      ...data
     }))
   }
 }
