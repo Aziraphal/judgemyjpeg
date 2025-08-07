@@ -26,6 +26,7 @@ export default function AccessibilityProvider({ children }: AccessibilityProvide
   const [reducedMotion, setReducedMotion] = useState(false)
   const [fontSize, setFontSizeState] = useState<'normal' | 'large' | 'xl'>('normal')
   const [announcements, setAnnouncements] = useState<string[]>([])
+  const [showPanel, setShowPanel] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -153,20 +154,39 @@ export default function AccessibilityProvider({ children }: AccessibilityProvide
         {/* Les messages urgents seront injectés ici */}
       </div>
 
-      {/* Panneau d'accessibilité flottant */}
-      <div className="fixed top-20 right-4 z-40 space-y-2">
+      {/* Bouton d'accessibilité flottant */}
+      <div className="fixed top-20 right-4 z-40">
         <button
-          onClick={toggleHighContrast}
-          className="bg-cosmic-glass/90 backdrop-blur-sm border border-cosmic-glassborder rounded-lg p-3 text-sm hover:bg-cosmic-glass transition-colors focus-visible"
-          title="Basculer le mode contraste élevé"
-          aria-label={`${highContrast ? 'Désactiver' : 'Activer'} le mode contraste élevé`}
+          onClick={() => setShowPanel(!showPanel)}
+          className="bg-gray-800 border border-gray-600 rounded-lg p-3 text-sm hover:bg-gray-700 transition-colors focus-visible"
+          title="Options d'accessibilité"
+          aria-label="Ouvrir les options d'accessibilité"
+          aria-expanded={showPanel}
         >
-          {highContrast ? '🔆' : '🌙'}
+          ♿
         </button>
         
-        <div className="bg-cosmic-glass/90 backdrop-blur-sm border border-cosmic-glassborder rounded-lg overflow-hidden">
-          <div className="text-xs text-text-muted p-2 border-b border-cosmic-glassborder">
-            Taille police
+        {showPanel && (
+          <div className="mt-2 space-y-2">
+            <button
+              onClick={toggleHighContrast}
+              className="w-full bg-gray-800 backdrop-blur-sm border border-gray-600 rounded-lg p-3 text-sm hover:bg-gray-700 transition-colors focus-visible"
+              title="Basculer le mode contraste élevé"
+              aria-label={`${highContrast ? 'Désactiver' : 'Activer'} le mode contraste élevé`}
+            >
+              {highContrast ? '🔆' : '🌙'} {highContrast ? 'Normal' : 'Contraste'}
+            </button>
+            
+            <div className="bg-gray-800 backdrop-blur-sm border border-gray-600 rounded-lg overflow-hidden">
+          <div className="text-xs text-white p-2 border-b border-gray-600 flex justify-between items-center">
+            <span>Taille police</span>
+            <button
+              onClick={() => setShowPanel(false)}
+              className="text-gray-400 hover:text-white text-sm"
+              aria-label="Fermer le panneau d'accessibilité"
+            >
+              ✕
+            </button>
           </div>
           <div className="flex flex-col">
             {(['normal', 'large', 'xl'] as const).map((size) => (
@@ -175,8 +195,8 @@ export default function AccessibilityProvider({ children }: AccessibilityProvide
                 onClick={() => setFontSize(size)}
                 className={`px-3 py-2 text-xs transition-colors focus-visible ${
                   fontSize === size 
-                    ? 'bg-neon-cyan/20 text-neon-cyan' 
-                    : 'text-text-gray hover:text-text-white hover:bg-white/5'
+                    ? 'bg-neon-cyan text-black font-semibold' 
+                    : 'text-white hover:text-neon-cyan hover:bg-gray-700'
                 }`}
                 aria-label={`Changer la taille de police vers ${size}`}
                 aria-pressed={fontSize === size}
@@ -185,7 +205,9 @@ export default function AccessibilityProvider({ children }: AccessibilityProvide
               </button>
             ))}
           </div>
-        </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <main id="main-content">

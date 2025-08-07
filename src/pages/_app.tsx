@@ -59,7 +59,8 @@ export default function App({
       
       <SessionProvider session={session}>
         <AccessibilityProvider>
-          {!hideSecurityBar && <SecurityStatusBar compact position="top" />}
+          {/* SecurityStatusBar désactivé par défaut - trop invasif pour l'utilisateur final */}
+          {process.env.NODE_ENV === 'development' && !hideSecurityBar && <SecurityStatusBar compact position="top" />}
           <Component {...pageProps} />
           <PWAManager />
           <CookieConsent />

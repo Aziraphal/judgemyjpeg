@@ -166,19 +166,19 @@ export default function CookieConsent() {
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={() => setShowSettings(true)}
-                  className="px-4 py-2 text-sm text-text-gray hover:text-text-white border border-cosmic-glassborder rounded hover:bg-white/5 transition-colors"
+                  className="px-4 py-2 text-sm text-white bg-gray-700 hover:bg-gray-600 border border-gray-600 rounded transition-colors"
                 >
                   Personnaliser
                 </button>
                 <button
                   onClick={rejectOptional}
-                  className="px-4 py-2 text-sm bg-red-600/20 text-red-300 border border-red-500/30 rounded hover:bg-red-600/30 transition-colors"
+                  className="px-4 py-2 text-sm bg-red-600 text-white border border-red-500 rounded hover:bg-red-700 transition-colors"
                 >
                   Refuser optionnels
                 </button>
                 <button
                   onClick={acceptAll}
-                  className="px-6 py-2 text-sm bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30 rounded hover:bg-neon-cyan/30 transition-colors font-semibold"
+                  className="px-6 py-2 text-sm bg-neon-cyan text-black border border-neon-cyan rounded hover:bg-neon-cyan/80 transition-colors font-semibold"
                 >
                   Accepter tout
                 </button>
