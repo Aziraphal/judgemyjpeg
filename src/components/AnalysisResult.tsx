@@ -53,13 +53,13 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional' 
 
   const getScoreBreakdown = () => {
     return {
-      composition: { score: extractScoreFromText(analysis.technical.composition), max: 15 },
-      lighting: { score: extractScoreFromText(analysis.technical.lighting), max: 15 },
-      focus: { score: extractScoreFromText(analysis.technical.focus), max: 15 },
-      exposure: { score: extractScoreFromText(analysis.technical.exposure), max: 15 },
-      creativity: { score: extractScoreFromText(analysis.artistic.creativity), max: 15 },
-      emotion: { score: extractScoreFromText(analysis.artistic.emotion), max: 15 },
-      storytelling: { score: extractScoreFromText(analysis.artistic.storytelling), max: 10 }
+      composition: { score: analysis.partialScores?.composition || 0, max: 15 },
+      lighting: { score: analysis.partialScores?.lighting || 0, max: 15 },
+      focus: { score: analysis.partialScores?.focus || 0, max: 15 },
+      exposure: { score: analysis.partialScores?.exposure || 0, max: 15 },
+      creativity: { score: analysis.partialScores?.creativity || 0, max: 15 },
+      emotion: { score: analysis.partialScores?.emotion || 0, max: 15 },
+      storytelling: { score: analysis.partialScores?.storytelling || 0, max: 10 }
     }
   }
 
