@@ -223,19 +223,19 @@ export default function AccessibilityProvider({ children }: AccessibilityProvide
       <div 
         className="fixed z-40"
         style={{ 
-          right: `${position.x}px`, 
-          top: `${position.y}px`,
+          right: `${Math.max(10, position.x)}px`, 
+          top: `${Math.max(10, position.y)}px`,
           cursor: isDragging ? 'grabbing' : 'grab'
         }}
       >
         <button
           onClick={() => !isDragging && setShowPanel(!showPanel)}
           onMouseDown={handleMouseDown}
-          className={`bg-gray-800 border border-gray-600 rounded-lg p-3 text-sm transition-colors focus-visible ${
+          className={`bg-gray-800 border border-gray-600 rounded-lg p-2 sm:p-3 text-sm transition-colors focus-visible ${
             isDragging 
               ? 'bg-gray-700 shadow-lg scale-110' 
               : 'hover:bg-gray-700 hover:shadow-md'
-          }`}
+          } min-w-[40px] min-h-[40px] flex items-center justify-center`}
           title={isDragging ? "Repositionnement du bouton..." : "Options d'accessibilité - Glisser pour déplacer"}
           aria-label={isDragging ? "Repositionnement en cours" : "Ouvrir les options d'accessibilité ou glisser pour déplacer"}
           aria-expanded={showPanel}
@@ -245,22 +245,22 @@ export default function AccessibilityProvider({ children }: AccessibilityProvide
         </button>
         
         {showPanel && (
-          <div className="mt-2 space-y-2">
+          <div className="mt-2 space-y-2 min-w-[180px] sm:min-w-[200px]">
             <button
               onClick={toggleHighContrast}
-              className="w-full bg-gray-800 backdrop-blur-sm border border-gray-600 rounded-lg p-3 text-sm hover:bg-gray-700 transition-colors focus-visible"
+              className="w-full bg-gray-800 backdrop-blur-sm border border-gray-600 rounded-lg p-2 sm:p-3 text-xs sm:text-sm hover:bg-gray-700 transition-colors focus-visible"
               title="Basculer le mode contraste élevé"
               aria-label={`${highContrast ? 'Désactiver' : 'Activer'} le mode contraste élevé`}
             >
-              {highContrast ? '🔆' : '🌙'} {highContrast ? 'Normal' : 'Contraste'}
+              {highContrast ? '🔆' : '🌙'} <span className="hidden sm:inline">{highContrast ? 'Normal' : 'Contraste'}</span>
             </button>
             
             <div className="bg-gray-800 backdrop-blur-sm border border-gray-600 rounded-lg overflow-hidden">
           <div className="text-xs text-white p-2 border-b border-gray-600 flex justify-between items-center">
-            <span>Taille police</span>
+            <span>Police</span>
             <button
               onClick={() => setShowPanel(false)}
-              className="text-gray-400 hover:text-white text-sm"
+              className="text-gray-400 hover:text-white text-sm p-1"
               aria-label="Fermer le panneau d'accessibilité"
             >
               ✕
@@ -271,11 +271,11 @@ export default function AccessibilityProvider({ children }: AccessibilityProvide
               <button
                 key={size}
                 onClick={() => setFontSize(size)}
-                className={`px-3 py-2 text-xs transition-colors focus-visible ${
+                className={`px-2 py-2 text-xs transition-colors focus-visible ${
                   fontSize === size 
                     ? 'bg-neon-cyan text-black font-semibold' 
                     : 'text-white hover:text-neon-cyan hover:bg-gray-700'
-                }`}
+                } min-h-[32px]`}
                 aria-label={`Changer la taille de police vers ${size}`}
                 aria-pressed={fontSize === size}
               >

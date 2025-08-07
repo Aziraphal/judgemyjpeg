@@ -157,19 +157,22 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional' 
                 {/* Technique */}
                 <div>
                   <h5 className="text-sm font-medium text-neon-cyan mb-2">Technique (/60)</h5>
-                  <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div className="space-y-2 text-xs">
                     {(() => {
                       const breakdown = getScoreBreakdown()
                       return [
-                        { key: 'composition', label: 'Composition', data: breakdown.composition },
-                        { key: 'lighting', label: 'Lumière', data: breakdown.lighting },
-                        { key: 'focus', label: 'Mise au point', data: breakdown.focus },
-                        { key: 'exposure', label: 'Exposition', data: breakdown.exposure }
+                        { key: 'composition', label: 'Composition', shortLabel: 'Compo', data: breakdown.composition },
+                        { key: 'lighting', label: 'Lumière', shortLabel: 'Lumière', data: breakdown.lighting },
+                        { key: 'focus', label: 'Mise au point', shortLabel: 'MAP', data: breakdown.focus },
+                        { key: 'exposure', label: 'Exposition', shortLabel: 'Expo', data: breakdown.exposure }
                       ].map(item => (
                         <div key={item.key} className="flex items-center justify-between p-2 bg-cosmic-glass rounded-lg">
-                          <span className="text-text-gray">{item.label}</span>
-                          <div className="flex items-center space-x-2">
-                            <div className="w-12 h-2 bg-cosmic-glassborder rounded-full overflow-hidden">
+                          <span className="text-text-gray text-xs sm:text-sm flex-shrink-0">
+                            <span className="hidden sm:inline">{item.label}</span>
+                            <span className="sm:hidden">{item.shortLabel}</span>
+                          </span>
+                          <div className="flex items-center space-x-2 ml-2">
+                            <div className="w-16 sm:w-20 h-2 bg-cosmic-glassborder rounded-full overflow-hidden">
                               <div 
                                 className={`h-full transition-all duration-500 ${
                                   item.data.score >= item.data.max * 0.8 ? 'bg-neon-cyan' :
@@ -179,7 +182,7 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional' 
                                 style={{ width: `${(item.data.score / item.data.max) * 100}%` }}
                               />
                             </div>
-                            <span className="text-text-white font-semibold min-w-[30px]">
+                            <span className="text-text-white font-semibold text-xs sm:text-sm min-w-[35px] text-right">
                               {item.data.score}/{item.data.max}
                             </span>
                           </div>
@@ -192,18 +195,21 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional' 
                 {/* Artistique */}
                 <div>
                   <h5 className="text-sm font-medium text-neon-pink mb-2">Artistique (/40)</h5>
-                  <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div className="space-y-2 text-xs">
                     {(() => {
                       const breakdown = getScoreBreakdown()
                       return [
-                        { key: 'creativity', label: 'Créativité', data: breakdown.creativity },
-                        { key: 'emotion', label: 'Émotion', data: breakdown.emotion },
-                        { key: 'storytelling', label: 'Narration', data: breakdown.storytelling, span: true }
+                        { key: 'creativity', label: 'Créativité', shortLabel: 'Créa', data: breakdown.creativity },
+                        { key: 'emotion', label: 'Émotion', shortLabel: 'Émotion', data: breakdown.emotion },
+                        { key: 'storytelling', label: 'Narration', shortLabel: 'Story', data: breakdown.storytelling }
                       ].map(item => (
-                        <div key={item.key} className={`flex items-center justify-between p-2 bg-cosmic-glass rounded-lg ${item.span ? 'col-span-2' : ''}`}>
-                          <span className="text-text-gray">{item.label}</span>
-                          <div className="flex items-center space-x-2">
-                            <div className="w-12 h-2 bg-cosmic-glassborder rounded-full overflow-hidden">
+                        <div key={item.key} className="flex items-center justify-between p-2 bg-cosmic-glass rounded-lg">
+                          <span className="text-text-gray text-xs sm:text-sm flex-shrink-0">
+                            <span className="hidden sm:inline">{item.label}</span>
+                            <span className="sm:hidden">{item.shortLabel}</span>
+                          </span>
+                          <div className="flex items-center space-x-2 ml-2">
+                            <div className="w-16 sm:w-20 h-2 bg-cosmic-glassborder rounded-full overflow-hidden">
                               <div 
                                 className={`h-full transition-all duration-500 ${
                                   item.data.score >= item.data.max * 0.8 ? 'bg-neon-cyan' :
@@ -213,7 +219,7 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional' 
                                 style={{ width: `${(item.data.score / item.data.max) * 100}%` }}
                               />
                             </div>
-                            <span className="text-text-white font-semibold min-w-[30px]">
+                            <span className="text-text-white font-semibold text-xs sm:text-sm min-w-[35px] text-right">
                               {item.data.score}/{item.data.max}
                             </span>
                           </div>
