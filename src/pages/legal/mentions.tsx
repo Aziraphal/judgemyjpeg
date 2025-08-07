@@ -44,23 +44,24 @@ export default function Mentions() {
                     <div>
                       <h3 className="text-lg font-semibold text-neon-pink mb-3">Informations sur l'éditeur</h3>
                       <div className="text-text-gray space-y-2">
-                        <p><strong>Raison sociale :</strong> [Votre nom/société]</p>
-                        <p><strong>Forme juridique :</strong> [Auto-entrepreneur/SARL/SAS...]</p>
-                        <p><strong>Capital social :</strong> [Si applicable]</p>
-                        <p><strong>Numéro SIRET :</strong> [À compléter]</p>
-                        <p><strong>Code APE/NAF :</strong> [À compléter]</p>
-                        <p><strong>TVA Intracommunautaire :</strong> [Si applicable]</p>
+                        <p><strong>Raison sociale :</strong> Cyril Paquier</p>
+                        <p><strong>Nom commercial :</strong> CodeCraft Plus</p>
+                        <p><strong>Forme juridique :</strong> Entrepreneur individuel</p>
+                        <p><strong>Numéro SIREN :</strong> 989587399</p>
+                        <p><strong>Numéro SIRET :</strong> 98958739900019</p>
+                        <p><strong>Code APE/NAF :</strong> 1812Z</p>
+                        <p><strong>Date d'immatriculation :</strong> 28/07/2025</p>
                       </div>
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-neon-pink mb-3">Coordonnées</h3>
                       <div className="text-text-gray space-y-2">
                         <p><strong>Adresse :</strong><br/>
-                        [Votre adresse complète]<br/>
-                        [Code postal] [Ville]<br/>
-                        [Pays]</p>
+                        9 Allée de la Meilleraie<br/>
+                        85340 Les Sables-d'Olonne<br/>
+                        France</p>
                         <p><strong>Email :</strong> contact@judgemyjpeg.com</p>
-                        <p><strong>Téléphone :</strong> [Votre numéro]</p>
+                        <p><strong>Téléphone :</strong> [À définir]</p>
                       </div>
                     </div>
                   </div>
@@ -70,8 +71,8 @@ export default function Mentions() {
               <section>
                 <h2 className="text-2xl font-bold text-neon-cyan mb-4">2. Directeur de Publication</h2>
                 <div className="text-text-gray space-y-3">
-                  <p><strong>Directeur de publication :</strong> [Votre nom]</p>
-                  <p><strong>Qualité :</strong> [Gérant/Président/Propriétaire]</p>
+                  <p><strong>Directeur de publication :</strong> Cyril Paquier</p>
+                  <p><strong>Qualité :</strong> Entrepreneur individuel - Propriétaire</p>
                   <p>
                     Le directeur de publication est responsable du contenu éditorial du site 
                     conformément à la loi du 29 juillet 1881 sur la liberté de la presse.
@@ -215,10 +216,10 @@ export default function Mentions() {
                       que vous pouvez recourir gratuitement au service de médiation :
                     </p>
                     <div className="bg-neon-cyan/10 p-4 rounded border border-neon-cyan/30">
-                      <p><strong>Médiateur :</strong> [Nom du médiateur agréé]</p>
-                      <p><strong>Adresse :</strong> [Adresse du médiateur]</p>
-                      <p><strong>Site web :</strong> <a href="#" className="text-neon-cyan hover:underline">[Site du médiateur]</a></p>
-                      <p><strong>Email :</strong> [Email du médiateur]</p>
+                      <p><strong>Médiateur :</strong> Médiateur de la consommation CNPM - MÉDIATION</p>
+                      <p><strong>Adresse :</strong> 27 avenue de la libération, 42400 Saint-Chamond</p>
+                      <p><strong>Site web :</strong> <a href="https://cnpm-mediation-consommation.eu" className="text-neon-cyan hover:underline" target="_blank" rel="noopener noreferrer">cnpm-mediation-consommation.eu</a></p>
+                      <p><strong>Email :</strong> contact@cnpm-mediation-consommation.eu</p>
                     </div>
                     <p className="text-sm">
                       <strong>Conditions :</strong> Le recours au médiateur n'est possible qu'après avoir 

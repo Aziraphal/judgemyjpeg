@@ -260,7 +260,7 @@ export default function Terms() {
                     Les présentes conditions sont régies par le droit français.
                   </p>
                   <p>
-                    Tout litige relatif à l'utilisation du service sera soumis aux tribunaux compétents de Paris.
+                    Tout litige relatif à l'utilisation du service sera soumis aux tribunaux compétents de La Roche-sur-Yon (Vendée).
                   </p>
                 </div>
               </section>
@@ -274,7 +274,7 @@ export default function Terms() {
                   <ul className="list-none space-y-1">
                     <li><strong>Email :</strong> legal@judgemyjpeg.com</li>
                     <li><strong>Support :</strong> support@judgemyjpeg.com</li>
-                    <li><strong>Adresse :</strong> [À compléter avec votre adresse]</li>
+                    <li><strong>Adresse :</strong> 9 Allée de la Meilleraie, 85340 Les Sables-d'Olonne, France</li>
                   </ul>
                 </div>
               </section>
