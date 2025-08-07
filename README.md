@@ -4,7 +4,7 @@ Une application web qui utilise l'IA Gemini pour analyser et critiquer les photo
 
 ## Fonctionnalités
 
-- 📸 Analyse de photos par IA (Gemini)
+- 📸 Analyse de photos par IA (o3 mini)
 - 🔍 Conseils d'amélioration professionnels
 - 📊 Tableau de bord utilisateur
 - 🔗 Liens vers Lightroom/Photoshop/Snapseed
