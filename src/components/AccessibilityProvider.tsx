@@ -27,15 +27,28 @@ export default function AccessibilityProvider({ children }: AccessibilityProvide
   const [fontSize, setFontSizeState] = useState<'normal' | 'large' | 'xl'>('normal')
   const [announcements, setAnnouncements] = useState<string[]>([])
   const [showPanel, setShowPanel] = useState(false)
+  const [position, setPosition] = useState({ x: 20, y: 80 }) // Position du bouton (right, top)
+  const [isDragging, setIsDragging] = useState(false)
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
   const router = useRouter()
 
   useEffect(() => {
     // Charger les préférences sauvegardées
     const savedHighContrast = localStorage.getItem('accessibility-high-contrast') === 'true'
     const savedFontSize = (localStorage.getItem('accessibility-font-size') as 'normal' | 'large' | 'xl') || 'normal'
+    const savedPosition = localStorage.getItem('accessibility-button-position')
     
     setHighContrast(savedHighContrast)
     setFontSizeState(savedFontSize)
+    
+    if (savedPosition) {
+      try {
+        setPosition(JSON.parse(savedPosition))
+      } catch (e) {
+        // Position par défaut si parsing échoue
+        setPosition({ x: 20, y: 80 })
+      }
+    }
 
     // Détecter les préférences système
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -121,6 +134,58 @@ export default function AccessibilityProvider({ children }: AccessibilityProvide
     }, 1000)
   }
 
+  // Fonctions de drag & drop pour le bouton d'accessibilité
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault()
+    setIsDragging(true)
+    const rect = (e.target as HTMLElement).getBoundingClientRect()
+    setDragOffset({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    })
+    setShowPanel(false) // Fermer le panel pendant le drag
+  }
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isDragging) return
+    
+    const newX = Math.max(10, Math.min(window.innerWidth - 70, window.innerWidth - e.clientX + dragOffset.x))
+    const newY = Math.max(10, Math.min(window.innerHeight - 70, e.clientY - dragOffset.y))
+    
+    setPosition({ x: newX, y: newY })
+  }
+
+  const handleMouseUp = () => {
+    if (isDragging) {
+      setIsDragging(false)
+      // Sauvegarder la position
+      localStorage.setItem('accessibility-button-position', JSON.stringify(position))
+      announceToScreenReader('Bouton d\'accessibilité repositionné')
+    }
+  }
+
+  // Event listeners pour le drag
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove)
+      document.addEventListener('mouseup', handleMouseUp)
+      document.body.style.cursor = 'grabbing'
+      document.body.style.userSelect = 'none'
+    } else {
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+      document.body.style.cursor = ''
+      document.body.style.userSelect = ''
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+      document.body.style.cursor = ''
+      document.body.style.userSelect = ''
+    }
+  }, [isDragging, dragOffset, position])
+
   const contextValue: AccessibilityContextType = {
     highContrast,
     reducedMotion,
@@ -154,14 +219,27 @@ export default function AccessibilityProvider({ children }: AccessibilityProvide
         {/* Les messages urgents seront injectés ici */}
       </div>
 
-      {/* Bouton d'accessibilité flottant */}
-      <div className="fixed top-20 right-4 z-40">
+      {/* Bouton d'accessibilité flottant déplaçable */}
+      <div 
+        className="fixed z-40"
+        style={{ 
+          right: `${position.x}px`, 
+          top: `${position.y}px`,
+          cursor: isDragging ? 'grabbing' : 'grab'
+        }}
+      >
         <button
-          onClick={() => setShowPanel(!showPanel)}
-          className="bg-gray-800 border border-gray-600 rounded-lg p-3 text-sm hover:bg-gray-700 transition-colors focus-visible"
-          title="Options d'accessibilité"
-          aria-label="Ouvrir les options d'accessibilité"
+          onClick={() => !isDragging && setShowPanel(!showPanel)}
+          onMouseDown={handleMouseDown}
+          className={`bg-gray-800 border border-gray-600 rounded-lg p-3 text-sm transition-colors focus-visible ${
+            isDragging 
+              ? 'bg-gray-700 shadow-lg scale-110' 
+              : 'hover:bg-gray-700 hover:shadow-md'
+          }`}
+          title={isDragging ? "Repositionnement du bouton..." : "Options d'accessibilité - Glisser pour déplacer"}
+          aria-label={isDragging ? "Repositionnement en cours" : "Ouvrir les options d'accessibilité ou glisser pour déplacer"}
           aria-expanded={showPanel}
+          style={{ userSelect: 'none' }}
         >
           ♿
         </button>
