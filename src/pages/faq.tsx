@@ -145,7 +145,7 @@ export default function FAQ() {
       id: '19',
       category: 'troubleshooting', 
       question: 'Je ne reçois pas les emails de confirmation',
-      answer: 'Vérifiez vos spams/indésirables. Ajoutez noreply@judgemyjpeg.com à vos contacts. Si le problème persiste, contactez le support avec votre adresse email exacte.'
+      answer: 'Vérifiez vos spams/indésirables. Ajoutez contact@judgemyjpeg.com à vos contacts. Si le problème persiste, contactez-nous avec votre adresse email exacte.'
     },
     {
       id: '20',
@@ -217,7 +217,7 @@ export default function FAQ() {
       id: '28',
       category: 'legal',
       question: 'JudgeMyJPEG respecte-t-il le RGPD et mes droits ?',
-      answer: 'Conformité RGPD 2025 complète : consentement explicite cookies, droit à l\'effacement (suppression compte), portabilité des données (export JSON/PDF), transparence totale sur l\'usage. Contact DPO : privacy@judgemyjpeg.com. Possibilité de saisine CNIL.',
+      answer: 'Conformité RGPD 2025 complète : consentement explicite cookies, droit à l\'effacement (suppression compte), portabilité des données (export JSON/PDF), transparence totale sur l\'usage. Contact : contact@judgemyjpeg.com. Possibilité de saisine CNIL.',
       important: true,
       tags: ['rgpd', 'droits', 'données', 'conformité']
     },
@@ -468,7 +468,7 @@ export default function FAQ() {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <button
-                    onClick={() => window.location.href = 'mailto:support@judgemyjpeg.com'}
+                    onClick={() => window.location.href = 'mailto:contact@judgemyjpeg.com'}
                     className="btn-neon-pink"
                   >
                     📧 Envoyer un email

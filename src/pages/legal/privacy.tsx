@@ -54,10 +54,10 @@ export default function Privacy() {
               <section>
                 <h2 className="text-2xl font-bold text-neon-cyan mb-4">2. Responsable du Traitement</h2>
                 <div className="text-text-gray space-y-3">
-                  <p><strong>Responsable :</strong> [Votre nom/société]</p>
-                  <p><strong>Adresse :</strong> [Votre adresse complète]</p>
-                  <p><strong>Email :</strong> privacy@judgemyjpeg.com</p>
-                  <p><strong>DPO :</strong> dpo@judgemyjpeg.com (si applicable)</p>
+                  <p><strong>Responsable :</strong> Cyril Paquier (CodeCraft Plus)</p>
+                  <p><strong>Adresse :</strong> 9 Allée de la Meilleraie, 85340 Les Sables-d'Olonne, France</p>
+                  <p><strong>Email :</strong> contact@judgemyjpeg.com</p>
+                  <p><strong>Contact :</strong> contact@judgemyjpeg.com</p>
                 </div>
               </section>
 
@@ -311,7 +311,7 @@ export default function Privacy() {
                         <li>Opposition au traitement</li>
                         <li>Retrait du consentement</li>
                         <li>Arrêt des communications</li>
-                        <li><strong>Contact :</strong> privacy@judgemyjpeg.com</li>
+                        <li><strong>Contact :</strong> contact@judgemyjpeg.com</li>
                       </ul>
                     </div>
                   </div>
@@ -319,7 +319,7 @@ export default function Privacy() {
                   <div className="bg-neon-cyan/10 p-4 rounded-lg border border-neon-cyan/30 mt-6">
                     <h4 className="font-semibold text-neon-cyan mb-2">🛡️ Comment exercer vos droits ?</h4>
                     <p className="text-sm">
-                      <strong>Email :</strong> privacy@judgemyjpeg.com<br/>
+                      <strong>Email :</strong> contact@judgemyjpeg.com<br/>
                       <strong>Objet :</strong> Exercice de mes droits RGPD<br/>
                       <strong>Pièces :</strong> Copie pièce d'identité (pour vérification)<br/>
                       <strong>Réponse :</strong> Sous 1 mois (2 mois si complexe)
@@ -430,7 +430,7 @@ export default function Privacy() {
                       <li>• Service réservé aux 16 ans et plus</li>
                       <li>• Vérification de l'âge lors de l'inscription</li>
                       <li>• Suppression immédiate des comptes de mineurs détectés</li>
-                      <li>• Contact parents : privacy@judgemyjpeg.com</li>
+                      <li>• Contact parents : contact@judgemyjpeg.com</li>
                     </ul>
                   </div>
                 </div>
@@ -462,9 +462,9 @@ export default function Privacy() {
                     <div>
                       <h3 className="text-lg font-semibold text-neon-pink mb-3">📧 Nous contacter</h3>
                       <ul className="space-y-2 text-sm">
-                        <li><strong>Questions générales :</strong><br/>privacy@judgemyjpeg.com</li>
-                        <li><strong>Exercice des droits :</strong><br/>dpo@judgemyjpeg.com</li>
-                        <li><strong>Signalement incident :</strong><br/>security@judgemyjpeg.com</li>
+                        <li><strong>Questions générales :</strong><br/>contact@judgemyjpeg.com</li>
+                        <li><strong>Exercice des droits :</strong><br/>contact@judgemyjpeg.com</li>
+                        <li><strong>Signalement incident :</strong><br/>contact@judgemyjpeg.com</li>
                         <li><strong>Adresse postale :</strong><br/>[Votre adresse complète]</li>
                       </ul>
                     </div>
