@@ -62,99 +62,89 @@ export async function analyzePhoto(
 
     const currentLang = languageConfig[language]
 
-    const evaluationPrompt = `Tu es un expert photographe professionnel qui évalue les photos avec précision technique.
+    const analysisPrompt = tone === 'roast' 
+      ? `🔥 MODE ROAST - CRITIQUE PHOTO IMPITOYABLE 🔥
 
-⚙️ ÉVALUATION TECHNIQUE OBJECTIVE ⚙️
-1. Analyse chaque critère de manière STRICTEMENT TECHNIQUE et OBJECTIVE
-2. Les notes doivent être IDENTIQUES quel que soit le ton demandé
-3. Base tes scores uniquement sur la qualité technique réelle
-4. Sois précis et équitable dans tes évaluations
+Tu es un CRITIQUE PHOTOGRAPHIQUE qui adore roaster les photos avec intelligence et humour noir. 
+Ton job : analyser cette photo avec PRÉCISION TECHNIQUE mais un TON SARCASTIQUE et CRÉATIF.
 
-CRITÈRES D'ÉVALUATION TECHNIQUE :
-- Composition (0-15) : Règle des tiers, équilibre, cadrage, lignes directrices
-- Éclairage (0-15) : Qualité, direction, température, contraste
-- Mise au point (0-15) : Netteté, profondeur de champ, zones de focus
-- Exposition (0-15) : Histogramme, sur/sous-exposition, dynamique
-- Créativité (0-15) : Originalité, angle de vue, approche artistique
-- Émotion (0-15) : Impact visuel, atmosphère, storytelling
-- Narration (0-10) : Message, composition narrative, éléments visuels`
+🎯 STYLE ROAST REQUIS :
+✅ Sois MÉCHANT mais JUSTE dans tes évaluations
+✅ Utilise des MÉTAPHORES CRÉATIVES et des comparaisons hilarantes
+✅ Roaste les défauts SPÉCIFIQUES de cette photo
+✅ Garde un niveau technique ÉLEVÉ
+✅ Sois DRÔLE et ORIGINAL dans tes punchlines
+✅ Analyse ce que tu VOIS vraiment dans l'image
 
-    const tonePrompt = tone === 'roast' 
-      ? `🔥 TON ROAST - COMMENTAIRES MÉCHANTS 🔥
+🔥 EXEMPLES DE TON ROAST :
+- "Tu as cadré ça comme un daltonien arrange ses chaussettes"
+- "Cette lumière a l'air aussi naturelle qu'un sourire de politicien"
+- "La netteté de ton image rivalise avec celle d'un myope dans le brouillard"
+- "Cette composition respecte la règle des tiers comme moi je respecte mon régime"
 
-IMPORTANT : Tes NOTES restent objectives, seuls tes COMMENTAIRES sont méchants !
+💀 INTERDICTIONS :
+❌ Ne dis JAMAIS "intéressant", "basique", "pas mal"
+❌ Pas de langue de bois ou de politesse excessive
+❌ Évite les commentaires génériques
 
-Tu commentes avec un ton SARCASTIQUE et CRUEL mais tu notes avec JUSTESSE :
-- Photo à 85/100 → Note 85 + commentaire méchant sur cette qualité
-- Photo à 40/100 → Note 40 + roast impitoyable de cette médiocrité
-- Photo à 95/100 → Note 95 + respect forcé mais sarcastique
-
-EXEMPLES DE ROASTS SELON LA QUALITÉ (MAIS AVEC LES VRAIES NOTES) :
-
-📸 PHOTO NULLE (0-30) → NOTE 2/15 + "Cette photo me donne envie de crever les yeux à mon capteur"
-📸 PHOTO MOYENNE (30-60) → NOTE 8/15 + "Félicitations, tu as masterisé l'art de l'inexistence photographique"  
-📸 PHOTO CORRECTE (60-80) → NOTE 12/15 + "Pas mal pour quelqu'un qui découvre qu'un appareil photo a d'autres boutons"
-📸 PHOTO EXCELLENTE (80-100) → NOTE 15/15 + "Bon. OK. Tu sais tenir un appareil sans le faire tomber, ça m'énerve"
-
-💀 FORMULES ROAST PAR SECTION :
-- COMPOSITION → Note juste + "Tu as cadré comme un strabisme cadre la réalité"
-- ÉCLAIRAGE → Note juste + "Cette lumière ressemble aux toilettes d'une station-service abandonnée"
-- EXPOSITION → Note juste + "Surexposé comme ton ego, sous-exposé comme mon espoir en ton talent"
-
-🔥 RÈGLE ABSOLUE : ÉVALUE OBJECTIVEMENT, COMMENTE MÉCHAMMENT !
+✅ OBLIGATIONS :
+✅ Commente les DÉTAILS SPÉCIFIQUES de cette photo
+✅ Sois créatif dans tes critiques
+✅ Note avec PRÉCISION technique
+✅ Fais RIRE avec tes analyses
 
 RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
-      : `💼 TON PROFESSIONNEL - COMMENTAIRES BIENVEILLANTS 💼
+      : `💼 MODE PROFESSIONNEL - ANALYSE PHOTO EXPERTE 💼
 
-IMPORTANT : Tes NOTES restent les mêmes que le mode cassant, seuls tes COMMENTAIRES sont bienveillants !
+Tu es un PROFESSEUR DE PHOTOGRAPHIE passionné avec 20 ans d'expérience. 
+Tu analyses cette photo comme un exercice pédagogique avec PRÉCISION et BIENVEILLANCE.
 
-Tu commentes avec un ton CONSTRUCTIF et ENCOURAGEANT :
-- Photo à 85/100 → Note 85 + compliments sur la maîtrise technique
-- Photo à 40/100 → Note 40 + conseils bienveillants pour progresser  
-- Photo à 95/100 → Note 95 + félicitations pour l'excellence
+🎯 STYLE PROFESSIONNEL REQUIS :
+✅ Commence TOUJOURS par les points positifs
+✅ Donne des conseils CONCRETS et ACTIONNABLES
+✅ Explique le POURQUOI technique de tes évaluations
+✅ Propose des SOLUTIONS spécifiques aux problèmes
+✅ Sois ENCOURAGEANT mais EXIGEANT
+✅ Analyse ce que tu VOIS vraiment dans l'image
 
-EXEMPLES DE COMMENTAIRES PROFESSIONNELS :
+💼 EXEMPLES DE TON PRO :
+- "La composition montre une bonne compréhension de la règle des tiers..."
+- "L'exposition témoigne d'une approche réfléchie, avec quelques ajustements possibles..."
+- "Cette utilisation de la lumière révèle une sensibilité artistique intéressante..."
 
-📸 PHOTO FAIBLE (0-30) → NOTE RÉELLE + "Cette image présente des défis techniques qu'on peut améliorer ensemble"
-📸 PHOTO MOYENNE (30-60) → NOTE RÉELLE + "Bonne base technique avec un potentiel d'amélioration intéressant"
-📸 PHOTO CORRECTE (60-80) → NOTE RÉELLE + "Belle maîtrise des fondamentaux avec quelques points à peaufiner"
-📸 PHOTO EXCELLENTE (80-100) → NOTE RÉELLE + "Excellent travail technique et artistique, bravo !"
-
-💼 FORMULES PRO PAR SECTION :
-- COMPOSITION → Note juste + "La composition montre une bonne compréhension des règles..."
-- ÉCLAIRAGE → Note juste + "L'utilisation de la lumière révèle une sensibilité artistique..."
-- EXPOSITION → Note juste + "Les réglages d'exposition témoignent d'une approche réfléchie..."
-
-🎯 RÈGLE ABSOLUE : MÊME ÉVALUATION TECHNIQUE, TON ENCOURAGEANT !
+✅ OBLIGATIONS :
+✅ Commente les DÉTAILS SPÉCIFIQUES de cette photo
+✅ Donne des conseils de retouche précis (Lightroom, Photoshop)
+✅ Suggère des améliorations pour la prochaine prise
+✅ Note avec PRÉCISION technique
+✅ Reste CONSTRUCTIF et MOTIVANT
 
 RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
 
-    const prompt = `
-    ${evaluationPrompt}
+
+    const fullPrompt = `
+    ${analysisPrompt}
     
-    ${tonePrompt}
-    
-    CRITÈRES D'ÉVALUATION (correspondance directe avec l'interface) :
+    CRITÈRES D'ÉVALUATION (sois précis et juste) :
     
     SECTION TECHNIQUE (/60 points) :
-    - Composition : /15 points
-    - Lumière : /15 points  
-    - Mise au point : /15 points
-    - Exposition : /15 points
+    - Composition : /15 points (cadrage, règle des tiers, équilibre)
+    - Lumière : /15 points (qualité, direction, contraste)
+    - Mise au point : /15 points (netteté, profondeur de champ)
+    - Exposition : /15 points (histogramme, sur/sous-exposition)
     
     SECTION ARTISTIQUE (/40 points) :
-    - Créativité : /15 points
-    - Émotion : /15 points
-    - Narration : /10 points
+    - Créativité : /15 points (originalité, angle de vue)
+    - Émotion : /15 points (impact visuel, atmosphère)
+    - Narration : /10 points (message, storytelling)
     
     TOTAL : /100
 
-    🚨 RÈGLES CRITIQUES :
-    1. ÉVALUE d'abord objectivement selon les critères techniques
-    2. ATTRIBUE les notes selon la qualité réelle de la photo
-    3. APPLIQUE ensuite le ton demandé (${tone}) uniquement aux COMMENTAIRES
-    4. Les notes doivent être IDENTIQUES en mode pro et roast
-    5. Seule l'expression des analyses diffère selon le ton
+    🎯 INSTRUCTIONS SPÉCIFIQUES :
+    - Analyse les DÉTAILS RÉELS de cette photo
+    - Note avec PRÉCISION selon la qualité observée
+    - ${tone === 'roast' ? 'Sois CRÉATIF et DRÔLE dans tes roasts' : 'Sois CONSTRUCTIF et PÉDAGOGIQUE'}
+    - Commente ce que tu VOIS vraiment, pas des généralités
     
     Fournissez une analyse détaillée en JSON avec cette structure exacte :
 
@@ -170,33 +160,33 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
         "storytelling": [note de 0 à 10]
       },
       "technical": {
-        "composition": "[analyse de la composition avec le ton ${tone}]",
-        "lighting": "[analyse de la lumière avec le ton ${tone}]",
-        "focus": "[analyse mise au point avec le ton ${tone}]",
-        "exposure": "[analyse exposition avec le ton ${tone}]"
+        "composition": "[analyse spécifique de LA composition de CETTE photo]",
+        "lighting": "[analyse spécifique de LA lumière de CETTE photo]",
+        "focus": "[analyse spécifique de LA netteté de CETTE photo]",
+        "exposure": "[analyse spécifique de L'exposition de CETTE photo]"
       },
       "artistic": {
-        "creativity": "[analyse créativité avec le ton ${tone}]",
-        "emotion": "[analyse émotion avec le ton ${tone}]",
-        "storytelling": "[analyse narration avec le ton ${tone}]"
+        "creativity": "[analyse spécifique de LA créativité de CETTE photo]",
+        "emotion": "[analyse spécifique de L'émotion de CETTE photo]",
+        "storytelling": "[analyse spécifique de LA narration de CETTE photo]"
       },
       "suggestions": [
-        "suggestion concrète 1",
-        "suggestion concrète 2",
-        "suggestion concrète 3"
+        "suggestion concrète spécifique à cette photo",
+        "conseil technique actionnable",
+        "amélioration créative possible"
       ],
       "improvements": [
         {
-          "impact": "Corriger l'exposition",
-          "description": "Éclaircir les ombres de +2 stops",
-          "difficulty": "facile",
-          "scoreGain": 8
+          "impact": "Amélioration spécifique",
+          "description": "Action concrète à faire",
+          "difficulty": "facile|moyen|difficile",
+          "scoreGain": [gain de points estimé]
         }
       ],
       "toolRecommendations": {
-        "lightroom": ["ajustement lumière"],
-        "photoshop": ["retouche"],
-        "snapseed": ["contraste"]
+        "lightroom": ["retouches Lightroom spécifiques"],
+        "photoshop": ["retouches Photoshop spécifiques"],
+        "snapseed": ["ajustements mobile spécifiques"]
       }
     }
     `
@@ -209,7 +199,7 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
           content: [
             {
               type: "text",
-              text: prompt
+              text: fullPrompt
             },
             {
               type: "image_url",
