@@ -65,7 +65,7 @@ export default function PWAManager() {
       announceToScreenReader('Application installée avec succès')
       
       // Analytics
-      if (typeof gtag !== 'undefined') {
+      if (typeof window !== 'undefined' && (window as any).gtag) {
         (window as any).gtag('event', 'pwa_install', {
           event_category: 'PWA',
           event_label: 'App Installed'
@@ -335,7 +335,7 @@ export function usePWA() {
         // Registrer pour background sync
         if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
           navigator.serviceWorker.ready.then(registration => {
-            registration.sync.register('photo-analysis-queue')
+            (registration as any).sync?.register('photo-analysis-queue')
           })
         }
       }

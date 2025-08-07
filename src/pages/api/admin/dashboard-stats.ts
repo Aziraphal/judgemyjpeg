@@ -244,21 +244,21 @@ async function getActivityStats() {
     popularCollections
   ] = await Promise.all([
     // Utilisateurs actifs (qui ont une session récente)
-    prisma.userSession.count({
+    prisma.userSession.groupBy({
+      by: ['userId'],
       where: {
         lastActivity: { gte: dayAgo },
         isActive: true
-      },
-      distinct: ['userId']
-    }),
+      }
+    }).then(results => results.length),
     
-    prisma.userSession.count({
+    prisma.userSession.groupBy({
+      by: ['userId'],
       where: {
         lastActivity: { gte: weekAgo },
         isActive: true
-      },
-      distinct: ['userId']
-    }),
+      }
+    }).then(results => results.length),
     
     // Top photos récentes
     prisma.photo.findMany({

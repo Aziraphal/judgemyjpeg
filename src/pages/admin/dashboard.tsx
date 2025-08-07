@@ -279,9 +279,9 @@ export default function AdminDashboard() {
                     <span className="mr-2">🚨</span>
                     Alertes critiques
                   </h3>
-                  {securityStats?.criticalAlerts?.length > 0 ? (
+                  {(securityStats?.criticalAlerts?.length ?? 0) > 0 ? (
                     <div className="space-y-3">
-                      {securityStats.criticalAlerts.map((alert, index) => (
+                      {securityStats?.criticalAlerts?.map((alert, index) => (
                         <div key={index} className="p-3 bg-red-900/20 border border-red-500/30 rounded-lg">
                           <p className="text-sm text-red-300 font-medium">{alert.title}</p>
                           <p className="text-xs text-red-400 mt-1">{alert.description}</p>
