@@ -133,14 +133,14 @@ export default async function handler(
     const expiresAt = new Date(Date.now() + 4 * 60 * 60 * 1000) // 4 heures
 
     // Stocker le token en cache (en production, utiliser Redis)
-    const adminTokens = global.adminTokens || new Map()
+    const adminTokens = (global as any).adminTokens || new Map()
     adminTokens.set(sessionToken, {
       createdAt: new Date(),
       expiresAt,
       ipAddress: clientIP,
       userAgent: req.headers['user-agent'] || 'unknown'
     })
-    global.adminTokens = adminTokens
+    ;(global as any).adminTokens = adminTokens
 
     // Reset des tentatives pour cette IP
     attemptCache.delete(clientIP)
@@ -183,7 +183,7 @@ export default async function handler(
 export function validateAdminToken(token: string): boolean {
   if (!token) return false
 
-  const adminTokens = global.adminTokens || new Map()
+  const adminTokens = (global as any).adminTokens || new Map()
   const tokenData = adminTokens.get(token)
 
   if (!tokenData) return false

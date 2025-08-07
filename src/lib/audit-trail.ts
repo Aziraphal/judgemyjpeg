@@ -50,6 +50,18 @@ export type AuditEventType =
   
   // Admin Events
   | 'admin_login'
+  | 'admin_login_success'
+  | 'admin_login_failed'
+  | 'admin_login_blocked'
+  | 'admin_config_error'
+  | 'admin_auth_error'
+  | 'admin_sessions_viewed'
+  | 'admin_session_invalidated'
+  | 'admin_bulk_session_invalidation'
+  | 'admin_bulk_session_suspicious'
+  | 'admin_bulk_session_clear_suspicious'
+  | 'admin_sessions_error'
+  | 'admin_bulk_sessions_error'
   | 'user_upgraded_by_admin'
   | 'admin_action'
 
