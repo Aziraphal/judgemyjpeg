@@ -31,12 +31,18 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
       
       const canvas = document.createElement('canvas')
       const ctx = canvas.getContext('2d')
+      if (!ctx) {
+        console.warn('Canvas context not available, using original file')
+        resolve(file)
+        return
+      }
       const img = new Image()
       
       img.onload = () => {
-        // Calcul des dimensions optimales
+        // Calcul des dimensions optimales (mobile-friendly)
         let { width, height } = img
-        const maxDimension = 2048 // Max 2K pour performances
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+        const maxDimension = isMobile ? 1536 : 2048 // Plus conservateur sur mobile
         
         if (width > maxDimension || height > maxDimension) {
           if (width > height) {
@@ -97,15 +103,19 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     
     // Compression automatique si nécessaire
     let processedFile = file
+    const originalSizeMB = Math.round(file.size / 1024 / 1024 * 100) / 100
+    console.log(`PhotoUpload: Original file size ${originalSizeMB}MB, type: ${file.type}`)
+    
     if (file.size > 4.5 * 1024 * 1024) {
       try {
         setIsCompressing(true)
         announceToScreenReader('Compression automatique de l\'image en cours...')
         
-        const originalSizeMB = Math.round(file.size / 1024 / 1024 * 100) / 100
         processedFile = await compressImage(file)
         const compressedSizeMB = Math.round(processedFile.size / 1024 / 1024 * 100) / 100
         const compressionRate = Math.round((1 - processedFile.size / file.size) * 100)
+        
+        console.log(`PhotoUpload: Compressed to ${compressedSizeMB}MB (-${compressionRate}%)`)
         
         const compressionMessage = `✨ Image compressée : ${originalSizeMB}MB → ${compressedSizeMB}MB (-${compressionRate}%)`
         setCompressionInfo(compressionMessage)
