@@ -20,8 +20,15 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
   const { isOnline, queueAnalysis } = usePWA()
 
   // Fonction de compression automatique
-  const compressImage = (file: File, maxSizeKB: number = 4500, quality: number = 0.8): Promise<File> => {
+  const compressImage = (file: File, maxSizeKB: number = 4500, quality: number = 0.8, attempt: number = 1): Promise<File> => {
     return new Promise((resolve, reject) => {
+      // Sécurité : max 5 tentatives
+      if (attempt > 5) {
+        console.warn('Compression: Max attempts reached, using current file')
+        resolve(file)
+        return
+      }
+      
       const canvas = document.createElement('canvas')
       const ctx = canvas.getContext('2d')
       const img = new Image()
@@ -54,10 +61,10 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
               // Si encore trop gros, réduire la qualité
               if (blob.size > maxSizeKB * 1024 && quality > 0.3) {
                 // Recursive compression avec qualité réduite
-                const newFile = new File([blob], file.name, { type: 'image/jpeg' })
-                compressImage(newFile, maxSizeKB, quality - 0.1).then(resolve).catch(reject)
+                const newFile = new File([blob], file.name || 'photo.jpg', { type: 'image/jpeg' })
+                compressImage(newFile, maxSizeKB, quality - 0.1, attempt + 1).then(resolve).catch(reject)
               } else {
-                const compressedFile = new File([blob], file.name, { 
+                const compressedFile = new File([blob], file.name || 'photo.jpg', { 
                   type: 'image/jpeg',
                   lastModified: Date.now()
                 })
