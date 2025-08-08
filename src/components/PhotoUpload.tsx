@@ -11,11 +11,71 @@ interface PhotoUploadProps {
 
 export default function PhotoUpload({ onAnalysisComplete, tone, language }: PhotoUploadProps) {
   const [isUploading, setIsUploading] = useState(false)
+  const [isCompressing, setIsCompressing] = useState(false)
   const [dragActive, setDragActive] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [compressionInfo, setCompressionInfo] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { announceToScreenReader } = useAccessibility()
   const { isOnline, queueAnalysis } = usePWA()
+
+  // Fonction de compression automatique
+  const compressImage = (file: File, maxSizeKB: number = 4500, quality: number = 0.8): Promise<File> => {
+    return new Promise((resolve, reject) => {
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      const img = new Image()
+      
+      img.onload = () => {
+        // Calcul des dimensions optimales
+        let { width, height } = img
+        const maxDimension = 2048 // Max 2K pour performances
+        
+        if (width > maxDimension || height > maxDimension) {
+          if (width > height) {
+            height = (height * maxDimension) / width
+            width = maxDimension
+          } else {
+            width = (width * maxDimension) / height
+            height = maxDimension
+          }
+        }
+        
+        canvas.width = width
+        canvas.height = height
+        
+        // Dessiner l'image redimensionnée
+        ctx?.drawImage(img, 0, 0, width, height)
+        
+        // Convertir en blob avec qualité ajustable
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              // Si encore trop gros, réduire la qualité
+              if (blob.size > maxSizeKB * 1024 && quality > 0.3) {
+                // Recursive compression avec qualité réduite
+                const newFile = new File([blob], file.name, { type: 'image/jpeg' })
+                compressImage(newFile, maxSizeKB, quality - 0.1).then(resolve).catch(reject)
+              } else {
+                const compressedFile = new File([blob], file.name, { 
+                  type: 'image/jpeg',
+                  lastModified: Date.now()
+                })
+                resolve(compressedFile)
+              }
+            } else {
+              reject(new Error('Erreur lors de la compression'))
+            }
+          },
+          'image/jpeg',
+          quality
+        )
+      }
+      
+      img.onerror = () => reject(new Error('Erreur de chargement de l\'image'))
+      img.src = URL.createObjectURL(file)
+    })
+  }
 
   const handleFile = async (file: File) => {
     if (!file.type.startsWith('image/')) {
@@ -24,21 +84,43 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
       return
     }
 
-    if (file.size > 4.5 * 1024 * 1024) {
-      setErrorMessage('L\'image doit faire moins de 4.5MB. Veuillez compresser votre image.')
-      announceToScreenReader('Erreur : Fichier trop volumineux')
-      return
-    }
-
     setIsUploading(true)
     setErrorMessage(null)
+    setCompressionInfo(null)
+    
+    // Compression automatique si nécessaire
+    let processedFile = file
+    if (file.size > 4.5 * 1024 * 1024) {
+      try {
+        setIsCompressing(true)
+        announceToScreenReader('Compression automatique de l\'image en cours...')
+        
+        const originalSizeMB = Math.round(file.size / 1024 / 1024 * 100) / 100
+        processedFile = await compressImage(file)
+        const compressedSizeMB = Math.round(processedFile.size / 1024 / 1024 * 100) / 100
+        const compressionRate = Math.round((1 - processedFile.size / file.size) * 100)
+        
+        const compressionMessage = `✨ Image compressée : ${originalSizeMB}MB → ${compressedSizeMB}MB (-${compressionRate}%)`
+        setCompressionInfo(compressionMessage)
+        announceToScreenReader(`Image compressée avec succès de ${originalSizeMB}MB à ${compressedSizeMB}MB`)
+        
+        setIsCompressing(false)
+      } catch (error) {
+        setIsCompressing(false)
+        setErrorMessage('Erreur lors de la compression automatique. Veuillez utiliser une image plus petite.')
+        announceToScreenReader('Erreur : Impossible de compresser l\'image')
+        setIsUploading(false)
+        return
+      }
+    }
+
     announceToScreenReader('Début de l\'analyse de la photo')
 
     // Gestion mode hors ligne
     if (!isOnline) {
       try {
         const formData = new FormData()
-        formData.append('photo', file)
+        formData.append('photo', processedFile)
         formData.append('tone', tone)
         formData.append('language', language)
 
@@ -57,7 +139,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
 
     try {
       const formData = new FormData()
-      formData.append('photo', file)
+      formData.append('photo', processedFile)
       formData.append('tone', tone)
       formData.append('language', language)
 
@@ -208,15 +290,25 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
               <p className={`text-xl sm:text-2xl font-bold text-glow ${
                 tone === 'roast' ? 'text-red-400' : 'text-neon-cyan'
               }`}>
-                <span aria-hidden="true">{tone === 'roast' ? '🔥 ' : ''}</span>
-                {tone === 'roast' ? 'Préparation du massacre...' : 'Analyse en cours...'}
+                <span aria-hidden="true">{isCompressing ? '⚡ ' : tone === 'roast' ? '🔥 ' : ''}</span>
+                {isCompressing 
+                  ? 'Compression automatique...' 
+                  : tone === 'roast' ? 'Préparation du massacre...' : 'Analyse en cours...'
+                }
               </p>
               <p className="text-sm sm:text-base text-text-gray">
-                {tone === 'roast' 
+                {isCompressing 
+                  ? 'Optimisation de votre image pour une analyse parfaite'
+                  : tone === 'roast' 
                   ? 'L\'IA se prépare à détruire votre photo' 
                   : 'L\'IA avancée analyse votre photo avec précision'
                 }
               </p>
+              {compressionInfo && (
+                <p className="text-xs sm:text-sm text-green-400 font-medium mt-2">
+                  {compressionInfo}
+                </p>
+              )}
               <div className="flex justify-center space-x-1 mt-4">
                 <div className={`w-2 h-2 rounded-full animate-bounce ${
                   tone === 'roast' ? 'bg-red-500' : 'bg-neon-pink'
@@ -246,16 +338,21 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
             </div>
             
             <div className="glass-card p-3 sm:p-4 max-w-xs sm:max-w-md mx-auto" id="file-constraints">
-              <div className="flex items-center justify-center space-x-2 sm:space-x-4 text-xs sm:text-sm text-text-muted">
-                <div className="flex items-center space-x-1">
-                  <span className="text-neon-pink" aria-hidden="true">✓</span>
-                  <span>Formats: JPG, PNG, WebP</span>
+              <div className="text-center space-y-2">
+                <div className="flex items-center justify-center space-x-2 sm:space-x-4 text-xs sm:text-sm text-text-muted">
+                  <div className="flex items-center space-x-1">
+                    <span className="text-neon-pink" aria-hidden="true">✓</span>
+                    <span>Formats: JPG, PNG, WebP</span>
+                  </div>
+                  <div className="w-1 h-1 bg-text-muted rounded-full" aria-hidden="true"></div>
+                  <div className="flex items-center space-x-1">
+                    <span className="text-green-400" aria-hidden="true">⚡</span>
+                    <span>Photos illimitées</span>
+                  </div>
                 </div>
-                <div className="w-1 h-1 bg-text-muted rounded-full" aria-hidden="true"></div>
-                <div className="flex items-center space-x-1">
-                  <span className="text-neon-cyan" aria-hidden="true">✓</span>
-                  <span>Taille max: 4.5MB</span>
-                </div>
+                <p className="text-xs text-green-400/80">
+                  📱 Compression automatique des photos smartphone
+                </p>
               </div>
             </div>
             
