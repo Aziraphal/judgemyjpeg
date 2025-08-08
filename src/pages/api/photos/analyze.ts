@@ -33,10 +33,10 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
 
   try {
 
-    // Parse le fichier uploadé avec limite Vercel-friendly
+    // Parse le fichier uploadé avec limite augmentée (compression côté client)
     const form = formidable({
-      maxFileSize: 4.5 * 1024 * 1024, // 4.5MB max (Vercel limit)
-      maxTotalFileSize: 4.5 * 1024 * 1024,
+      maxFileSize: 8 * 1024 * 1024, // 8MB max (post-compression)
+      maxTotalFileSize: 8 * 1024 * 1024,
       keepExtensions: true,
       allowEmptyFiles: false,
       filter: (part) => part.mimetype?.startsWith('image/') || false,
@@ -54,7 +54,7 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     
     // Validation sécurisée du fichier avec magic bytes
     const validation = validateUpload(fileBuffer, file.originalFilename || 'photo.jpg', {
-      maxSize: 4.5 * 1024 * 1024, // 4.5MB Vercel limit
+      maxSize: 8 * 1024 * 1024, // 8MB limit (post-compression client)
       allowedTypes: ['jpg', 'png', 'webp'],
       strictMode: true // Mode strict pour la sécurité
     })
