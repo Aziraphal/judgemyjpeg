@@ -263,31 +263,8 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
         try {
           photoUrl = await uploadDirectToCloudinary(processedFile)
         } catch (cloudinaryError) {
-          addDebugInfo(`🔄 Fallback: Upload via serveur malgré limite`)
-          
-          // Fallback: essayer via serveur malgré la limite
-          const formData = new FormData()
-          formData.append('photo', processedFile)
-          formData.append('tone', tone)
-          formData.append('language', language)
-
-          const response = await fetch('/api/photos/analyze', {
-            method: 'POST',
-            body: formData,
-            signal: AbortSignal.timeout(120000), // 2 minutes
-          })
-          
-          if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}))
-            addDebugInfo(`❌ Fallback serveur erreur ${response.status}: ${errorData.error || 'Inconnu'}`)
-            throw new Error(errorData.error || 'Erreur lors de l\'analyse')
-          }
-
-          const result = await response.json()
-          addDebugInfo(`✅ Fallback serveur réussi`)
-          announceToScreenReader('Analyse de la photo terminée avec succès')
-          onAnalysisComplete(result)
-          return
+          addDebugInfo(`❌ Cloudinary direct échoué, impossible de traiter fichier >4MB`)
+          throw new Error(`Photo trop volumineuse (${finalSizeMB}MB) et upload direct impossible. Essayez avec une photo plus petite ou vérifiez votre connexion.`)
         }
       } else {
         addDebugInfo(`📤 Upload via serveur: ${finalSizeMB}MB (<4MB)`)
@@ -446,11 +423,29 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
       
       addDebugInfo(`🌐 Upload vers Cloudinary...`)
       
-      // Upload direct vers Cloudinary
-      const uploadResponse = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
-        method: 'POST',
-        body: formData,
-      })
+      // Upload direct vers Cloudinary avec retry et headers
+      let uploadResponse
+      for (let attempt = 1; attempt <= 2; attempt++) {
+        try {
+          addDebugInfo(`🔄 Tentative ${attempt}/2 upload Cloudinary`)
+          uploadResponse = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+            method: 'POST',
+            body: formData,
+            mode: 'cors',
+          })
+          
+          if (uploadResponse.ok) {
+            break // Succès, sortir de la boucle
+          } else {
+            addDebugInfo(`⚠️ Tentative ${attempt} HTTP ${uploadResponse.status}`)
+            if (attempt === 2) throw new Error(`HTTP ${uploadResponse.status}`)
+          }
+        } catch (fetchError) {
+          addDebugInfo(`⚠️ Tentative ${attempt} fetch error: ${fetchError instanceof Error ? fetchError.message : 'Unknown'}`)
+          if (attempt === 2) throw fetchError
+          await new Promise(resolve => setTimeout(resolve, 1000)) // Attendre 1s avant retry
+        }
+      }
       
       if (!uploadResponse.ok) {
         const error = await uploadResponse.text()
