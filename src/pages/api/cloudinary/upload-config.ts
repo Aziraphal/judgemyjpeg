@@ -36,4 +36,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.error('Erreur config upload Cloudinary:', error)
     res.status(500).json({ error: 'Erreur serveur' })
   }
-})
+}
