@@ -56,7 +56,7 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     const validation = validateUpload(fileBuffer, file.originalFilename || 'photo.jpg', {
       maxSize: 25 * 1024 * 1024, // 25MB limit pour smartphones modernes
       allowedTypes: ['jpg', 'png', 'webp'],
-      strictMode: true // Mode strict pour la sécurité
+      strictMode: false // Mode souple pour compatibilité smartphone
     })
     
     if (!validation.isValid) {
@@ -64,7 +64,10 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
         filename: file.originalFilename,
         errors: validation.errors,
         detectedType: validation.detectedType,
-        isSuspicious: validation.isSuspicious
+        isSuspicious: validation.isSuspicious,
+        fileSize: fileBuffer.length,
+        strictMode: true,
+        allowedTypes: ['jpg', 'png', 'webp']
       }, req.user.id, ip)
       
       // Audit: File upload rejected (security event)
@@ -77,7 +80,13 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
       return res.status(400).json({ 
         error: 'Fichier invalide',
         details: validation.errors,
-        type: validation.detectedType
+        type: validation.detectedType,
+        debug: {
+          fileSize: fileBuffer.length,
+          detectedType: validation.detectedType,
+          errors: validation.errors,
+          warnings: validation.warnings
+        }
       })
     }
     
