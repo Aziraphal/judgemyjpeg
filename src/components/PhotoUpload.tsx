@@ -222,10 +222,9 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
         setIsCompressing(false)
         console.error('PhotoUpload: Toutes les tentatives de compression ont échoué:', error)
         addDebugInfo(`🚫 Compression échouée: ${error instanceof Error ? error.message : 'Erreur inconnue'}`)
-        setErrorMessage(`Photo trop grande pour votre appareil (${originalSizeMB}MB). Essayez avec une photo plus petite ou prenez-en une nouvelle avec une résolution réduite.`)
-        announceToScreenReader('Erreur : Photo trop volumineuse pour compression')
-        setIsUploading(false)
-        return
+        addDebugInfo(`🔄 Fallback: Upload direct du fichier original`)
+        // On garde le fichier original pour l'upload direct
+        processedFile = file
       }
     }
 
