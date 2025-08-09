@@ -15,6 +15,10 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
   const [dragActive, setDragActive] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [compressionInfo, setCompressionInfo] = useState<string | null>(null)
+  const [debugInfo, setDebugInfo] = useState<string[]>([])
+  const addDebugInfo = (info: string) => {
+    setDebugInfo(prev => [...prev.slice(-4), `[${new Date().toLocaleTimeString()}] ${info}`])
+  }
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { announceToScreenReader } = useAccessibility()
   const { isOnline, queueAnalysis } = usePWA()
@@ -168,9 +172,10 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     let processedFile = file
     const originalSizeMB = Math.round(file.size / 1024 / 1024 * 100) / 100
     console.log(`PhotoUpload: Original file size ${originalSizeMB}MB, type: ${file.type}`)
+    addDebugInfo(`📁 Fichier détecté: ${originalSizeMB}MB, ${file.type}`)
     
-    // Tentative compression seulement pour les TRÈS gros fichiers (>15MB)
-    if (file.size > 15 * 1024 * 1024) {
+    // Upload direct vers Cloudinary si >4MB (contourne limite Vercel Functions 4.5MB)
+    if (file.size > 4 * 1024 * 1024) {
       try {
         setIsCompressing(true)
         announceToScreenReader('Compression automatique de l\'image en cours...')
@@ -187,6 +192,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
           try {
             const attempt = compressionAttempts[i]
             console.log(`PhotoUpload: Tentative ${i+1} - ${attempt.maxDimension}px, qualité ${attempt.quality}`)
+            addDebugInfo(`⚡ Tentative ${i+1}: ${attempt.maxDimension}px, Q${attempt.quality}`)
             
             processedFile = await compressImageWithSettings(file, attempt.maxDimension, attempt.quality)
             compressed = true
@@ -195,6 +201,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
             const compressionRate = Math.round((1 - processedFile.size / file.size) * 100)
             
             console.log(`PhotoUpload: Succès - compressé à ${compressedSizeMB}MB (-${compressionRate}%)`)
+            addDebugInfo(`✅ Succès: ${compressedSizeMB}MB (-${compressionRate}%)`)
             
             const compressionMessage = `✨ Image compressée : ${originalSizeMB}MB → ${compressedSizeMB}MB (-${compressionRate}%)`
             setCompressionInfo(compressionMessage)
@@ -202,6 +209,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
             
           } catch (attemptError) {
             console.warn(`PhotoUpload: Tentative ${i+1} échouée:`, attemptError)
+            addDebugInfo(`❌ Échec tentative ${i+1}: ${attemptError instanceof Error ? attemptError.message : 'Erreur inconnue'}`)
             if (i === compressionAttempts.length - 1) {
               // Dernière tentative échouée, on rejette le fichier
               throw attemptError
@@ -213,6 +221,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
       } catch (error) {
         setIsCompressing(false)
         console.error('PhotoUpload: Toutes les tentatives de compression ont échoué:', error)
+        addDebugInfo(`🚫 Compression échouée: ${error instanceof Error ? error.message : 'Erreur inconnue'}`)
         setErrorMessage(`Photo trop grande pour votre appareil (${originalSizeMB}MB). Essayez avec une photo plus petite ou prenez-en une nouvelle avec une résolution réduite.`)
         announceToScreenReader('Erreur : Photo trop volumineuse pour compression')
         setIsUploading(false)
@@ -244,24 +253,61 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     }
 
     try {
-      const formData = new FormData()
-      formData.append('photo', processedFile)
-      formData.append('tone', tone)
-      formData.append('language', language)
+      const finalSizeMB = Math.round(processedFile.size / 1024 / 1024 * 100) / 100
+      
+      let photoUrl: string
+      
+      // Si le fichier est encore >4MB après compression, upload direct vers Cloudinary
+      if (processedFile.size > 4 * 1024 * 1024) {
+        addDebugInfo(`🔄 Upload direct Cloudinary: ${finalSizeMB}MB (>4MB)`)
+        photoUrl = await uploadDirectToCloudinary(processedFile)
+      } else {
+        addDebugInfo(`📤 Upload via serveur: ${finalSizeMB}MB (<4MB)`)
+        
+        const formData = new FormData()
+        formData.append('photo', processedFile)
+        formData.append('tone', tone)
+        formData.append('language', language)
 
-      const response = await fetch('/api/photos/analyze', {
+        const response = await fetch('/api/photos/analyze', {
+          method: 'POST',
+          body: formData,
+          signal: AbortSignal.timeout(60000),
+        })
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}))
+          addDebugInfo(`❌ Serveur erreur ${response.status}: ${errorData.error || 'Inconnu'}`)
+          throw new Error(errorData.error || 'Erreur lors de l\'analyse')
+        }
+
+        const result = await response.json()
+        addDebugInfo(`✅ Analyse terminée avec succès`)
+        announceToScreenReader('Analyse de la photo terminée avec succès')
+        onAnalysisComplete(result)
+        return
+      }
+      
+      // Analyse avec URL Cloudinary
+      const response = await fetch('/api/photos/analyze-url', {
         method: 'POST',
-        body: formData,
-        // Augmenter le timeout côté client
-        signal: AbortSignal.timeout(60000), // 60 secondes
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          photoUrl,
+          tone, 
+          language 
+        }),
+        signal: AbortSignal.timeout(60000),
       })
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
+        addDebugInfo(`❌ Analyse URL erreur ${response.status}: ${errorData.error || 'Inconnu'}`)
         throw new Error(errorData.error || 'Erreur lors de l\'analyse')
       }
 
       const result = await response.json()
+      addDebugInfo(`✅ Analyse URL terminée avec succès`)
       announceToScreenReader('Analyse de la photo terminée avec succès')
       onAnalysisComplete(result)
 
@@ -286,6 +332,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
         }
       }
       
+      addDebugInfo(`🔴 Erreur finale: ${errorMessage}`)
       setErrorMessage(errorMessage)
       announceToScreenReader(`Erreur : ${errorMessage}`)
     } finally {
@@ -333,6 +380,47 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
 
   const clearError = () => {
     setErrorMessage(null)
+  }
+
+  // Upload direct vers Cloudinary (contourne la limite Vercel 4.5MB)
+  const uploadDirectToCloudinary = async (file: File): Promise<string> => {
+    try {
+      // Obtenir les paramètres d'upload depuis notre API
+      const configResponse = await fetch('/api/cloudinary/upload-config')
+      if (!configResponse.ok) {
+        throw new Error('Impossible d\'obtenir la config Cloudinary')
+      }
+      
+      const { signature, timestamp, cloudName, apiKey, folder } = await configResponse.json()
+      
+      // Créer formData pour Cloudinary
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('signature', signature)
+      formData.append('timestamp', timestamp.toString())
+      formData.append('api_key', apiKey)
+      formData.append('folder', folder)
+      formData.append('transformation', 'w_1200,h_1200,c_limit,q_auto')
+      
+      // Upload direct vers Cloudinary
+      const uploadResponse = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+        method: 'POST',
+        body: formData,
+      })
+      
+      if (!uploadResponse.ok) {
+        const error = await uploadResponse.text()
+        throw new Error(`Upload Cloudinary échoué: ${error}`)
+      }
+      
+      const result = await uploadResponse.json()
+      addDebugInfo(`✅ Upload Cloudinary réussi: ${result.secure_url}`)
+      
+      return result.secure_url
+    } catch (error) {
+      addDebugInfo(`❌ Échec upload Cloudinary: ${error instanceof Error ? error.message : 'Erreur inconnue'}`)
+      throw error
+    }
   }
 
   return (
@@ -415,6 +503,19 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
                   {compressionInfo}
                 </p>
               )}
+              
+              {/* Debug info mobile - visible pendant le traitement */}
+              {debugInfo.length > 0 && (
+                <div className="glass-card p-3 mt-4 text-left">
+                  <h4 className="text-xs font-semibold text-neon-cyan mb-2">📊 Debug Mobile</h4>
+                  <div className="space-y-1 text-xs text-text-muted font-mono max-h-20 overflow-y-auto">
+                    {debugInfo.map((info, idx) => (
+                      <div key={idx} className="truncate">{info}</div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
               <div className="flex justify-center space-x-1 mt-4">
                 <div className={`w-2 h-2 rounded-full animate-bounce ${
                   tone === 'roast' ? 'bg-red-500' : 'bg-neon-pink'
@@ -457,7 +558,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
                   </div>
                 </div>
                 <p className="text-xs text-green-400/80">
-                  📱 Photos smartphone jusqu'à 25MB • Compression auto si &gt;15MB
+                  📱 Photos smartphone jusqu'à 25MB • Upload direct si &gt;4MB
                 </p>
               </div>
             </div>
@@ -466,6 +567,26 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
               Powered by{' '}
               <span className="text-neon-pink font-semibold">Intelligence Artificielle</span> ✨
             </div>
+            
+            {/* Debug info mobile - visible même quand pas d'upload */}
+            {debugInfo.length > 0 && (
+              <div className="glass-card p-3 mt-4 text-left">
+                <h4 className="text-xs font-semibold text-neon-cyan mb-2 flex items-center">
+                  📊 Dernières activités
+                  <button 
+                    onClick={() => setDebugInfo([])} 
+                    className="ml-auto text-xs text-text-muted hover:text-white"
+                  >
+                    ✕
+                  </button>
+                </h4>
+                <div className="space-y-1 text-xs text-text-muted font-mono max-h-32 overflow-y-auto">
+                  {debugInfo.map((info, idx) => (
+                    <div key={idx} className="break-all text-[10px] sm:text-xs">{info}</div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
         
