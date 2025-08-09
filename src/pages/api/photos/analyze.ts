@@ -33,10 +33,10 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
 
   try {
 
-    // Parse le fichier uploadé avec limite augmentée (compression côté client)
+    // Parse le fichier uploadé avec limite très élevée pour smartphones modernes
     const form = formidable({
-      maxFileSize: 8 * 1024 * 1024, // 8MB max (post-compression)
-      maxTotalFileSize: 8 * 1024 * 1024,
+      maxFileSize: 25 * 1024 * 1024, // 25MB max pour photos smartphone modernes
+      maxTotalFileSize: 25 * 1024 * 1024,
       keepExtensions: true,
       allowEmptyFiles: false,
       filter: (part) => part.mimetype?.startsWith('image/') || false,
@@ -54,7 +54,7 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     
     // Validation sécurisée du fichier avec magic bytes
     const validation = validateUpload(fileBuffer, file.originalFilename || 'photo.jpg', {
-      maxSize: 8 * 1024 * 1024, // 8MB limit (post-compression client)
+      maxSize: 25 * 1024 * 1024, // 25MB limit pour smartphones modernes
       allowedTypes: ['jpg', 'png', 'webp'],
       strictMode: true // Mode strict pour la sécurité
     })
