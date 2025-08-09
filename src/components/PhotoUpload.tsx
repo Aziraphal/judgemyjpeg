@@ -169,7 +169,8 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     const originalSizeMB = Math.round(file.size / 1024 / 1024 * 100) / 100
     console.log(`PhotoUpload: Original file size ${originalSizeMB}MB, type: ${file.type}`)
     
-    if (file.size > 4.5 * 1024 * 1024) {
+    // Tentative compression seulement pour les TRÈS gros fichiers (>15MB)
+    if (file.size > 15 * 1024 * 1024) {
       try {
         setIsCompressing(true)
         announceToScreenReader('Compression automatique de l\'image en cours...')
@@ -456,7 +457,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
                   </div>
                 </div>
                 <p className="text-xs text-green-400/80">
-                  📱 Compression automatique des photos smartphone
+                  📱 Photos smartphone jusqu'à 25MB • Compression auto si >15MB
                 </p>
               </div>
             </div>
