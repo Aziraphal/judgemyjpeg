@@ -384,13 +384,27 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
   // Upload direct vers Cloudinary (contourne la limite Vercel 4.5MB)
   const uploadDirectToCloudinary = async (file: File): Promise<string> => {
     try {
+      addDebugInfo(`🔧 Demande config Cloudinary...`)
+      
       // Obtenir les paramètres d'upload depuis notre API
-      const configResponse = await fetch('/api/cloudinary/upload-config')
+      const configResponse = await fetch('/api/cloudinary/upload-config', {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+        },
+        cache: 'no-cache'
+      })
+      
       if (!configResponse.ok) {
-        throw new Error('Impossible d\'obtenir la config Cloudinary')
+        const errorText = await configResponse.text()
+        addDebugInfo(`❌ Config API erreur ${configResponse.status}: ${errorText}`)
+        throw new Error(`Config API erreur ${configResponse.status}: ${errorText}`)
       }
       
-      const { signature, timestamp, cloudName, apiKey, folder } = await configResponse.json()
+      const config = await configResponse.json()
+      addDebugInfo(`✅ Config reçue: ${config.cloudName}`)
+      
+      const { signature, timestamp, cloudName, apiKey, folder, transformation } = config
       
       // Créer formData pour Cloudinary
       const formData = new FormData()
@@ -399,7 +413,9 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
       formData.append('timestamp', timestamp.toString())
       formData.append('api_key', apiKey)
       formData.append('folder', folder)
-      formData.append('transformation', 'w_1200,h_1200,c_limit,q_auto')
+      formData.append('transformation', transformation)
+      
+      addDebugInfo(`🌐 Upload vers Cloudinary...`)
       
       // Upload direct vers Cloudinary
       const uploadResponse = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
@@ -409,15 +425,17 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
       
       if (!uploadResponse.ok) {
         const error = await uploadResponse.text()
+        addDebugInfo(`❌ Upload Cloudinary ${uploadResponse.status}: ${error}`)
         throw new Error(`Upload Cloudinary échoué: ${error}`)
       }
       
       const result = await uploadResponse.json()
-      addDebugInfo(`✅ Upload Cloudinary réussi: ${result.secure_url}`)
+      addDebugInfo(`✅ Upload réussi: ${result.secure_url.slice(0, 50)}...`)
       
       return result.secure_url
     } catch (error) {
-      addDebugInfo(`❌ Échec upload Cloudinary: ${error instanceof Error ? error.message : 'Erreur inconnue'}`)
+      const errorMsg = error instanceof Error ? error.message : 'Erreur inconnue'
+      addDebugInfo(`🚫 Échec upload Cloudinary: ${errorMsg}`)
       throw error
     }
   }
