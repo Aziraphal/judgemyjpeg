@@ -19,7 +19,70 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
   const { announceToScreenReader } = useAccessibility()
   const { isOnline, queueAnalysis } = usePWA()
 
-  // Fonction de compression automatique
+  // Fonction de compression avec paramètres configurables
+  const compressImageWithSettings = (file: File, maxDimension: number, quality: number): Promise<File> => {
+    return new Promise((resolve, reject) => {
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      if (!ctx) {
+        console.warn('Canvas context not available')
+        reject(new Error('Canvas non supporté'))
+        return
+      }
+      const img = new Image()
+      
+      img.onload = () => {
+        try {
+          // Calcul des dimensions
+          let { width, height } = img
+          
+          if (width > maxDimension || height > maxDimension) {
+            if (width > height) {
+              height = (height * maxDimension) / width
+              width = maxDimension
+            } else {
+              width = (width * maxDimension) / height
+              height = maxDimension
+            }
+          }
+          
+          canvas.width = width
+          canvas.height = height
+          
+          // Dessiner avec gestion d'erreur
+          ctx.drawImage(img, 0, 0, width, height)
+          
+          canvas.toBlob(
+            (blob) => {
+              if (blob) {
+                const compressedFile = new File([blob], file.name || 'photo.jpg', { 
+                  type: 'image/jpeg',
+                  lastModified: Date.now()
+                })
+                resolve(compressedFile)
+              } else {
+                reject(new Error('Échec création blob'))
+              }
+            },
+            'image/jpeg',
+            quality
+          )
+        } catch (error) {
+          reject(error)
+        }
+      }
+      
+      img.onerror = () => reject(new Error('Erreur chargement image'))
+      img.src = URL.createObjectURL(file)
+      
+      // Timeout de sécurité pour mobile
+      setTimeout(() => {
+        reject(new Error('Timeout compression'))
+      }, 10000)
+    })
+  }
+
+  // Fonction de compression automatique (legacy)
   const compressImage = (file: File, maxSizeKB: number = 4500, quality: number = 0.8, attempt: number = 1): Promise<File> => {
     return new Promise((resolve, reject) => {
       // Sécurité : max 5 tentatives
@@ -111,21 +174,46 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
         setIsCompressing(true)
         announceToScreenReader('Compression automatique de l\'image en cours...')
         
-        processedFile = await compressImage(file)
-        const compressedSizeMB = Math.round(processedFile.size / 1024 / 1024 * 100) / 100
-        const compressionRate = Math.round((1 - processedFile.size / file.size) * 100)
+        // Tentative compression progressive
+        let compressionAttempts = [
+          { maxDimension: 1536, quality: 0.8 },  // Première tentative
+          { maxDimension: 1200, quality: 0.7 },  // Plus petit si échoue
+          { maxDimension: 800, quality: 0.6 },   // Encore plus petit
+        ]
         
-        console.log(`PhotoUpload: Compressed to ${compressedSizeMB}MB (-${compressionRate}%)`)
-        
-        const compressionMessage = `✨ Image compressée : ${originalSizeMB}MB → ${compressedSizeMB}MB (-${compressionRate}%)`
-        setCompressionInfo(compressionMessage)
-        announceToScreenReader(`Image compressée avec succès de ${originalSizeMB}MB à ${compressedSizeMB}MB`)
+        let compressed = false
+        for (let i = 0; i < compressionAttempts.length && !compressed; i++) {
+          try {
+            const attempt = compressionAttempts[i]
+            console.log(`PhotoUpload: Tentative ${i+1} - ${attempt.maxDimension}px, qualité ${attempt.quality}`)
+            
+            processedFile = await compressImageWithSettings(file, attempt.maxDimension, attempt.quality)
+            compressed = true
+            
+            const compressedSizeMB = Math.round(processedFile.size / 1024 / 1024 * 100) / 100
+            const compressionRate = Math.round((1 - processedFile.size / file.size) * 100)
+            
+            console.log(`PhotoUpload: Succès - compressé à ${compressedSizeMB}MB (-${compressionRate}%)`)
+            
+            const compressionMessage = `✨ Image compressée : ${originalSizeMB}MB → ${compressedSizeMB}MB (-${compressionRate}%)`
+            setCompressionInfo(compressionMessage)
+            announceToScreenReader(`Image compressée avec succès de ${originalSizeMB}MB à ${compressedSizeMB}MB`)
+            
+          } catch (attemptError) {
+            console.warn(`PhotoUpload: Tentative ${i+1} échouée:`, attemptError)
+            if (i === compressionAttempts.length - 1) {
+              // Dernière tentative échouée, on rejette le fichier
+              throw attemptError
+            }
+          }
+        }
         
         setIsCompressing(false)
       } catch (error) {
         setIsCompressing(false)
-        setErrorMessage('Erreur lors de la compression automatique. Veuillez utiliser une image plus petite.')
-        announceToScreenReader('Erreur : Impossible de compresser l\'image')
+        console.error('PhotoUpload: Toutes les tentatives de compression ont échoué:', error)
+        setErrorMessage(`Photo trop grande pour votre appareil (${originalSizeMB}MB). Essayez avec une photo plus petite ou prenez-en une nouvelle avec une résolution réduite.`)
+        announceToScreenReader('Erreur : Photo trop volumineuse pour compression')
         setIsUploading(false)
         return
       }
