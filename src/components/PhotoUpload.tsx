@@ -256,10 +256,39 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
       
       let photoUrl: string
       
-      // Si le fichier est encore >4MB après compression, upload direct vers Cloudinary
+      // Si le fichier est encore >4MB, essayer upload direct puis fallback serveur
       if (processedFile.size > 4 * 1024 * 1024) {
         addDebugInfo(`🔄 Upload direct Cloudinary: ${finalSizeMB}MB (>4MB)`)
-        photoUrl = await uploadDirectToCloudinary(processedFile)
+        
+        try {
+          photoUrl = await uploadDirectToCloudinary(processedFile)
+        } catch (cloudinaryError) {
+          addDebugInfo(`🔄 Fallback: Upload via serveur malgré limite`)
+          
+          // Fallback: essayer via serveur malgré la limite
+          const formData = new FormData()
+          formData.append('photo', processedFile)
+          formData.append('tone', tone)
+          formData.append('language', language)
+
+          const response = await fetch('/api/photos/analyze', {
+            method: 'POST',
+            body: formData,
+            signal: AbortSignal.timeout(120000), // 2 minutes
+          })
+          
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}))
+            addDebugInfo(`❌ Fallback serveur erreur ${response.status}: ${errorData.error || 'Inconnu'}`)
+            throw new Error(errorData.error || 'Erreur lors de l\'analyse')
+          }
+
+          const result = await response.json()
+          addDebugInfo(`✅ Fallback serveur réussi`)
+          announceToScreenReader('Analyse de la photo terminée avec succès')
+          onAnalysisComplete(result)
+          return
+        }
       } else {
         addDebugInfo(`📤 Upload via serveur: ${finalSizeMB}MB (<4MB)`)
         
