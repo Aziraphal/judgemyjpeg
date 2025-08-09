@@ -1,9 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { withAuth, AuthenticatedRequest } from '@/lib/auth-middleware'
 import { v2 as cloudinary } from 'cloudinary'
-import crypto from 'crypto'
 
-export default withAuth(async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' })
   }
