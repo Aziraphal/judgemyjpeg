@@ -457,7 +457,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
                   </div>
                 </div>
                 <p className="text-xs text-green-400/80">
-                  📱 Photos smartphone jusqu'à 25MB • Compression auto si >15MB
+                  📱 Photos smartphone jusqu'à 25MB • Compression auto si &gt;15MB
                 </p>
               </div>
             </div>
