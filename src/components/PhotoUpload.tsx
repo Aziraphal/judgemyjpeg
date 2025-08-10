@@ -37,9 +37,113 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     console.log(`PhotoUpload: Original file size ${originalSizeMB}MB, type: ${file.type}`)
     addDebugInfo(`📁 Fichier détecté: ${originalSizeMB}MB, ${file.type}`)
     
-    // VERCEL PRO: Support natif photos jusqu'à 50MB - pas de compression client nécessaire
-    addDebugInfo(`🚀 Vercel Pro: Upload direct ${originalSizeMB}MB (limite 50MB)`)
-    addDebugInfo(`✨ Serveur Sharp optimisera automatiquement`)
+    // RÉALITÉ VERCEL: Limite ~4.5MB même sur Pro - compression obligatoire
+    let processedFile = file
+    
+    if (file.size > 3.8 * 1024 * 1024) { // 3.8MB seuil sécurisé
+      addDebugInfo(`⚡ Compression obligatoire: ${originalSizeMB}MB > 3.8MB`)
+      
+      try {
+        // Compression progressive robuste
+        processedFile = await new Promise<File>((resolve, reject) => {
+          const canvas = document.createElement('canvas')
+          const ctx = canvas.getContext('2d')
+          if (!ctx) {
+            reject(new Error('Canvas non supporté sur cet appareil'))
+            return
+          }
+          
+          const img = new Image()
+          
+          // Timeout sécurité pour mobiles lents
+          const timeout = setTimeout(() => {
+            reject(new Error('Timeout compression (appareil trop lent)'))
+          }, 15000)
+          
+          img.onload = () => {
+            clearTimeout(timeout)
+            
+            try {
+              // Calcul intelligent des dimensions
+              let { width, height } = img
+              let quality = 0.6
+              let maxDimension = 1200
+              
+              // Ajustements selon la taille originale
+              if (file.size > 8 * 1024 * 1024) {
+                maxDimension = 900
+                quality = 0.4
+              } else if (file.size > 6 * 1024 * 1024) {
+                maxDimension = 1000
+                quality = 0.5
+              }
+              
+              // Redimensionnement proportionnel
+              if (width > maxDimension || height > maxDimension) {
+                const ratio = Math.min(maxDimension / width, maxDimension / height)
+                width = Math.round(width * ratio)
+                height = Math.round(height * ratio)
+              }
+              
+              canvas.width = width
+              canvas.height = height
+              
+              // Dessin avec gestion mémoire
+              ctx.fillStyle = '#FFFFFF'
+              ctx.fillRect(0, 0, width, height) // Fond blanc
+              ctx.drawImage(img, 0, 0, width, height)
+              
+              canvas.toBlob(
+                (blob) => {
+                  if (blob) {
+                    const compressed = new File([blob], file.name, { 
+                      type: 'image/jpeg',
+                      lastModified: Date.now()
+                    })
+                    const compressedMB = Math.round(compressed.size / 1024 / 1024 * 100) / 100
+                    const ratio = Math.round((1 - compressed.size / file.size) * 100)
+                    addDebugInfo(`✅ Compressé: ${originalSizeMB}MB → ${compressedMB}MB (-${ratio}%)`)
+                    resolve(compressed)
+                  } else {
+                    reject(new Error('Échec création du fichier compressé'))
+                  }
+                },
+                'image/jpeg',
+                quality
+              )
+            } catch (canvasError) {
+              reject(new Error('Erreur lors du traitement Canvas'))
+            }
+          }
+          
+          img.onerror = () => {
+            clearTimeout(timeout)
+            reject(new Error('Image corrompue ou format non supporté'))
+          }
+          
+          // Chargement de l'image
+          img.src = URL.createObjectURL(file)
+        })
+        
+      } catch (error) {
+        const errorMsg = error instanceof Error ? error.message : 'Erreur de compression'
+        addDebugInfo(`❌ ${errorMsg}`)
+        
+        // Messages spécifiques selon l'erreur
+        if (errorMsg.includes('Canvas non supporté')) {
+          setErrorMessage('Votre navigateur ne supporte pas la compression d\'images. Essayez avec une photo plus petite (<4MB).')
+        } else if (errorMsg.includes('Timeout') || errorMsg.includes('lent')) {
+          setErrorMessage('Photo trop complexe pour cet appareil. Essayez une photo plus simple ou utilisez un autre appareil.')
+        } else {
+          setErrorMessage(`Impossible de compresser cette photo (${originalSizeMB}MB). Essayez avec une image plus simple.`)
+        }
+        
+        setIsUploading(false)
+        return
+      }
+    } else {
+      addDebugInfo(`✅ Taille OK pour Vercel: ${originalSizeMB}MB`)
+    }
 
     announceToScreenReader('Début de l\'analyse de la photo')
 
@@ -47,7 +151,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     if (!isOnline) {
       try {
         const formData = new FormData()
-        formData.append('photo', file)
+        formData.append('photo', processedFile)
         formData.append('tone', tone)
         formData.append('language', language)
 
@@ -65,12 +169,12 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     }
 
     try {
-      // Upload direct avec Vercel Pro - pas de logique complexe
-      const finalSizeMB = Math.round(file.size / 1024 / 1024 * 100) / 100
-      addDebugInfo(`📤 Upload direct: ${finalSizeMB}MB`)
+      // Upload avec fichier potentiellement compressé
+      const finalSizeMB = Math.round(processedFile.size / 1024 / 1024 * 100) / 100
+      addDebugInfo(`📤 Upload final: ${finalSizeMB}MB`)
       
       const formData = new FormData()
-      formData.append('photo', file)
+      formData.append('photo', processedFile)
       formData.append('tone', tone)
       formData.append('language', language)
 
