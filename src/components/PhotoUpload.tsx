@@ -174,17 +174,18 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     console.log(`PhotoUpload: Original file size ${originalSizeMB}MB, type: ${file.type}`)
     addDebugInfo(`📁 Fichier détecté: ${originalSizeMB}MB, ${file.type}`)
     
-    // Upload direct vers Cloudinary si >4MB (contourne limite Vercel Functions 4.5MB)
-    if (file.size > 4 * 1024 * 1024) {
+    // Compression agressive si >3MB pour éviter upload Cloudinary 
+    if (file.size > 3 * 1024 * 1024) {
       try {
         setIsCompressing(true)
         announceToScreenReader('Compression automatique de l\'image en cours...')
         
-        // Tentative compression progressive
+        // Tentative compression progressive (très agressive pour éviter Cloudinary)
         let compressionAttempts = [
-          { maxDimension: 1536, quality: 0.8 },  // Première tentative
-          { maxDimension: 1200, quality: 0.7 },  // Plus petit si échoue
-          { maxDimension: 800, quality: 0.6 },   // Encore plus petit
+          { maxDimension: 1200, quality: 0.7 },  // Première tentative
+          { maxDimension: 1000, quality: 0.6 },  // Plus petit si échoue
+          { maxDimension: 800, quality: 0.5 },   // Encore plus petit
+          { maxDimension: 600, quality: 0.4 },   // Très petit si nécessaire
         ]
         
         let compressed = false
@@ -253,66 +254,27 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
 
     try {
       const finalSizeMB = Math.round(processedFile.size / 1024 / 1024 * 100) / 100
+      addDebugInfo(`📤 Upload via serveur: ${finalSizeMB}MB`)
       
-      let photoUrl: string
-      
-      // Si le fichier est encore >4MB, essayer upload direct puis fallback serveur
-      if (processedFile.size > 4 * 1024 * 1024) {
-        addDebugInfo(`🔄 Upload direct Cloudinary: ${finalSizeMB}MB (>4MB)`)
-        
-        try {
-          photoUrl = await uploadDirectToCloudinary(processedFile)
-        } catch (cloudinaryError) {
-          addDebugInfo(`❌ Cloudinary direct échoué, impossible de traiter fichier >4MB`)
-          throw new Error(`Photo trop volumineuse (${finalSizeMB}MB) et upload direct impossible. Essayez avec une photo plus petite ou vérifiez votre connexion.`)
-        }
-      } else {
-        addDebugInfo(`📤 Upload via serveur: ${finalSizeMB}MB (<4MB)`)
-        
-        const formData = new FormData()
-        formData.append('photo', processedFile)
-        formData.append('tone', tone)
-        formData.append('language', language)
+      const formData = new FormData()
+      formData.append('photo', processedFile)
+      formData.append('tone', tone)
+      formData.append('language', language)
 
-        const response = await fetch('/api/photos/analyze', {
-          method: 'POST',
-          body: formData,
-          signal: AbortSignal.timeout(60000),
-        })
-        
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}))
-          addDebugInfo(`❌ Serveur erreur ${response.status}: ${errorData.error || 'Inconnu'}`)
-          throw new Error(errorData.error || 'Erreur lors de l\'analyse')
-        }
-
-        const result = await response.json()
-        addDebugInfo(`✅ Analyse terminée avec succès`)
-        announceToScreenReader('Analyse de la photo terminée avec succès')
-        onAnalysisComplete(result)
-        return
-      }
-      
-      // Analyse avec URL Cloudinary
-      const response = await fetch('/api/photos/analyze-url', {
+      const response = await fetch('/api/photos/analyze', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          photoUrl,
-          tone, 
-          language 
-        }),
+        body: formData,
         signal: AbortSignal.timeout(60000),
       })
-
+      
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
-        addDebugInfo(`❌ Analyse URL erreur ${response.status}: ${errorData.error || 'Inconnu'}`)
+        addDebugInfo(`❌ Serveur erreur ${response.status}: ${errorData.error || 'Inconnu'}`)
         throw new Error(errorData.error || 'Erreur lors de l\'analyse')
       }
 
       const result = await response.json()
-      addDebugInfo(`✅ Analyse URL terminée avec succès`)
+      addDebugInfo(`✅ Analyse terminée avec succès`)
       announceToScreenReader('Analyse de la photo terminée avec succès')
       onAnalysisComplete(result)
 
@@ -599,7 +561,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
                   </div>
                 </div>
                 <p className="text-xs text-green-400/80">
-                  📱 Photos smartphone jusqu'à 25MB • Upload direct si &gt;4MB
+                  📱 Photos smartphone jusqu'à 25MB • Compression automatique
                 </p>
               </div>
             </div>
