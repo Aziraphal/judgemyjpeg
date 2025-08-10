@@ -168,8 +168,6 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     setErrorMessage(null)
     setCompressionInfo(null)
     
-    // Compression automatique si nécessaire
-    let processedFile = file
     const originalSizeMB = Math.round(file.size / 1024 / 1024 * 100) / 100
     console.log(`PhotoUpload: Original file size ${originalSizeMB}MB, type: ${file.type}`)
     addDebugInfo(`📁 Fichier détecté: ${originalSizeMB}MB, ${file.type}`)
@@ -177,64 +175,6 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     // SUPPRIMÉ: Plus de compression client Canvas (trop instable)
     // Le serveur se charge automatiquement de la compression
     addDebugInfo(`📤 Envoi direct au serveur: ${originalSizeMB}MB`)
-      try {
-        setIsCompressing(true)
-        announceToScreenReader('Compression automatique de l\'image en cours...')
-        
-        // Compression ultra-agressive pour garantir 100% de réussite
-        let compressionAttempts = [
-          { maxDimension: 1200, quality: 0.7 },  // Première tentative
-          { maxDimension: 1000, quality: 0.6 },  // Plus petit si échoue
-          { maxDimension: 800, quality: 0.5 },   // Encore plus petit
-          { maxDimension: 600, quality: 0.4 },   // Très petit
-          { maxDimension: 500, quality: 0.3 },   // Ultra petit
-          { maxDimension: 400, quality: 0.25 },  // Micro mais analysable
-        ]
-        
-        let compressed = false
-        for (let i = 0; i < compressionAttempts.length && !compressed; i++) {
-          try {
-            const attempt = compressionAttempts[i]
-            console.log(`PhotoUpload: Tentative ${i+1} - ${attempt.maxDimension}px, qualité ${attempt.quality}`)
-            addDebugInfo(`⚡ Tentative ${i+1}: ${attempt.maxDimension}px, Q${attempt.quality}`)
-            
-            processedFile = await compressImageWithSettings(file, attempt.maxDimension, attempt.quality)
-            compressed = true
-            
-            const compressedSizeMB = Math.round(processedFile.size / 1024 / 1024 * 100) / 100
-            const compressionRate = Math.round((1 - processedFile.size / file.size) * 100)
-            
-            console.log(`PhotoUpload: Succès - compressé à ${compressedSizeMB}MB (-${compressionRate}%)`)
-            addDebugInfo(`✅ Succès: ${compressedSizeMB}MB (-${compressionRate}%)`)
-            
-            const compressionMessage = `✨ Image compressée : ${originalSizeMB}MB → ${compressedSizeMB}MB (-${compressionRate}%)`
-            setCompressionInfo(compressionMessage)
-            announceToScreenReader(`Image compressée avec succès de ${originalSizeMB}MB à ${compressedSizeMB}MB`)
-            
-          } catch (attemptError) {
-            console.warn(`PhotoUpload: Tentative ${i+1} échouée:`, attemptError)
-            addDebugInfo(`❌ Échec tentative ${i+1}: ${attemptError instanceof Error ? attemptError.message : 'Erreur inconnue'}`)
-            if (i === compressionAttempts.length - 1) {
-              // Dernière tentative échouée, on rejette le fichier
-              throw attemptError
-            }
-          }
-        }
-        
-        setIsCompressing(false)
-      } catch (error) {
-        setIsCompressing(false)
-        console.error('PhotoUpload: Toutes les tentatives de compression ont échoué:', error)
-        addDebugInfo(`🚫 Compression Canvas échouée: ${error instanceof Error ? error.message : 'Erreur inconnue'}`)
-        
-        // FALLBACK SIMPLE: Message clair pour l'utilisateur
-        const errorMsg = `Photo trop complexe pour votre appareil (${originalSizeMB}MB). Veuillez utiliser une photo plus petite ou avec moins de détails.`
-        setErrorMessage(errorMsg)
-        announceToScreenReader('Erreur : Photo trop volumineuse')
-        setIsUploading(false)
-        return
-      }
-    }
 
     announceToScreenReader('Début de l\'analyse de la photo')
 
@@ -242,7 +182,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     if (!isOnline) {
       try {
         const formData = new FormData()
-        formData.append('photo', processedFile)
+        formData.append('photo', file)
         formData.append('tone', tone)
         formData.append('language', language)
 
@@ -260,11 +200,11 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     }
 
     try {
-      const finalSizeMB = Math.round(processedFile.size / 1024 / 1024 * 100) / 100
+      const finalSizeMB = Math.round(file.size / 1024 / 1024 * 100) / 100
       addDebugInfo(`📤 Upload via serveur: ${finalSizeMB}MB`)
       
       const formData = new FormData()
-      formData.append('photo', processedFile)
+      formData.append('photo', file)
       formData.append('tone', tone)
       formData.append('language', language)
 
