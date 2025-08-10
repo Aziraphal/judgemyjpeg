@@ -75,50 +75,33 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
       let response
       
       if (useCloudinaryDirect) {
-        // NOUVEAU: Upload Cloudinary signed puis analyse via URL
-        addDebugInfo(`🔐 Demande signature Cloudinary...`)
+        // SOLUTION ANTI-CORS: Upload via notre serveur proxy vers Cloudinary
+        addDebugInfo(`🛡️ Upload via proxy serveur (évite CORS)...`)
         
-        const configResponse = await fetch('/api/cloudinary/upload-config', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
-        })
-        
-        if (!configResponse.ok) {
-          throw new Error(`Erreur config Cloudinary: ${configResponse.status}`)
-        }
-        
-        const config = await configResponse.json()
-        addDebugInfo(`✅ Signature obtenue`)
-        
-        // Upload direct vers Cloudinary avec signature
         const uploadFormData = new FormData()
-        uploadFormData.append('file', file)
-        uploadFormData.append('signature', config.signature)
-        uploadFormData.append('timestamp', config.timestamp.toString())
-        uploadFormData.append('api_key', config.apiKey)
-        uploadFormData.append('folder', config.folder)
+        uploadFormData.append('photo', file)
         
-        addDebugInfo(`🌐 Upload direct Cloudinary ${originalSizeMB}MB...`)
-        
-        const cloudinaryResponse = await fetch(config.uploadUrl, {
+        const uploadResponse = await fetch('/api/photos/upload-large', {
           method: 'POST',
           body: uploadFormData,
+          signal: AbortSignal.timeout(120000), // 2min pour gros fichiers
         })
         
-        if (!cloudinaryResponse.ok) {
-          const errorText = await cloudinaryResponse.text()
-          throw new Error(`Upload Cloudinary échoué: ${cloudinaryResponse.status} - ${errorText}`)
+        if (!uploadResponse.ok) {
+          const uploadError = await uploadResponse.json().catch(() => ({}))
+          addDebugInfo(`❌ Proxy erreur ${uploadResponse.status}: ${uploadError.error || 'Inconnu'}`)
+          throw new Error(uploadError.error || `Proxy upload failed: ${uploadResponse.status}`)
         }
         
-        const uploadResult = await cloudinaryResponse.json()
-        addDebugInfo(`✅ Upload réussi: ${uploadResult.secure_url.slice(-30)}...`)
+        const { photoUrl } = await uploadResponse.json()
+        addDebugInfo(`✅ Upload proxy réussi: ${photoUrl.slice(-30)}...`)
         
         // Analyse via URL
         response = await fetch('/api/photos/analyze-url', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            photoUrl: uploadResult.secure_url,
+            photoUrl,
             tone,
             language,
             filename: file.name
