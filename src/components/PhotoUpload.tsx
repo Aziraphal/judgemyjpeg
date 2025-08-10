@@ -172,13 +172,38 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     console.log(`PhotoUpload: Original file size ${originalSizeMB}MB, type: ${file.type}`)
     addDebugInfo(`📁 Fichier détecté: ${originalSizeMB}MB, ${file.type}`)
     
-    // SOLUTION ULTIME: Upload direct vers Cloudinary pour photos >4MB (contourne Vercel)
+    // SOLUTION FINALE: Compression forcée pour Honor Magic 6 Pro >4MB
     let finalFile = file
     let useDirectCloudinary = false
     
     if (file.size > 4 * 1024 * 1024) {
-      addDebugInfo(`🌐 Photo ${originalSizeMB}MB > 4MB: Upload direct Cloudinary`)
       useDirectCloudinary = true
+      addDebugInfo(`⚡ OBLIGATOIRE: Compression ${originalSizeMB}MB → <4MB`)
+      
+      try {
+        setIsCompressing(true)
+        
+        // Méthode BRUTALE mais qui marche : réduction massive
+        finalFile = await compressImageWithSettings(file, 800, 0.4) // Très petit, très compressé
+        const compressedMB = Math.round(finalFile.size / 1024 / 1024 * 100) / 100
+        
+        if (finalFile.size > 4 * 1024 * 1024) {
+          // Si encore trop gros, compression extrême
+          finalFile = await compressImageWithSettings(file, 600, 0.3)
+          const finalMB = Math.round(finalFile.size / 1024 / 1024 * 100) / 100
+          addDebugInfo(`🔥 Compression extrême: ${originalSizeMB}MB → ${finalMB}MB`)
+        } else {
+          addDebugInfo(`✅ Compressé avec succès: ${originalSizeMB}MB → ${compressedMB}MB`)
+        }
+        
+        setIsCompressing(false)
+      } catch (error) {
+        setIsCompressing(false)
+        addDebugInfo(`❌ Compression impossible sur cet appareil`)
+        setErrorMessage(`Photo trop complexe pour cet appareil (${originalSizeMB}MB). Utilisez une photo plus simple ou depuis un autre appareil.`)
+        setIsUploading(false)
+        return
+      }
     } else {
       addDebugInfo(`✅ Taille OK pour Vercel: ${originalSizeMB}MB`)
     }
@@ -210,36 +235,18 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
       let response
       
       if (useDirectCloudinary) {
-        // Upload via proxy serveur vers Cloudinary (évite CORS mobile)
-        addDebugInfo(`📤 Upload proxy serveur → Cloudinary...`)
+        // Photo >4MB compressée forcément - upload standard maintenant
+        const compressedMB = Math.round(finalFile.size / 1024 / 1024 * 100) / 100
+        addDebugInfo(`📤 Upload compressé: ${compressedMB}MB via Vercel`)
         
-        const uploadFormData = new FormData()
-        uploadFormData.append('photo', file)
-        
-        const uploadResponse = await fetch('/api/photos/upload-large', {
+        const formData = new FormData()
+        formData.append('photo', finalFile)
+        formData.append('tone', tone)
+        formData.append('language', language)
+
+        response = await fetch('/api/photos/analyze', {
           method: 'POST',
-          body: uploadFormData,
-          signal: AbortSignal.timeout(120000), // 2min pour gros fichiers
-        })
-        
-        if (!uploadResponse.ok) {
-          const uploadError = await uploadResponse.json().catch(() => ({}))
-          throw new Error(uploadError.error || `Upload proxy failed: ${uploadResponse.status}`)
-        }
-        
-        const { photoUrl } = await uploadResponse.json()
-        addDebugInfo(`✅ URL Cloudinary: ${photoUrl.slice(-20)}...`)
-        
-        // Analyser via URL
-        response = await fetch('/api/photos/analyze-url', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            photoUrl,
-            tone,
-            language,
-            filename: file.name
-          }),
+          body: formData,
           signal: AbortSignal.timeout(60000),
         })
       } else {
