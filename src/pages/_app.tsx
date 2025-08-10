@@ -1,7 +1,7 @@
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import { SessionProvider } from 'next-auth/react'
-import { Analytics } from '@vercel/analytics/react'
+import { Analytics } from '@vercel/analytics/next'
 import SecurityStatusBar from '@/components/SecurityStatusBar'
 import CookieConsent from '@/components/CookieConsent'
 import AccessibilityProvider from '@/components/AccessibilityProvider'
