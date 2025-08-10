@@ -37,16 +37,15 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     console.log(`PhotoUpload: Original file size ${originalSizeMB}MB, type: ${file.type}`)
     addDebugInfo(`📁 Fichier détecté: ${originalSizeMB}MB, ${file.type}`)
     
-    // RÉALITÉ VERCEL: Limite ~4.5MB même sur Pro - compression obligatoire
-    let processedFile = file
+    // ARCHITECTURE HYBRIDE: Cloudinary (>4MB) + Vercel (≤4MB)
     
-    if (file.size > 4 * 1024 * 1024) {
-      addDebugInfo(`❌ Photo ${originalSizeMB}MB > 4MB: IMPOSSIBLE avec Vercel`)
-      setErrorMessage(`Cette photo (${originalSizeMB}MB) est trop volumineuse pour notre système. Maximum : 4MB. Utilisez une photo plus petite ou compressez-la avant upload.`)
-      setIsUploading(false)
-      return
+    // SOLUTION CLOUDINARY: Upload direct pour gros fichiers, Vercel pour petits
+    const useCloudinaryDirect = file.size > 4 * 1024 * 1024
+    
+    if (useCloudinaryDirect) {
+      addDebugInfo(`🌐 Photo ${originalSizeMB}MB > 4MB: Upload direct Cloudinary`)
     } else {
-      addDebugInfo(`✅ Taille OK: ${originalSizeMB}MB ≤ 4MB`)
+      addDebugInfo(`✅ Photo ${originalSizeMB}MB ≤ 4MB: Upload via Vercel`)
     }
 
     announceToScreenReader('Début de l\'analyse de la photo')
@@ -55,7 +54,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     if (!isOnline) {
       try {
         const formData = new FormData()
-        formData.append('photo', processedFile)
+        formData.append('photo', file)
         formData.append('tone', tone)
         formData.append('language', language)
 
@@ -73,20 +72,76 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     }
 
     try {
-      // Upload avec fichier potentiellement compressé
-      const finalSizeMB = Math.round(processedFile.size / 1024 / 1024 * 100) / 100
-      addDebugInfo(`📤 Upload final: ${finalSizeMB}MB`)
+      let response
       
-      const formData = new FormData()
-      formData.append('photo', processedFile)
-      formData.append('tone', tone)
-      formData.append('language', language)
+      if (useCloudinaryDirect) {
+        // NOUVEAU: Upload Cloudinary signed puis analyse via URL
+        addDebugInfo(`🔐 Demande signature Cloudinary...`)
+        
+        const configResponse = await fetch('/api/cloudinary/upload-config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        })
+        
+        if (!configResponse.ok) {
+          throw new Error(`Erreur config Cloudinary: ${configResponse.status}`)
+        }
+        
+        const config = await configResponse.json()
+        addDebugInfo(`✅ Signature obtenue`)
+        
+        // Upload direct vers Cloudinary avec signature
+        const uploadFormData = new FormData()
+        uploadFormData.append('file', file)
+        uploadFormData.append('signature', config.signature)
+        uploadFormData.append('timestamp', config.timestamp.toString())
+        uploadFormData.append('api_key', config.apiKey)
+        uploadFormData.append('folder', config.folder)
+        
+        addDebugInfo(`🌐 Upload direct Cloudinary ${originalSizeMB}MB...`)
+        
+        const cloudinaryResponse = await fetch(config.uploadUrl, {
+          method: 'POST',
+          body: uploadFormData,
+        })
+        
+        if (!cloudinaryResponse.ok) {
+          const errorText = await cloudinaryResponse.text()
+          throw new Error(`Upload Cloudinary échoué: ${cloudinaryResponse.status} - ${errorText}`)
+        }
+        
+        const uploadResult = await cloudinaryResponse.json()
+        addDebugInfo(`✅ Upload réussi: ${uploadResult.secure_url.slice(-30)}...`)
+        
+        // Analyse via URL
+        response = await fetch('/api/photos/analyze-url', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            photoUrl: uploadResult.secure_url,
+            tone,
+            language,
+            filename: file.name
+          }),
+          signal: AbortSignal.timeout(90000),
+        })
+        
+      } else {
+        // Upload standard via Vercel (photos ≤4MB)
+        const finalSizeMB = Math.round(file.size / 1024 / 1024 * 100) / 100
+        addDebugInfo(`📤 Upload Vercel: ${finalSizeMB}MB`)
+        
+        const formData = new FormData()
+        formData.append('photo', file)
+        formData.append('tone', tone)
+        formData.append('language', language)
 
-      const response = await fetch('/api/photos/analyze', {
-        method: 'POST',
-        body: formData,
-        signal: AbortSignal.timeout(90000), // 90s pour gros fichiers
-      })
+        response = await fetch('/api/photos/analyze', {
+          method: 'POST',
+          body: formData,
+          signal: AbortSignal.timeout(90000),
+        })
+      }
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
@@ -304,7 +359,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
                   </div>
                 </div>
                 <p className="text-xs text-green-400/80">
-                  📱 Photos smartphone jusqu'à 50MB • Vercel Pro • Compression intelligente Sharp
+                  📱 Photos smartphone jusqu'à 25MB • Cloudinary Direct • Sans limite Vercel
                 </p>
               </div>
             </div>
