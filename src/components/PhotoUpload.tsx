@@ -180,12 +180,14 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
         setIsCompressing(true)
         announceToScreenReader('Compression automatique de l\'image en cours...')
         
-        // Tentative compression progressive (très agressive pour éviter Cloudinary)
+        // Compression ultra-agressive pour garantir 100% de réussite
         let compressionAttempts = [
           { maxDimension: 1200, quality: 0.7 },  // Première tentative
           { maxDimension: 1000, quality: 0.6 },  // Plus petit si échoue
           { maxDimension: 800, quality: 0.5 },   // Encore plus petit
-          { maxDimension: 600, quality: 0.4 },   // Très petit si nécessaire
+          { maxDimension: 600, quality: 0.4 },   // Très petit
+          { maxDimension: 500, quality: 0.3 },   // Ultra petit
+          { maxDimension: 400, quality: 0.25 },  // Micro mais analysable
         ]
         
         let compressed = false
@@ -222,10 +224,36 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
       } catch (error) {
         setIsCompressing(false)
         console.error('PhotoUpload: Toutes les tentatives de compression ont échoué:', error)
-        addDebugInfo(`🚫 Compression échouée: ${error instanceof Error ? error.message : 'Erreur inconnue'}`)
-        addDebugInfo(`🔄 Fallback: Upload direct du fichier original`)
-        // On garde le fichier original pour l'upload direct
-        processedFile = file
+        addDebugInfo(`🚫 Compression Canvas échouée: ${error instanceof Error ? error.message : 'Erreur inconnue'}`)
+        
+        // FALLBACK ULTIME: Compression via API serveur 
+        try {
+          addDebugInfo(`🔄 Fallback: Compression côté serveur`)
+          
+          // Upload brut vers API compression dédiée
+          const compressFormData = new FormData()
+          compressFormData.append('photo', file)
+          compressFormData.append('maxSize', '3500000') // 3.5MB max
+          
+          const compressResponse = await fetch('/api/photos/compress', {
+            method: 'POST',
+            body: compressFormData,
+          })
+          
+          if (compressResponse.ok) {
+            const blob = await compressResponse.blob()
+            processedFile = new File([blob], file.name || 'compressed.jpg', { type: 'image/jpeg' })
+            const compressedSizeMB = Math.round(processedFile.size / 1024 / 1024 * 100) / 100
+            addDebugInfo(`✅ Compression serveur réussie: ${compressedSizeMB}MB`)
+          } else {
+            throw new Error('Compression serveur échouée')
+          }
+        } catch (serverError) {
+          addDebugInfo(`🚫 Compression serveur échouée: ${serverError instanceof Error ? serverError.message : 'Erreur inconnue'}`)
+          // Dernier recours: garder le fichier original et espérer qu'il passe
+          processedFile = file
+          addDebugInfo(`⚠️ Dernier recours: Tentative avec fichier original`)
+        }
       }
     }
 
