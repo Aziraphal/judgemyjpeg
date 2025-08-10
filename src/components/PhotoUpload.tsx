@@ -174,8 +174,9 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     console.log(`PhotoUpload: Original file size ${originalSizeMB}MB, type: ${file.type}`)
     addDebugInfo(`📁 Fichier détecté: ${originalSizeMB}MB, ${file.type}`)
     
-    // Compression OBLIGATOIRE si >2MB pour garantir passage sous 4MB 
-    if (file.size > 2 * 1024 * 1024) {
+    // SUPPRIMÉ: Plus de compression client Canvas (trop instable)
+    // Le serveur se charge automatiquement de la compression
+    addDebugInfo(`📤 Envoi direct au serveur: ${originalSizeMB}MB`)
       try {
         setIsCompressing(true)
         announceToScreenReader('Compression automatique de l\'image en cours...')
@@ -567,7 +568,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
                   </div>
                 </div>
                 <p className="text-xs text-green-400/80">
-                  📱 Photos smartphone jusqu'à 25MB • Compression automatique
+                  📱 Photos smartphone jusqu'à 25MB • Compression intelligente serveur
                 </p>
               </div>
             </div>
