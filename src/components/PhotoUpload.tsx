@@ -83,6 +83,13 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
         addDebugInfo(`❌ Serveur erreur ${response.status}: ${errorData.error || 'Inconnu'}`)
+        
+        // Debug spécial pour 413
+        if (response.status === 413) {
+          addDebugInfo(`🚨 413 = Limite dépassée. Vérifiez Vercel Pro activé`)
+          addDebugInfo(`🔍 Server: ${response.headers.get('server') || 'Unknown'}`)
+        }
+        
         throw new Error(errorData.error || 'Erreur lors de l\'analyse')
       }
 
