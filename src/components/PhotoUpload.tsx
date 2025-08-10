@@ -174,8 +174,8 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     console.log(`PhotoUpload: Original file size ${originalSizeMB}MB, type: ${file.type}`)
     addDebugInfo(`📁 Fichier détecté: ${originalSizeMB}MB, ${file.type}`)
     
-    // Compression agressive si >3MB pour éviter upload Cloudinary 
-    if (file.size > 3 * 1024 * 1024) {
+    // Compression OBLIGATOIRE si >2MB pour garantir passage sous 4MB 
+    if (file.size > 2 * 1024 * 1024) {
       try {
         setIsCompressing(true)
         announceToScreenReader('Compression automatique de l\'image en cours...')
@@ -226,34 +226,12 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
         console.error('PhotoUpload: Toutes les tentatives de compression ont échoué:', error)
         addDebugInfo(`🚫 Compression Canvas échouée: ${error instanceof Error ? error.message : 'Erreur inconnue'}`)
         
-        // FALLBACK ULTIME: Compression via API serveur 
-        try {
-          addDebugInfo(`🔄 Fallback: Compression côté serveur`)
-          
-          // Upload brut vers API compression dédiée
-          const compressFormData = new FormData()
-          compressFormData.append('photo', file)
-          compressFormData.append('maxSize', '3500000') // 3.5MB max
-          
-          const compressResponse = await fetch('/api/photos/compress', {
-            method: 'POST',
-            body: compressFormData,
-          })
-          
-          if (compressResponse.ok) {
-            const blob = await compressResponse.blob()
-            processedFile = new File([blob], file.name || 'compressed.jpg', { type: 'image/jpeg' })
-            const compressedSizeMB = Math.round(processedFile.size / 1024 / 1024 * 100) / 100
-            addDebugInfo(`✅ Compression serveur réussie: ${compressedSizeMB}MB`)
-          } else {
-            throw new Error('Compression serveur échouée')
-          }
-        } catch (serverError) {
-          addDebugInfo(`🚫 Compression serveur échouée: ${serverError instanceof Error ? serverError.message : 'Erreur inconnue'}`)
-          // Dernier recours: garder le fichier original et espérer qu'il passe
-          processedFile = file
-          addDebugInfo(`⚠️ Dernier recours: Tentative avec fichier original`)
-        }
+        // FALLBACK SIMPLE: Message clair pour l'utilisateur
+        const errorMsg = `Photo trop complexe pour votre appareil (${originalSizeMB}MB). Veuillez utiliser une photo plus petite ou avec moins de détails.`
+        setErrorMessage(errorMsg)
+        announceToScreenReader('Erreur : Photo trop volumineuse')
+        setIsUploading(false)
+        return
       }
     }
 
