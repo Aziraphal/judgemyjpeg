@@ -172,24 +172,13 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     console.log(`PhotoUpload: Original file size ${originalSizeMB}MB, type: ${file.type}`)
     addDebugInfo(`📁 Fichier détecté: ${originalSizeMB}MB, ${file.type}`)
     
-    // Compression client minimale SEULEMENT si > 4MB (limite Vercel)
+    // SOLUTION ULTIME: Upload direct vers Cloudinary pour photos >4MB (contourne Vercel)
     let finalFile = file
+    let useDirectCloudinary = false
+    
     if (file.size > 4 * 1024 * 1024) {
-      try {
-        setIsCompressing(true)
-        addDebugInfo(`⚡ Compression nécessaire pour Vercel (>4MB)`)
-        
-        // Compression simple et fiable - une seule tentative
-        finalFile = await compressImageWithSettings(file, 1200, 0.6)
-        const compressedMB = Math.round(finalFile.size / 1024 / 1024 * 100) / 100
-        addDebugInfo(`✅ Compressé: ${originalSizeMB}MB → ${compressedMB}MB`)
-        
-        setIsCompressing(false)
-      } catch (error) {
-        setIsCompressing(false)
-        addDebugInfo(`❌ Compression échouée - serveur prendra le relais`)
-        // Continuer avec fichier original - le serveur refuse mais message clair
-      }
+      addDebugInfo(`🌐 Photo ${originalSizeMB}MB > 4MB: Upload direct Cloudinary`)
+      useDirectCloudinary = true
     } else {
       addDebugInfo(`✅ Taille OK pour Vercel: ${originalSizeMB}MB`)
     }
@@ -218,19 +207,42 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     }
 
     try {
-      const finalSizeMB = Math.round(finalFile.size / 1024 / 1024 * 100) / 100
-      addDebugInfo(`📤 Upload via serveur: ${finalSizeMB}MB`)
+      let response
       
-      const formData = new FormData()
-      formData.append('photo', finalFile)
-      formData.append('tone', tone)
-      formData.append('language', language)
+      if (useDirectCloudinary) {
+        // Upload direct vers Cloudinary puis analyse via URL
+        addDebugInfo(`🌐 Upload direct Cloudinary...`)
+        const photoUrl = await uploadDirectToCloudinary(file)
+        addDebugInfo(`✅ URL Cloudinary reçue`)
+        
+        // Analyser via URL au lieu de FormData
+        response = await fetch('/api/photos/analyze-url', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            photoUrl,
+            tone,
+            language,
+            filename: file.name
+          }),
+          signal: AbortSignal.timeout(60000),
+        })
+      } else {
+        // Upload standard via Vercel
+        const finalSizeMB = Math.round(finalFile.size / 1024 / 1024 * 100) / 100
+        addDebugInfo(`📤 Upload via serveur: ${finalSizeMB}MB`)
+        
+        const formData = new FormData()
+        formData.append('photo', finalFile)
+        formData.append('tone', tone)
+        formData.append('language', language)
 
-      const response = await fetch('/api/photos/analyze', {
-        method: 'POST',
-        body: formData,
-        signal: AbortSignal.timeout(60000),
-      })
+        response = await fetch('/api/photos/analyze', {
+          method: 'POST',
+          body: formData,
+          signal: AbortSignal.timeout(60000),
+        })
+      }
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
