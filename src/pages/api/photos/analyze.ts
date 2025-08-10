@@ -50,7 +50,60 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     }
 
     // Lire le fichier pour validation
-    const fileBuffer = readFileSync(file.filepath)
+    let fileBuffer = readFileSync(file.filepath)
+    
+    // COMPRESSION SERVEUR AUTOMATIQUE si >4MB
+    if (fileBuffer.length > 4 * 1024 * 1024) {
+      logger.info('Large file detected, compressing server-side', {
+        originalSize: Math.round(fileBuffer.length / 1024 / 1024 * 100) / 100,
+        filename: file.originalFilename
+      }, req.user.id, ip)
+      
+      try {
+        const sharp = require('sharp')
+        
+        // Compression intelligente adaptative
+        let quality = 80
+        let width = 1200
+        let compressed = fileBuffer
+        
+        while (compressed.length > 4 * 1024 * 1024 && quality > 20) {
+          compressed = await sharp(fileBuffer)
+            .resize(width, width, { 
+              fit: 'inside', 
+              withoutEnlargement: true 
+            })
+            .jpeg({ 
+              quality: quality,
+              progressive: true,
+              mozjpeg: true 
+            })
+            .toBuffer()
+          
+          if (compressed.length > 4 * 1024 * 1024) {
+            if (quality > 40) {
+              quality -= 15
+            } else if (width > 600) {
+              width -= 200
+              quality = 70
+            } else {
+              quality -= 10
+            }
+          }
+        }
+        
+        fileBuffer = compressed
+        const finalSizeMB = Math.round(fileBuffer.length / 1024 / 1024 * 100) / 100
+        logger.info('Server compression successful', {
+          finalSize: finalSizeMB,
+          compressionRatio: Math.round((1 - fileBuffer.length / file.size) * 100)
+        }, req.user.id, ip)
+        
+      } catch (compressionError) {
+        logger.warn('Server compression failed, using original', compressionError, req.user.id, ip)
+        // Continuer avec fichier original si compression échoue
+      }
+    }
     
     // Validation sécurisée du fichier avec magic bytes
     const validation = validateUpload(fileBuffer, file.originalFilename || 'photo.jpg', {
