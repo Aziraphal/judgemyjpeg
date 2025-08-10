@@ -210,12 +210,27 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
       let response
       
       if (useDirectCloudinary) {
-        // Upload direct vers Cloudinary puis analyse via URL
-        addDebugInfo(`🌐 Upload direct Cloudinary...`)
-        const photoUrl = await uploadDirectToCloudinary(file)
-        addDebugInfo(`✅ URL Cloudinary reçue`)
+        // Upload via proxy serveur vers Cloudinary (évite CORS mobile)
+        addDebugInfo(`📤 Upload proxy serveur → Cloudinary...`)
         
-        // Analyser via URL au lieu de FormData
+        const uploadFormData = new FormData()
+        uploadFormData.append('photo', file)
+        
+        const uploadResponse = await fetch('/api/photos/upload-large', {
+          method: 'POST',
+          body: uploadFormData,
+          signal: AbortSignal.timeout(120000), // 2min pour gros fichiers
+        })
+        
+        if (!uploadResponse.ok) {
+          const uploadError = await uploadResponse.json().catch(() => ({}))
+          throw new Error(uploadError.error || `Upload proxy failed: ${uploadResponse.status}`)
+        }
+        
+        const { photoUrl } = await uploadResponse.json()
+        addDebugInfo(`✅ URL Cloudinary: ${photoUrl.slice(-20)}...`)
+        
+        // Analyser via URL
         response = await fetch('/api/photos/analyze-url', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
