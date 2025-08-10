@@ -33,10 +33,10 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
 
   try {
 
-    // Parse le fichier uploadé avec limite très élevée pour smartphones modernes
+    // Parse le fichier uploadé avec limite Vercel Pro
     const form = formidable({
-      maxFileSize: 25 * 1024 * 1024, // 25MB max pour photos smartphone modernes
-      maxTotalFileSize: 25 * 1024 * 1024,
+      maxFileSize: 50 * 1024 * 1024, // 50MB limite Vercel Pro
+      maxTotalFileSize: 50 * 1024 * 1024,
       keepExtensions: true,
       allowEmptyFiles: false,
       filter: (part) => part.mimetype?.startsWith('image/') || false,
@@ -107,7 +107,7 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     
     // Validation sécurisée du fichier avec magic bytes
     const validation = validateUpload(fileBuffer, file.originalFilename || 'photo.jpg', {
-      maxSize: 25 * 1024 * 1024, // 25MB limit pour smartphones modernes
+      maxSize: 50 * 1024 * 1024, // 50MB limite Vercel Pro
       allowedTypes: ['jpg', 'png', 'webp'],
       strictMode: false // Mode souple pour compatibilité smartphone
     })

@@ -11,10 +11,8 @@ interface PhotoUploadProps {
 
 export default function PhotoUpload({ onAnalysisComplete, tone, language }: PhotoUploadProps) {
   const [isUploading, setIsUploading] = useState(false)
-  const [isCompressing, setIsCompressing] = useState(false)
   const [dragActive, setDragActive] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [compressionInfo, setCompressionInfo] = useState<string | null>(null)
   const [debugInfo, setDebugInfo] = useState<string[]>([])
   const addDebugInfo = (info: string) => {
     setDebugInfo(prev => [...prev.slice(-4), `[${new Date().toLocaleTimeString()}] ${info}`])
@@ -23,139 +21,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
   const { announceToScreenReader } = useAccessibility()
   const { isOnline, queueAnalysis } = usePWA()
 
-  // Fonction de compression avec paramètres configurables
-  const compressImageWithSettings = (file: File, maxDimension: number, quality: number): Promise<File> => {
-    return new Promise((resolve, reject) => {
-      const canvas = document.createElement('canvas')
-      const ctx = canvas.getContext('2d')
-      if (!ctx) {
-        console.warn('Canvas context not available')
-        reject(new Error('Canvas non supporté'))
-        return
-      }
-      const img = new Image()
-      
-      img.onload = () => {
-        try {
-          // Calcul des dimensions
-          let { width, height } = img
-          
-          if (width > maxDimension || height > maxDimension) {
-            if (width > height) {
-              height = (height * maxDimension) / width
-              width = maxDimension
-            } else {
-              width = (width * maxDimension) / height
-              height = maxDimension
-            }
-          }
-          
-          canvas.width = width
-          canvas.height = height
-          
-          // Dessiner avec gestion d'erreur
-          ctx.drawImage(img, 0, 0, width, height)
-          
-          canvas.toBlob(
-            (blob) => {
-              if (blob) {
-                const compressedFile = new File([blob], file.name || 'photo.jpg', { 
-                  type: 'image/jpeg',
-                  lastModified: Date.now()
-                })
-                resolve(compressedFile)
-              } else {
-                reject(new Error('Échec création blob'))
-              }
-            },
-            'image/jpeg',
-            quality
-          )
-        } catch (error) {
-          reject(error)
-        }
-      }
-      
-      img.onerror = () => reject(new Error('Erreur chargement image'))
-      img.src = URL.createObjectURL(file)
-      
-      // Timeout de sécurité pour mobile
-      setTimeout(() => {
-        reject(new Error('Timeout compression'))
-      }, 10000)
-    })
-  }
-
-  // Fonction de compression automatique (legacy)
-  const compressImage = (file: File, maxSizeKB: number = 4500, quality: number = 0.8, attempt: number = 1): Promise<File> => {
-    return new Promise((resolve, reject) => {
-      // Sécurité : max 5 tentatives
-      if (attempt > 5) {
-        console.warn('Compression: Max attempts reached, using current file')
-        resolve(file)
-        return
-      }
-      
-      const canvas = document.createElement('canvas')
-      const ctx = canvas.getContext('2d')
-      if (!ctx) {
-        console.warn('Canvas context not available, using original file')
-        resolve(file)
-        return
-      }
-      const img = new Image()
-      
-      img.onload = () => {
-        // Calcul des dimensions optimales (mobile-friendly)
-        let { width, height } = img
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-        const maxDimension = isMobile ? 1536 : 2048 // Plus conservateur sur mobile
-        
-        if (width > maxDimension || height > maxDimension) {
-          if (width > height) {
-            height = (height * maxDimension) / width
-            width = maxDimension
-          } else {
-            width = (width * maxDimension) / height
-            height = maxDimension
-          }
-        }
-        
-        canvas.width = width
-        canvas.height = height
-        
-        // Dessiner l'image redimensionnée
-        ctx?.drawImage(img, 0, 0, width, height)
-        
-        // Convertir en blob avec qualité ajustable
-        canvas.toBlob(
-          (blob) => {
-            if (blob) {
-              // Si encore trop gros, réduire la qualité
-              if (blob.size > maxSizeKB * 1024 && quality > 0.3) {
-                // Recursive compression avec qualité réduite
-                const newFile = new File([blob], file.name || 'photo.jpg', { type: 'image/jpeg' })
-                compressImage(newFile, maxSizeKB, quality - 0.1, attempt + 1).then(resolve).catch(reject)
-              } else {
-                const compressedFile = new File([blob], file.name || 'photo.jpg', { 
-                  type: 'image/jpeg',
-                  lastModified: Date.now()
-                })
-                resolve(compressedFile)
-              }
-            } else {
-              reject(new Error('Erreur lors de la compression'))
-            }
-          },
-          'image/jpeg',
-          quality
-        )
-      }
-      
-      img.onerror = () => reject(new Error('Erreur de chargement de l\'image'))
-      img.src = URL.createObjectURL(file)
-    })
-  }
+  // SUPPRIMÉ: Fonctions de compression Canvas (plus nécessaires avec Vercel Pro 50MB)
 
   const handleFile = async (file: File) => {
     if (!file.type.startsWith('image/')) {
@@ -172,41 +38,9 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     console.log(`PhotoUpload: Original file size ${originalSizeMB}MB, type: ${file.type}`)
     addDebugInfo(`📁 Fichier détecté: ${originalSizeMB}MB, ${file.type}`)
     
-    // SOLUTION FINALE: Compression forcée pour Honor Magic 6 Pro >4MB
-    let finalFile = file
-    let useDirectCloudinary = false
-    
-    if (file.size > 4 * 1024 * 1024) {
-      useDirectCloudinary = true
-      addDebugInfo(`⚡ OBLIGATOIRE: Compression ${originalSizeMB}MB → <4MB`)
-      
-      try {
-        setIsCompressing(true)
-        
-        // Méthode BRUTALE mais qui marche : réduction massive
-        finalFile = await compressImageWithSettings(file, 800, 0.4) // Très petit, très compressé
-        const compressedMB = Math.round(finalFile.size / 1024 / 1024 * 100) / 100
-        
-        if (finalFile.size > 4 * 1024 * 1024) {
-          // Si encore trop gros, compression extrême
-          finalFile = await compressImageWithSettings(file, 600, 0.3)
-          const finalMB = Math.round(finalFile.size / 1024 / 1024 * 100) / 100
-          addDebugInfo(`🔥 Compression extrême: ${originalSizeMB}MB → ${finalMB}MB`)
-        } else {
-          addDebugInfo(`✅ Compressé avec succès: ${originalSizeMB}MB → ${compressedMB}MB`)
-        }
-        
-        setIsCompressing(false)
-      } catch (error) {
-        setIsCompressing(false)
-        addDebugInfo(`❌ Compression impossible sur cet appareil`)
-        setErrorMessage(`Photo trop complexe pour cet appareil (${originalSizeMB}MB). Utilisez une photo plus simple ou depuis un autre appareil.`)
-        setIsUploading(false)
-        return
-      }
-    } else {
-      addDebugInfo(`✅ Taille OK pour Vercel: ${originalSizeMB}MB`)
-    }
+    // VERCEL PRO: Support natif photos jusqu'à 50MB - pas de compression client nécessaire
+    addDebugInfo(`🚀 Vercel Pro: Upload direct ${originalSizeMB}MB (limite 50MB)`)
+    addDebugInfo(`✨ Serveur Sharp optimisera automatiquement`)
 
     announceToScreenReader('Début de l\'analyse de la photo')
 
@@ -214,7 +48,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     if (!isOnline) {
       try {
         const formData = new FormData()
-        formData.append('photo', finalFile)
+        formData.append('photo', file)
         formData.append('tone', tone)
         formData.append('language', language)
 
@@ -232,39 +66,20 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     }
 
     try {
-      let response
+      // Upload direct avec Vercel Pro - pas de logique complexe
+      const finalSizeMB = Math.round(file.size / 1024 / 1024 * 100) / 100
+      addDebugInfo(`📤 Upload direct: ${finalSizeMB}MB`)
       
-      if (useDirectCloudinary) {
-        // Photo >4MB compressée forcément - upload standard maintenant
-        const compressedMB = Math.round(finalFile.size / 1024 / 1024 * 100) / 100
-        addDebugInfo(`📤 Upload compressé: ${compressedMB}MB via Vercel`)
-        
-        const formData = new FormData()
-        formData.append('photo', finalFile)
-        formData.append('tone', tone)
-        formData.append('language', language)
+      const formData = new FormData()
+      formData.append('photo', file)
+      formData.append('tone', tone)
+      formData.append('language', language)
 
-        response = await fetch('/api/photos/analyze', {
-          method: 'POST',
-          body: formData,
-          signal: AbortSignal.timeout(60000),
-        })
-      } else {
-        // Upload standard via Vercel
-        const finalSizeMB = Math.round(finalFile.size / 1024 / 1024 * 100) / 100
-        addDebugInfo(`📤 Upload via serveur: ${finalSizeMB}MB`)
-        
-        const formData = new FormData()
-        formData.append('photo', finalFile)
-        formData.append('tone', tone)
-        formData.append('language', language)
-
-        response = await fetch('/api/photos/analyze', {
-          method: 'POST',
-          body: formData,
-          signal: AbortSignal.timeout(60000),
-        })
-      }
+      const response = await fetch('/api/photos/analyze', {
+        method: 'POST',
+        body: formData,
+        signal: AbortSignal.timeout(90000), // 90s pour gros fichiers
+      })
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
@@ -348,82 +163,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     setErrorMessage(null)
   }
 
-  // Upload direct vers Cloudinary (contourne la limite Vercel 4.5MB)
-  const uploadDirectToCloudinary = async (file: File): Promise<string> => {
-    try {
-      addDebugInfo(`🔧 Demande config Cloudinary...`)
-      
-      // Obtenir les paramètres d'upload depuis notre API
-      const configResponse = await fetch('/api/cloudinary/upload-config', {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-        },
-        cache: 'no-cache'
-      })
-      
-      if (!configResponse.ok) {
-        const errorText = await configResponse.text()
-        addDebugInfo(`❌ Config API erreur ${configResponse.status}: ${errorText}`)
-        throw new Error(`Config API erreur ${configResponse.status}: ${errorText}`)
-      }
-      
-      const config = await configResponse.json()
-      addDebugInfo(`✅ Config reçue: ${config.cloudName}`)
-      
-      const { signature, timestamp, cloudName, apiKey, folder, transformation } = config
-      
-      // Créer formData pour Cloudinary
-      const formData = new FormData()
-      formData.append('file', file)
-      formData.append('signature', signature)
-      formData.append('timestamp', timestamp.toString())
-      formData.append('api_key', apiKey)
-      formData.append('folder', folder)
-      formData.append('transformation', transformation)
-      
-      addDebugInfo(`🌐 Upload vers Cloudinary...`)
-      
-      // Upload direct vers Cloudinary avec retry et headers
-      let uploadResponse
-      for (let attempt = 1; attempt <= 2; attempt++) {
-        try {
-          addDebugInfo(`🔄 Tentative ${attempt}/2 upload Cloudinary`)
-          uploadResponse = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
-            method: 'POST',
-            body: formData,
-            mode: 'cors',
-          })
-          
-          if (uploadResponse.ok) {
-            break // Succès, sortir de la boucle
-          } else {
-            addDebugInfo(`⚠️ Tentative ${attempt} HTTP ${uploadResponse.status}`)
-            if (attempt === 2) throw new Error(`HTTP ${uploadResponse.status}`)
-          }
-        } catch (fetchError) {
-          addDebugInfo(`⚠️ Tentative ${attempt} fetch error: ${fetchError instanceof Error ? fetchError.message : 'Unknown'}`)
-          if (attempt === 2) throw fetchError
-          await new Promise(resolve => setTimeout(resolve, 1000)) // Attendre 1s avant retry
-        }
-      }
-      
-      if (!uploadResponse || !uploadResponse.ok) {
-        const error = uploadResponse ? await uploadResponse.text() : 'No response'
-        addDebugInfo(`❌ Upload Cloudinary ${uploadResponse?.status || 'unknown'}: ${error}`)
-        throw new Error(`Upload Cloudinary échoué: ${error}`)
-      }
-      
-      const result = await uploadResponse.json()
-      addDebugInfo(`✅ Upload réussi: ${result.secure_url.slice(0, 50)}...`)
-      
-      return result.secure_url
-    } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : 'Erreur inconnue'
-      addDebugInfo(`🚫 Échec upload Cloudinary: ${errorMsg}`)
-      throw error
-    }
-  }
+  // SUPPRIMÉ: Upload direct Cloudinary (plus nécessaire avec Vercel Pro 50MB)
 
   return (
     <div className="w-full max-w-lg sm:max-w-2xl mx-auto">
@@ -486,25 +226,15 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
               <p className={`text-xl sm:text-2xl font-bold text-glow ${
                 tone === 'roast' ? 'text-red-400' : 'text-neon-cyan'
               }`}>
-                <span aria-hidden="true">{isCompressing ? '⚡ ' : tone === 'roast' ? '🔥 ' : ''}</span>
-                {isCompressing 
-                  ? 'Compression automatique...' 
-                  : tone === 'roast' ? 'Préparation du massacre...' : 'Analyse en cours...'
-                }
+                <span aria-hidden="true">{tone === 'roast' ? '🔥 ' : '🚀 '}</span>
+                {tone === 'roast' ? 'Préparation du massacre...' : 'Analyse IA en cours...'}
               </p>
               <p className="text-sm sm:text-base text-text-gray">
-                {isCompressing 
-                  ? 'Optimisation de votre image pour une analyse parfaite'
-                  : tone === 'roast' 
+                {tone === 'roast' 
                   ? 'L\'IA se prépare à détruire votre photo' 
-                  : 'L\'IA avancée analyse votre photo avec précision'
+                  : 'GPT-4 Vision analyse votre photo avec Vercel Pro'
                 }
               </p>
-              {compressionInfo && (
-                <p className="text-xs sm:text-sm text-green-400 font-medium mt-2">
-                  {compressionInfo}
-                </p>
-              )}
               
               {/* Debug info mobile - visible pendant le traitement */}
               {debugInfo.length > 0 && (
@@ -560,7 +290,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
                   </div>
                 </div>
                 <p className="text-xs text-green-400/80">
-                  📱 Photos smartphone jusqu'à 25MB • Compression intelligente serveur
+                  📱 Photos smartphone jusqu'à 50MB • Vercel Pro • Compression intelligente Sharp
                 </p>
               </div>
             </div>
