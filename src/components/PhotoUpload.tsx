@@ -32,7 +32,6 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
 
     setIsUploading(true)
     setErrorMessage(null)
-    setCompressionInfo(null)
     
     const originalSizeMB = Math.round(file.size / 1024 / 1024 * 100) / 100
     console.log(`PhotoUpload: Original file size ${originalSizeMB}MB, type: ${file.type}`)
