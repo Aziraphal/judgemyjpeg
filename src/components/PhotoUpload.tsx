@@ -447,9 +447,9 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
         }
       }
       
-      if (!uploadResponse.ok) {
-        const error = await uploadResponse.text()
-        addDebugInfo(`❌ Upload Cloudinary ${uploadResponse.status}: ${error}`)
+      if (!uploadResponse || !uploadResponse.ok) {
+        const error = uploadResponse ? await uploadResponse.text() : 'No response'
+        addDebugInfo(`❌ Upload Cloudinary ${uploadResponse?.status || 'unknown'}: ${error}`)
         throw new Error(`Upload Cloudinary échoué: ${error}`)
       }
       
