@@ -172,9 +172,27 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     console.log(`PhotoUpload: Original file size ${originalSizeMB}MB, type: ${file.type}`)
     addDebugInfo(`📁 Fichier détecté: ${originalSizeMB}MB, ${file.type}`)
     
-    // SUPPRIMÉ: Plus de compression client Canvas (trop instable)
-    // Le serveur se charge automatiquement de la compression
-    addDebugInfo(`📤 Envoi direct au serveur: ${originalSizeMB}MB`)
+    // Compression client minimale SEULEMENT si > 4MB (limite Vercel)
+    let finalFile = file
+    if (file.size > 4 * 1024 * 1024) {
+      try {
+        setIsCompressing(true)
+        addDebugInfo(`⚡ Compression nécessaire pour Vercel (>4MB)`)
+        
+        // Compression simple et fiable - une seule tentative
+        finalFile = await compressImageWithSettings(file, 1200, 0.6)
+        const compressedMB = Math.round(finalFile.size / 1024 / 1024 * 100) / 100
+        addDebugInfo(`✅ Compressé: ${originalSizeMB}MB → ${compressedMB}MB`)
+        
+        setIsCompressing(false)
+      } catch (error) {
+        setIsCompressing(false)
+        addDebugInfo(`❌ Compression échouée - serveur prendra le relais`)
+        // Continuer avec fichier original - le serveur refuse mais message clair
+      }
+    } else {
+      addDebugInfo(`✅ Taille OK pour Vercel: ${originalSizeMB}MB`)
+    }
 
     announceToScreenReader('Début de l\'analyse de la photo')
 
@@ -182,7 +200,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     if (!isOnline) {
       try {
         const formData = new FormData()
-        formData.append('photo', file)
+        formData.append('photo', finalFile)
         formData.append('tone', tone)
         formData.append('language', language)
 
@@ -200,11 +218,11 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     }
 
     try {
-      const finalSizeMB = Math.round(file.size / 1024 / 1024 * 100) / 100
+      const finalSizeMB = Math.round(finalFile.size / 1024 / 1024 * 100) / 100
       addDebugInfo(`📤 Upload via serveur: ${finalSizeMB}MB`)
       
       const formData = new FormData()
-      formData.append('photo', file)
+      formData.append('photo', finalFile)
       formData.append('tone', tone)
       formData.append('language', language)
 
