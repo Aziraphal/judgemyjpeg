@@ -132,10 +132,10 @@ export default function CookieConsent() {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
       )}
 
-      {/* Banner principal */}
+      {/* Banner principal - PLUS VISIBLE */}
       {!showSettings && (
-        <div className="fixed bottom-0 left-0 right-0 bg-cosmic-glass/95 backdrop-blur-md border-t border-cosmic-glassborder z-50">
-          <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6">
+        <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-black/95 via-cosmic-glass/95 to-cosmic-glass/80 backdrop-blur-md border-t-2 border-neon-cyan/50 shadow-lg shadow-neon-cyan/20 z-50">
+          <div className="container mx-auto px-3 sm:px-4 py-5 sm:py-7">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
               
               {/* Contenu */}

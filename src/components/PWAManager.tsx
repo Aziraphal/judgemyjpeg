@@ -47,12 +47,7 @@ export default function PWAManager() {
       setDeferredPrompt(promptEvent)
       setIsInstallable(true)
       
-      // Afficher banner après 30 secondes si pas installé
-      setTimeout(() => {
-        if (!isInstalled && !localStorage.getItem('pwa-install-dismissed')) {
-          setShowInstallBanner(true)
-        }
-      }, 30000)
+      // Banner auto supprimée - trop intrusive
     }
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
@@ -188,49 +183,8 @@ export default function PWAManager() {
         </div>
       )}
 
-      {/* Banner d'installation PWA */}
-      {showInstallBanner && !isInstalled && (
-        <div className="fixed bottom-20 left-4 right-4 z-50">
-          <div className="bg-cosmic-glass/95 backdrop-blur-md border border-cosmic-glassborder rounded-xl p-4">
-            <div className="flex items-start justify-between">
-              <div className="flex-1 mr-3">
-                <div className="flex items-center mb-2">
-                  <span className="text-2xl mr-2" aria-hidden="true">📱</span>
-                  <h3 className="font-semibold text-text-white text-sm">
-                    Installer JudgeMyJPEG
-                  </h3>
-                </div>
-                <p className="text-xs text-text-gray mb-3">
-                  Accès rapide, notifications et mode hors ligne disponibles
-                </p>
-                <div className="flex gap-2">
-                  <button
-                    onClick={addToHomeScreen}
-                    className="px-4 py-2 bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30 rounded-lg text-xs font-medium hover:bg-neon-cyan/30 transition-colors focus-visible"
-                    aria-label="Installer l'application JudgeMyJPEG"
-                  >
-                    Installer
-                  </button>
-                  <button
-                    onClick={dismissInstallBanner}
-                    className="px-3 py-2 text-text-muted hover:text-text-white text-xs transition-colors focus-visible"
-                    aria-label="Fermer la bannière d'installation"
-                  >
-                    Plus tard
-                  </button>
-                </div>
-              </div>
-              <button
-                onClick={dismissInstallBanner}
-                className="text-text-muted hover:text-text-white transition-colors focus-visible p-1"
-                aria-label="Fermer"
-              >
-                ✕
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Banner d'installation PWA SUPPRIMÉE - trop intrusive */}
+      {/* Possibilité d'installation disponible via menu utilisateur si nécessaire */}
 
       {/* Notification de mise à jour */}
       {updateAvailable && (
