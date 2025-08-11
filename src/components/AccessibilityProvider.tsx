@@ -219,34 +219,34 @@ export default function AccessibilityProvider({ children }: AccessibilityProvide
         {/* Les messages urgents seront injectés ici */}
       </div>
 
-      {/* Menu accessibilité latéral à droite */}
-      <div className="fixed right-0 top-1/2 transform -translate-y-1/2 z-40">
-        {/* Bouton d'ouverture */}
+      {/* Bouton d'accessibilité flottant déplaçable */}
+      <div 
+        className="fixed z-40"
+        style={{ 
+          right: `${Math.max(10, position.x)}px`, 
+          top: `${Math.max(10, position.y)}px`,
+          cursor: isDragging ? 'grabbing' : 'grab'
+        }}
+      >
         <button
-          onClick={() => setShowPanel(!showPanel)}
-          className="bg-gray-800/95 backdrop-blur-md border border-gray-600 rounded-l-lg p-3 text-sm hover:bg-gray-700 transition-all focus-visible shadow-lg"
-          title="Options d'accessibilité"
-          aria-label="Ouvrir les options d'accessibilité"
+          onClick={() => !isDragging && setShowPanel(!showPanel)}
+          onMouseDown={handleMouseDown}
+          className={`bg-gray-800 border border-gray-600 rounded-lg p-2 sm:p-3 text-sm transition-colors focus-visible ${
+            isDragging 
+              ? 'bg-gray-700 shadow-lg scale-110' 
+              : 'hover:bg-gray-700 hover:shadow-md'
+          } min-w-[40px] min-h-[40px] flex items-center justify-center`}
+          title={isDragging ? "Repositionnement du bouton..." : "Options d'accessibilité - Glisser pour déplacer"}
+          aria-label={isDragging ? "Repositionnement en cours" : "Ouvrir les options d'accessibilité ou glisser pour déplacer"}
           aria-expanded={showPanel}
+          style={{ userSelect: 'none' }}
         >
           ♿
         </button>
         
-        {/* Panel latéral dépliant */}
-        <div className={`absolute right-full top-0 transition-transform duration-300 ${showPanel ? 'translate-x-0' : 'translate-x-full'}`}>
-          <div className="bg-gray-900/95 backdrop-blur-md border border-gray-700 rounded-l-lg shadow-xl w-72 p-4 mr-1">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-white">Options d'accessibilité</h3>
-              <button
-                onClick={() => setShowPanel(false)}
-                className="text-gray-400 hover:text-white"
-                aria-label="Fermer"
-              >
-                ✕
-              </button>
-            </div>
-            <div className="space-y-3">
-              <button
+        {showPanel && (
+          <div className="mt-2 space-y-2 min-w-[180px] sm:min-w-[200px]">
+            <button
               onClick={toggleHighContrast}
               className="w-full bg-gray-800 backdrop-blur-sm border border-gray-600 rounded-lg p-2 sm:p-3 text-xs sm:text-sm hover:bg-gray-700 transition-colors focus-visible"
               title="Basculer le mode contraste élevé"
@@ -282,9 +282,10 @@ export default function AccessibilityProvider({ children }: AccessibilityProvide
                 {size === 'normal' ? 'A' : size === 'large' ? 'A+' : 'A++'}
               </button>
             ))}
+          </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
 
       <main id="main-content">
