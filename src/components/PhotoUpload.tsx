@@ -93,7 +93,21 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
             reject(new Error('Image corrompue'))
           }
           
-          img.src = URL.createObjectURL(file)
+          // Fix CORS + validation image
+          try {
+            const reader = new FileReader()
+            reader.onload = (e) => {
+              if (e.target?.result) {
+                img.src = e.target.result as string
+              } else {
+                reject(new Error('Lecture fichier échouée'))
+              }
+            }
+            reader.onerror = () => reject(new Error('FileReader erreur'))
+            reader.readAsDataURL(file)
+          } catch (readerError) {
+            reject(new Error('Impossible de lire le fichier'))
+          }
         })
         
         processedFile = await compressionPromise
