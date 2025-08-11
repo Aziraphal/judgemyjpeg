@@ -37,15 +37,75 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     console.log(`PhotoUpload: Original file size ${originalSizeMB}MB, type: ${file.type}`)
     addDebugInfo(`📁 Fichier détecté: ${originalSizeMB}MB, ${file.type}`)
     
-    // ARCHITECTURE HYBRIDE: Cloudinary (>4MB) + Vercel (≤4MB)
+    // RÉALITÉ VERCEL: IMPOSSIBLE >4MB - Compression OBLIGATOIRE même si instable
+    let processedFile = file
     
-    // SOLUTION CLOUDINARY: Upload direct pour gros fichiers, Vercel pour petits
-    const useCloudinaryDirect = file.size > 4 * 1024 * 1024
-    
-    if (useCloudinaryDirect) {
-      addDebugInfo(`🌐 Photo ${originalSizeMB}MB > 4MB: Upload direct Cloudinary`)
+    if (file.size > 3.5 * 1024 * 1024) { // 3.5MB seuil très sécurisé
+      addDebugInfo(`⚡ COMPRESSION FORCÉE: ${originalSizeMB}MB > 3.5MB`)
+      
+      try {
+        setIsUploading(true)
+        addDebugInfo(`🔧 Tentative Canvas compression...`)
+        
+        // Compression SIMPLE et BRUTALE - pas d'alternatives
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d')
+        if (!ctx) throw new Error('Canvas non disponible')
+        
+        const img = new Image()
+        const compressionPromise = new Promise<File>((resolve, reject) => {
+          const timeout = setTimeout(() => reject(new Error('Timeout 10s')), 10000)
+          
+          img.onload = () => {
+            clearTimeout(timeout)
+            try {
+              // ULTRA compression: 800px max, qualité 0.3
+              let { width, height } = img
+              const maxDim = 800
+              
+              if (width > maxDim || height > maxDim) {
+                const ratio = Math.min(maxDim / width, maxDim / height)
+                width = Math.round(width * ratio)
+                height = Math.round(height * ratio)
+              }
+              
+              canvas.width = width
+              canvas.height = height
+              ctx.drawImage(img, 0, 0, width, height)
+              
+              canvas.toBlob((blob) => {
+                if (blob) {
+                  const compressed = new File([blob], file.name, { type: 'image/jpeg' })
+                  const sizeMB = Math.round(compressed.size / 1024 / 1024 * 100) / 100
+                  addDebugInfo(`✅ Compressé: ${originalSizeMB}MB → ${sizeMB}MB`)
+                  resolve(compressed)
+                } else {
+                  reject(new Error('Échec blob'))
+                }
+              }, 'image/jpeg', 0.3)
+            } catch (e) {
+              reject(e)
+            }
+          }
+          
+          img.onerror = () => {
+            clearTimeout(timeout)
+            reject(new Error('Image corrompue'))
+          }
+          
+          img.src = URL.createObjectURL(file)
+        })
+        
+        processedFile = await compressionPromise
+        
+      } catch (error) {
+        addDebugInfo(`❌ Canvas échoué: ${error instanceof Error ? error.message : 'Erreur'}`)
+        setErrorMessage(`Photo trop complexe (${originalSizeMB}MB). Canvas ne peut pas la traiter sur cet appareil. Essayez une photo plus simple ou utilisez un ordinateur.`)
+        setIsUploading(false)
+        return
+      }
     } else {
-      addDebugInfo(`✅ Photo ${originalSizeMB}MB ≤ 4MB: Upload via Vercel`)
+      addDebugInfo(`✅ Taille OK: ${originalSizeMB}MB ≤ 3.5MB`)
     }
 
     announceToScreenReader('Début de l\'analyse de la photo')
@@ -54,7 +114,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     if (!isOnline) {
       try {
         const formData = new FormData()
-        formData.append('photo', file)
+        formData.append('photo', processedFile)
         formData.append('tone', tone)
         formData.append('language', language)
 
@@ -72,59 +132,20 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     }
 
     try {
-      let response
+      // Upload standard avec fichier compressé si nécessaire
+      const finalSizeMB = Math.round(processedFile.size / 1024 / 1024 * 100) / 100
+      addDebugInfo(`📤 Upload final: ${finalSizeMB}MB`)
       
-      if (useCloudinaryDirect) {
-        // SOLUTION ANTI-CORS: Upload via notre serveur proxy vers Cloudinary
-        addDebugInfo(`🛡️ Upload via proxy serveur (évite CORS)...`)
-        
-        const uploadFormData = new FormData()
-        uploadFormData.append('photo', file)
-        
-        const uploadResponse = await fetch('/api/photos/upload-large', {
-          method: 'POST',
-          body: uploadFormData,
-          signal: AbortSignal.timeout(120000), // 2min pour gros fichiers
-        })
-        
-        if (!uploadResponse.ok) {
-          const uploadError = await uploadResponse.json().catch(() => ({}))
-          addDebugInfo(`❌ Proxy erreur ${uploadResponse.status}: ${uploadError.error || 'Inconnu'}`)
-          throw new Error(uploadError.error || `Proxy upload failed: ${uploadResponse.status}`)
-        }
-        
-        const { photoUrl } = await uploadResponse.json()
-        addDebugInfo(`✅ Upload proxy réussi: ${photoUrl.slice(-30)}...`)
-        
-        // Analyse via URL
-        response = await fetch('/api/photos/analyze-url', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            photoUrl,
-            tone,
-            language,
-            filename: file.name
-          }),
-          signal: AbortSignal.timeout(90000),
-        })
-        
-      } else {
-        // Upload standard via Vercel (photos ≤4MB)
-        const finalSizeMB = Math.round(file.size / 1024 / 1024 * 100) / 100
-        addDebugInfo(`📤 Upload Vercel: ${finalSizeMB}MB`)
-        
-        const formData = new FormData()
-        formData.append('photo', file)
-        formData.append('tone', tone)
-        formData.append('language', language)
+      const formData = new FormData()
+      formData.append('photo', processedFile)
+      formData.append('tone', tone)
+      formData.append('language', language)
 
-        response = await fetch('/api/photos/analyze', {
-          method: 'POST',
-          body: formData,
-          signal: AbortSignal.timeout(90000),
-        })
-      }
+      const response = await fetch('/api/photos/analyze', {
+        method: 'POST',
+        body: formData,
+        signal: AbortSignal.timeout(90000),
+      })
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
