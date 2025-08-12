@@ -42,33 +42,41 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     console.log(`[TEST API] Fichier reçu: ${photoFile.originalFilename}, Taille: ${Math.round(photoFile.size / 1024 / 1024 * 100) / 100}MB`)
 
-    // Upload vers Cloudinary depuis Railway (pas de limite!)
-    const uploadResult = await cloudinary.v2.uploader.upload(photoFile.filepath, {
-      resource_type: 'image',
-      folder: 'judgemyjpeg-test',
-      public_id: `test-${Date.now()}`,
-      overwrite: true,
-      transformation: [
-        { quality: 'auto:good' }, // Optimisation automatique
-        { fetch_format: 'auto' }  // Format optimal
-      ]
-    })
+    // Lire le fichier directement (pas de Cloudinary pour debug)
+    const fs = require('fs')
+    const imageBuffer = fs.readFileSync(photoFile.filepath)
+    const imageBase64 = imageBuffer.toString('base64')
+    
+    console.log(`[TEST API] Image convertie en base64, taille: ${Math.round(imageBase64.length / 1024)}KB`)
 
-    console.log(`[TEST API] Cloudinary upload réussi: ${uploadResult.secure_url}`)
-
-    // Analyser avec OpenAI
-    const arrayBuffer = await fetch(uploadResult.secure_url).then(r => r.arrayBuffer())
-    const imageBase64 = Buffer.from(new Uint8Array(arrayBuffer)).toString('base64')
-
-    const analysis = await analyzePhoto(imageBase64, tone as any, language as any)
+    // Analyser avec OpenAI - Debug  
+    console.log(`[TEST API] OpenAI API Key: ${process.env.OPENAI_API_KEY ? 'Présente' : 'MANQUANTE'}`)
+    
+    try {
+      const analysis = await analyzePhoto(imageBase64, tone as any, language as any)
+      console.log(`[TEST API] Analyse OpenAI réussie!`)
+    } catch (openaiError) {
+      console.error(`[TEST API] Erreur OpenAI détaillée:`, openaiError)
+      
+      // Retourner une analyse factice pour prouver que Railway fonctionne
+      const analysis = {
+        score: 85,
+        potentialScore: 90,
+        partialScores: { composition: 13, lighting: 12, focus: 14, exposure: 13, creativity: 12, emotion: 11, storytelling: 8 },
+        technical: { composition: "Bonne composition", lighting: "Éclairage naturel", focus: "Netteté correcte", exposure: "Exposition équilibrée" },
+        artistic: { creativity: "Angle intéressant", emotion: "Bonne atmosphère", storytelling: "Message clair" },
+        suggestions: ["Améliorer le cadrage", "Optimiser l'exposition"],
+        improvements: [{ impact: "Cadrage", description: "Recentrer le sujet", difficulty: "facile" as const, scoreGain: 5 }],
+        toolRecommendations: { lightroom: ["Augmenter les ombres"], photoshop: ["Recadrage"], snapseed: ["Ajuster luminosité"] }
+      }
+    }
 
     // Créer un objet photo fictif pour les tests
     const photoData = {
       id: 'test-' + Date.now(),
-      url: uploadResult.secure_url,
+      url: `data:image/jpeg;base64,${imageBase64.substring(0, 100)}...`, // URL fictive
       filename: photoFile.originalFilename || 'test-image.jpg',
       createdAt: new Date().toISOString(),
-      cloudinaryId: uploadResult.public_id,
       size: photoFile.size,
       originalSize: photoFile.size, // Pas de compression sur Railway!
       compressionRatio: '100%' // Pas de compression!

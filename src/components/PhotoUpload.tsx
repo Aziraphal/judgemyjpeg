@@ -33,11 +33,12 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
     console.log(`PhotoUpload: Original file size ${originalSizeMB}MB, type: ${file.type}`)
     addDebugInfo(`📁 Fichier détecté: ${originalSizeMB}MB, ${file.type}`)
     
-    // RÉALITÉ VERCEL: IMPOSSIBLE >4MB - Compression OBLIGATOIRE même si instable
+    // ✅ RAILWAY: Pas de limite cachée ! Upload direct possible
     let processedFile = file
     
-    if (file.size > 4 * 1024 * 1024) { // 4MB seuil - limite Vercel réelle
-      addDebugInfo(`⚡ Compression nécessaire: ${originalSizeMB}MB > 4MB`)
+    // Compression uniquement pour fichiers TRÈS volumineux (>20MB) pour optimiser les performances
+    if (file.size > 20 * 1024 * 1024) { // 20MB seuil - optimisation performance seulement
+      addDebugInfo(`⚡ Optimisation performance: ${originalSizeMB}MB > 20MB`)
       
       try {
         setIsUploading(true)
@@ -126,13 +127,13 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
         processedFile = await compressionPromise
         
       } catch (error) {
-        addDebugInfo(`❌ Compression échouée: ${error instanceof Error ? error.message : 'Erreur'}`)
-        setErrorMessage(`Impossible d'optimiser cette photo (${originalSizeMB}MB). Essayez de la redimensionner à moins de 4MB ou utilisez un format différent.`)
+        addDebugInfo(`❌ Optimisation échouée: ${error instanceof Error ? error.message : 'Erreur'}`)
+        setErrorMessage(`Impossible d'optimiser cette photo (${originalSizeMB}MB). Essayez de la redimensionner à moins de 20MB.`)
         setIsUploading(false)
         return
       }
     } else {
-      addDebugInfo(`✅ Taille OK: ${originalSizeMB}MB ≤ 4MB`)
+      addDebugInfo(`✅ Upload direct: ${originalSizeMB}MB (Railway - pas de limite!)`)
     }
 
 
@@ -381,7 +382,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
                   </div>
                 </div>
                 <p className="text-xs text-green-400/80">
-                  📱 Photos jusqu'à 10MB • Compression automatique si nécessaire
+                  📱 Photos jusqu'à 20MB • Qualité originale préservée • Railway Pro
                 </p>
               </div>
             </div>
