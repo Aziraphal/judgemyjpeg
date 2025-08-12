@@ -70,7 +70,6 @@ export default function TestUploadPage() {
               photo={result.photo}
               analysis={result.analysis}
               tone={selectedTone}
-              language={selectedLanguage}
               onNewAnalysis={handleNewAnalysis}
             />
           )}
