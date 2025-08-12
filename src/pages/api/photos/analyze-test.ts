@@ -52,14 +52,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Analyser avec OpenAI - Debug  
     console.log(`[TEST API] OpenAI API Key: ${process.env.OPENAI_API_KEY ? 'Présente' : 'MANQUANTE'}`)
     
+    let analysis
     try {
-      const analysis = await analyzePhoto(imageBase64, tone as any, language as any)
+      analysis = await analyzePhoto(imageBase64, tone as any, language as any)
       console.log(`[TEST API] Analyse OpenAI réussie!`)
     } catch (openaiError) {
       console.error(`[TEST API] Erreur OpenAI détaillée:`, openaiError)
       
       // Retourner une analyse factice pour prouver que Railway fonctionne
-      const analysis = {
+      analysis = {
         score: 85,
         potentialScore: 90,
         partialScores: { composition: 13, lighting: 12, focus: 14, exposure: 13, creativity: 12, emotion: 11, storytelling: 8 },
