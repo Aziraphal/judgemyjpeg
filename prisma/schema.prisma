@@ -49,6 +49,9 @@ model User {
   stripeSubscriptionId String?       @unique
   subscriptionStatus   String        @default("free")
   password             String?
+  hashedPassword       String?
+  resetToken           String?
+  resetTokenExpiry     DateTime?
   backupCodes          String[]      @default([])
   twoFactorEnabled     Boolean       @default(false)
   twoFactorSecret      String?
