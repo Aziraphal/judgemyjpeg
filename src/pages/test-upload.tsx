@@ -64,6 +64,7 @@ export default function TestUploadPage() {
               onAnalysisComplete={handleAnalysisComplete}
               tone={selectedTone}
               language={selectedLanguage}
+              testMode={true}
             />
           ) : (
             <div>
