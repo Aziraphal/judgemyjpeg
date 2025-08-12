@@ -57,9 +57,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log(`[TEST API] Cloudinary upload réussi: ${uploadResult.secure_url}`)
 
     // Analyser avec OpenAI
-    const imageBase64 = Buffer.from(
-      await fetch(uploadResult.secure_url).then(r => r.arrayBuffer())
-    ).toString('base64')
+    const arrayBuffer = await fetch(uploadResult.secure_url).then(r => r.arrayBuffer())
+    const imageBase64 = Buffer.from(new Uint8Array(arrayBuffer)).toString('base64')
 
     const analysis = await analyzePhoto(imageBase64, tone as any, language as any)
 
