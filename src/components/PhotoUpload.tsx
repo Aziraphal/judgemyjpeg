@@ -5,9 +5,10 @@ interface PhotoUploadProps {
   onAnalysisComplete: (result: { photo: any; analysis: PhotoAnalysis }) => void
   tone: AnalysisTone
   language: AnalysisLanguage
+  testMode?: boolean // Mode test sans auth
 }
 
-export default function PhotoUpload({ onAnalysisComplete, tone, language }: PhotoUploadProps) {
+export default function PhotoUpload({ onAnalysisComplete, tone, language, testMode = false }: PhotoUploadProps) {
   const [isUploading, setIsUploading] = useState(false)
   const [dragActive, setDragActive] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -146,7 +147,11 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
       formData.append('tone', tone)
       formData.append('language', language)
 
-      const response = await fetch('/api/photos/analyze', {
+      // Utiliser l'API de test si en mode test
+      const apiUrl = testMode ? '/api/photos/analyze-test' : '/api/photos/analyze'
+      addDebugInfo(`🔗 API utilisée: ${apiUrl}`)
+      
+      const response = await fetch(apiUrl, {
         method: 'POST',
         body: formData,
         signal: AbortSignal.timeout(90000),
