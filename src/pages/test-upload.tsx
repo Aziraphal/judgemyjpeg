@@ -38,7 +38,7 @@ export default function TestUploadPage() {
               </span>
             </h1>
             <p className="text-text-gray max-w-2xl mx-auto">
-              Test des uploads >4MB sans compression brutale
+              Test des uploads &gt;4MB sans compression brutale
             </p>
           </div>
 
