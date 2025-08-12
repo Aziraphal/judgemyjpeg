@@ -66,12 +66,21 @@ export default function TestUploadPage() {
               language={selectedLanguage}
             />
           ) : (
-            <AnalysisResult 
-              photo={result.photo}
-              analysis={result.analysis}
-              tone={selectedTone}
-              onNewAnalysis={handleNewAnalysis}
-            />
+            <div>
+              <AnalysisResult 
+                photo={result.photo}
+                analysis={result.analysis}
+                tone={selectedTone}
+              />
+              <div className="text-center mt-8">
+                <button 
+                  onClick={handleNewAnalysis}
+                  className="btn-neon-secondary"
+                >
+                  🔄 Nouvelle Analyse
+                </button>
+              </div>
+            </div>
           )}
         </div>
       </main>
