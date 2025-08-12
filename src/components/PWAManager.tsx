@@ -4,7 +4,6 @@
  */
 
 import { useState, useEffect } from 'react'
-import { useAccessibility } from './AccessibilityProvider'
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[]
@@ -22,7 +21,6 @@ export default function PWAManager() {
   const [isOnline, setIsOnline] = useState(true)
   const [updateAvailable, setUpdateAvailable] = useState(false)
   const [showInstallBanner, setShowInstallBanner] = useState(false)
-  const { announceToScreenReader } = useAccessibility()
 
   useEffect(() => {
     // Détecter si l'app est installée
@@ -34,7 +32,6 @@ export default function PWAManager() {
     const updateOnlineStatus = () => {
       const online = navigator.onLine
       setIsOnline(online)
-      announceToScreenReader(online ? 'Connexion rétablie' : 'Mode hors ligne activé')
     }
 
     window.addEventListener('online', updateOnlineStatus)
@@ -57,7 +54,6 @@ export default function PWAManager() {
       setIsInstalled(true)
       setIsInstallable(false)
       setShowInstallBanner(false)
-      announceToScreenReader('Application installée avec succès')
       
       // Analytics
       if (typeof window !== 'undefined' && (window as any).gtag) {
@@ -81,7 +77,7 @@ export default function PWAManager() {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
       window.removeEventListener('appinstalled', handleAppInstalled)
     }
-  }, [announceToScreenReader, isInstalled])
+  }, [isInstalled])
 
   const registerServiceWorker = async () => {
     try {
@@ -99,7 +95,6 @@ export default function PWAManager() {
           newWorker.addEventListener('statechange', () => {
             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
               setUpdateAvailable(true)
-              announceToScreenReader('Mise à jour de l\'application disponible')
             }
           })
         }
@@ -124,7 +119,6 @@ export default function PWAManager() {
 
       if (outcome === 'accepted') {
         console.log('[PWA] Installation acceptée')
-        announceToScreenReader('Installation de l\'application en cours')
       } else {
         console.log('[PWA] Installation refusée')
         localStorage.setItem('pwa-install-dismissed', Date.now().toString())
@@ -158,7 +152,6 @@ export default function PWAManager() {
   const addToHomeScreen = () => {
     // iOS Safari fallback
     if (typeof window !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent)) {
-      announceToScreenReader('Pour installer: tapez sur Partager puis Ajouter à l\'écran d\'accueil')
       alert('Pour installer JudgeMyJPEG:\n1. Tapez sur l\'icône Partager (carré avec flèche)\n2. Sélectionnez "Ajouter à l\'écran d\'accueil"\n3. Tapez "Ajouter"')
     } else {
       handleInstallClick()

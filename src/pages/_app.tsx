@@ -1,11 +1,9 @@
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import { SessionProvider } from 'next-auth/react'
-import { Analytics } from '@vercel/analytics/next'
+// import { Analytics } from '@vercel/analytics/next' // Désactivé pour Railway
 import SecurityStatusBar from '@/components/SecurityStatusBar'
 import CookieConsent from '@/components/CookieConsent'
-import AccessibilityProvider from '@/components/AccessibilityProvider'
-import PWAManager from '@/components/PWAManager'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
@@ -58,14 +56,11 @@ export default function App({
       </Head>
       
       <SessionProvider session={session}>
-        <AccessibilityProvider>
-          {/* SecurityStatusBar désactivé par défaut - trop invasif pour l'utilisateur final */}
-          {process.env.NODE_ENV === 'development' && !hideSecurityBar && <SecurityStatusBar compact position="top" />}
-          <Component {...pageProps} />
-          <PWAManager />
-          <CookieConsent />
-          <Analytics />
-        </AccessibilityProvider>
+        {/* SecurityStatusBar désactivé par défaut - trop invasif pour l'utilisateur final */}
+        {process.env.NODE_ENV === 'development' && !hideSecurityBar && <SecurityStatusBar compact position="top" />}
+        <Component {...pageProps} />
+        <CookieConsent />
+        {/* <Analytics /> */}
       </SessionProvider>
     </>
   )

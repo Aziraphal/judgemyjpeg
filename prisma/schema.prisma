@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
@@ -14,15 +14,14 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -36,37 +35,31 @@ model Session {
 }
 
 model User {
-  id                    String    @id @default(cuid())
-  name                  String?
-  email                 String?   @unique
-  emailVerified         DateTime?
-  image                 String?
-  password              String?
-  accounts              Account[]
-  sessions              Session[]
-  userSessions          UserSession[]
-  photos                Photo[]
-  collections           Collection[]
-  favorites             Favorite[]
-  
-  // Subscription fields
-  subscriptionStatus    String    @default("free") // "free", "premium", "lifetime"
-  stripeCustomerId      String?   @unique
-  stripeSubscriptionId  String?   @unique
-  currentPeriodEnd      DateTime?
-  monthlyAnalysisCount  Int       @default(0)
-  lastAnalysisReset     DateTime  @default(now())
-  
-  // 2FA fields
-  twoFactorEnabled      Boolean   @default(false)
-  twoFactorSecret       String?   // TOTP secret key (encrypted)
-  backupCodes           String[]  @default([]) // Recovery codes (hashed)
-  twoFactorVerified     DateTime? // When 2FA was first verified
-  
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
+  id                   String        @id @default(cuid())
+  name                 String?
+  email                String?       @unique
+  emailVerified        DateTime?
+  image                String?
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+  currentPeriodEnd     DateTime?
+  lastAnalysisReset    DateTime      @default(now())
+  monthlyAnalysisCount Int           @default(0)
+  stripeCustomerId     String?       @unique
+  stripeSubscriptionId String?       @unique
+  subscriptionStatus   String        @default("free")
+  password             String?
+  backupCodes          String[]      @default([])
+  twoFactorEnabled     Boolean       @default(false)
+  twoFactorSecret      String?
+  twoFactorVerified    DateTime?
+  accounts             Account[]
+  collections          Collection[]
+  favorites            Favorite[]
+  photos               Photo[]
+  sessions             Session[]
+  userSessions         UserSession[]
 
-  // Index pour performance
   @@index([subscriptionStatus])
   @@index([createdAt])
 }
@@ -80,24 +73,22 @@ model VerificationToken {
 }
 
 model Photo {
-  id              String   @id @default(cuid())
+  id              String           @id @default(cuid())
   userId          String
   url             String
   filename        String
-  analysis        String?  @db.Text
+  analysis        String?
   score           Float?
+  suggestions     String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  isTopPhoto      Boolean          @default(false)
+  improvements    String?
   potentialScore  Float?
-  improvements    String?  @db.Text
-  suggestions     String?  @db.Text
-  isTopPhoto      Boolean  @default(false)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  user            User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  favorites       Favorite[]
   collectionItems CollectionItem[]
+  favorites       Favorite[]
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  // Index pour performance
   @@index([userId, createdAt])
   @@index([score])
   @@index([isTopPhoto])
@@ -105,29 +96,27 @@ model Photo {
 }
 
 model Collection {
-  id          String   @id @default(cuid())
+  id          String           @id @default(cuid())
   userId      String
   name        String
   description String?
-  color       String   @default("#FF006E")
-  isPublic    Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  user  User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  items CollectionItem[]
+  color       String           @default("#FF006E")
+  isPublic    Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items       CollectionItem[]
 
   @@unique([userId, name])
 }
 
 model CollectionItem {
-  id           String @id @default(cuid())
+  id           String     @id @default(cuid())
   collectionId String
   photoId      String
-  addedAt      DateTime @default(now())
-
-  collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
-  photo      Photo      @relation(fields: [photoId], references: [id], onDelete: Cascade)
+  addedAt      DateTime   @default(now())
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  photo        Photo      @relation(fields: [photoId], references: [id], onDelete: Cascade)
 
   @@unique([collectionId, photoId])
 }
@@ -137,9 +126,8 @@ model Favorite {
   userId    String
   photoId   String
   createdAt DateTime @default(now())
-
-  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  photo Photo @relation(fields: [photoId], references: [id], onDelete: Cascade)
+  photo     Photo    @relation(fields: [photoId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, photoId])
 }
@@ -150,14 +138,13 @@ model AuditLog {
   email       String?
   ipAddress   String
   userAgent   String?
-  eventType   String   // AuditEventType enum
+  eventType   String
   description String
-  metadata    String?  @db.Text // JSON string
-  riskLevel   String   // low, medium, high, critical
+  metadata    String?
+  riskLevel   String
   success     Boolean
   timestamp   DateTime @default(now())
 
-  // Index pour performance des requêtes de sécurité
   @@index([userId, timestamp])
   @@index([eventType, timestamp])
   @@index([riskLevel, timestamp])
@@ -165,26 +152,24 @@ model AuditLog {
 }
 
 model UserSession {
-  id                  String    @id @default(uuid())
-  userId              String
-  deviceFingerprint   String
-  deviceName          String
-  browser             String
-  os                  String
-  ipAddress           String
-  location            String
-  createdAt           DateTime  @default(now())
-  lastActivity        DateTime  @default(now())
-  expiresAt           DateTime
-  isActive            Boolean   @default(true)
-  isSuspicious        Boolean   @default(false)
-  riskScore           Int       @default(0)
-  invalidatedAt       DateTime?
-  invalidationReason  String?
+  id                 String    @id @default(uuid())
+  userId             String
+  deviceFingerprint  String
+  deviceName         String
+  browser            String
+  os                 String
+  ipAddress          String
+  location           String
+  createdAt          DateTime  @default(now())
+  lastActivity       DateTime  @default(now())
+  expiresAt          DateTime
+  isActive           Boolean   @default(true)
+  isSuspicious       Boolean   @default(false)
+  riskScore          Int       @default(0)
+  invalidatedAt      DateTime?
+  invalidationReason String?
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  // Index pour performance
   @@index([userId, isActive])
   @@index([deviceFingerprint])
   @@index([ipAddress, createdAt])

@@ -1,7 +1,5 @@
 import { useState, useRef } from 'react'
 import { PhotoAnalysis, AnalysisTone, AnalysisLanguage } from '@/services/openai'
-import { AccessibleError, useAccessibility } from '@/components/AccessibilityProvider'
-import { usePWA } from '@/components/PWAManager'
 
 interface PhotoUploadProps {
   onAnalysisComplete: (result: { photo: any; analysis: PhotoAnalysis }) => void
@@ -18,15 +16,12 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     setDebugInfo(prev => [...prev.slice(-4), `[${new Date().toLocaleTimeString()}] ${info}`])
   }
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const { announceToScreenReader } = useAccessibility()
-  const { isOnline, queueAnalysis } = usePWA()
 
   // SUPPRIMÉ: Fonctions de compression Canvas (plus nécessaires avec Vercel Pro 50MB)
 
   const handleFile = async (file: File) => {
     if (!file.type.startsWith('image/')) {
       setErrorMessage('Veuillez sélectionner un fichier image valide (JPG, PNG, WebP)')
-      announceToScreenReader('Erreur : Format de fichier non supporté')
       return
     }
 
@@ -40,12 +35,12 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
     // RÉALITÉ VERCEL: IMPOSSIBLE >4MB - Compression OBLIGATOIRE même si instable
     let processedFile = file
     
-    if (file.size > 3.5 * 1024 * 1024) { // 3.5MB seuil très sécurisé
-      addDebugInfo(`⚡ COMPRESSION FORCÉE: ${originalSizeMB}MB > 3.5MB`)
+    if (file.size > 4 * 1024 * 1024) { // 4MB seuil - limite Vercel réelle
+      addDebugInfo(`⚡ Compression nécessaire: ${originalSizeMB}MB > 4MB`)
       
       try {
         setIsUploading(true)
-        addDebugInfo(`🔧 Tentative Canvas compression...`)
+        addDebugInfo(`🔧 Optimisation qualité préservée...`)
         
         // Compression SIMPLE et BRUTALE - pas d'alternatives
         const canvas = document.createElement('canvas')
@@ -59,30 +54,47 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
           img.onload = () => {
             clearTimeout(timeout)
             try {
-              // ULTRA compression: 800px max, qualité 0.3
+              // Compression INTELLIGENTE: garder qualité max sous 4.4MB
               let { width, height } = img
-              const maxDim = 800
+              let quality = 0.9 // Commencer avec haute qualité
+              const targetSize = 4.4 * 1024 * 1024 // 4.4MB cible
               
-              if (width > maxDim || height > maxDim) {
-                const ratio = Math.min(maxDim / width, maxDim / height)
+              // Réduire dimensions seulement si nécessaire (très grosse image)
+              if (width * height > 4000000) { // >4MP
+                const ratio = Math.sqrt(4000000 / (width * height))
                 width = Math.round(width * ratio)
                 height = Math.round(height * ratio)
+                addDebugInfo(`🔧 Redimensionné: ${img.width}x${img.height} → ${width}x${height}`)
               }
               
               canvas.width = width
               canvas.height = height
               ctx.drawImage(img, 0, 0, width, height)
               
-              canvas.toBlob((blob) => {
-                if (blob) {
-                  const compressed = new File([blob], file.name, { type: 'image/jpeg' })
-                  const sizeMB = Math.round(compressed.size / 1024 / 1024 * 100) / 100
-                  addDebugInfo(`✅ Compressé: ${originalSizeMB}MB → ${sizeMB}MB`)
-                  resolve(compressed)
-                } else {
-                  reject(new Error('Échec blob'))
-                }
-              }, 'image/jpeg', 0.3)
+              // Fonction récursive pour ajuster la qualité
+              const compressWithQuality = (q: number) => {
+                canvas.toBlob((blob) => {
+                  if (blob) {
+                    const sizeMB = blob.size / 1024 / 1024
+                    addDebugInfo(`🧪 Test qualité ${Math.round(q*100)}%: ${Math.round(sizeMB*100)/100}MB`)
+                    
+                    if (blob.size <= targetSize || q <= 0.1) {
+                      // Taille acceptable ou qualité minimum atteinte
+                      const compressed = new File([blob], file.name, { type: 'image/jpeg' })
+                      const finalSizeMB = Math.round(sizeMB * 100) / 100
+                      addDebugInfo(`✅ Optimisé: ${originalSizeMB}MB → ${finalSizeMB}MB (qualité ${Math.round(q*100)}%)`)
+                      resolve(compressed)
+                    } else {
+                      // Trop gros, réduire qualité
+                      compressWithQuality(q - 0.1)
+                    }
+                  } else {
+                    reject(new Error('Échec blob'))
+                  }
+                }, 'image/jpeg', q)
+              }
+              
+              compressWithQuality(quality)
             } catch (e) {
               reject(e)
             }
@@ -113,37 +125,16 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
         processedFile = await compressionPromise
         
       } catch (error) {
-        addDebugInfo(`❌ Canvas échoué: ${error instanceof Error ? error.message : 'Erreur'}`)
-        setErrorMessage(`Photo trop complexe (${originalSizeMB}MB). Canvas ne peut pas la traiter sur cet appareil. Essayez une photo plus simple ou utilisez un ordinateur.`)
+        addDebugInfo(`❌ Compression échouée: ${error instanceof Error ? error.message : 'Erreur'}`)
+        setErrorMessage(`Impossible d'optimiser cette photo (${originalSizeMB}MB). Essayez de la redimensionner à moins de 4MB ou utilisez un format différent.`)
         setIsUploading(false)
         return
       }
     } else {
-      addDebugInfo(`✅ Taille OK: ${originalSizeMB}MB ≤ 3.5MB`)
+      addDebugInfo(`✅ Taille OK: ${originalSizeMB}MB ≤ 4MB`)
     }
 
-    announceToScreenReader('Début de l\'analyse de la photo')
 
-    // Gestion mode hors ligne
-    if (!isOnline) {
-      try {
-        const formData = new FormData()
-        formData.append('photo', processedFile)
-        formData.append('tone', tone)
-        formData.append('language', language)
-
-        const queueId = await queueAnalysis(formData)
-        announceToScreenReader('Photo ajoutée à la file d\'attente. Elle sera analysée dès que la connexion sera rétablie.')
-        
-        setErrorMessage('Mode hors ligne : Votre photo a été mise en file d\'attente et sera analysée automatiquement dès que la connexion sera rétablie.')
-        setIsUploading(false)
-        return
-      } catch (error) {
-        setErrorMessage('Impossible de mettre en file d\'attente en mode hors ligne')
-        setIsUploading(false)
-        return
-      }
-    }
 
     try {
       // Upload standard avec fichier compressé si nécessaire
@@ -176,7 +167,6 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
 
       const result = await response.json()
       addDebugInfo(`✅ Analyse terminée avec succès`)
-      announceToScreenReader('Analyse de la photo terminée avec succès')
       onAnalysisComplete(result)
 
     } catch (error) {
@@ -202,7 +192,6 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
       
       addDebugInfo(`🔴 Erreur finale: ${errorMessage}`)
       setErrorMessage(errorMessage)
-      announceToScreenReader(`Erreur : ${errorMessage}`)
     } finally {
       setIsUploading(false)
     }
@@ -255,7 +244,17 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
   return (
     <div className="w-full max-w-lg sm:max-w-2xl mx-auto">
       {errorMessage && (
-        <AccessibleError message={errorMessage} onRetry={clearError} />
+        <div className="mb-4 p-3 bg-red-900/30 border border-red-500/30 rounded-lg text-red-300">
+          <div className="flex items-center justify-between">
+            <div className="flex-1">{errorMessage}</div>
+            <button
+              onClick={clearError}
+              className="ml-4 px-3 py-1 bg-red-600/30 hover:bg-red-600/50 rounded text-sm"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
       )}
       <div
         className={`
@@ -314,19 +313,19 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
                 tone === 'roast' ? 'text-red-400' : 'text-neon-cyan'
               }`}>
                 <span aria-hidden="true">{tone === 'roast' ? '🔥 ' : '🚀 '}</span>
-                {tone === 'roast' ? 'Préparation du massacre...' : 'Analyse IA en cours...'}
+                {tone === 'roast' ? 'Analyse critique en cours...' : 'Analyse IA en cours...'}
               </p>
               <p className="text-sm sm:text-base text-text-gray">
                 {tone === 'roast' 
-                  ? 'L\'IA se prépare à détruire votre photo' 
-                  : 'GPT-4 Vision analyse votre photo avec Vercel Pro'
+                  ? 'L\'IA prépare une critique sans concession' 
+                  : 'GPT-4 Vision analyse votre photo avec précision'
                 }
               </p>
               
               {/* Debug info mobile - visible pendant le traitement */}
               {debugInfo.length > 0 && (
                 <div className="glass-card p-3 mt-4 text-left">
-                  <h4 className="text-xs font-semibold text-neon-cyan mb-2">📊 Debug Mobile</h4>
+                  <h4 className="text-xs font-semibold text-neon-cyan mb-2">📊 Traitement</h4>
                   <div className="space-y-1 text-xs text-text-muted font-mono max-h-20 overflow-y-auto">
                     {debugInfo.map((info, idx) => (
                       <div key={idx} className="truncate">{info}</div>
@@ -377,7 +376,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
                   </div>
                 </div>
                 <p className="text-xs text-green-400/80">
-                  📱 Photos smartphone jusqu'à 25MB • Cloudinary Direct • Sans limite Vercel
+                  📱 Photos jusqu'à 10MB • Compression automatique si nécessaire
                 </p>
               </div>
             </div>
@@ -387,11 +386,11 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language }: Phot
               <span className="text-neon-pink font-semibold">Intelligence Artificielle</span> ✨
             </div>
             
-            {/* Debug info mobile - visible même quand pas d'upload */}
+            {/* Debug info - visible même quand pas d'upload */}
             {debugInfo.length > 0 && (
               <div className="glass-card p-3 mt-4 text-left">
                 <h4 className="text-xs font-semibold text-neon-cyan mb-2 flex items-center">
-                  📊 Dernières activités
+                  📊 Activité récente
                   <button 
                     onClick={() => setDebugInfo([])} 
                     className="ml-auto text-xs text-text-muted hover:text-white"
