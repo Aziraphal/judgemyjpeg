@@ -118,13 +118,13 @@ export default function Home() {
                     onClick={() => window.location.href = '/auth/signup'}
                     className="btn-neon-pink text-lg px-8 py-3"
                   >
-                    🚀 Créer un compte
+                    Créer un compte
                   </button>
                   <button
                     onClick={() => window.location.href = '/auth/signin'}
                     className="btn-neon-secondary text-lg px-8 py-3"
                   >
-                    🔑 Se connecter
+                    Se connecter
                   </button>
                 </div>
               </div>
