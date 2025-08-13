@@ -116,7 +116,7 @@ export const authOptions: NextAuthOptions = {
       authorization: {
         params: {
           redirect_uri: process.env.NODE_ENV === 'production' 
-            ? 'https://judgemyjpeg.fr/api/auth/callback/google'
+            ? 'https://www.judgemyjpeg.fr/api/auth/callback/google'
             : 'http://localhost:3005/api/auth/callback/google'
         }
       }
