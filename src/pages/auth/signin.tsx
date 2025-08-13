@@ -199,7 +199,7 @@ export default function SignInPage() {
                 href="/auth/forgot-password"
                 className="text-sm text-neon-cyan hover:text-neon-pink transition-colors"
               >
-                🔐 Mot de passe oublié ?
+                Mot de passe oublié ?
               </Link>
             </div>
 

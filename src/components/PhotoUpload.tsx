@@ -6,9 +6,10 @@ interface PhotoUploadProps {
   tone: AnalysisTone
   language: AnalysisLanguage
   testMode?: boolean // Mode test sans auth
+  onUploadStateChange?: (isUploading: boolean) => void
 }
 
-export default function PhotoUpload({ onAnalysisComplete, tone, language, testMode = false }: PhotoUploadProps) {
+export default function PhotoUpload({ onAnalysisComplete, tone, language, testMode = false, onUploadStateChange }: PhotoUploadProps) {
   const [isUploading, setIsUploading] = useState(false)
   const [dragActive, setDragActive] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -27,6 +28,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
     }
 
     setIsUploading(true)
+    onUploadStateChange?.(true)
     setErrorMessage(null)
     
     const originalSizeMB = Math.round(file.size / 1024 / 1024 * 100) / 100
@@ -42,6 +44,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
       
       try {
         setIsUploading(true)
+    onUploadStateChange?.(true)
         addDebugInfo(`🔧 Optimisation qualité préservée...`)
         
         // Compression SIMPLE et BRUTALE - pas d'alternatives
@@ -130,6 +133,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
         addDebugInfo(`❌ Optimisation échouée: ${error instanceof Error ? error.message : 'Erreur'}`)
         setErrorMessage(`Impossible d'optimiser cette photo (${originalSizeMB}MB). Essayez de la redimensionner à moins de 20MB.`)
         setIsUploading(false)
+    onUploadStateChange?.(false)
         return
       }
     } else {
@@ -200,6 +204,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
       setErrorMessage(errorMessage)
     } finally {
       setIsUploading(false)
+    onUploadStateChange?.(false)
     }
   }
 
@@ -331,7 +336,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
               {/* Debug info mobile - visible pendant le traitement */}
               {debugInfo.length > 0 && (
                 <div className="glass-card p-3 mt-4 text-left">
-                  <h4 className="text-xs font-semibold text-neon-cyan mb-2">📊 Traitement</h4>
+                  <h4 className="text-xs font-semibold text-neon-cyan mb-2">Traitement</h4>
                   <div className="space-y-1 text-xs text-text-muted font-mono max-h-20 overflow-y-auto">
                     {debugInfo.map((info, idx) => (
                       <div key={idx} className="truncate">{info}</div>
@@ -396,7 +401,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
             {debugInfo.length > 0 && (
               <div className="glass-card p-3 mt-4 text-left">
                 <h4 className="text-xs font-semibold text-neon-cyan mb-2 flex items-center">
-                  📊 Activité récente
+                  Activité récente
                   <button 
                     onClick={() => setDebugInfo([])} 
                     className="ml-auto text-xs text-text-muted hover:text-white"
