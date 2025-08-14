@@ -152,6 +152,9 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
 
 
 
+    // Déclarer messageInterval en dehors du try pour le scope
+    let messageInterval: NodeJS.Timeout | null = null
+
     try {
       // Upload standard avec fichier compressé si nécessaire
       const finalSizeMB = Math.round(processedFile.size / 1024 / 1024 * 100) / 100
@@ -189,7 +192,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
 
       // Afficher les messages progressivement
       let messageIndex = 0
-      const messageInterval = setInterval(() => {
+      messageInterval = setInterval(() => {
         if (messageIndex < progressMessages.length) {
           addDebugInfo(progressMessages[messageIndex])
           messageIndex++
@@ -216,7 +219,9 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
       }
 
       // Arrêter les messages progressifs
-      clearInterval(messageInterval)
+      if (messageInterval) {
+        clearInterval(messageInterval)
+      }
 
       const result = await response.json()
       
@@ -231,7 +236,9 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
 
     } catch (error) {
       // Arrêter les messages en cas d'erreur aussi
-      clearInterval(messageInterval)
+      if (messageInterval) {
+        clearInterval(messageInterval)
+      }
       // Log pour debug uniquement
       if (process.env.NODE_ENV === 'development') {
         console.error('Erreur:', error)
