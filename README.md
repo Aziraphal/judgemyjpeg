@@ -17,7 +17,7 @@ Une application web qui utilise l'IA Gemini pour analyser et critiquer les photo
 - **Backend**: Next.js API Routes
 - **Database**: PostgreSQL + Prisma ORM
 - **Auth**: NextAuth.js
-- **IA**: Google Gemini API
+- **IA**: OpenAI API (o3 mini)
 - **Paiement**: Stripe
 - **Styling**: Tailwind CSS
 
@@ -27,6 +27,10 @@ Une application web qui utilise l'IA Gemini pour analyser et critiquer les photo
 npm install
 npm run dev
 ```
+
+## Déploiement
+
+L'application est déployée sur Railway, permettant un jugement des images sans compression ni limite de taille.
 
 ## Structure du projet
 
