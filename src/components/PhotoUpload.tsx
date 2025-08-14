@@ -34,24 +34,20 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
     const originalSizeMB = Math.round(file.size / 1024 / 1024 * 100) / 100
     console.log(`PhotoUpload: Original file size ${originalSizeMB}MB, type: ${file.type}`)
     
-    // Messages engageants selon le mode
-    if (tone === 'roast') {
-      addDebugInfo(`🔥 Préparation du bûcher pour votre photo...`)
-    } else {
-      addDebugInfo(`⚡ Initialisation de l'analyse professionnelle...`)
-    }
+    // Logs internes uniquement (non visibles)
+    console.log(`Analysis mode: ${tone}, file size: ${originalSizeMB}MB`)
     
     // ✅ RAILWAY: Pas de limite cachée ! Upload direct possible
     let processedFile = file
     
     // Compression uniquement pour fichiers TRÈS volumineux (>20MB) pour optimiser les performances
     if (file.size > 20 * 1024 * 1024) { // 20MB seuil - optimisation performance seulement
-      addDebugInfo(`⚡ Optimisation performance: ${originalSizeMB}MB > 20MB`)
+      console.log(`Performance optimization: ${originalSizeMB}MB > 20MB`)
       
       try {
         setIsUploading(true)
     onUploadStateChange?.(true)
-        addDebugInfo(`🔧 Optimisation qualité préservée...`)
+        console.log('Quality optimization starting...')
         
         // Compression SIMPLE et BRUTALE - pas d'alternatives
         const canvas = document.createElement('canvas')
@@ -75,7 +71,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
                 const ratio = Math.sqrt(4000000 / (width * height))
                 width = Math.round(width * ratio)
                 height = Math.round(height * ratio)
-                addDebugInfo(`🔧 Redimensionné: ${img.width}x${img.height} → ${width}x${height}`)
+                console.log(`Resized: ${img.width}x${img.height} → ${width}x${height}`)
               }
               
               canvas.width = width
@@ -87,13 +83,13 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
                 canvas.toBlob((blob) => {
                   if (blob) {
                     const sizeMB = blob.size / 1024 / 1024
-                    addDebugInfo(`🧪 Test qualité ${Math.round(q*100)}%: ${Math.round(sizeMB*100)/100}MB`)
+                    console.log(`Quality test ${Math.round(q*100)}%: ${Math.round(sizeMB*100)/100}MB`)
                     
                     if (blob.size <= targetSize || q <= 0.1) {
                       // Taille acceptable ou qualité minimum atteinte
                       const compressed = new File([blob], file.name, { type: 'image/jpeg' })
                       const finalSizeMB = Math.round(sizeMB * 100) / 100
-                      addDebugInfo(`✅ Optimisé: ${originalSizeMB}MB → ${finalSizeMB}MB (qualité ${Math.round(q*100)}%)`)
+                      console.log(`Optimized: ${originalSizeMB}MB → ${finalSizeMB}MB (quality ${Math.round(q*100)}%)`)
                       resolve(compressed)
                     } else {
                       // Trop gros, réduire qualité
@@ -136,18 +132,14 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
         processedFile = await compressionPromise
         
       } catch (error) {
-        addDebugInfo(`❌ Optimisation échouée: ${error instanceof Error ? error.message : 'Erreur'}`)
+        console.error('Optimization failed:', error instanceof Error ? error.message : 'Error')
         setErrorMessage(`Impossible d'optimiser cette photo (${originalSizeMB}MB). Essayez de la redimensionner à moins de 20MB.`)
         setIsUploading(false)
     onUploadStateChange?.(false)
         return
       }
     } else {
-      if (tone === 'roast') {
-        addDebugInfo(`🎯 Votre victime est dans le viseur...`)
-      } else {
-        addDebugInfo(`📡 Transmission des données vers l'IA...`)
-      }
+      console.log(`Upload mode: direct, size: ${originalSizeMB}MB`)
     }
 
 
@@ -158,11 +150,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
     try {
       // Upload standard avec fichier compressé si nécessaire
       const finalSizeMB = Math.round(processedFile.size / 1024 / 1024 * 100) / 100
-      if (tone === 'roast') {
-        addDebugInfo(`⚔️ Préparation des munitions critiques...`)
-      } else {
-        addDebugInfo(`🔬 Préparation de l'analyse détaillée...`)
-      }
+      console.log(`Processing file for ${tone} analysis...`)
       
       const formData = new FormData()
       formData.append('photo', processedFile)
@@ -171,33 +159,10 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
 
       // Utiliser l'API de test si en mode test
       const apiUrl = testMode ? '/api/photos/analyze-test' : '/api/photos/analyze'
-      if (tone === 'roast') {
-        addDebugInfo(`🔥 L'IA aiguise ses griffes...`)
-      } else {
-        addDebugInfo(`🧠 L'IA examine votre composition...`)
-      }
+      console.log(`Sending to API: ${apiUrl}`)
       
-      // Messages progressifs pendant l'analyse
-      const progressMessages = tone === 'roast' 
-        ? [
-            '🎯 L\'IA localise les défauts...',
-            '💀 Préparation des critiques assassines...',
-            '🔥 Forge des métaphores dévastatrices...'
-          ]
-        : [
-            '👁️ L\'IA analyse la composition...',
-            '🎨 Évaluation des couleurs et de la lumière...',
-            '📏 Mesure de l\'équilibre et du cadrage...'
-          ]
-
-      // Afficher les messages progressivement
-      let messageIndex = 0
-      messageInterval = setInterval(() => {
-        if (messageIndex < progressMessages.length) {
-          addDebugInfo(progressMessages[messageIndex])
-          messageIndex++
-        }
-      }, 1000)
+      // Les messages progressifs sont maintenant intégrés dans l'interface
+      console.log(`Starting ${tone} analysis...`)
 
       const response = await fetch(apiUrl, {
         method: 'POST',
@@ -207,38 +172,17 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
-        addDebugInfo(`❌ Serveur erreur ${response.status}: ${errorData.error || 'Inconnu'}`)
-        
-        // Debug spécial pour 413
-        if (response.status === 413) {
-          addDebugInfo(`🚨 413 = Limite dépassée. Vérifiez Vercel Pro activé`)
-          addDebugInfo(`🔍 Server: ${response.headers.get('server') || 'Unknown'}`)
-        }
+        console.error(`Server error ${response.status}:`, errorData.error || 'Unknown')
         
         throw new Error(errorData.error || 'Erreur lors de l\'analyse')
       }
 
-      // Arrêter les messages progressifs
-      if (messageInterval) {
-        clearInterval(messageInterval)
-      }
-
       const result = await response.json()
-      
-      // Message final selon le mode
-      if (tone === 'roast') {
-        addDebugInfo('🏆 Verdict final rendu ! Préparez-vous...')
-      } else {
-        addDebugInfo('✨ Analyse terminée avec succès !')
-      }
+      console.log('Analysis completed successfully')
       
       onAnalysisComplete(result)
 
     } catch (error) {
-      // Arrêter les messages en cas d'erreur aussi
-      if (messageInterval) {
-        clearInterval(messageInterval)
-      }
       // Log pour debug uniquement
       if (process.env.NODE_ENV === 'development') {
         console.error('Erreur:', error)
@@ -259,7 +203,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
         }
       }
       
-      addDebugInfo(`🔴 Erreur finale: ${errorMessage}`)
+      console.error('Final error:', errorMessage)
       setErrorMessage(errorMessage)
     } finally {
       setIsUploading(false)
@@ -392,56 +336,73 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
                 }
               </p>
               
-              {/* Debug info mobile - visible pendant le traitement */}
-              {debugInfo.length > 0 && (
-                <div className="glass-card p-3 mt-4 text-left">
-                  <h4 className="text-xs font-semibold text-neon-cyan mb-2">
-                    {tone === 'roast' ? '🔥 Préparation du châtiment' : '⚡ Analyse en cours'}
-                  </h4>
-                  <div className="space-y-1 text-xs text-text-muted font-mono max-h-20 overflow-y-auto">
-                    {debugInfo.map((info, idx) => (
-                      <div key={idx} className="truncate">{info}</div>
-                    ))}
-                  </div>
-                </div>
-              )}
+              {/* Section debug cachée pendant l'analyse - plus visible */}
               
-              {/* Animation améliorée selon le tone */}
-              <div className="flex justify-center items-center mt-6 h-12">
-                {tone === 'roast' ? (
-                  // Animation dramatique pour le mode roast
-                  <div className="flex items-center space-x-3">
-                    <div className="relative">
-                      <div className="text-2xl animate-pulse" style={{animationDuration: '0.8s'}}>🔪</div>
-                      <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-ping"></div>
+              {/* Animation SPECTACULAIRE agrandie - sans debug */}
+              <div className="flex flex-col items-center mt-8 space-y-6">
+                {/* Messages thématiques centrés */}
+                <div className="text-center space-y-2">
+                  <h3 className="text-lg font-bold text-glow">
+                    {tone === 'roast' ? '🔥 Préparation du châtiment' : '⚡ Analyse en cours'}
+                  </h3>
+                  <p className="text-sm text-text-muted">
+                    {tone === 'roast' 
+                      ? "L'IA prépare une critique sans concession..." 
+                      : "L'IA examine chaque détail de votre photo..."
+                    }
+                  </p>
+                </div>
+
+                {/* Animation ÉNORME selon le tone */}
+                <div className="flex justify-center items-center h-20">
+                  {tone === 'roast' ? (
+                    // Animation EXPLOSIVE pour le mode roast
+                    <div className="flex items-center space-x-6">
+                      <div className="relative">
+                        <div className="text-5xl animate-pulse" style={{animationDuration: '0.6s'}}>🔪</div>
+                        <div className="absolute -top-2 -right-2 w-4 h-4 bg-red-500 rounded-full animate-ping"></div>
+                        <div className="absolute -bottom-1 -left-2 w-3 h-3 bg-orange-500 rounded-full animate-ping" style={{animationDelay: '0.3s'}}></div>
+                      </div>
+                      <div className="flex flex-col space-y-2">
+                        <div className="flex space-x-2">
+                          <div className="w-3 h-3 bg-orange-400 rounded-full animate-ping"></div>
+                          <div className="w-4 h-4 bg-yellow-400 rounded-full animate-ping" style={{animationDelay: '0.1s'}}></div>
+                          <div className="w-3 h-3 bg-red-400 rounded-full animate-ping" style={{animationDelay: '0.2s'}}></div>
+                        </div>
+                        <div className="flex space-x-2">
+                          <div className="w-2 h-2 bg-red-500 rounded-full animate-ping" style={{animationDelay: '0.4s'}}></div>
+                          <div className="w-3 h-3 bg-orange-500 rounded-full animate-ping" style={{animationDelay: '0.5s'}}></div>
+                          <div className="w-2 h-2 bg-yellow-500 rounded-full animate-ping" style={{animationDelay: '0.6s'}}></div>
+                        </div>
+                      </div>
+                      <div className="relative">
+                        <div className="text-5xl animate-bounce" style={{animationDelay: '0.4s', animationDuration: '1s'}}>⚡</div>
+                        <div className="absolute -top-4 -left-2 text-xl animate-pulse" style={{animationDelay: '0.7s'}}>💥</div>
+                        <div className="absolute -bottom-2 -right-2 text-lg animate-pulse" style={{animationDelay: '0.9s'}}>🔥</div>
+                      </div>
                     </div>
-                    <div className="flex space-x-1">
-                      <div className="w-1 h-1 bg-orange-400 rounded-full animate-ping"></div>
-                      <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full animate-ping" style={{animationDelay: '0.1s'}}></div>
-                      <div className="w-1 h-1 bg-red-400 rounded-full animate-ping" style={{animationDelay: '0.2s'}}></div>
-                      <div className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-ping" style={{animationDelay: '0.3s'}}></div>
+                  ) : (
+                    // Animation SOPHISTIQUÉE pour le mode pro
+                    <div className="flex items-center space-x-8">
+                      <div className="relative">
+                        <div className="text-4xl animate-spin" style={{animationDuration: '4s'}}>⚙️</div>
+                        <div className="absolute -top-2 -right-2 text-lg animate-spin" style={{animationDuration: '3s', animationDirection: 'reverse'}}>⚙️</div>
+                        <div className="absolute -bottom-1 -left-1 text-sm animate-spin" style={{animationDuration: '2s'}}>⚙️</div>
+                      </div>
+                      <div className="flex flex-col items-center space-y-3">
+                        <div className="flex space-x-2">
+                          <div className="w-3 h-8 bg-blue-400 rounded-full animate-pulse"></div>
+                          <div className="w-2 h-6 bg-cyan-300 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                          <div className="w-3 h-10 bg-blue-500 rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
+                          <div className="w-2 h-7 bg-cyan-400 rounded-full animate-pulse" style={{animationDelay: '0.6s'}}></div>
+                          <div className="w-3 h-9 bg-blue-300 rounded-full animate-pulse" style={{animationDelay: '0.8s'}}></div>
+                        </div>
+                        <div className="text-xs text-neon-cyan animate-pulse">Analyse en cours...</div>
+                      </div>
+                      <div className="text-4xl animate-spin" style={{animationDuration: '5s', animationDirection: 'reverse'}}>🔬</div>
                     </div>
-                    <div className="relative">
-                      <div className="text-2xl animate-bounce" style={{animationDelay: '0.4s', animationDuration: '1.2s'}}>⚡</div>
-                      <div className="absolute -top-2 -left-1 text-xs animate-pulse" style={{animationDelay: '0.6s'}}>💥</div>
-                    </div>
-                  </div>
-                ) : (
-                  // Animation sophistiquée pour le mode pro
-                  <div className="flex items-center space-x-3">
-                    <div className="relative">
-                      <div className="text-xl animate-spin" style={{animationDuration: '3s'}}>⚙️</div>
-                      <div className="absolute -top-1 -right-1 text-xs animate-spin" style={{animationDuration: '2s', animationDirection: 'reverse'}}>⚙️</div>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-                      <div className="w-1 h-3 bg-cyan-300 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
-                      <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
-                      <div className="w-1 h-3 bg-cyan-400 rounded-full animate-pulse" style={{animationDelay: '0.6s'}}></div>
-                    </div>
-                    <div className="text-xl animate-spin" style={{animationDuration: '4s', animationDirection: 'reverse'}}>🔬</div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             </div>
           </div>
