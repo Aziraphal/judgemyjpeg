@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export type AnalysisTone = 'professional' | 'roast'
+export type AnalysisTone = 'professional' | 'roast' | 'expert'
 
 interface ToneSelectorProps {
   selectedTone: AnalysisTone
@@ -24,6 +24,13 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
       description: 'Analyse brutalement honnête et fun',
       color: 'border-neon-pink/50 bg-neon-pink/10',
       selectedColor: 'border-neon-pink bg-neon-pink/20'
+    },
+    expert: {
+      label: 'Mode Expert',
+      icon: '🎯',
+      description: 'Analyse professionnelle ultra-avancée',
+      color: 'border-yellow-400/50 bg-yellow-400/10',
+      selectedColor: 'border-yellow-400 bg-yellow-400/20'
     }
   }
 
@@ -44,12 +51,12 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
       </div>
 
       {/* Sélection rapide */}
-      <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
+      <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-3 sm:mb-4">
         {Object.entries(toneOptions).map(([tone, config]) => (
           <button
             key={tone}
             onClick={() => onToneChange(tone as AnalysisTone)}
-            className={`p-3 sm:p-4 rounded-lg border-2 transition-all duration-300 hover:scale-105 ${
+            className={`p-2 sm:p-4 rounded-lg border-2 transition-all duration-300 hover:scale-105 ${
               selectedTone === tone 
                 ? config.selectedColor 
                 : config.color + ' hover:border-opacity-75'
@@ -67,12 +74,12 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
       {/* Exemples détaillés */}
       {isExpanded && (
         <div className="animate-fadeIn space-y-4">
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-3 gap-4">
             {/* Exemple Professionnel */}
             <div className="glass-card p-4 border border-neon-cyan/30">
               <div className="flex items-center mb-3">
                 <span className="text-xl mr-2">👔</span>
-                <span className="text-neon-cyan font-semibold">Mode Professionnel</span>
+                <span className="text-neon-cyan font-semibold">Mode Pro</span>
               </div>
               <div className="text-text-gray text-sm space-y-2">
                 <p><strong>Exemple :</strong></p>
@@ -94,9 +101,24 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
                 <p><strong>Exemple :</strong></p>
                 <p className="italic">
                   "Cette exposition ressemble à un vampire qui a peur 
-                  de la lumière... Techniquement parlant, +2 stops 
-                  arrangeraient les choses. Le cadrage ? On dirait que 
-                  l'appareil a eu le hoquet ! 📸💀"
+                  de la lumière... +2 stops arrangeraient les choses. 
+                  Le cadrage ? L'appareil a eu le hoquet ! 📸💀"
+                </p>
+              </div>
+            </div>
+
+            {/* Exemple Expert */}
+            <div className="glass-card p-4 border border-yellow-400/30">
+              <div className="flex items-center mb-3">
+                <span className="text-xl mr-2">🎯</span>
+                <span className="text-yellow-400 font-semibold">Mode Expert</span>
+              </div>
+              <div className="text-text-gray text-sm space-y-2">
+                <p><strong>Exemple :</strong></p>
+                <p className="italic">
+                  "Distribution tonale révèle contraste local insuffisant. 
+                  Cette palette évoque Crewdson. Le bokeh circulaire 
+                  indique une optique limitée. Potentiel commercial: 7/10."
                 </p>
               </div>
             </div>

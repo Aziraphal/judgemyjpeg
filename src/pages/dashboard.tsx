@@ -139,6 +139,12 @@ export default function DashboardPage() {
                 📸 Analyser une photo
               </button>
               <button
+                onClick={() => router.push('/batch')}
+                className="btn-neon-secondary"
+              >
+                📊 Analyse en lot
+              </button>
+              <button
                 onClick={() => router.push('/gallery')}
                 className="btn-neon-secondary"
               >

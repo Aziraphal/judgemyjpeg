@@ -324,14 +324,21 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
             </div>
             <div className="space-y-2">
               <p className={`text-xl sm:text-2xl font-bold text-glow ${
-                tone === 'roast' ? 'text-red-400' : 'text-neon-cyan'
+                tone === 'roast' ? 'text-red-400' : 
+                tone === 'expert' ? 'text-yellow-400' : 'text-neon-cyan'
               }`}>
-                <span aria-hidden="true">{tone === 'roast' ? '🔥 ' : '🚀 '}</span>
-                {tone === 'roast' ? 'Analyse critique en cours...' : 'Analyse IA en cours...'}
+                <span aria-hidden="true">{
+                  tone === 'roast' ? '🔥 ' : 
+                  tone === 'expert' ? '🎯 ' : '🚀 '
+                }</span>
+                {tone === 'roast' ? 'Analyse critique en cours...' : 
+                 tone === 'expert' ? 'Analyse experte en cours...' : 'Analyse IA en cours...'}
               </p>
               <p className="text-sm sm:text-base text-text-gray">
                 {tone === 'roast' 
-                  ? 'L\'IA prépare une critique sans concession' 
+                  ? 'L\'IA prépare une critique sans concession'
+                  : tone === 'expert'
+                  ? 'Analyse de niveau maître en cours...' 
                   : 'GPT-4 Vision analyse votre photo avec précision'
                 }
               </p>
@@ -343,11 +350,14 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
                 {/* Messages thématiques centrés */}
                 <div className="text-center space-y-2">
                   <h3 className="text-lg font-bold text-glow">
-                    {tone === 'roast' ? '🔥 Préparation du châtiment' : '⚡ Analyse en cours'}
+                    {tone === 'roast' ? '🔥 Préparation du châtiment' : 
+                     tone === 'expert' ? '🎯 Expertise en cours' : '⚡ Analyse en cours'}
                   </h3>
                   <p className="text-sm text-text-muted">
                     {tone === 'roast' 
                       ? "L'IA prépare une critique sans concession..." 
+                      : tone === 'expert'
+                      ? "Analyse photographique de niveau professionnel..."
                       : "L'IA examine chaque détail de votre photo..."
                     }
                   </p>
@@ -379,6 +389,37 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
                         <div className="text-5xl animate-bounce" style={{animationDelay: '0.4s', animationDuration: '1s'}}>⚡</div>
                         <div className="absolute -top-4 -left-2 text-xl animate-pulse" style={{animationDelay: '0.7s'}}>💥</div>
                         <div className="absolute -bottom-2 -right-2 text-lg animate-pulse" style={{animationDelay: '0.9s'}}>🔥</div>
+                      </div>
+                    </div>
+                  ) : tone === 'expert' ? (
+                    // Animation EXPERT pour le mode expert
+                    <div className="flex items-center space-x-8">
+                      <div className="relative">
+                        <div className="text-5xl animate-pulse" style={{animationDuration: '1.5s'}}>🎯</div>
+                        <div className="absolute -top-3 -right-3 text-2xl animate-pulse" style={{animationDelay: '0.3s', animationDuration: '1.2s'}}>🔍</div>
+                        <div className="absolute -bottom-2 -left-2 text-xl animate-pulse" style={{animationDelay: '0.6s', animationDuration: '1.8s'}}>📊</div>
+                      </div>
+                      <div className="flex flex-col items-center space-y-2">
+                        <div className="flex space-x-1">
+                          {[...Array(7)].map((_, i) => (
+                            <div 
+                              key={i}
+                              className={`w-1 rounded-full animate-pulse ${
+                                i % 3 === 0 ? 'h-8 bg-yellow-400' :
+                                i % 3 === 1 ? 'h-6 bg-amber-500' : 'h-10 bg-orange-400'
+                              }`}
+                              style={{animationDelay: `${i * 0.1}s`, animationDuration: '2s'}}
+                            />
+                          ))}
+                        </div>
+                        <div className="text-xs text-amber-400 animate-pulse" style={{animationDuration: '1.5s'}}>
+                          ANALYSE EXPERTE
+                        </div>
+                      </div>
+                      <div className="relative">
+                        <div className="text-4xl animate-bounce" style={{animationDuration: '2s'}}>🏆</div>
+                        <div className="absolute -top-1 -right-1 text-sm animate-pulse" style={{animationDelay: '0.5s'}}>✨</div>
+                        <div className="absolute -bottom-1 -left-1 text-sm animate-pulse" style={{animationDelay: '1s'}}>💎</div>
                       </div>
                     </div>
                   ) : (

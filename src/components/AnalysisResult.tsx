@@ -4,7 +4,10 @@ import FavoriteButton from '@/components/FavoriteButton'
 import AddToCollectionModal from '@/components/AddToCollectionModal'
 import PotentialScoreCard from '@/components/PotentialScoreCard'
 import SocialShare from '@/components/SocialShare'
+import InstagramGenerator from '@/components/InstagramGenerator'
+import { PDFExporter } from '@/services/pdf-export'
 import { useState } from 'react'
+import { useSession } from 'next-auth/react'
 
 interface AnalysisResultProps {
   photo: {
@@ -18,6 +21,7 @@ interface AnalysisResultProps {
 }
 
 export default function AnalysisResult({ photo, analysis, tone = 'professional' }: AnalysisResultProps) {
+  const { data: session } = useSession()
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false)
   
   const getAIPersonality = (score: number) => {
@@ -249,6 +253,25 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional' 
                 >
                   <span>📁</span>
                   <span>Ajouter à collection</span>
+                </button>
+                <button
+                  onClick={async () => {
+                    try {
+                      const exporter = new PDFExporter()
+                      await exporter.exportSingleAnalysis(
+                        photo,
+                        analysis,
+                        session?.user?.email || 'client'
+                      )
+                    } catch (error) {
+                      console.error('Erreur export PDF:', error)
+                      alert('Erreur lors de l\'export PDF')
+                    }
+                  }}
+                  className="btn-neon-pink text-sm px-4 py-2 flex items-center space-x-2"
+                >
+                  <span>📄</span>
+                  <span>Export PDF</span>
                 </button>
               </div>
             </div>
@@ -495,6 +518,12 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional' 
           })}
         </div>
       </div>
+
+      {/* Générateur Instagram */}
+      <InstagramGenerator 
+        photo={photo}
+        analysis={analysis}
+      />
 
       {/* Partage social */}
       <SocialShare 

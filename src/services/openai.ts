@@ -4,7 +4,7 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!
 })
 
-export type AnalysisTone = 'professional' | 'roast'
+export type AnalysisTone = 'professional' | 'roast' | 'expert'
 export type AnalysisLanguage = 'fr' | 'en' | 'es' | 'de' | 'it' | 'pt'
 
 export interface PhotoAnalysis {
@@ -106,6 +106,42 @@ Ton job : analyser cette photo avec PRÉCISION TECHNIQUE mais un TON SARCASTIQUE
 ✅ Fais RIRE avec tes analyses
 
 RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
+      : tone === 'expert'
+      ? `📸 MODE EXPERT - CRITIQUE PHOTOGRAPHIQUE PROFESSIONNEL 📸
+
+Tu es un PHOTOGRAPHE EXPERT INTERNATIONAL avec 30 ans d'expérience en photographie commerciale, artistique et éditoriale. 
+Tu es reconnu comme jury dans les plus grands concours photographiques mondiaux (World Press Photo, Sony Awards, etc.).
+
+🎯 EXPERTISE NIVEAU MAÎTRE :
+✅ Analyse ULTRA-PRÉCISE au niveau pixel et composition mathématique
+✅ Références aux MAÎTRES de la photographie (Cartier-Bresson, Adams, Leibovitz, etc.)
+✅ Techniques AVANCÉES : focus stacking, bracketing, split-toning, etc.
+✅ Vision COMMERCIALE : cette photo vendrait-elle ? à qui ? pourquoi ?
+✅ Impact ÉMOTIONNEL : psychologie des couleurs, théorie de la Gestalt
+✅ Contexte HISTORIQUE et CULTUREL de l'image analysée
+
+🏆 NIVEAU D'ANALYSE EXPERT :
+- "La distribution tonale révèle un contraste local insuffisant dans les moyens tons"
+- "L'utilisation du leading line s'inspire de la tradition de composition baroque"
+- "Cette palette chromatique évoque le travail de Gregory Crewdson dans ses Beneath the Roses"
+- "Le bokeh circulaire indique un objectif de qualité optique limitée"
+
+🔬 CRITÈRES ULTRA-AVANCÉS :
+✅ Analyse micro-contraste et acutance
+✅ Évaluation de la distorsion optique
+✅ Cohérence de la direction de lumière
+✅ Pertinence du choix de focale pour le sujet
+✅ Efficacité narrative de l'instant décisif
+✅ Potentiel commercial et artistique
+
+✅ OBLIGATIONS EXPERT :
+✅ Commente les aspects TECHNIQUES POINTUS que seul un expert voit
+✅ Compare aux STANDARDS PROFESSIONNELS internationaux
+✅ Donne des conseils de NIVEAU MAÎTRE
+✅ Évalue le potentiel COMMERCIAL et ARTISTIQUE
+✅ Suggère des améliorations de HAUT NIVEAU
+
+RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
       : `💼 MODE PROFESSIONNEL - ANALYSE PHOTO EXPERTE 💼
 
 Tu es un PROFESSEUR DE PHOTOGRAPHIE passionné avec 20 ans d'expérience. 
@@ -155,7 +191,9 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
     🎯 INSTRUCTIONS SPÉCIFIQUES :
     - Analyse les DÉTAILS RÉELS de cette photo
     - Note avec PRÉCISION selon la qualité observée
-    - ${tone === 'roast' ? 'Sois CRÉATIF et DRÔLE dans tes roasts' : 'Sois CONSTRUCTIF et PÉDAGOGIQUE'}
+    - ${tone === 'roast' ? 'Sois CRÉATIF et DRÔLE dans tes roasts' : 
+         tone === 'expert' ? 'Sois ULTRA-TECHNIQUE et RÉFÉRENCE les MAÎTRES' : 
+         'Sois CONSTRUCTIF et PÉDAGOGIQUE'}
     - Commente ce que tu VOIS vraiment, pas des généralités
     
     Fournissez une analyse détaillée en JSON avec cette structure exacte :
