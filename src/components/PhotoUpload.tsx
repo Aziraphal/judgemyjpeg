@@ -369,7 +369,6 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
                   </div>
                 )}
               </div>
-              </div>
             </div>
           </div>
         ) : (
