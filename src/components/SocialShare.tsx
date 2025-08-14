@@ -7,7 +7,7 @@ interface SocialShareProps {
     url: string
   }
   analysis: PhotoAnalysis
-  tone: 'professional' | 'roast'
+  tone: 'professional' | 'roast' | 'expert'
 }
 
 export default function SocialShare({ photo, analysis, tone }: SocialShareProps) {
@@ -16,6 +16,8 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
     
     if (tone === 'roast') {
       return `${baseText} 🔥 L'IA m'a grillé mais j'ai adoré ! 😂`
+    } else if (tone === 'expert') {
+      return `${baseText} 🎯 Analyse experte niveau maître ! 💎`
     } else {
       return `${baseText} 📸 Analyse pro par IA !`
     }
