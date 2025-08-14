@@ -33,6 +33,9 @@ export default function SettingsPage() {
 
   const handleSaveProfile = async () => {
     setIsSaving(true)
+    console.log('=== Tentative de sauvegarde ===')
+    console.log('User preferences:', userPreferences)
+    
     try {
       const response = await fetch('/api/user/preferences', {
         method: 'POST',
@@ -40,17 +43,22 @@ export default function SettingsPage() {
         body: JSON.stringify(userPreferences)
       })
       
+      console.log('Response status:', response.status)
+      const data = await response.json()
+      console.log('Response data:', data)
+      
       if (response.ok) {
         setMessage({ type: 'success', text: '✨ Profil mis à jour avec succès !' })
         setIsEditing(false)
       } else {
-        throw new Error('Erreur lors de la sauvegarde')
+        setMessage({ type: 'error', text: `❌ ${data.error || 'Erreur lors de la sauvegarde'}` })
       }
     } catch (error) {
-      setMessage({ type: 'error', text: '❌ Erreur lors de la sauvegarde. Veuillez réessayer.' })
+      console.error('Client error:', error)
+      setMessage({ type: 'error', text: '❌ Erreur de connexion. Veuillez réessayer.' })
     } finally {
       setIsSaving(false)
-      setTimeout(() => setMessage(null), 3000)
+      setTimeout(() => setMessage(null), 5000)
     }
   }
 
