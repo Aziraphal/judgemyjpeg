@@ -180,7 +180,7 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
           "impact": "Amélioration spécifique",
           "description": "Action concrète à faire",
           "difficulty": "facile|moyen|difficile",
-          "scoreGain": [gain de points estimé]
+          "scoreGain": [TOUJOURS UN GAIN POSITIF entre 1 et 25 points - JAMAIS négatif]
         }
       ],
       "toolRecommendations": {

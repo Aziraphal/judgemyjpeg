@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import { useAccessibility } from '@/components/AccessibilityProvider'
 
 interface FAQItem {
   id: string
@@ -16,7 +15,6 @@ export default function FAQ() {
   const [openItems, setOpenItems] = useState<string[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState('')
-  const { announceToScreenReader } = useAccessibility()
 
   const faqData: FAQItem[] = [
     // Général
@@ -261,22 +259,18 @@ export default function FAQ() {
         ? prev.filter(item => item !== id)
         : [...prev, id]
     )
-    announceToScreenReader(openItems.includes(id) ? 'Section fermée' : 'Section ouverte')
   }
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category)
-    announceToScreenReader(`Catégorie ${categories.find(c => c.id === category)?.name} sélectionnée`)
   }
 
   // Ouvrir/fermer tout
   const toggleAll = () => {
     if (openItems.length === filteredFAQ.length) {
       setOpenItems([])
-      announceToScreenReader('Toutes les sections fermées')
     } else {
       setOpenItems(filteredFAQ.map(item => item.id))
-      announceToScreenReader('Toutes les sections ouvertes')
     }
   }
 

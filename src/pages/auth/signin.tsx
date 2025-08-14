@@ -193,6 +193,16 @@ export default function SignInPage() {
               <span>Continuer avec Google</span>
             </button>
 
+            {/* Forgot Password Link */}
+            <div className="mt-4 text-center">
+              <Link 
+                href="/auth/forgot-password"
+                className="text-sm text-neon-cyan hover:text-neon-pink transition-colors"
+              >
+                Mot de passe oublié ?
+              </Link>
+            </div>
+
             {/* Links */}
             <div className="mt-6 text-center space-y-2">
               <p className="text-text-muted text-sm">

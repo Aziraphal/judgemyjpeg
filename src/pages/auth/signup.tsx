@@ -87,11 +87,9 @@ export default function SignUpPage() {
             <div className="bg-cosmic-glass/50 border border-cosmic-glassborder rounded-lg p-4 mb-6">
               <div className="space-y-2 text-sm text-text-muted">
                 <p className="flex items-center justify-center space-x-2">
-                  <span>🔍</span>
                   <span>Vérifiez votre boîte de réception et vos spams</span>
                 </p>
                 <p className="flex items-center justify-center space-x-2">
-                  <span>⏱️</span>
                   <span>Le lien expire dans 24 heures</span>
                 </p>
               </div>
@@ -101,7 +99,7 @@ export default function SignUpPage() {
                 onClick={() => signIn('email', { email: formData.email })}
                 className="btn-neon-secondary text-sm"
               >
-                📧 Renvoyer l'email
+                Renvoyer l'email
               </button>
               <div>
                 <Link href="/auth/signin" className="text-text-muted text-sm hover:text-neon-cyan transition-colors">
@@ -270,7 +268,7 @@ export default function SignUpPage() {
 
             {/* Benefits */}
             <div className="mt-8 p-4 bg-cosmic-glass/50 border border-cosmic-glassborder rounded-lg">
-              <h3 className="text-sm font-semibold text-neon-cyan mb-2">✨ Inclus gratuitement :</h3>
+              <h3 className="text-sm font-semibold text-neon-cyan mb-2">Inclus gratuitement :</h3>
               <ul className="space-y-1 text-xs text-text-gray">
                 <li>• 3 analyses par mois</li>
                 <li>• Mode Pro & Cassant</li>

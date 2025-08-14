@@ -33,10 +33,10 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
 
   try {
 
-    // Parse le fichier uploadé avec limite Vercel-friendly
+    // Parse le fichier uploadé avec limite Vercel Pro
     const form = formidable({
-      maxFileSize: 4.5 * 1024 * 1024, // 4.5MB max (Vercel limit)
-      maxTotalFileSize: 4.5 * 1024 * 1024,
+      maxFileSize: 50 * 1024 * 1024, // 50MB limite Vercel Pro
+      maxTotalFileSize: 50 * 1024 * 1024,
       keepExtensions: true,
       allowEmptyFiles: false,
       filter: (part) => part.mimetype?.startsWith('image/') || false,
@@ -50,13 +50,66 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     }
 
     // Lire le fichier pour validation
-    const fileBuffer = readFileSync(file.filepath)
+    let fileBuffer = readFileSync(file.filepath)
+    
+    // COMPRESSION SERVEUR AUTOMATIQUE si >4MB
+    if (fileBuffer.length > 4 * 1024 * 1024) {
+      logger.info('Large file detected, compressing server-side', {
+        originalSize: Math.round(fileBuffer.length / 1024 / 1024 * 100) / 100,
+        filename: file.originalFilename
+      }, req.user.id, ip)
+      
+      try {
+        const sharp = require('sharp')
+        
+        // Compression intelligente adaptative
+        let quality = 80
+        let width = 1200
+        let compressed = fileBuffer
+        
+        while (compressed.length > 4 * 1024 * 1024 && quality > 20) {
+          compressed = await sharp(fileBuffer)
+            .resize(width, width, { 
+              fit: 'inside', 
+              withoutEnlargement: true 
+            })
+            .jpeg({ 
+              quality: quality,
+              progressive: true,
+              mozjpeg: true 
+            })
+            .toBuffer()
+          
+          if (compressed.length > 4 * 1024 * 1024) {
+            if (quality > 40) {
+              quality -= 15
+            } else if (width > 600) {
+              width -= 200
+              quality = 70
+            } else {
+              quality -= 10
+            }
+          }
+        }
+        
+        fileBuffer = compressed
+        const finalSizeMB = Math.round(fileBuffer.length / 1024 / 1024 * 100) / 100
+        logger.info('Server compression successful', {
+          finalSize: finalSizeMB,
+          compressionRatio: Math.round((1 - fileBuffer.length / file.size) * 100)
+        }, req.user.id, ip)
+        
+      } catch (compressionError) {
+        logger.warn('Server compression failed, using original', compressionError, req.user.id, ip)
+        // Continuer avec fichier original si compression échoue
+      }
+    }
     
     // Validation sécurisée du fichier avec magic bytes
     const validation = validateUpload(fileBuffer, file.originalFilename || 'photo.jpg', {
-      maxSize: 4.5 * 1024 * 1024, // 4.5MB Vercel limit
+      maxSize: 50 * 1024 * 1024, // 50MB limite Vercel Pro
       allowedTypes: ['jpg', 'png', 'webp'],
-      strictMode: true // Mode strict pour la sécurité
+      strictMode: false // Mode souple pour compatibilité smartphone
     })
     
     if (!validation.isValid) {
@@ -64,7 +117,10 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
         filename: file.originalFilename,
         errors: validation.errors,
         detectedType: validation.detectedType,
-        isSuspicious: validation.isSuspicious
+        isSuspicious: validation.isSuspicious,
+        fileSize: fileBuffer.length,
+        strictMode: true,
+        allowedTypes: ['jpg', 'png', 'webp']
       }, req.user.id, ip)
       
       // Audit: File upload rejected (security event)
@@ -77,7 +133,13 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
       return res.status(400).json({ 
         error: 'Fichier invalide',
         details: validation.errors,
-        type: validation.detectedType
+        type: validation.detectedType,
+        debug: {
+          fileSize: fileBuffer.length,
+          detectedType: validation.detectedType,
+          errors: validation.errors,
+          warnings: validation.warnings
+        }
       })
     }
     
