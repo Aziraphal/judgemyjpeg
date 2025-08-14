@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import CreateCollectionModal from './CreateCollectionModal'
 
 interface Collection {
   id: string
@@ -19,6 +20,7 @@ export default function AddToCollectionModal({ isOpen, onClose, photoId, photoNa
   const [collections, setCollections] = useState<Collection[]>([])
   const [loading, setLoading] = useState(true)
   const [adding, setAdding] = useState<string | null>(null)
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
 
   useEffect(() => {
     if (isOpen) {
@@ -75,6 +77,11 @@ export default function AddToCollectionModal({ isOpen, onClose, photoId, photoNa
     }
   }
 
+  const handleCollectionCreated = (newCollection: Collection) => {
+    setCollections(prev => [newCollection, ...prev])
+    setIsCreateModalOpen(false)
+  }
+
   if (!isOpen) return null
 
   return (
@@ -108,12 +115,40 @@ export default function AddToCollectionModal({ isOpen, onClose, photoId, photoNa
             <p className="text-text-gray mb-4">
               Aucune collection trouvée
             </p>
-            <p className="text-text-muted text-sm">
+            <p className="text-text-muted text-sm mb-6">
               Créez votre première collection pour organiser vos photos
             </p>
+            <button
+              onClick={() => setIsCreateModalOpen(true)}
+              className="btn-neon-pink mx-auto flex items-center space-x-2"
+            >
+              <span>➕</span>
+              <span>Créer une collection</span>
+            </button>
           </div>
         ) : (
           <div className="space-y-3">
+            {/* Bouton créer nouvelle collection */}
+            <button
+              onClick={() => setIsCreateModalOpen(true)}
+              className="w-full glass-card p-4 text-left transition-all duration-300 hover:bg-cosmic-glassborder hover:scale-102 border-2 border-dashed border-cosmic-glassborder"
+            >
+              <div className="flex items-center space-x-3">
+                <div className="w-4 h-4 rounded-full bg-neon-pink flex-shrink-0 flex items-center justify-center">
+                  <span className="text-xs text-white">➕</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-neon-pink font-medium">
+                    Nouvelle collection
+                  </h4>
+                  <p className="text-text-muted text-sm">
+                    Créer une nouvelle collection
+                  </p>
+                </div>
+                <span className="text-neon-pink">→</span>
+              </div>
+            </button>
+
             {collections.map((collection) => (
               <button
                 key={collection.id}
@@ -167,6 +202,13 @@ export default function AddToCollectionModal({ isOpen, onClose, photoId, photoNa
           </p>
         </div>
       </div>
+
+      {/* Modal création de collection */}
+      <CreateCollectionModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onCollectionCreated={handleCollectionCreated}
+      />
     </div>
   )
 }
