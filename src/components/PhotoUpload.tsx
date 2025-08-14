@@ -33,7 +33,13 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
     
     const originalSizeMB = Math.round(file.size / 1024 / 1024 * 100) / 100
     console.log(`PhotoUpload: Original file size ${originalSizeMB}MB, type: ${file.type}`)
-    addDebugInfo(`📁 Fichier détecté: ${originalSizeMB}MB, ${file.type}`)
+    
+    // Messages engageants selon le mode
+    if (tone === 'roast') {
+      addDebugInfo(`🔥 Préparation du bûcher pour votre photo...`)
+    } else {
+      addDebugInfo(`⚡ Initialisation de l'analyse professionnelle...`)
+    }
     
     // ✅ RAILWAY: Pas de limite cachée ! Upload direct possible
     let processedFile = file
@@ -137,7 +143,11 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
         return
       }
     } else {
-      addDebugInfo(`✅ Upload direct: ${originalSizeMB}MB (Railway - pas de limite!)`)
+      if (tone === 'roast') {
+        addDebugInfo(`🎯 Votre victime est dans le viseur...`)
+      } else {
+        addDebugInfo(`📡 Transmission des données vers l'IA...`)
+      }
     }
 
 
@@ -145,7 +155,11 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
     try {
       // Upload standard avec fichier compressé si nécessaire
       const finalSizeMB = Math.round(processedFile.size / 1024 / 1024 * 100) / 100
-      addDebugInfo(`📤 Upload final: ${finalSizeMB}MB`)
+      if (tone === 'roast') {
+        addDebugInfo(`⚔️ Préparation des munitions critiques...`)
+      } else {
+        addDebugInfo(`🔬 Préparation de l'analyse détaillée...`)
+      }
       
       const formData = new FormData()
       formData.append('photo', processedFile)
@@ -154,8 +168,34 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
 
       // Utiliser l'API de test si en mode test
       const apiUrl = testMode ? '/api/photos/analyze-test' : '/api/photos/analyze'
-      addDebugInfo(`🔗 API utilisée: ${apiUrl}`)
+      if (tone === 'roast') {
+        addDebugInfo(`🔥 L'IA aiguise ses griffes...`)
+      } else {
+        addDebugInfo(`🧠 L'IA examine votre composition...`)
+      }
       
+      // Messages progressifs pendant l'analyse
+      const progressMessages = tone === 'roast' 
+        ? [
+            '🎯 L\'IA localise les défauts...',
+            '💀 Préparation des critiques assassines...',
+            '🔥 Forge des métaphores dévastatrices...'
+          ]
+        : [
+            '👁️ L\'IA analyse la composition...',
+            '🎨 Évaluation des couleurs et de la lumière...',
+            '📏 Mesure de l\'équilibre et du cadrage...'
+          ]
+
+      // Afficher les messages progressivement
+      let messageIndex = 0
+      const messageInterval = setInterval(() => {
+        if (messageIndex < progressMessages.length) {
+          addDebugInfo(progressMessages[messageIndex])
+          messageIndex++
+        }
+      }, 1000)
+
       const response = await fetch(apiUrl, {
         method: 'POST',
         body: formData,
@@ -175,11 +215,23 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
         throw new Error(errorData.error || 'Erreur lors de l\'analyse')
       }
 
+      // Arrêter les messages progressifs
+      clearInterval(messageInterval)
+
       const result = await response.json()
-      addDebugInfo(`✅ Analyse terminée avec succès`)
+      
+      // Message final selon le mode
+      if (tone === 'roast') {
+        addDebugInfo('🏆 Verdict final rendu ! Préparez-vous...')
+      } else {
+        addDebugInfo('✨ Analyse terminée avec succès !')
+      }
+      
       onAnalysisComplete(result)
 
     } catch (error) {
+      // Arrêter les messages en cas d'erreur aussi
+      clearInterval(messageInterval)
       // Log pour debug uniquement
       if (process.env.NODE_ENV === 'development') {
         console.error('Erreur:', error)
@@ -347,25 +399,40 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
                 </div>
               )}
               
-              {/* Animation selon le tone */}
-              <div className="flex justify-center items-center mt-4 h-8">
+              {/* Animation améliorée selon le tone */}
+              <div className="flex justify-center items-center mt-6 h-12">
                 {tone === 'roast' ? (
-                  // Animation couteau qui s'aiguise pour le mode roast
-                  <div className="flex items-center space-x-2">
-                    <div className="text-xl animate-pulse">🔪</div>
-                    <div className="flex space-x-1">
-                      <div className="w-1 h-1 bg-yellow-400 rounded-full animate-ping"></div>
-                      <div className="w-1 h-1 bg-yellow-300 rounded-full animate-ping" style={{animationDelay: '0.1s'}}></div>
-                      <div className="w-1 h-1 bg-yellow-500 rounded-full animate-ping" style={{animationDelay: '0.2s'}}></div>
+                  // Animation dramatique pour le mode roast
+                  <div className="flex items-center space-x-3">
+                    <div className="relative">
+                      <div className="text-2xl animate-pulse" style={{animationDuration: '0.8s'}}>🔪</div>
+                      <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-ping"></div>
                     </div>
-                    <div className="text-xl animate-bounce" style={{animationDelay: '0.3s'}}>⚡</div>
+                    <div className="flex space-x-1">
+                      <div className="w-1 h-1 bg-orange-400 rounded-full animate-ping"></div>
+                      <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full animate-ping" style={{animationDelay: '0.1s'}}></div>
+                      <div className="w-1 h-1 bg-red-400 rounded-full animate-ping" style={{animationDelay: '0.2s'}}></div>
+                      <div className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-ping" style={{animationDelay: '0.3s'}}></div>
+                    </div>
+                    <div className="relative">
+                      <div className="text-2xl animate-bounce" style={{animationDelay: '0.4s', animationDuration: '1.2s'}}>⚡</div>
+                      <div className="absolute -top-2 -left-1 text-xs animate-pulse" style={{animationDelay: '0.6s'}}>💥</div>
+                    </div>
                   </div>
                 ) : (
-                  // Animation engrenages pour le mode pro
-                  <div className="flex items-center space-x-2">
-                    <div className="text-lg animate-spin" style={{animationDuration: '2s'}}>⚙️</div>
-                    <div className="text-sm animate-spin" style={{animationDuration: '1.5s', animationDirection: 'reverse'}}>⚙️</div>
-                    <div className="text-lg animate-spin" style={{animationDuration: '2.5s'}}>⚙️</div>
+                  // Animation sophistiquée pour le mode pro
+                  <div className="flex items-center space-x-3">
+                    <div className="relative">
+                      <div className="text-xl animate-spin" style={{animationDuration: '3s'}}>⚙️</div>
+                      <div className="absolute -top-1 -right-1 text-xs animate-spin" style={{animationDuration: '2s', animationDirection: 'reverse'}}>⚙️</div>
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                      <div className="w-1 h-3 bg-cyan-300 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                      <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
+                      <div className="w-1 h-3 bg-cyan-400 rounded-full animate-pulse" style={{animationDelay: '0.6s'}}></div>
+                    </div>
+                    <div className="text-xl animate-spin" style={{animationDuration: '4s', animationDirection: 'reverse'}}>🔬</div>
                   </div>
                 )}
               </div>
