@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Image from 'next/image'
 import FavoriteButton from '@/components/FavoriteButton'
+import AddToCollectionModal from '@/components/AddToCollectionModal'
 
 interface Photo {
   id: string
@@ -21,6 +22,7 @@ export default function GalleryPage() {
   const [topPhotos, setTopPhotos] = useState<Photo[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null)
+  const [collectionModalPhoto, setCollectionModalPhoto] = useState<Photo | null>(null)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -164,8 +166,18 @@ export default function GalleryPage() {
                         {photo.score}/100
                       </div>
                       
-                      {/* Bouton favori */}
-                      <div className="absolute top-3 right-3">
+                      {/* Boutons actions */}
+                      <div className="absolute top-3 right-3 flex space-x-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setCollectionModalPhoto(photo)
+                          }}
+                          className="bg-cosmic-glass backdrop-blur-sm border border-cosmic-glassborder p-2 rounded-full hover:bg-cosmic-glassborder transition-colors duration-300 text-neon-cyan hover:text-white text-sm"
+                          title="Ajouter à une collection"
+                        >
+                          📁
+                        </button>
                         <FavoriteButton
                           photoId={photo.id}
                           initialIsFavorite={photo.isFavorite}
@@ -243,15 +255,34 @@ export default function GalleryPage() {
                   })()}
                 </div>
                 
-                <FavoriteButton
-                  photoId={selectedPhoto.id}
-                  initialIsFavorite={selectedPhoto.isFavorite}
-                  onToggle={(isFavorite) => handleFavoriteToggle(selectedPhoto.id, isFavorite)}
-                  size="lg"
-                />
+                <div className="flex items-center space-x-3">
+                  <button
+                    onClick={() => setCollectionModalPhoto(selectedPhoto)}
+                    className="btn-neon-secondary flex items-center space-x-2"
+                  >
+                    <span>📁</span>
+                    <span>Ajouter à collection</span>
+                  </button>
+                  <FavoriteButton
+                    photoId={selectedPhoto.id}
+                    initialIsFavorite={selectedPhoto.isFavorite}
+                    onToggle={(isFavorite) => handleFavoriteToggle(selectedPhoto.id, isFavorite)}
+                    size="lg"
+                  />
+                </div>
               </div>
             </div>
           </div>
+        )}
+
+        {/* Modal ajouter à collection */}
+        {collectionModalPhoto && (
+          <AddToCollectionModal
+            isOpen={!!collectionModalPhoto}
+            onClose={() => setCollectionModalPhoto(null)}
+            photoId={collectionModalPhoto.id}
+            photoName={collectionModalPhoto.filename}
+          />
         )}
       </main>
     </>

@@ -336,7 +336,9 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
               {/* Debug info mobile - visible pendant le traitement */}
               {debugInfo.length > 0 && (
                 <div className="glass-card p-3 mt-4 text-left">
-                  <h4 className="text-xs font-semibold text-neon-cyan mb-2">Traitement</h4>
+                  <h4 className="text-xs font-semibold text-neon-cyan mb-2">
+                    {tone === 'roast' ? '🔥 Préparation du châtiment' : '⚡ Analyse en cours'}
+                  </h4>
                   <div className="space-y-1 text-xs text-text-muted font-mono max-h-20 overflow-y-auto">
                     {debugInfo.map((info, idx) => (
                       <div key={idx} className="truncate">{info}</div>
@@ -345,16 +347,27 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
                 </div>
               )}
               
-              <div className="flex justify-center space-x-1 mt-4">
-                <div className={`w-2 h-2 rounded-full animate-bounce ${
-                  tone === 'roast' ? 'bg-red-500' : 'bg-neon-pink'
-                }`}></div>
-                <div className={`w-2 h-2 rounded-full animate-bounce ${
-                  tone === 'roast' ? 'bg-red-400' : 'bg-neon-cyan'
-                }`} style={{animationDelay: '0.1s'}}></div>
-                <div className={`w-2 h-2 rounded-full animate-bounce ${
-                  tone === 'roast' ? 'bg-red-500' : 'bg-neon-pink'
-                }`} style={{animationDelay: '0.2s'}}></div>
+              {/* Animation selon le tone */}
+              <div className="flex justify-center items-center mt-4 h-8">
+                {tone === 'roast' ? (
+                  // Animation couteau qui s'aiguise pour le mode roast
+                  <div className="flex items-center space-x-2">
+                    <div className="text-xl animate-pulse">🔪</div>
+                    <div className="flex space-x-1">
+                      <div className="w-1 h-1 bg-yellow-400 rounded-full animate-ping"></div>
+                      <div className="w-1 h-1 bg-yellow-300 rounded-full animate-ping" style={{animationDelay: '0.1s'}}></div>
+                      <div className="w-1 h-1 bg-yellow-500 rounded-full animate-ping" style={{animationDelay: '0.2s'}}></div>
+                    </div>
+                    <div className="text-xl animate-bounce" style={{animationDelay: '0.3s'}}>⚡</div>
+                  </div>
+                ) : (
+                  // Animation engrenages pour le mode pro
+                  <div className="flex items-center space-x-2">
+                    <div className="text-lg animate-spin" style={{animationDuration: '2s'}}>⚙️</div>
+                    <div className="text-sm animate-spin" style={{animationDuration: '1.5s', animationDirection: 'reverse'}}>⚙️</div>
+                    <div className="text-lg animate-spin" style={{animationDuration: '2.5s'}}>⚙️</div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
