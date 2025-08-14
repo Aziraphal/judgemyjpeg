@@ -51,3 +51,24 @@ Thumbs.db
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# Security - Additional protection
+*.key
+*.pem
+*.p12
+*.pfx
+*.cer
+*.crt
+*.der
+*.p8
+secrets.json
+credentials.json
+service-account.json
+.secrets/
+temp/
+tmp/
+
+# Claude artifacts and temp files
+*openai.ts.*
+*temp*openai*
+C:*openai*
