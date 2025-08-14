@@ -11,7 +11,10 @@ export default function Home() {
     if (session?.user?.id) {
       fetch('/api/subscription/status')
         .then(res => res.json())
-        .then(data => setUserSubscription(data))
+        .then(data => {
+          console.log('Données subscription récupérées:', data)
+          setUserSubscription(data.subscription)
+        })
         .catch(err => console.error('Error fetching subscription:', err))
     }
   }, [session])
@@ -44,13 +47,13 @@ export default function Home() {
             <div className="flex justify-between items-center mb-8">
               <div className="text-sm text-text-gray">
                 Bonjour, <span className={`font-semibold ${
-                  userSubscription?.subscriptionStatus === 'premium' || userSubscription?.subscriptionStatus === 'lifetime'
+                  userSubscription?.status === 'premium' || userSubscription?.status === 'lifetime' || userSubscription?.subscriptionStatus === 'premium' || userSubscription?.subscriptionStatus === 'lifetime'
                     ? 'text-yellow-400 drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]' // Effet doré brillant
                     : 'text-neon-cyan'
                 }`}>
                   {session.user?.name}
-                  {userSubscription?.subscriptionStatus === 'lifetime' && ' ✨'}
-                  {userSubscription?.subscriptionStatus === 'premium' && ' 💎'}
+                  {(userSubscription?.status === 'lifetime' || userSubscription?.subscriptionStatus === 'lifetime') && ' ✨'}
+                  {(userSubscription?.status === 'premium' || userSubscription?.subscriptionStatus === 'premium') && ' 💎'}
                 </span>
               </div>
               <div className="flex items-center space-x-3">

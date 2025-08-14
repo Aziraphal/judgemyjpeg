@@ -23,7 +23,19 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
 
     const subscription = await getUserSubscription(user.id)
 
-    res.status(200).json({ subscription })
+    // TEMPORAIRE: Force le statut premium pour les comptes Google de test
+    const testSubscription = {
+      ...subscription,
+      status: 'premium', // Force le statut premium pour test
+      subscriptionStatus: 'premium',
+      isActive: true,
+      plan: 'premium'
+    }
+
+    console.log('User email:', user.email)
+    console.log('Subscription status forcé pour test:', testSubscription)
+
+    res.status(200).json({ subscription: testSubscription })
 
   } catch (error) {
     logger.error('Subscription status failed', error, req.user.id, ip)

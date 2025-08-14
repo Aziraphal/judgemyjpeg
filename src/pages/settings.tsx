@@ -71,7 +71,6 @@ export default function SettingsPage() {
     { id: 'profile', label: 'Profil', icon: '👤' },
     { id: 'preferences', label: 'Préférences', icon: '⚙️' },
     { id: 'security', label: 'Sécurité', icon: '🔐' },
-    { id: 'notifications', label: 'Notifications', icon: '🔔' },
     { id: 'privacy', label: 'Confidentialité', icon: '🔒' }
   ]
 
@@ -502,44 +501,6 @@ export default function SettingsPage() {
                   </div>
                 )}
 
-                {/* Notifications Tab */}
-                {activeTab === 'notifications' && (
-                  <div className="space-y-8">
-                    <div>
-                      <h2 className="text-2xl font-bold text-text-white mb-2">
-                        🔔 Notifications
-                      </h2>
-                      <p className="text-text-gray mb-6">
-                        Configurez vos préférences de notifications
-                      </p>
-                    </div>
-
-                    <div className="glass-card p-6">
-                      <h3 className="text-lg font-semibold text-text-white mb-4">
-                        Préférences email
-                      </h3>
-                      <div className="space-y-4">
-                        <label className="flex items-center space-x-3">
-                          <input type="checkbox" className="form-checkbox" defaultChecked />
-                          <span className="text-text-white">Notifications de sécurité</span>
-                        </label>
-                        <label className="flex items-center space-x-3">
-                          <input type="checkbox" className="form-checkbox" defaultChecked />
-                          <span className="text-text-white">Mises à jour du produit</span>
-                        </label>
-                        <label className="flex items-center space-x-3">
-                          <input type="checkbox" className="form-checkbox" />
-                          <span className="text-text-white">Newsletter</span>
-                        </label>
-                      </div>
-                      <div className="mt-6">
-                        <button className="btn-neon-secondary">
-                          Sauvegarder les préférences
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                )}
 
                 {/* Privacy Tab */}
                 {activeTab === 'privacy' && (
@@ -606,12 +567,6 @@ export default function SettingsPage() {
                         <span className="sm:hidden">Vos données</span>
                       </h3>
                       <div className="space-y-3">
-                        <button 
-                          className="btn-neon-secondary w-full sm:w-auto text-sm"
-                          onClick={() => window.open('/api/user/export-data', '_blank')}
-                        >
-                          📋 <span className="hidden sm:inline">Télécharger mes données</span><span className="sm:hidden">Export données</span>
-                        </button>
                         <button 
                           className="btn-neon-secondary w-full sm:w-auto text-sm"
                           onClick={() => {
