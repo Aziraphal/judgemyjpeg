@@ -85,13 +85,14 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
   }
 
   return (
-    <div className="glass-card p-6 hover-glow">
-      <div className="text-center mb-6">
-        <h3 className="text-xl font-bold text-text-white mb-2 flex items-center justify-center">
-          <span className="text-2xl mr-2">🚀</span>
-          Partager votre analyse
+    <div className="glass-card p-4 sm:p-6 hover-glow">
+      <div className="text-center mb-4 sm:mb-6">
+        <h3 className="text-lg sm:text-xl font-bold text-text-white mb-2 flex items-center justify-center">
+          <span className="text-xl sm:text-2xl mr-2">🚀</span>
+          <span className="hidden sm:inline">Partager votre analyse</span>
+          <span className="sm:hidden">Partager</span>
         </h3>
-        <p className="text-text-gray text-sm">
+        <p className="text-text-gray text-xs sm:text-sm">
           {tone === 'roast' 
             ? "Montrez comme l'IA vous a grillé ! 🔥" 
             : "Partagez vos insights photo ! 📸"
@@ -100,14 +101,17 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
       </div>
 
       {/* Aperçu du texte de partage */}
-      <div className="mb-6 p-4 bg-cosmic-glass rounded-lg border border-cosmic-glassborder">
-        <div className="text-sm text-text-muted mb-2">Aperçu du partage :</div>
-        <div className="text-text-white font-medium">{shareText}</div>
+      <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-cosmic-glass rounded-lg border border-cosmic-glassborder">
+        <div className="text-xs sm:text-sm text-text-muted mb-2">
+          <span className="hidden sm:inline">Aperçu du partage :</span>
+          <span className="sm:hidden">Aperçu :</span>
+        </div>
+        <div className="text-text-white font-medium text-sm sm:text-base">{shareText}</div>
         <div className="text-xs text-neon-cyan mt-1">{hashtags}</div>
       </div>
 
       {/* Boutons de partage */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 mb-3 sm:mb-4">
         {Object.entries(socialLinks).map(([platform, config]) => (
           <a
             key={platform}
@@ -115,27 +119,28 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
             target="_blank"
             rel="noopener noreferrer"
             className={`
-              flex items-center justify-center space-x-2 p-3 rounded-lg 
+              flex items-center justify-center space-x-1 sm:space-x-2 p-2 sm:p-3 rounded-lg 
               bg-cosmic-glass border border-cosmic-glassborder
               transition-all duration-300 hover:scale-105 hover:shadow-neon-cyan/20 hover:shadow-lg
               ${config.color}
             `}
           >
-            <span className="text-lg">{config.icon}</span>
-            <span className="text-sm font-medium">{config.name}</span>
+            <span className="text-base sm:text-lg">{config.icon}</span>
+            <span className="text-xs sm:text-sm font-medium">{config.name}</span>
           </a>
         ))}
       </div>
 
       {/* Actions supplémentaires */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3 sm:mb-4">
         <button
           id="copy-button"
           onClick={copyToClipboard}
-          className="btn-neon-secondary flex items-center space-x-2 justify-center"
+          className="btn-neon-secondary flex items-center space-x-2 justify-center text-sm"
         >
           <span>📋</span>
-          <span>Copier le lien</span>
+          <span className="hidden sm:inline">Copier le lien</span>
+          <span className="sm:hidden">Copier</span>
         </button>
         
         <div className="flex justify-center">
@@ -148,11 +153,11 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
       </div>
 
       {/* Stats motivantes */}
-      <div className="mt-6 text-center">
-        <div className="inline-flex items-center space-x-4 text-xs text-text-muted">
+      <div className="mt-4 sm:mt-6 text-center">
+        <div className="inline-flex flex-col sm:flex-row items-center gap-2 sm:space-x-4 sm:gap-0 text-xs text-text-muted">
           <div className="flex items-center space-x-1">
             <span>👀</span>
-            <span>Viral potential: {tone === 'roast' ? 'ÉLEVÉ' : 'MOYEN'}</span>
+            <span>Viral: {tone === 'roast' ? 'ÉLEVÉ' : 'MOYEN'}</span>
           </div>
           <div className="flex items-center space-x-1">
             <span>⚡</span>

@@ -60,6 +60,12 @@ export default function Home() {
                 >
                   📊 Dashboard
                 </button>
+                <button 
+                  onClick={() => window.location.href = '/settings'}
+                  className="btn-neon-secondary text-sm"
+                >
+                  ⚙️ <span className="hidden sm:inline">Paramètres</span>
+                </button>
                 <button
                   onClick={async () => {
                     try {

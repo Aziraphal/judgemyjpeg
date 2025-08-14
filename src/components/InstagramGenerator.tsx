@@ -84,30 +84,33 @@ export default function InstagramGeneratorComponent({ photo, analysis }: Instagr
   }
 
   return (
-    <div className="glass-card p-8 hover-glow">
-      <h3 className="text-2xl font-bold text-text-white mb-6 flex items-center">
-        <span className="text-3xl mr-3">📱</span>
+    <div className="glass-card p-4 sm:p-8 hover-glow">
+      <h3 className="text-xl sm:text-2xl font-bold text-text-white mb-4 sm:mb-6 flex items-center">
+        <span className="text-2xl sm:text-3xl mr-2 sm:mr-3">📱</span>
         <span className="text-neon-pink">Partage Instagram</span>
       </h3>
 
       {/* Sélecteur de style */}
-      <div className="mb-6">
-        <h4 className="text-lg font-semibold text-text-white mb-4">Choisissez votre style :</h4>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="mb-4 sm:mb-6">
+        <h4 className="text-base sm:text-lg font-semibold text-text-white mb-3 sm:mb-4">
+          <span className="hidden sm:inline">Choisissez votre style :</span>
+          <span className="sm:hidden">Style :</span>
+        </h4>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
           {Object.entries(styles).map(([key, config]) => (
             <button
               key={key}
               onClick={() => setSelectedStyle(key as any)}
-              className={`p-3 rounded-lg border-2 transition-all duration-300 hover:scale-105 ${
+              className={`p-2 sm:p-3 rounded-lg border-2 transition-all duration-300 hover:scale-105 ${
                 selectedStyle === key
                   ? 'border-neon-pink bg-neon-pink/20'
                   : 'border-cosmic-glassborder hover:border-neon-pink/50 bg-cosmic-glass'
               }`}
             >
               <div className="text-center">
-                <div className="text-2xl mb-1">{config.emoji}</div>
-                <div className="text-text-white font-semibold text-sm">{config.name}</div>
-                <div className="text-text-muted text-xs">{config.desc}</div>
+                <div className="text-xl sm:text-2xl mb-1">{config.emoji}</div>
+                <div className="text-text-white font-semibold text-xs sm:text-sm">{config.name}</div>
+                <div className="text-text-muted text-xs hidden sm:block">{config.desc}</div>
               </div>
             </button>
           ))}
@@ -115,90 +118,104 @@ export default function InstagramGeneratorComponent({ photo, analysis }: Instagr
       </div>
 
       {/* Actions */}
-      <div className="flex space-x-4 mb-6">
+      <div className="flex flex-col sm:flex-row gap-3 sm:space-x-4 sm:gap-0 mb-4 sm:mb-6">
         <button
           onClick={generatePost}
           disabled={isGenerating}
-          className="btn-neon-pink flex items-center space-x-2"
+          className="btn-neon-pink flex items-center justify-center space-x-2"
         >
           <span>📱</span>
-          <span>{isGenerating ? 'Génération...' : 'Générer le post'}</span>
+          <span className="hidden sm:inline">{isGenerating ? 'Génération...' : 'Générer le post'}</span>
+          <span className="sm:hidden">{isGenerating ? 'Génération...' : 'Générer'}</span>
         </button>
         
         <button
           onClick={generateAllVariants}
           disabled={isGenerating}
-          className="btn-neon-secondary flex items-center space-x-2"
+          className="btn-neon-secondary flex items-center justify-center space-x-2"
         >
           <span>📄</span>
-          <span>Toutes les variantes</span>
+          <span className="hidden sm:inline">Toutes les variantes</span>
+          <span className="sm:hidden">Toutes</span>
         </button>
       </div>
 
       {/* Preview */}
       {showPreview && generatedPost && (
-        <div className="space-y-6">
-          <div className="border-t border-cosmic-glassborder pt-6">
-            <h4 className="text-lg font-semibold text-neon-cyan mb-4">Aperçu du post :</h4>
+        <div className="space-y-4 sm:space-y-6">
+          <div className="border-t border-cosmic-glassborder pt-4 sm:pt-6">
+            <h4 className="text-base sm:text-lg font-semibold text-neon-cyan mb-3 sm:mb-4">
+              <span className="hidden sm:inline">Aperçu du post :</span>
+              <span className="sm:hidden">Aperçu :</span>
+            </h4>
             
             {/* Caption */}
-            <div className="glass-card p-4 mb-4">
+            <div className="glass-card p-3 sm:p-4 mb-3 sm:mb-4">
               <div className="flex justify-between items-center mb-2">
-                <h5 className="font-semibold text-text-white">Caption</h5>
+                <h5 className="font-semibold text-text-white text-sm sm:text-base">Caption</h5>
                 <button
                   onClick={() => copyToClipboard(generatedPost.caption, 'Caption')}
-                  className="btn-neon-secondary text-xs px-3 py-1"
+                  className="btn-neon-secondary text-xs px-2 sm:px-3 py-1"
                 >
-                  📋 Copier
+                  <span className="hidden sm:inline">📋 Copier</span>
+                  <span className="sm:hidden">📋</span>
                 </button>
               </div>
-              <div className="bg-cosmic-overlay p-3 rounded text-sm text-text-gray whitespace-pre-wrap">
+              <div className="bg-cosmic-overlay p-2 sm:p-3 rounded text-xs sm:text-sm text-text-gray whitespace-pre-wrap">
                 {generatedPost.caption}
               </div>
             </div>
 
             {/* Hashtags */}
-            <div className="glass-card p-4 mb-4">
+            <div className="glass-card p-3 sm:p-4 mb-3 sm:mb-4">
               <div className="flex justify-between items-center mb-2">
-                <h5 className="font-semibold text-text-white">Hashtags</h5>
+                <h5 className="font-semibold text-text-white text-sm sm:text-base">Hashtags</h5>
                 <button
                   onClick={() => copyToClipboard(generatedPost.hashtags.join(' '), 'Hashtags')}
-                  className="btn-neon-secondary text-xs px-3 py-1"
+                  className="btn-neon-secondary text-xs px-2 sm:px-3 py-1"
                 >
-                  📋 Copier
+                  <span className="hidden sm:inline">📋 Copier</span>
+                  <span className="sm:hidden">📋</span>
                 </button>
               </div>
-              <div className="bg-cosmic-overlay p-3 rounded text-sm text-text-gray">
+              <div className="bg-cosmic-overlay p-2 sm:p-3 rounded text-xs sm:text-sm text-text-gray">
                 {generatedPost.hashtags.join(' ')}
               </div>
             </div>
 
             {/* Story */}
-            <div className="glass-card p-4 mb-4">
+            <div className="glass-card p-3 sm:p-4 mb-3 sm:mb-4">
               <div className="flex justify-between items-center mb-2">
-                <h5 className="font-semibold text-text-white">Story Instagram</h5>
+                <h5 className="font-semibold text-text-white text-sm sm:text-base">
+                  <span className="hidden sm:inline">Story Instagram</span>
+                  <span className="sm:hidden">Story</span>
+                </h5>
                 <button
                   onClick={() => copyToClipboard(generatedPost.storyText, 'Story')}
-                  className="btn-neon-secondary text-xs px-3 py-1"
+                  className="btn-neon-secondary text-xs px-2 sm:px-3 py-1"
                 >
-                  📋 Copier
+                  <span className="hidden sm:inline">📋 Copier</span>
+                  <span className="sm:hidden">📋</span>
                 </button>
               </div>
-              <div className="bg-cosmic-overlay p-3 rounded text-sm text-text-gray whitespace-pre-wrap">
+              <div className="bg-cosmic-overlay p-2 sm:p-3 rounded text-xs sm:text-sm text-text-gray whitespace-pre-wrap">
                 {generatedPost.storyText}
               </div>
             </div>
 
             {/* Carousel Slides si disponible */}
             {generatedPost.carouselSlides && generatedPost.carouselSlides.length > 0 && (
-              <div className="glass-card p-4">
-                <h5 className="font-semibold text-text-white mb-3">Slides pour Carousel</h5>
-                <div className="grid md:grid-cols-3 gap-3">
+              <div className="glass-card p-3 sm:p-4">
+                <h5 className="font-semibold text-text-white mb-3 text-sm sm:text-base">
+                  <span className="hidden sm:inline">Slides pour Carousel</span>
+                  <span className="sm:hidden">Carousel</span>
+                </h5>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
                   {generatedPost.carouselSlides.map((slide, index) => (
-                    <div key={index} className="bg-cosmic-overlay p-3 rounded">
+                    <div key={index} className="bg-cosmic-overlay p-2 sm:p-3 rounded">
                       <div className="text-center mb-2">
-                        <span className="text-2xl">{slide.emoji}</span>
-                        <h6 className="font-semibold text-text-white text-sm">{slide.title}</h6>
+                        <span className="text-xl sm:text-2xl">{slide.emoji}</span>
+                        <h6 className="font-semibold text-text-white text-xs sm:text-sm">{slide.title}</h6>
                       </div>
                       <div className="text-xs text-text-gray">{slide.content}</div>
                     </div>
@@ -209,12 +226,13 @@ export default function InstagramGeneratorComponent({ photo, analysis }: Instagr
           </div>
 
           {/* Conseils d'utilisation */}
-          <div className="glass-card p-4 border border-neon-cyan/30">
-            <h5 className="font-semibold text-neon-cyan mb-2 flex items-center">
+          <div className="glass-card p-3 sm:p-4 border border-neon-cyan/30">
+            <h5 className="font-semibold text-neon-cyan mb-2 flex items-center text-sm sm:text-base">
               <span className="mr-2">💡</span>
-              Conseils d'utilisation
+              <span className="hidden sm:inline">Conseils d'utilisation</span>
+              <span className="sm:hidden">Conseils</span>
             </h5>
-            <ul className="text-sm text-text-gray space-y-1">
+            <ul className="text-xs sm:text-sm text-text-gray space-y-1">
               <li>• Adaptez le texte à votre style personnel</li>
               <li>• Ajoutez vos hashtags spécifiques à votre niche</li>
               <li>• Postez aux heures où votre audience est active</li>
