@@ -42,6 +42,18 @@ export interface PhotoAnalysis {
     photoshop?: string[]
     snapseed?: string[]
   }
+  // NOUVELLES SECTIONS SÉPARÉES
+  nextShotTips: {
+    tip: string
+    category: 'technique' | 'composition' | 'éclairage' | 'créativité'
+    difficulty: 'débutant' | 'intermédiaire' | 'avancé'
+  }[]
+  editingRecommendations: {
+    suggestion: string
+    tool: 'Lightroom' | 'Photoshop' | 'Snapseed' | 'GIMP'
+    difficulty: 'facile' | 'moyen' | 'difficile'
+    expectedImprovement: string
+  }[]
 }
 
 export async function analyzePhoto(
@@ -187,8 +199,48 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
         "lightroom": ["retouches Lightroom spécifiques"],
         "photoshop": ["retouches Photoshop spécifiques"],
         "snapseed": ["ajustements mobile spécifiques"]
-      }
+      },
+      "nextShotTips": [
+        {
+          "tip": "Conseil spécifique pour améliorer la prochaine prise de vue",
+          "category": "technique|composition|éclairage|créativité",
+          "difficulty": "débutant|intermédiaire|avancé"
+        },
+        {
+          "tip": "Deuxième conseil pour la prise de vue suivante",
+          "category": "technique|composition|éclairage|créativité",
+          "difficulty": "débutant|intermédiaire|avancé"
+        },
+        {
+          "tip": "Troisième conseil pratique pour s'améliorer",
+          "category": "technique|composition|éclairage|créativité",
+          "difficulty": "débutant|intermédiaire|avancé"
+        }
+      ],
+      "editingRecommendations": [
+        {
+          "suggestion": "Retouche spécifique pour améliorer CETTE photo",
+          "tool": "Lightroom|Photoshop|Snapseed|GIMP",
+          "difficulty": "facile|moyen|difficile",
+          "expectedImprovement": "Résultat attendu de cette retouche"
+        },
+        {
+          "suggestion": "Deuxième suggestion de retouche pour cette photo",
+          "tool": "Lightroom|Photoshop|Snapseed|GIMP",
+          "difficulty": "facile|moyen|difficile",
+          "expectedImprovement": "Bénéfice de cette modification"
+        },
+        {
+          "suggestion": "Troisième idée de retouche ciblée",
+          "tool": "Lightroom|Photoshop|Snapseed|GIMP",
+          "difficulty": "facile|moyen|difficile",
+          "expectedImprovement": "Impact visuel escompté"
+        }
+      ]
     }
+    
+    📸 SECTION "nextShotTips" : Conseils pour améliorer la PROCHAINE PRISE de vue
+    🎨 SECTION "editingRecommendations" : Suggestions pour retoucher CETTE PHOTO ACTUELLE
     `
 
     const response = await openai.chat.completions.create({

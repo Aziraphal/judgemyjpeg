@@ -322,6 +322,95 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional' 
         </ul>
       </div>
 
+      {/* Conseils pour la prochaine prise */}
+      {analysis.nextShotTips && analysis.nextShotTips.length > 0 && (
+        <div className="glass-card p-8 hover-glow">
+          <h3 className="text-2xl font-bold text-text-white mb-6 flex items-center">
+            <span className="text-3xl mr-3">📸</span>
+            <span className="text-neon-cyan">Conseils pour la prochaine prise</span>
+          </h3>
+          <div className="grid md:grid-cols-3 gap-6">
+            {analysis.nextShotTips.map((tip, index) => {
+              const categoryIcons = {
+                technique: '⚙️',
+                composition: '🎯',
+                éclairage: '💡',
+                créativité: '✨'
+              }
+              
+              const difficultyColors = {
+                débutant: 'bg-green-500/20 text-green-400',
+                intermédiaire: 'bg-yellow-500/20 text-yellow-400',
+                avancé: 'bg-red-500/20 text-red-400'
+              }
+              
+              return (
+                <div key={index} className="glass-card p-6 hover:bg-cosmic-glassborder transition-all duration-300">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-xl">{categoryIcons[tip.category]}</span>
+                      <span className="text-sm font-semibold text-neon-pink capitalize">
+                        {tip.category}
+                      </span>
+                    </div>
+                    <span className={`text-xs px-2 py-1 rounded-full ${difficultyColors[tip.difficulty]}`}>
+                      {tip.difficulty}
+                    </span>
+                  </div>
+                  <p className="text-text-gray leading-relaxed text-sm">{tip.tip}</p>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Suggestions de retouche */}
+      {analysis.editingRecommendations && analysis.editingRecommendations.length > 0 && (
+        <div className="glass-card p-8 hover-glow">
+          <h3 className="text-2xl font-bold text-text-white mb-6 flex items-center">
+            <span className="text-3xl mr-3">🎨</span>
+            <span className="text-neon-pink">Suggestions de retouche</span>
+          </h3>
+          <div className="grid md:grid-cols-3 gap-6">
+            {analysis.editingRecommendations.map((rec, index) => {
+              const toolIcons = {
+                Lightroom: '📷',
+                Photoshop: '🖌️',
+                Snapseed: '📱',
+                GIMP: '🆓'
+              }
+              
+              const difficultyColors = {
+                facile: 'bg-green-500/20 text-green-400',
+                moyen: 'bg-yellow-500/20 text-yellow-400',
+                difficile: 'bg-red-500/20 text-red-400'
+              }
+              
+              return (
+                <div key={index} className="glass-card p-6 hover:bg-cosmic-glassborder transition-all duration-300">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-xl">{toolIcons[rec.tool]}</span>
+                      <span className="text-sm font-semibold text-neon-cyan">
+                        {rec.tool}
+                      </span>
+                    </div>
+                    <span className={`text-xs px-2 py-1 rounded-full ${difficultyColors[rec.difficulty]}`}>
+                      {rec.difficulty}
+                    </span>
+                  </div>
+                  <p className="text-text-gray leading-relaxed text-sm mb-3">{rec.suggestion}</p>
+                  <div className="text-xs text-neon-pink font-semibold">
+                    ✨ {rec.expectedImprovement}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Outils recommandés */}
       <div className="glass-card p-8 hover-glow">
         <h3 className="text-2xl font-bold text-text-white mb-6 flex items-center">
