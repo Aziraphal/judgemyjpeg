@@ -347,7 +347,7 @@ export class PDFExporter {
   }
 
   private addPage() {
-    if (this.pdf.internal.getNumberOfPages() > 0) {
+    if (this.pdf.getNumberOfPages() > 0) {
       this.pdf.addPage()
     }
     this.currentY = this.margin

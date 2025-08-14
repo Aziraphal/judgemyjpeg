@@ -274,7 +274,7 @@ export class InstagramGenerator {
     analysis: PhotoAnalysis
   ): Promise<Record<string, InstagramPost>> {
     
-    const variants = {}
+    const variants: Record<string, InstagramPost> = {}
     const styles: ('minimal' | 'tips' | 'storytelling' | 'professional')[] = [
       'minimal', 'tips', 'storytelling', 'professional'
     ]

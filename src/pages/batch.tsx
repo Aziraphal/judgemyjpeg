@@ -246,11 +246,11 @@ export default function BatchAnalysis() {
   const generateOverallRecommendations = (categories: any, photos: BatchPhoto[]): string[] => {
     const recommendations: string[] = []
     const weakest = Object.entries(categories)
-      .sort(([,a], [,b]) => a - b)
+      .sort(([,a], [,b]) => (a as number) - (b as number))
       .slice(0, 3)
     
     weakest.forEach(([category, score]) => {
-      if (score < 12) {
+      if ((score as number) < 12) {
         switch (category) {
           case 'composition':
             recommendations.push("Travaillez davantage la règle des tiers et l'équilibre visuel de vos cadrages")
