@@ -12,7 +12,7 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
 
   const toneOptions = {
     professional: {
-      label: 'Mode Professionnel',
+      label: 'Mode Pro',
       icon: '👔',
       description: 'Analyse technique et constructive',
       color: 'border-neon-cyan/50 bg-neon-cyan/10',

@@ -91,14 +91,14 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional' 
   const toolLinks = getToolLinks()
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 relative">
+    <div className="max-w-5xl mx-auto space-y-6 sm:space-y-8 relative px-4">
       {/* Floating decorative elements */}
-      <div className="absolute -top-10 -right-10 w-20 h-20 bg-glow-pink rounded-full blur-xl opacity-20 animate-float"></div>
-      <div className="absolute top-1/2 -left-10 w-16 h-16 bg-glow-cyan rounded-full blur-lg opacity-15 animate-float" style={{animationDelay: '1s'}}></div>
+      <div className="hidden sm:block absolute -top-10 -right-10 w-20 h-20 bg-glow-pink rounded-full blur-xl opacity-20 animate-float"></div>
+      <div className="hidden sm:block absolute top-1/2 -left-10 w-16 h-16 bg-glow-cyan rounded-full blur-lg opacity-15 animate-float" style={{animationDelay: '1s'}}></div>
       
       {/* Photo et Score */}
-      <div className="glass-card p-8 hover-glow">
-        <div className="grid lg:grid-cols-2 gap-8">
+      <div className="glass-card p-4 sm:p-8 hover-glow">
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8">
           <div className="space-y-4">
             <div className="relative group">
               <Image
@@ -111,11 +111,11 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional' 
             </div>
           </div>
           
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <div>
-              <h2 className="text-3xl font-bold text-text-white mb-2 text-glow">
-                Analyse de{' '}
-                <span className="text-neon-cyan">{photo.filename}</span>
+              <h2 className="text-xl sm:text-3xl font-bold text-text-white mb-2 text-glow">
+                <span className="block sm:inline">Analyse de</span>{' '}
+                <span className="text-neon-cyan break-all">{photo.filename}</span>
               </h2>
               <p className="text-text-muted">
                 {new Date(photo.createdAt).toLocaleDateString('fr-FR', {
@@ -151,10 +151,11 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional' 
             )}
 
             {/* Scores détaillés */}
-            <div className="glass-card p-6">
-              <h4 className="text-lg font-semibold text-text-white mb-4 flex items-center">
-                <span className="text-xl mr-2">📊</span>
-                Détail des notes
+            <div className="glass-card p-4 sm:p-6">
+              <h4 className="text-base sm:text-lg font-semibold text-text-white mb-3 sm:mb-4 flex items-center">
+                <span className="text-lg sm:text-xl mr-2">📊</span>
+                <span className="hidden sm:inline">Détail des notes</span>
+                <span className="sm:hidden">Notes</span>
               </h4>
               
               <div className="space-y-3">
@@ -234,6 +235,77 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional' 
                 </div>
               </div>
             </div>
+
+            {/* Bilan récapitulatif */}
+            <div className="glass-card p-4 sm:p-6 border border-neon-cyan/30">
+              <h4 className="text-base sm:text-lg font-semibold text-neon-cyan mb-3 sm:mb-4 flex items-center">
+                <span className="text-lg sm:text-xl mr-2">📋</span>
+                Bilan de l'analyse
+              </h4>
+              
+              <div className="space-y-3">
+                {/* Score et niveau */}
+                <div className="flex items-center justify-between p-3 bg-cosmic-glass rounded-lg">
+                  <span className="text-text-white font-medium">Niveau global</span>
+                  <div className="flex items-center space-x-2">
+                    <span className={`text-2xl ${getScoreColor(analysis.score)}`}>
+                      {analysis.score >= 85 ? '🏆' : analysis.score >= 70 ? '⭐' : analysis.score >= 55 ? '💪' : '📈'}
+                    </span>
+                    <span className={`font-bold ${getScoreColor(analysis.score)}`}>
+                      {analysis.score >= 85 ? 'Excellent' : 
+                       analysis.score >= 70 ? 'Très bon' : 
+                       analysis.score >= 55 ? 'Bon' : 'À améliorer'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Points forts */}
+                <div className="p-3 bg-cosmic-glass rounded-lg">
+                  <div className="flex items-center mb-2">
+                    <span className="text-green-400 mr-2">✅</span>
+                    <span className="text-text-white font-medium text-sm">Points forts</span>
+                  </div>
+                  <div className="text-xs sm:text-sm text-text-gray">
+                    {(() => {
+                      const scores = analysis.partialScores
+                      const strengths = []
+                      if (scores.composition >= 12) strengths.push('Composition')
+                      if (scores.lighting >= 12) strengths.push('Éclairage')
+                      if (scores.focus >= 12) strengths.push('Netteté')
+                      if (scores.creativity >= 12) strengths.push('Créativité')
+                      if (scores.emotion >= 12) strengths.push('Émotion')
+                      
+                      return strengths.length > 0 
+                        ? strengths.join(', ') 
+                        : 'Continuez vos efforts, vous progressez !'
+                    })()}
+                  </div>
+                </div>
+
+                {/* Point à améliorer */}
+                <div className="p-3 bg-cosmic-glass rounded-lg">
+                  <div className="flex items-center mb-2">
+                    <span className="text-yellow-400 mr-2">💡</span>
+                    <span className="text-text-white font-medium text-sm">Priorité d'amélioration</span>
+                  </div>
+                  <div className="text-xs sm:text-sm text-text-gray">
+                    {(() => {
+                      const scores = analysis.partialScores
+                      const weaknesses = [
+                        { name: 'Composition', score: scores.composition, max: 15 },
+                        { name: 'Éclairage', score: scores.lighting, max: 15 },
+                        { name: 'Netteté', score: scores.focus, max: 15 },
+                        { name: 'Exposition', score: scores.exposure, max: 15 },
+                        { name: 'Créativité', score: scores.creativity, max: 15 }
+                      ]
+                      
+                      const mainWeakness = weaknesses.sort((a, b) => (a.score/a.max) - (b.score/b.max))[0]
+                      return `${mainWeakness.name} (${mainWeakness.score}/${mainWeakness.max})`
+                    })()}
+                  </div>
+                </div>
+              </div>
+            </div>
             
             <div className="glass-card p-4">
               <p className="text-text-gray text-sm leading-relaxed mb-4">
@@ -241,7 +313,7 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional' 
               </p>
               
               {/* Actions */}
-              <div className="flex space-x-3">
+              <div className="flex flex-col sm:flex-row gap-3 sm:space-x-3 sm:gap-0">
                 <FavoriteButton
                   photoId={photo.id}
                   initialIsFavorite={false}
@@ -249,10 +321,11 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional' 
                 />
                 <button
                   onClick={() => setIsCollectionModalOpen(true)}
-                  className="btn-neon-secondary text-sm px-4 py-2 flex items-center space-x-2"
+                  className="btn-neon-secondary text-sm px-4 py-2 flex items-center justify-center space-x-2"
                 >
                   <span>📁</span>
-                  <span>Ajouter à collection</span>
+                  <span className="hidden sm:inline">Ajouter à collection</span>
+                  <span className="sm:hidden">Collection</span>
                 </button>
                 <button
                   onClick={async () => {
@@ -268,7 +341,7 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional' 
                       alert('Erreur lors de l\'export PDF')
                     }
                   }}
-                  className="btn-neon-pink text-sm px-4 py-2 flex items-center space-x-2"
+                  className="btn-neon-pink text-sm px-4 py-2 flex items-center justify-center space-x-2"
                 >
                   <span>📄</span>
                   <span>Export PDF</span>
@@ -280,41 +353,41 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional' 
       </div>
 
       {/* Analyse Technique */}
-      <div className="glass-card p-8 hover-glow">
-        <h3 className="text-2xl font-bold text-text-white mb-6 flex items-center">
-          <span className="text-3xl mr-3">🔧</span>
+      <div className="glass-card p-4 sm:p-8 hover-glow">
+        <h3 className="text-xl sm:text-2xl font-bold text-text-white mb-4 sm:mb-6 flex items-center">
+          <span className="text-2xl sm:text-3xl mr-2 sm:mr-3">🔧</span>
           <span className="text-neon-cyan">Analyse Technique</span>
         </h3>
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
           {Object.entries(analysis.technical).map(([key, value]) => (
-            <div key={key} className="glass-card p-6 hover:bg-cosmic-glassborder transition-all duration-300">
-              <h4 className="font-bold text-text-white mb-3 capitalize flex items-center">
+            <div key={key} className="glass-card p-4 sm:p-6 hover:bg-cosmic-glassborder transition-all duration-300">
+              <h4 className="font-bold text-text-white mb-2 sm:mb-3 text-sm sm:text-base capitalize flex items-center">
                 <span className="w-2 h-2 bg-neon-pink rounded-full mr-2"></span>
                 {key === 'composition' ? 'Composition' : 
                  key === 'lighting' ? 'Éclairage' :
                  key === 'focus' ? 'Mise au point' : 'Exposition'}
               </h4>
-              <p className="text-text-gray leading-relaxed">{value}</p>
+              <p className="text-text-gray leading-relaxed text-sm sm:text-base">{value}</p>
             </div>
           ))}
         </div>
       </div>
 
       {/* Analyse Artistique */}
-      <div className="glass-card p-8 hover-glow">
-        <h3 className="text-2xl font-bold text-text-white mb-6 flex items-center">
-          <span className="text-3xl mr-3">🎨</span>
+      <div className="glass-card p-4 sm:p-8 hover-glow">
+        <h3 className="text-xl sm:text-2xl font-bold text-text-white mb-4 sm:mb-6 flex items-center">
+          <span className="text-2xl sm:text-3xl mr-2 sm:mr-3">🎨</span>
           <span className="text-neon-pink">Analyse Artistique</span>
         </h3>
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {Object.entries(analysis.artistic).map(([key, value]) => (
-            <div key={key} className="glass-card p-6 hover:bg-cosmic-glassborder transition-all duration-300">
-              <h4 className="font-bold text-text-white mb-3 capitalize flex items-center">
+            <div key={key} className="glass-card p-4 sm:p-6 hover:bg-cosmic-glassborder transition-all duration-300">
+              <h4 className="font-bold text-text-white mb-2 sm:mb-3 text-sm sm:text-base capitalize flex items-center">
                 <span className="w-2 h-2 bg-neon-cyan rounded-full mr-2"></span>
                 {key === 'creativity' ? 'Créativité' : 
                  key === 'emotion' ? 'Émotion' : 'Narration'}
               </h4>
-              <p className="text-text-gray leading-relaxed">{value}</p>
+              <p className="text-text-gray leading-relaxed text-sm sm:text-base">{value}</p>
             </div>
           ))}
         </div>
