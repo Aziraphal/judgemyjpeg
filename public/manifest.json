@@ -12,68 +12,16 @@
   "scope": "/",
   "icons": [
     {
-      "src": "/icon-72x72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-96x96.png", 
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-128x128.png",
-      "sizes": "128x128", 
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-152x152.png",
-      "sizes": "152x152",
-      "type": "image/png", 
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-192x192.png",
+      "src": "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3e%3crect width='192' height='192' fill='%23FF006E'/%3e%3ctext x='96' y='120' font-family='Arial' font-size='80' text-anchor='middle' fill='white'%3e📸%3c/text%3e%3c/svg%3e",
       "sizes": "192x192",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-384x384.png",
-      "sizes": "384x384", 
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-512x512.png",
+      "src": "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3e%3crect width='512' height='512' fill='%23FF006E'/%3e%3ctext x='256' y='320' font-family='Arial' font-size='200' text-anchor='middle' fill='white'%3e📸%3c/text%3e%3c/svg%3e",
       "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/screenshot-desktop.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Interface principale sur desktop"
-    },
-    {
-      "src": "/screenshot-mobile.png", 
-      "sizes": "390x844",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Interface mobile optimisée"
     }
   ],
   "shortcuts": [
@@ -81,40 +29,19 @@
       "name": "Analyser une photo",
       "short_name": "Analyser",
       "description": "Démarrer directement une analyse de photo",
-      "url": "/analyze",
-      "icons": [
-        {
-          "src": "/icon-shortcut-analyze.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
+      "url": "/analyze"
     },
     {
       "name": "Dashboard",
       "short_name": "Dashboard", 
       "description": "Voir vos analyses et statistiques",
-      "url": "/dashboard",
-      "icons": [
-        {
-          "src": "/icon-shortcut-dashboard.png",
-          "sizes": "192x192", 
-          "type": "image/png"
-        }
-      ]
+      "url": "/dashboard"
     },
     {
       "name": "Top Photos",
       "short_name": "Top",
       "description": "Explorer les meilleures photos de la communauté", 
-      "url": "/gallery",
-      "icons": [
-        {
-          "src": "/icon-shortcut-gallery.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
+      "url": "/gallery"
     }
   ],
   "related_applications": [],

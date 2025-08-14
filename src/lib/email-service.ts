@@ -5,7 +5,17 @@
 
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+let resend: Resend | null = null
+
+function getResendClient(): Resend {
+  if (!resend) {
+    if (!process.env.RESEND_API_KEY) {
+      throw new Error('RESEND_API_KEY is not configured')
+    }
+    resend = new Resend(process.env.RESEND_API_KEY)
+  }
+  return resend
+}
 
 export interface EmailTemplate {
   to: string
@@ -19,7 +29,7 @@ export interface EmailTemplate {
  */
 export async function sendVerificationEmail(email: string, verificationUrl: string): Promise<void> {
   try {
-    await resend.emails.send({
+    await getResendClient().emails.send({
       from: 'JudgeMyJPEG <noreply@judgemyjpeg.fr>',
       to: email,
       subject: '🔐 Vérifiez votre email - JudgeMyJPEG',
@@ -54,7 +64,7 @@ export async function sendSuspiciousLoginEmail(
       ? `${location.city}, ${location.region}, ${location.country}`
       : 'Localisation inconnue'
 
-    await resend.emails.send({
+    await getResendClient().emails.send({
       from: 'JudgeMyJPEG Security <security@judgemyjpeg.fr>',
       to: email,
       subject: '🚨 Connexion suspecte détectée - JudgeMyJPEG',
@@ -80,7 +90,7 @@ export async function sendPasswordChangeNotification(
   }
 ): Promise<void> {
   try {
-    await resend.emails.send({
+    await getResendClient().emails.send({
       from: 'JudgeMyJPEG Security <security@judgemyjpeg.fr>',
       to: email,
       subject: '🔐 Mot de passe modifié - JudgeMyJPEG',
@@ -107,7 +117,7 @@ export async function sendAccountLockoutNotification(
   }
 ): Promise<void> {
   try {
-    await resend.emails.send({
+    await getResendClient().emails.send({
       from: 'JudgeMyJPEG Security <security@judgemyjpeg.fr>',
       to: email,
       subject: '🚫 Compte temporairement verrouillé - JudgeMyJPEG',
@@ -136,7 +146,7 @@ export async function sendNewDeviceLoginNotification(
   }
 ): Promise<void> {
   try {
-    await resend.emails.send({
+    await getResendClient().emails.send({
       from: 'JudgeMyJPEG Security <security@judgemyjpeg.fr>',
       to: email,
       subject: loginInfo.isFirstTime 
@@ -162,7 +172,7 @@ export async function sendCriticalSecurityAlert(
   try {
     const adminEmail = process.env.ADMIN_EMAIL || 'admin@judgemyjpeg.fr'
     
-    await resend.emails.send({
+    await getResendClient().emails.send({
       from: 'JudgeMyJPEG Security <security@judgemyjpeg.fr>',
       to: adminEmail,
       subject: '🚨 CRITICAL SECURITY ALERT - JudgeMyJPEG',

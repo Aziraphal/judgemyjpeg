@@ -18,6 +18,7 @@ export default function AnalyzePage() {
   } | null>(null)
   const [selectedTone, setSelectedTone] = useState<AnalysisTone>('professional')
   const [selectedLanguage, setSelectedLanguage] = useState<AnalysisLanguage>('fr')
+  const [isUploading, setIsUploading] = useState(false)
 
   if (status === 'loading') {
     return (
@@ -47,7 +48,11 @@ export default function AnalyzePage() {
         <meta name="description" content="L'IA qui juge vos photos avec humour ou professionnalisme" />
       </Head>
 
-      <main className="min-h-screen bg-cosmic-overlay particles-container relative">
+      <main className={`min-h-screen particles-container relative transition-all duration-1000 ${
+        isUploading && selectedTone === 'roast' 
+          ? 'bg-red-900/20 bg-gradient-to-br from-red-900/30 to-black' 
+          : 'bg-cosmic-overlay'
+      }`}>
         {/* Floating decorative elements */}
         <div className="absolute top-10 left-5 w-24 h-24 bg-glow-pink rounded-full blur-xl opacity-20 animate-float"></div>
         <div className="absolute bottom-20 right-10 w-32 h-32 bg-glow-cyan rounded-full blur-xl opacity-15 animate-float" style={{animationDelay: '2s'}}></div>
@@ -142,6 +147,7 @@ export default function AnalyzePage() {
                       onAnalysisComplete={handleAnalysisComplete} 
                       tone={selectedTone}
                       language={selectedLanguage}
+                      onUploadStateChange={setIsUploading}
                     />
                   </div>
                 </div>
