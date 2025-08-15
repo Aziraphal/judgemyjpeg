@@ -92,7 +92,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         finalSize: `${Math.round(photoFile.size / 1024 / 1024 * 100) / 100}MB`,
         compression: 'Aucune - Railway gère les gros fichiers!',
         platform: 'Railway.app',
-        limit: '50MB (vs 4.5MB Vercel)'
+        limit: '50MB Railway'
       }
     })
 

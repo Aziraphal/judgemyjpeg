@@ -1,7 +1,6 @@
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import { SessionProvider } from 'next-auth/react'
-// import { Analytics } from '@vercel/analytics/next' // Désactivé pour Railway
 import SecurityStatusBar from '@/components/SecurityStatusBar'
 import CookieConsent from '@/components/CookieConsent'
 import Head from 'next/head'
@@ -60,7 +59,6 @@ export default function App({
         {process.env.NODE_ENV === 'development' && !hideSecurityBar && <SecurityStatusBar compact position="top" />}
         <Component {...pageProps} />
         <CookieConsent />
-        {/* <Analytics /> */}
       </SessionProvider>
     </>
   )

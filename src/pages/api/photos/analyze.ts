@@ -34,9 +34,9 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
 
   try {
 
-    // Parse le fichier uploadé avec limite Vercel Pro
+    // Parse le fichier uploadé avec limite Railway
     const form = formidable({
-      maxFileSize: 50 * 1024 * 1024, // 50MB limite Vercel Pro
+      maxFileSize: 50 * 1024 * 1024, // 50MB limite Railway
       maxTotalFileSize: 50 * 1024 * 1024,
       keepExtensions: true,
       allowEmptyFiles: false,
@@ -108,7 +108,7 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     
     // Validation sécurisée du fichier avec magic bytes
     const validation = validateUpload(fileBuffer, file.originalFilename || 'photo.jpg', {
-      maxSize: 50 * 1024 * 1024, // 50MB limite Vercel Pro
+      maxSize: 50 * 1024 * 1024, // 50MB limite Railway
       allowedTypes: ['jpg', 'png', 'webp'],
       strictMode: false // Mode souple pour compatibilité smartphone
     })

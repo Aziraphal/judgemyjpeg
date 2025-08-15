@@ -41,7 +41,7 @@
 
 #### Variables d'environnement serveur
 - [ ] Utiliser le template .env.production.template
-- [ ] Configurer sur ton serveur (Vercel/Netlify/etc.)
+- [ ] Configurer sur ton serveur (Railway/etc.)
 - [ ] JAMAIS de fichier .env en production
 
 #### URLs production

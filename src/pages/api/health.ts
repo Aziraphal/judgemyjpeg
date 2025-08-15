@@ -135,7 +135,7 @@ async function checkEmailService() {
 
 function checkMonitoring() {
   const sentryConfigured = !!process.env.NEXT_PUBLIC_SENTRY_DSN
-  const analyticsEnabled = true // Vercel Analytics is always enabled
+  const analyticsEnabled = true // Analytics enabled
   
   return {
     status: (sentryConfigured && analyticsEnabled) ? 'up' as const : 'down' as const,

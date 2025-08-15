@@ -20,7 +20,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
   }
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // SUPPRIMÉ: Fonctions de compression Canvas (plus nécessaires avec Vercel Pro 50MB)
+  // SUPPRIMÉ: Fonctions de compression Canvas (plus nécessaires avec Railway)
 
   const handleFile = async (file: File) => {
     if (!file.type.startsWith('image/')) {
@@ -254,7 +254,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
     setErrorMessage(null)
   }
 
-  // SUPPRIMÉ: Upload direct Cloudinary (plus nécessaire avec Vercel Pro 50MB)
+  // SUPPRIMÉ: Upload direct Cloudinary (plus nécessaire avec Railway)
 
   return (
     <div className="w-full max-w-lg sm:max-w-2xl mx-auto">

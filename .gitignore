@@ -45,8 +45,8 @@ pids
 .DS_Store
 Thumbs.db
 
-# Vercel
-.vercel
+# Railway
+.railway
 
 # TypeScript
 *.tsbuildinfo

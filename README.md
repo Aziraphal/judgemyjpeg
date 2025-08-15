@@ -58,7 +58,7 @@ npm run dev
 ## 🌐 Déploiement
 
 L'application est déployée sur **Railway** :
-- ✅ Pas de limite de taille d'image (vs Vercel)
+- ✅ Pas de limite de taille d'image
 - ✅ Auto-déploiement depuis GitHub
 - ✅ PostgreSQL intégré
 - ✅ Variables d'environnement sécurisées

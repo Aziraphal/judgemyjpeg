@@ -136,12 +136,13 @@ export default function DashboardPage() {
               >
                 📸 Analyser une photo
               </button>
-              <button
+              {/* TODO: Réactiver dans une future mise à jour */}
+              {/* <button
                 onClick={() => router.push('/batch')}
                 className="btn-neon-secondary text-sm px-4 py-2"
               >
                 📊 Analyse en lot
-              </button>
+              </button> */
               <button
                 onClick={() => router.push('/gallery')}
                 className="btn-neon-secondary text-sm px-4 py-2"
