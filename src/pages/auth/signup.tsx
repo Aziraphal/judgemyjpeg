@@ -14,6 +14,7 @@ export default function SignUpPage() {
   const [showEmailVerification, setShowEmailVerification] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
+    nickname: '',
     email: '',
     password: '',
     confirmPassword: ''
@@ -44,6 +45,7 @@ export default function SignUpPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: formData.name,
+          nickname: formData.nickname,
           email: formData.email,
           password: formData.password
         })
@@ -160,6 +162,24 @@ export default function SignUpPage() {
                   placeholder="John Doe"
                   required
                 />
+              </div>
+
+              <div>
+                <label className="block text-text-white mb-2" htmlFor="nickname">
+                  Pseudo (nom affiché)
+                  <span className="text-neon-cyan text-xs ml-2">✨ Optionnel</span>
+                </label>
+                <input
+                  id="nickname"
+                  type="text"
+                  value={formData.nickname}
+                  onChange={(e) => setFormData({ ...formData, nickname: e.target.value })}
+                  className="w-full p-3 bg-cosmic-glass border border-cosmic-glassborder rounded-lg text-text-white placeholder-text-muted focus:outline-none focus:border-neon-cyan"
+                  placeholder="PhotoMaster, ArtistPro, etc."
+                />
+                <p className="text-xs text-text-muted mt-1">
+                  Ce nom sera affiché sur le site (ex: "Bonjour, MonPseudo"). Si vide, votre nom complet sera utilisé.
+                </p>
               </div>
 
               <div>

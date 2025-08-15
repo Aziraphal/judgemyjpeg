@@ -64,7 +64,7 @@ export default function Home() {
                     ? 'text-yellow-400 drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]' // Effet doré brillant
                     : 'text-neon-cyan'
                 }`}>
-                  {userPreferences?.nickname || userPreferences?.displayName || session.user?.name}
+                  {session.user?.nickname || userPreferences?.nickname || userPreferences?.displayName || session.user?.name}
                   {(userSubscription?.status === 'lifetime' || userSubscription?.subscriptionStatus === 'lifetime') && ' ✨'}
                   {(userSubscription?.status === 'premium' || userSubscription?.subscriptionStatus === 'premium') && ' 💎'}
                 </span>

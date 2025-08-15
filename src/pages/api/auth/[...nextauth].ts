@@ -147,6 +147,7 @@ export const authOptions: NextAuthOptions = {
             id: true,
             email: true,
             name: true,
+            nickname: true,
             image: true,
             password: true,
             twoFactorEnabled: true,
@@ -221,6 +222,7 @@ export const authOptions: NextAuthOptions = {
             id: true,
             email: true,
             name: true,
+            nickname: true,
             image: true
           }
         })
@@ -238,6 +240,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id
         token.email = user.email
+        token.nickname = user.nickname
       }
       if (account) {
         token.provider = account.provider
@@ -249,6 +252,7 @@ export const authOptions: NextAuthOptions = {
       if (session?.user && token) {
         session.user.id = token.id as string
         session.user.email = token.email as string
+        session.user.nickname = token.nickname as string
         
         // Vérification de cohérence de session
         if (session.user.email !== token.email) {

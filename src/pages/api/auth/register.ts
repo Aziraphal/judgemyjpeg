@@ -9,7 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const { name, email, password } = req.body
+    const { name, nickname, email, password } = req.body
 
     // Validation des champs
     if (!name || !email || !password) {
@@ -49,6 +49,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const user = await prisma.user.create({
       data: {
         name,
+        nickname: nickname || null,
         email,
         password: hashedPassword,
         // Nouveaux utilisateurs commencent en free
