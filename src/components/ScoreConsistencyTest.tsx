@@ -55,13 +55,13 @@ export default function ScoreConsistencyTest({ imageBase64 }: ScoreTestProps) {
             <div className="bg-blue-500/10 p-3 rounded border border-blue-500/30">
               <div className="text-blue-400 font-semibold">👔 Mode Pro</div>
               <div className="text-white text-xl">{results.professional.score}/100</div>
-              <div className="text-xs text-gray-400">Potentiel: {results.professional.potentialScore}/100</div>
+              <div className="text-xs text-gray-400">Score final</div>
             </div>
             
             <div className="bg-pink-500/10 p-3 rounded border border-pink-500/30">
               <div className="text-pink-400 font-semibold">🔥 Mode Cassant</div>
               <div className="text-white text-xl">{results.roast.score}/100</div>
-              <div className="text-xs text-gray-400">Potentiel: {results.roast.potentialScore}/100</div>
+              <div className="text-xs text-gray-400">Score final</div>
             </div>
           </div>
 
