@@ -173,20 +173,6 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
           </div>
         </div>
         
-        {/* Explication viralité */}
-        <div className="text-xs text-text-muted bg-cosmic-glass/50 rounded-lg p-3 border border-cosmic-glassborder/50">
-          <div className="font-semibold text-neon-cyan mb-1">📊 Comment est calculée la viralité ?</div>
-          <div className="space-y-1">
-            <div>• <span className="text-text-white">Score photo:</span> {Math.round(analysis.score * 0.4)}/40 pts</div>
-            <div>• <span className="text-text-white">Mode {tone}:</span> {tone === 'roast' ? '30' : tone === 'expert' ? '15' : '10'}/30 pts</div>
-            <div>• <span className="text-text-white">Bonus extrême:</span> {analysis.score >= 90 || analysis.score <= 30 ? '30' : analysis.score >= 80 || analysis.score <= 40 ? '15' : '0'}/30 pts</div>
-          </div>
-          <div className="mt-2 text-center">
-            <span className="text-neon-pink font-semibold">
-              Total: {Math.round(analysis.score * 0.4) + (tone === 'roast' ? 30 : tone === 'expert' ? 15 : 10) + (analysis.score >= 90 || analysis.score <= 30 ? 30 : analysis.score >= 80 || analysis.score <= 40 ? 15 : 0)}/100
-            </span>
-          </div>
-        </div>
       </div>
     </div>
   )

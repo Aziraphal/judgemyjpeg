@@ -9,6 +9,7 @@ import formidable, { File } from 'formidable'
 import { readFileSync } from 'fs'
 import { validateUpload } from '@/lib/file-validation'
 import { AuditLogger } from '@/lib/audit-trail'
+import { cacheService } from '@/lib/cache-service'
 
 export const config = {
   api: {
@@ -160,12 +161,41 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     const analysisLanguage: AnalysisLanguage = (['fr', 'en', 'es', 'de', 'it', 'pt'].includes(language as string)) ? language as AnalysisLanguage : 'fr'
 
     const base64Image = fileBuffer.toString('base64')
+    
+    // Générer hash unique pour cette image
+    const imageHash = cacheService.generateImageHash(fileBuffer)
+    
+    // Vérifier le cache d'abord
+    let analysis = await cacheService.getCachedAnalysis(imageHash, analysisTone, analysisLanguage)
+    let fromCache = false
+    
+    if (analysis) {
+      fromCache = true
+      logger.info('Analysis from cache', { 
+        imageHash: imageHash,
+        tone: analysisTone,
+        language: analysisLanguage
+      }, req.user.id, ip)
+    } else {
+      // Upload vers Cloudinary seulement si pas en cache
+      const uploadResult = await uploadPhoto(fileBuffer, file.originalFilename || 'photo')
+      
+      // Analyser avec OpenAI GPT-4o-mini avec le ton sélectionné
+      analysis = await analyzePhoto(base64Image, analysisTone, analysisLanguage)
+      
+      // Mettre en cache le résultat (TTL: 24h)
+      await cacheService.cacheAnalysis(imageHash, analysis, analysisTone, analysisLanguage, 86400)
+      
+      logger.info('Analysis computed and cached', { 
+        imageHash: imageHash,
+        score: analysis.score,
+        tone: analysisTone,
+        language: analysisLanguage
+      }, req.user.id, ip)
+    }
 
-    // Upload vers Cloudinary
+    // Upload vers Cloudinary (nécessaire pour sauvegarder même si analyse en cache)
     const uploadResult = await uploadPhoto(fileBuffer, file.originalFilename || 'photo')
-
-    // Analyser avec OpenAI GPT-4o-mini avec le ton sélectionné
-    const analysis = await analyzePhoto(base64Image, analysisTone, analysisLanguage)
 
     // Sauvegarder en base - utilisateur déjà disponible via middleware
     const user = await prisma.user.findUnique({
@@ -222,7 +252,11 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
         filename: photo.filename,
         createdAt: photo.createdAt,
       },
-      analysis
+      analysis,
+      cache: {
+        hit: fromCache,
+        imageHash: imageHash.substring(0, 8) // Premiers 8 caractères pour debug
+      }
     })
 
   } catch (error) {

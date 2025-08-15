@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react'
 import { PhotoAnalysis, AnalysisTone, AnalysisLanguage } from '@/services/openai'
+import ContextualTooltip, { RichTooltip } from './ContextualTooltip'
 
 interface PhotoUploadProps {
   onAnalysisComplete: (result: { photo: any; analysis: PhotoAnalysis }) => void
@@ -462,29 +463,37 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
               </p>
             </div>
             
-            <div className="glass-card p-3 sm:p-4 max-w-xs sm:max-w-md mx-auto" id="file-constraints">
-              <div className="text-center space-y-2">
-                <div className="flex items-center justify-center space-x-2 sm:space-x-4 text-xs sm:text-sm text-text-muted">
-                  <div className="flex items-center space-x-1">
-                    <span className="text-neon-pink" aria-hidden="true">✓</span>
-                    <span>Formats: JPG, PNG, WebP</span>
+            <RichTooltip
+              title="Spécifications techniques"
+              description="Formats optimisés pour l'analyse IA : JPEG pour rapidité, PNG pour qualité, WebP pour compression avancée"
+              icon="⚙️"
+            >
+              <div className="glass-card p-3 sm:p-4 max-w-xs sm:max-w-md mx-auto cursor-help" id="file-constraints">
+                <div className="text-center space-y-2">
+                  <div className="flex items-center justify-center space-x-2 sm:space-x-4 text-xs sm:text-sm text-text-muted">
+                    <div className="flex items-center space-x-1">
+                      <span className="text-neon-pink" aria-hidden="true">✓</span>
+                      <span>Formats: JPG, PNG, WebP</span>
+                    </div>
+                    <div className="w-1 h-1 bg-text-muted rounded-full" aria-hidden="true"></div>
+                    <div className="flex items-center space-x-1">
+                      <span className="text-green-400" aria-hidden="true">⚡</span>
+                      <span>Photos illimitées</span>
+                    </div>
                   </div>
-                  <div className="w-1 h-1 bg-text-muted rounded-full" aria-hidden="true"></div>
-                  <div className="flex items-center space-x-1">
-                    <span className="text-green-400" aria-hidden="true">⚡</span>
-                    <span>Photos illimitées</span>
-                  </div>
+                  <p className="text-xs text-green-400/80">
+                    📱 Photos jusqu'à 20MB • Qualité originale préservée • Railway Pro
+                  </p>
                 </div>
-                <p className="text-xs text-green-400/80">
-                  📱 Photos jusqu'à 20MB • Qualité originale préservée • Railway Pro
-                </p>
               </div>
-            </div>
+            </RichTooltip>
             
-            <div className="text-xs text-text-muted">
-              Powered by{' '}
-              <span className="text-neon-pink font-semibold">Intelligence Artificielle</span> ✨
-            </div>
+            <ContextualTooltip content="Analyse GPT-4 Vision avec traitement optimisé">
+              <div className="text-xs text-text-muted cursor-help">
+                Powered by{' '}
+                <span className="text-neon-pink font-semibold">Intelligence Artificielle</span> ✨
+              </div>
+            </ContextualTooltip>
             
             {/* Debug info - visible même quand pas d'upload */}
             {debugInfo.length > 0 && (

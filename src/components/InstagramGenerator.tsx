@@ -138,6 +138,17 @@ export default function InstagramGeneratorComponent({ photo, analysis }: Instagr
           <span className="hidden sm:inline">Toutes les variantes</span>
           <span className="sm:hidden">Toutes</span>
         </button>
+        
+        <a
+          href="https://www.instagram.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn-neon-secondary flex items-center justify-center space-x-2 hover:bg-pink-500/20 hover:text-pink-400 transition-colors"
+        >
+          <span>📷</span>
+          <span className="hidden sm:inline">Ouvrir Instagram</span>
+          <span className="sm:hidden">Instagram</span>
+        </a>
       </div>
 
       {/* Preview */}

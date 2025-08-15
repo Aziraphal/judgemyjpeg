@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import ContextualTooltip, { RichTooltip } from './ContextualTooltip'
 
 export type AnalysisTone = 'professional' | 'roast' | 'expert'
 
@@ -15,6 +16,7 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
       label: 'Mode Pro',
       icon: '👔',
       description: 'Analyse technique et constructive',
+      tooltip: 'Analyse professionnelle focalisée sur les aspects techniques : composition, exposition, netteté, etc.',
       color: 'border-neon-cyan/50 bg-neon-cyan/10',
       selectedColor: 'border-neon-cyan bg-neon-cyan/20'
     },
@@ -22,6 +24,7 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
       label: 'Mode Cassant',
       icon: '🔥',
       description: 'Analyse brutalement honnête et fun',
+      tooltip: 'Mode humoristique qui révèle les défauts avec humour tout en restant constructif',
       color: 'border-neon-pink/50 bg-neon-pink/10',
       selectedColor: 'border-neon-pink bg-neon-pink/20'
     },
@@ -29,6 +32,7 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
       label: 'Mode Expert',
       icon: '🎯',
       description: 'Analyse professionnelle ultra-avancée',
+      tooltip: 'Analyse détaillée niveau professionnel avec terminologie technique et références artistiques',
       color: 'border-yellow-400/50 bg-yellow-400/10',
       selectedColor: 'border-yellow-400 bg-yellow-400/20'
     }
@@ -53,21 +57,27 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
       {/* Sélection rapide */}
       <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-3 sm:mb-4">
         {Object.entries(toneOptions).map(([tone, config]) => (
-          <button
+          <RichTooltip
             key={tone}
-            onClick={() => onToneChange(tone as AnalysisTone)}
-            className={`p-2 sm:p-4 rounded-lg border-2 transition-all duration-300 hover:scale-105 ${
-              selectedTone === tone 
-                ? config.selectedColor 
-                : config.color + ' hover:border-opacity-75'
-            }`}
+            title={config.label}
+            description={config.tooltip}
+            icon={config.icon}
           >
-            <div className="text-center">
-              <div className="text-2xl sm:text-3xl mb-1 sm:mb-2">{config.icon}</div>
-              <div className="text-text-white font-semibold mb-1 text-sm sm:text-base">{config.label}</div>
-              <div className="text-text-muted text-xs hidden sm:block">{config.description}</div>
-            </div>
-          </button>
+            <button
+              onClick={() => onToneChange(tone as AnalysisTone)}
+              className={`p-2 sm:p-4 rounded-lg border-2 transition-all duration-300 hover:scale-105 w-full ${
+                selectedTone === tone 
+                  ? config.selectedColor 
+                  : config.color + ' hover:border-opacity-75'
+              }`}
+            >
+              <div className="text-center">
+                <div className="text-2xl sm:text-3xl mb-1 sm:mb-2">{config.icon}</div>
+                <div className="text-text-white font-semibold mb-1 text-sm sm:text-base">{config.label}</div>
+                <div className="text-text-muted text-xs hidden sm:block">{config.description}</div>
+              </div>
+            </button>
+          </RichTooltip>
         ))}
       </div>
 
