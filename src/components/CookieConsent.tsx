@@ -132,9 +132,9 @@ export default function CookieConsent() {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
       )}
 
-      {/* Banner principal - PLUS VISIBLE */}
+      {/* Banner principal - FOND GRIS + ÉCRITURE BLANCHE */}
       {!showSettings && (
-        <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-black/95 via-cosmic-glass/95 to-cosmic-glass/80 backdrop-blur-md border-t-2 border-neon-cyan/50 shadow-lg shadow-neon-cyan/20 z-50">
+        <div className="fixed bottom-0 left-0 right-0 bg-gray-800/98 border-t-2 border-gray-600 shadow-lg z-50">
           <div className="container mx-auto px-3 sm:px-4 py-5 sm:py-7">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
               
@@ -143,17 +143,17 @@ export default function CookieConsent() {
                 <div className="flex items-start space-x-2 sm:space-x-3 mb-3 sm:mb-4">
                   <span className="text-xl sm:text-2xl flex-shrink-0">🍪</span>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-base sm:text-lg font-semibold text-text-white mb-1 sm:mb-2">
+                    <h3 className="text-base sm:text-lg font-semibold text-white mb-1 sm:mb-2">
                       Gestion des cookies
                     </h3>
-                    <p className="text-xs sm:text-sm text-text-gray">
+                    <p className="text-xs sm:text-sm text-gray-200">
                       Nous utilisons des cookies pour améliorer votre expérience et analyser notre trafic. 
                       Les cookies essentiels au fonctionnement sont automatiquement acceptés.
                     </p>
-                    <p className="text-xs text-text-muted mt-1 sm:mt-2">
+                    <p className="text-xs text-gray-300 mt-1 sm:mt-2">
                       En continuant, vous acceptez notre utilisation des cookies. 
                       Consultez notre{' '}
-                      <Link href="/legal/cookies" className="text-neon-cyan hover:underline">
+                      <Link href="/legal/cookies" className="text-blue-300 hover:underline">
                         politique de cookies
                       </Link>{' '}
                       pour plus d'informations.
@@ -166,7 +166,7 @@ export default function CookieConsent() {
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
                 <button
                   onClick={() => setShowSettings(true)}
-                  className="px-3 sm:px-4 py-2 text-xs sm:text-sm text-white bg-gray-700 hover:bg-gray-600 border border-gray-600 rounded transition-colors whitespace-nowrap"
+                  className="px-3 sm:px-4 py-2 text-xs sm:text-sm text-white bg-gray-600 hover:bg-gray-500 border border-gray-500 rounded transition-colors whitespace-nowrap"
                 >
                   Personnaliser
                 </button>
@@ -178,7 +178,7 @@ export default function CookieConsent() {
                 </button>
                 <button
                   onClick={acceptAll}
-                  className="px-4 sm:px-6 py-2 text-xs sm:text-sm bg-neon-cyan text-gray-900 border border-neon-cyan rounded hover:bg-neon-cyan/90 hover:text-black transition-colors font-semibold whitespace-nowrap"
+                  className="px-4 sm:px-6 py-2 text-xs sm:text-sm bg-blue-600 text-white border border-blue-500 rounded hover:bg-blue-700 transition-colors font-semibold whitespace-nowrap"
                 >
                   Accepter tout
                 </button>

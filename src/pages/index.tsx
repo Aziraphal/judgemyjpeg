@@ -57,7 +57,7 @@ export default function Home() {
         <div className="container mx-auto px-4 py-12 relative z-10">
           {/* Header avec navigation utilisateur */}
           {session && (
-            <div className="flex justify-between items-center mb-8">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 space-y-3 sm:space-y-0">
               <div className="text-sm text-text-gray">
                 Bonjour, <span className={`font-semibold ${
                   userSubscription?.status === 'premium' || userSubscription?.status === 'lifetime' || userSubscription?.subscriptionStatus === 'premium' || userSubscription?.subscriptionStatus === 'lifetime'
@@ -69,18 +69,18 @@ export default function Home() {
                   {(userSubscription?.status === 'premium' || userSubscription?.subscriptionStatus === 'premium') && ' 💎'}
                 </span>
               </div>
-              <div className="flex items-center space-x-3">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
                 <button 
                   onClick={() => window.location.href = '/dashboard'}
-                  className="btn-neon-secondary text-sm"
+                  className="btn-neon-secondary text-sm px-3 py-2 flex items-center justify-center"
                 >
-                  📊 Dashboard
+                  📊 <span className="ml-1">Dashboard</span>
                 </button>
                 <button 
                   onClick={() => window.location.href = '/settings'}
-                  className="btn-neon-secondary text-sm"
+                  className="btn-neon-secondary text-sm px-3 py-2 flex items-center justify-center"
                 >
-                  ⚙️ <span className="hidden sm:inline">Paramètres</span>
+                  ⚙️ <span className="ml-1 hidden sm:inline">Paramètres</span><span className="ml-1 sm:hidden">Réglages</span>
                 </button>
                 <button
                   onClick={async () => {
@@ -114,9 +114,9 @@ export default function Home() {
                       window.location.replace('/?fallback_logout=' + Date.now())
                     }
                   }}
-                  className="btn-neon-secondary text-sm"
+                  className="btn-neon-secondary text-sm px-3 py-2 flex items-center justify-center"
                 >
-                  Déconnexion
+                  🚪 <span className="ml-1 hidden sm:inline">Déconnexion</span><span className="ml-1 sm:hidden">Sortie</span>
                 </button>
               </div>
             </div>
