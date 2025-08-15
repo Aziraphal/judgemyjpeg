@@ -11,6 +11,29 @@ interface SocialShareProps {
 }
 
 export default function SocialShare({ photo, analysis, tone }: SocialShareProps) {
+  // Calcul de la viralité basé sur le score et le ton
+  const getViralPotential = () => {
+    let viralScore = 0
+    
+    // Base sur le score photo (0-40 points)
+    viralScore += Math.round(analysis.score * 0.4)
+    
+    // Bonus ton (0-30 points)
+    if (tone === 'roast') viralScore += 30  // Le roast est plus viral
+    else if (tone === 'expert') viralScore += 15
+    else viralScore += 10
+    
+    // Bonus scores extrêmes (0-30 points)
+    if (analysis.score >= 90 || analysis.score <= 30) viralScore += 30
+    else if (analysis.score >= 80 || analysis.score <= 40) viralScore += 15
+    
+    // Déterminer le niveau
+    if (viralScore >= 75) return { level: 'TRÈS ÉLEVÉ', color: 'text-red-400' }
+    if (viralScore >= 60) return { level: 'ÉLEVÉ', color: 'text-orange-400' }
+    if (viralScore >= 40) return { level: 'MOYEN', color: 'text-yellow-400' }
+    return { level: 'FAIBLE', color: 'text-gray-400' }
+  }
+
   const generateShareText = () => {
     const baseText = `🤖 JudgeMyJPEG a jugé ma photo : ${analysis.score}/100`
     
@@ -30,13 +53,6 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
     : '#JudgeMyJPEG #PhotographyTips #AIAnalysis #Photography'
 
   const socialLinks = {
-    instagram: {
-      url: `https://www.instagram.com/`,
-      icon: '📷',
-      name: 'Instagram',
-      color: 'hover:bg-pink-500/20 hover:text-pink-400',
-      note: 'Copiez le lien pour partager'
-    },
     twitter: {
       url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}&hashtags=${encodeURIComponent(hashtags.replace(/#/g, ''))}`,
       icon: '𝕏',
@@ -48,18 +64,6 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
       icon: 'f',
       name: 'Facebook', 
       color: 'hover:bg-blue-600/20 hover:text-blue-400'
-    },
-    linkedin: {
-      url: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}&summary=${encodeURIComponent(shareText)}`,
-      icon: 'in',
-      name: 'LinkedIn',
-      color: 'hover:bg-blue-500/20 hover:text-blue-300'
-    },
-    reddit: {
-      url: `https://reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareText)}`,
-      icon: '🤖',
-      name: 'Reddit',
-      color: 'hover:bg-orange-500/20 hover:text-orange-400'
     },
     whatsapp: {
       url: `https://wa.me/?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`,
@@ -152,16 +156,35 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
         </div>
       </div>
 
-      {/* Stats motivantes */}
-      <div className="mt-4 sm:mt-6 text-center">
-        <div className="inline-flex flex-col sm:flex-row items-center gap-2 sm:space-x-4 sm:gap-0 text-xs text-text-muted">
-          <div className="flex items-center space-x-1">
-            <span>👀</span>
-            <span>Viral: {tone === 'roast' ? 'ÉLEVÉ' : 'MOYEN'}</span>
+      {/* Stats motivantes avec explication */}
+      <div className="mt-4 sm:mt-6">
+        <div className="text-center mb-3">
+          <div className="inline-flex flex-col sm:flex-row items-center gap-2 sm:space-x-4 sm:gap-0 text-xs">
+            <div className="flex items-center space-x-1">
+              <span>👀</span>
+              <span className={`font-semibold ${getViralPotential().color}`}>
+                Viral: {getViralPotential().level}
+              </span>
+            </div>
+            <div className="flex items-center space-x-1 text-text-muted">
+              <span>⚡</span>
+              <span>Score: {analysis.score}/100</span>
+            </div>
           </div>
-          <div className="flex items-center space-x-1">
-            <span>⚡</span>
-            <span>Score: {analysis.score}/100</span>
+        </div>
+        
+        {/* Explication viralité */}
+        <div className="text-xs text-text-muted bg-cosmic-glass/50 rounded-lg p-3 border border-cosmic-glassborder/50">
+          <div className="font-semibold text-neon-cyan mb-1">📊 Comment est calculée la viralité ?</div>
+          <div className="space-y-1">
+            <div>• <span className="text-text-white">Score photo:</span> {Math.round(analysis.score * 0.4)}/40 pts</div>
+            <div>• <span className="text-text-white">Mode {tone}:</span> {tone === 'roast' ? '30' : tone === 'expert' ? '15' : '10'}/30 pts</div>
+            <div>• <span className="text-text-white">Bonus extrême:</span> {analysis.score >= 90 || analysis.score <= 30 ? '30' : analysis.score >= 80 || analysis.score <= 40 ? '15' : '0'}/30 pts</div>
+          </div>
+          <div className="mt-2 text-center">
+            <span className="text-neon-pink font-semibold">
+              Total: {Math.round(analysis.score * 0.4) + (tone === 'roast' ? 30 : tone === 'expert' ? 15 : 10) + (analysis.score >= 90 || analysis.score <= 30 ? 30 : analysis.score >= 80 || analysis.score <= 40 ? 15 : 0)}/100
+            </span>
           </div>
         </div>
       </div>

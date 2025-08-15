@@ -62,7 +62,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Retourner une analyse factice pour prouver que Railway fonctionne
       analysis = {
         score: 85,
-        potentialScore: 90,
         partialScores: { composition: 13, lighting: 12, focus: 14, exposure: 13, creativity: 12, emotion: 11, storytelling: 8 },
         technical: { composition: "Bonne composition", lighting: "Éclairage naturel", focus: "Netteté correcte", exposure: "Exposition équilibrée" },
         artistic: { creativity: "Angle intéressant", emotion: "Bonne atmosphère", storytelling: "Message clair" },

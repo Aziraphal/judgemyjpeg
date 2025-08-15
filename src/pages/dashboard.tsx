@@ -14,8 +14,6 @@ interface DashboardStats {
     totalFavorites: number
     totalCollections: number
     avgScore: number
-    avgPotentialScore: number
-    improvementPotential: number
     recentPhotos: number
   }
   distribution: {
@@ -214,15 +212,6 @@ export default function DashboardPage() {
                   color="secondary"
                 />
                 
-                {stats.overview.improvementPotential > 0 && (
-                  <StatCard
-                    title="Potentiel d'amélioration"
-                    value={`+${stats.overview.improvementPotential}`}
-                    icon="🎯"
-                    subtitle="Points gagnables en moyenne"
-                    color="warning"
-                  />
-                )}
               </div>
 
               {/* Graphiques et analyses */}

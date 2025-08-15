@@ -30,7 +30,6 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
       totalFavorites,
       totalCollections,
       avgScore,
-      avgPotentialScore,
       recentPhotos,
       scoreDistribution
     ] = await Promise.all([
@@ -64,15 +63,6 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
           score: { not: null }
         },
         _avg: { score: true }
-      }),
-      
-      // Score potentiel moyen
-      prisma.photo.aggregate({
-        where: { 
-          userId: user.id,
-          potentialScore: { not: null }
-        },
-        _avg: { potentialScore: true }
       }),
       
       // Photos récentes (7 derniers jours)
@@ -169,10 +159,6 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
         totalFavorites,
         totalCollections,
         avgScore: avgScore._avg.score ? Math.round(avgScore._avg.score * 10) / 10 : 0,
-        avgPotentialScore: avgPotentialScore._avg.potentialScore ? Math.round(avgPotentialScore._avg.potentialScore * 10) / 10 : 0,
-        improvementPotential: avgPotentialScore._avg.potentialScore && avgScore._avg.score 
-          ? Math.round((avgPotentialScore._avg.potentialScore - avgScore._avg.score) * 10) / 10 
-          : 0,
         recentPhotos,
       },
       distribution,

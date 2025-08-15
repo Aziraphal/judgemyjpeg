@@ -9,7 +9,6 @@ export type AnalysisLanguage = 'fr' | 'en' | 'es' | 'de' | 'it' | 'pt'
 
 export interface PhotoAnalysis {
   score: number
-  potentialScore: number
   partialScores: {
     composition: number
     lighting: number
@@ -199,7 +198,6 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
     Fournissez une analyse détaillée en JSON avec cette structure exacte :
 
     {
-      "potentialScore": [score potentiel après retouches optimales],
       "partialScores": {
         "composition": [note de 0 à 15],
         "lighting": [note de 0 à 15],

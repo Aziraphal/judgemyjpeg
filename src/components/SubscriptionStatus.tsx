@@ -190,7 +190,7 @@ export default function SubscriptionStatus({ compact = false }: SubscriptionStat
               <div className="bg-cosmic-glass border border-gray-500/50 rounded-lg p-6">
                 <div className="text-center mb-4">
                   <h5 className="text-lg font-bold text-neon-cyan">🆓 Gratuit</h5>
-                  <div className="text-2xl font-bold text-text-white mt-2">€0</div>
+                  <div className="text-3xl font-bold text-neon-cyan mt-2 mb-1">0€</div>
                   <div className="text-text-muted text-sm">Pour toujours</div>
                 </div>
                 
@@ -230,7 +230,7 @@ export default function SubscriptionStatus({ compact = false }: SubscriptionStat
                 
                 <div className="text-center mb-4">
                   <h5 className="text-lg font-bold text-neon-pink">💎 Premium</h5>
-                  <div className="text-2xl font-bold text-text-white mt-2">€9.98</div>
+                  <div className="text-3xl font-bold text-neon-pink mt-2 mb-1">9,98€</div>
                   <div className="text-text-muted text-sm">par mois</div>
                 </div>
                 
@@ -273,9 +273,9 @@ export default function SubscriptionStatus({ compact = false }: SubscriptionStat
                 
                 <div className="text-center mb-4">
                   <h5 className="text-lg font-bold text-neon-cyan">🚀 Lifetime</h5>
-                  <div className="text-2xl font-bold text-text-white mt-2">€99</div>
+                  <div className="text-3xl font-bold text-neon-cyan mt-2 mb-1">99€</div>
                   <div className="text-text-muted text-sm">paiement unique</div>
-                  <div className="text-xs text-neon-cyan mt-1">Économie de €60/an</div>
+                  <div className="text-xs text-neon-cyan mt-1 font-semibold">Économie de 60€/an</div>
                 </div>
                 
                 <div className="space-y-3">
@@ -373,36 +373,38 @@ export default function SubscriptionStatus({ compact = false }: SubscriptionStat
               </div>
 
               <div className="space-y-4">
-                <h5 className="text-lg font-bold text-neon-pink">🚀 À venir prochainement</h5>
+                <h5 className="text-lg font-bold text-neon-pink">🎯 Pourquoi Premium ?</h5>
                 <div className="space-y-3">
                   <div className="flex items-center space-x-3">
-                    <span className="text-neon-pink text-lg">🔮</span>
-                    <span className="text-text-gray">Analyse vidéo courte</span>
+                    <span className="text-neon-pink text-lg">⚡</span>
+                    <span className="text-text-white">Plus de limites d'analyses</span>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <span className="text-neon-pink text-lg">🔮</span>
-                    <span className="text-text-gray">Comparaison photos avant/après</span>
+                    <span className="text-neon-pink text-lg">🎨</span>
+                    <span className="text-text-white">Images pour réseaux sociaux</span>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <span className="text-neon-pink text-lg">🔮</span>
-                    <span className="text-text-gray">IA tendances réseaux sociaux</span>
+                    <span className="text-neon-pink text-lg">📊</span>
+                    <span className="text-text-white">Export de données avancé</span>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <span className="text-neon-pink text-lg">🔮</span>
-                    <span className="text-text-gray">API développeurs</span>
+                    <span className="text-neon-pink text-lg">🛠️</span>
+                    <span className="text-text-white">Support prioritaire</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="mt-6 p-6 bg-gradient-to-r from-neon-cyan/10 to-neon-pink/10 rounded-lg border border-neon-cyan/30">
-              <div className="text-center">
-                <h5 className="font-bold text-neon-cyan mb-2">🎉 Merci d'être Premium !</h5>
-                <p className="text-text-gray text-sm">
-                  Vous soutenez le développement de nouvelles features IA
-                </p>
+            {(subscription.subscriptionStatus === 'premium' || subscription.subscriptionStatus === 'lifetime') && (
+              <div className="mt-6 p-6 bg-gradient-to-r from-neon-cyan/10 to-neon-pink/10 rounded-lg border border-neon-cyan/30">
+                <div className="text-center">
+                  <h5 className="font-bold text-neon-cyan mb-2">🎉 Merci d'être Premium !</h5>
+                  <p className="text-text-gray text-sm">
+                    Vous soutenez le développement de nouvelles features IA
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
           </>
         )}
       </div>

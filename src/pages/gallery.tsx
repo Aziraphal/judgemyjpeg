@@ -59,6 +59,32 @@ export default function GalleryPage() {
     )
   }
 
+  const handleDeletePhoto = async (photoId: string) => {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer cette photo ? Cette action est irréversible.')) {
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/photos/${photoId}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        setTopPhotos(prev => prev.filter(photo => photo.id !== photoId))
+        
+        // Si on était en train de voir cette photo, fermer la modal
+        if (selectedPhoto?.id === photoId) {
+          setSelectedPhoto(null)
+        }
+      } else {
+        alert('Erreur lors de la suppression')
+      }
+    } catch (error) {
+      console.error('Erreur:', error)
+      alert('Erreur lors de la suppression')
+    }
+  }
+
   const getScoreBadge = (score: number) => {
     if (score >= 95) return { emoji: '👑', text: 'Legendary', color: 'from-yellow-400 to-yellow-600' }
     if (score >= 90) return { emoji: '🏆', text: 'Masterpiece', color: 'from-neon-cyan to-blue-400' }
@@ -171,6 +197,16 @@ export default function GalleryPage() {
                         <button
                           onClick={(e) => {
                             e.stopPropagation()
+                            handleDeletePhoto(photo.id)
+                          }}
+                          className="bg-red-500/80 backdrop-blur-sm border border-red-400 p-2 rounded-full hover:bg-red-500 transition-colors duration-300 text-white text-sm"
+                          title="Supprimer cette photo"
+                        >
+                          ✕
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
                             setCollectionModalPhoto(photo)
                           }}
                           className="bg-cosmic-glass backdrop-blur-sm border border-cosmic-glassborder p-2 rounded-full hover:bg-cosmic-glassborder transition-colors duration-300 text-neon-cyan hover:text-white text-sm"
@@ -256,6 +292,13 @@ export default function GalleryPage() {
                 </div>
                 
                 <div className="flex items-center space-x-3">
+                  <button
+                    onClick={() => handleDeletePhoto(selectedPhoto.id)}
+                    className="bg-red-500/80 text-white px-4 py-2 rounded-lg border border-red-400 hover:bg-red-500 transition-colors flex items-center space-x-2"
+                  >
+                    <span>✕</span>
+                    <span>Supprimer</span>
+                  </button>
                   <button
                     onClick={() => setCollectionModalPhoto(selectedPhoto)}
                     className="btn-neon-secondary flex items-center space-x-2"

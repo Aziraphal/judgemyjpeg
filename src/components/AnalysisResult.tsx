@@ -2,7 +2,6 @@ import { PhotoAnalysis, AnalysisTone } from '@/services/openai'
 import Image from 'next/image'
 import FavoriteButton from '@/components/FavoriteButton'
 import AddToCollectionModal from '@/components/AddToCollectionModal'
-import PotentialScoreCard from '@/components/PotentialScoreCard'
 import SocialShare from '@/components/SocialShare'
 import InstagramGenerator from '@/components/InstagramGenerator'
 import { PDFExporter } from '@/services/pdf-export'
@@ -393,14 +392,6 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional' 
         </div>
       </div>
 
-      {/* Score Potentiel */}
-      {analysis.potentialScore && analysis.improvements && (
-        <PotentialScoreCard 
-          currentScore={analysis.score}
-          potentialScore={analysis.potentialScore}
-          improvements={analysis.improvements}
-        />
-      )}
 
       {/* Suggestions */}
       <div className="glass-card p-8 hover-glow">

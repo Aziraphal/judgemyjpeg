@@ -92,7 +92,6 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
         filename: filename,
         analysis: JSON.stringify(analysis),
         score: analysis.score,
-        potentialScore: analysis.potentialScore,
         improvements: JSON.stringify(analysis.improvements),
         suggestions: JSON.stringify(analysis.suggestions),
       }
