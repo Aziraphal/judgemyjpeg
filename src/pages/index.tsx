@@ -6,6 +6,7 @@ import Footer from '@/components/Footer'
 export default function Home() {
   const { data: session, status } = useSession()
   const [userSubscription, setUserSubscription] = useState<any>(null)
+  const [userPreferences, setUserPreferences] = useState<any>(null)
 
   useEffect(() => {
     if (session?.user?.id) {
@@ -16,6 +17,18 @@ export default function Home() {
           setUserSubscription(data.subscription)
         })
         .catch(err => console.error('Error fetching subscription:', err))
+    }
+    
+    // Charger les préférences locales
+    if (session?.user?.email) {
+      const savedPrefs = localStorage.getItem(`userPrefs_${session.user.email}`)
+      if (savedPrefs) {
+        try {
+          setUserPreferences(JSON.parse(savedPrefs))
+        } catch (error) {
+          console.error('Erreur lecture préférences:', error)
+        }
+      }
     }
   }, [session])
 
@@ -51,7 +64,7 @@ export default function Home() {
                     ? 'text-yellow-400 drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]' // Effet doré brillant
                     : 'text-neon-cyan'
                 }`}>
-                  {session.user?.name}
+                  {userPreferences?.nickname || userPreferences?.displayName || session.user?.name}
                   {(userSubscription?.status === 'lifetime' || userSubscription?.subscriptionStatus === 'lifetime') && ' ✨'}
                   {(userSubscription?.status === 'premium' || userSubscription?.subscriptionStatus === 'premium') && ' 💎'}
                 </span>

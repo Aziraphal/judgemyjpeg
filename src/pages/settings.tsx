@@ -2,7 +2,7 @@
  * Page Settings - Paramètres utilisateur avec 2FA
  */
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
@@ -31,6 +31,25 @@ export default function SettingsPage() {
   const [isEditing, setIsEditing] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
 
+  // Charger les préférences sauvegardées au démarrage
+  useEffect(() => {
+    if (session?.user?.email) {
+      const savedPrefs = localStorage.getItem(`userPrefs_${session.user.email}`)
+      if (savedPrefs) {
+        try {
+          const parsedPrefs = JSON.parse(savedPrefs)
+          setUserPreferences({
+            ...userPreferences,
+            ...parsedPrefs,
+            displayName: parsedPrefs.displayName || session.user.name || '',
+          })
+        } catch (error) {
+          console.error('Erreur lecture préférences:', error)
+        }
+      }
+    }
+  }, [session])
+
   const handleSaveProfile = async () => {
     setIsSaving(true)
     console.log('=== Tentative de sauvegarde ===')
@@ -48,6 +67,11 @@ export default function SettingsPage() {
       console.log('Response data:', data)
       
       if (response.ok) {
+        // Sauvegarder localement les préférences
+        if (session?.user?.email) {
+          localStorage.setItem(`userPrefs_${session.user.email}`, JSON.stringify(userPreferences))
+        }
+        
         setMessage({ type: 'success', text: '✨ Profil mis à jour avec succès !' })
         setIsEditing(false)
       } else {
