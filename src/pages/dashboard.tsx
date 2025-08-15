@@ -122,37 +122,37 @@ export default function DashboardPage() {
           </div>
 
           {/* Navigation */}
-          <div className="flex flex-col sm:flex-row justify-between items-center mb-8 space-y-4 sm:space-y-0">
+          <div className="flex flex-col space-y-4 mb-8">
             <button
               onClick={() => router.push('/')}
-              className="btn-neon-secondary flex items-center space-x-2"
+              className="btn-neon-secondary flex items-center justify-center space-x-2 w-full sm:w-auto self-start"
             >
               <span>←</span>
               <span>Retour à l'accueil</span>
             </button>
             
-            <div className="flex space-x-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               <button
                 onClick={() => router.push('/analyze')}
-                className="btn-neon-pink"
+                className="btn-neon-pink text-sm px-4 py-2"
               >
                 📸 Analyser une photo
               </button>
               <button
                 onClick={() => router.push('/batch')}
-                className="btn-neon-secondary"
+                className="btn-neon-secondary text-sm px-4 py-2"
               >
                 📊 Analyse en lot
               </button>
               <button
                 onClick={() => router.push('/gallery')}
-                className="btn-neon-secondary"
+                className="btn-neon-secondary text-sm px-4 py-2"
               >
                 🏆 Top Photos
               </button>
               <button
                 onClick={() => router.push('/insights')}
-                className="btn-neon-secondary"
+                className="btn-neon-secondary text-sm px-4 py-2"
               >
                 🧠 Insights IA
               </button>

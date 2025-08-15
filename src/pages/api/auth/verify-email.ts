@@ -18,12 +18,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
+    console.log('🔍 Email verification attempt:', { email, token: token?.substring(0, 10) + '...', timestamp: new Date().toISOString() })
+    
     // Vérifier le token de vérification dans la base
     const verificationToken = await prisma.verificationToken.findUnique({
       where: {
         token: token as string
       }
     })
+    
+    console.log('📋 Token lookup result:', { found: !!verificationToken, identifier: verificationToken?.identifier })
 
     if (!verificationToken) {
       return res.redirect('/auth/signin?error=TokenNotFound')

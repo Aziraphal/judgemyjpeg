@@ -188,22 +188,22 @@ export default function CookieConsent() {
         </div>
       )}
 
-      {/* Panneau de paramétrage détaillé */}
+      {/* Panneau de paramétrage détaillé - FOND GRIS + ÉCRITURE BLANCHE */}
       {showSettings && (
-        <div className="fixed inset-4 bg-cosmic-glass/95 backdrop-blur-md rounded-xl border border-cosmic-glassborder z-50 overflow-auto">
+        <div className="fixed inset-4 bg-gray-800/98 rounded-xl border-2 border-gray-600 z-50 overflow-auto shadow-2xl">
           <div className="p-6 h-full flex flex-col">
             
             {/* Header */}
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-cosmic-glassborder">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-600">
               <div>
-                <h2 className="text-xl font-bold text-text-white">Paramètres des cookies</h2>
-                <p className="text-sm text-text-gray">
+                <h2 className="text-xl font-bold text-white">Paramètres des cookies</h2>
+                <p className="text-sm text-gray-300">
                   Choisissez les cookies que vous souhaitez autoriser
                 </p>
               </div>
               <button
                 onClick={() => setShowSettings(false)}
-                className="text-text-gray hover:text-text-white text-xl"
+                className="text-gray-300 hover:text-white text-xl"
               >
                 ✕
               </button>
@@ -213,18 +213,18 @@ export default function CookieConsent() {
             <div className="flex-1 space-y-6 overflow-auto">
               
               {/* Cookies Nécessaires */}
-              <div className="bg-cosmic-glass/30 p-4 rounded-lg">
+              <div className="bg-gray-700/50 p-4 rounded-lg border border-gray-600">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-semibold text-text-white">🔧 Cookies Nécessaires</h3>
+                  <h3 className="font-semibold text-white">🔧 Cookies Nécessaires</h3>
                   <div className="bg-green-600/20 text-green-300 px-3 py-1 rounded-full text-xs">
                     Toujours activé
                   </div>
                 </div>
-                <p className="text-sm text-text-gray mb-2">
+                <p className="text-sm text-gray-200 mb-2">
                   Ces cookies sont essentiels au fonctionnement du site et ne peuvent pas être désactivés.
                 </p>
-                <details className="text-xs text-text-muted">
-                  <summary className="cursor-pointer hover:text-text-gray">Voir les détails</summary>
+                <details className="text-xs text-gray-300">
+                  <summary className="cursor-pointer hover:text-gray-200">Voir les détails</summary>
                   <ul className="mt-2 ml-4 space-y-1">
                     <li>• Session utilisateur et authentification</li>
                     <li>• Protection CSRF et sécurité</li>
@@ -235,9 +235,9 @@ export default function CookieConsent() {
               </div>
 
               {/* Cookies Analytics */}
-              <div className="bg-cosmic-glass/30 p-4 rounded-lg">
+              <div className="bg-gray-700/50 p-4 rounded-lg border border-gray-600">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-semibold text-text-white">📊 Cookies Analytiques</h3>
+                  <h3 className="font-semibold text-white">📊 Cookies Analytiques</h3>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input
                       type="checkbox"
@@ -248,11 +248,11 @@ export default function CookieConsent() {
                     <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-neon-cyan"></div>
                   </label>
                 </div>
-                <p className="text-sm text-text-gray mb-2">
+                <p className="text-sm text-gray-200 mb-2">
                   Nous aident à comprendre comment vous utilisez le site pour l'améliorer.
                 </p>
-                <details className="text-xs text-text-muted">
-                  <summary className="cursor-pointer hover:text-text-gray">Voir les détails</summary>
+                <details className="text-xs text-gray-300">
+                  <summary className="cursor-pointer hover:text-gray-200">Voir les détails</summary>
                   <ul className="mt-2 ml-4 space-y-1">
                     <li>• Google Analytics (données anonymisées)</li>
                     <li>• Statistiques de pages visitées</li>
@@ -263,9 +263,9 @@ export default function CookieConsent() {
               </div>
 
               {/* Cookies Personnalisation */}
-              <div className="bg-cosmic-glass/30 p-4 rounded-lg">
+              <div className="bg-gray-700/50 p-4 rounded-lg border border-gray-600">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-semibold text-text-white">🎨 Cookies de Personnalisation</h3>
+                  <h3 className="font-semibold text-white">🎨 Cookies de Personnalisation</h3>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input
                       type="checkbox"
@@ -276,11 +276,11 @@ export default function CookieConsent() {
                     <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-neon-cyan"></div>
                   </label>
                 </div>
-                <p className="text-sm text-text-gray mb-2">
+                <p className="text-sm text-gray-200 mb-2">
                   Mémorisent vos préférences pour personnaliser votre expérience.
                 </p>
-                <details className="text-xs text-text-muted">
-                  <summary className="cursor-pointer hover:text-text-gray">Voir les détails</summary>
+                <details className="text-xs text-gray-300">
+                  <summary className="cursor-pointer hover:text-gray-200">Voir les détails</summary>
                   <ul className="mt-2 ml-4 space-y-1">
                     <li>• Mode d'analyse préféré (Pro/Cassant)</li>
                     <li>• Langue d'interface</li>
@@ -291,9 +291,9 @@ export default function CookieConsent() {
               </div>
 
               {/* Cookies Réseaux Sociaux */}
-              <div className="bg-cosmic-glass/30 p-4 rounded-lg">
+              <div className="bg-gray-700/50 p-4 rounded-lg border border-gray-600">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-semibold text-text-white">📱 Cookies Réseaux Sociaux</h3>
+                  <h3 className="font-semibold text-white">📱 Cookies Réseaux Sociaux</h3>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input
                       type="checkbox"
@@ -304,11 +304,11 @@ export default function CookieConsent() {
                     <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-neon-cyan"></div>
                   </label>
                 </div>
-                <p className="text-sm text-text-gray mb-2">
+                <p className="text-sm text-gray-200 mb-2">
                   Permettent le partage de contenu sur les réseaux sociaux.
                 </p>
-                <details className="text-xs text-text-muted">
-                  <summary className="cursor-pointer hover:text-text-gray">Voir les détails</summary>
+                <details className="text-xs text-gray-300">
+                  <summary className="cursor-pointer hover:text-gray-200">Voir les détails</summary>
                   <ul className="mt-2 ml-4 space-y-1">
                     <li>• Boutons de partage Twitter/X</li>
                     <li>• Intégrations Facebook</li>
@@ -319,9 +319,9 @@ export default function CookieConsent() {
               </div>
 
               {/* Information importante */}
-              <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+              <div className="bg-blue-800/30 border border-blue-500 rounded-lg p-4">
                 <h4 className="font-semibold text-blue-300 mb-2">ℹ️ Information importante</h4>
-                <ul className="text-xs text-text-gray space-y-1">
+                <ul className="text-xs text-gray-200 space-y-1">
                   <li>• Vos préférences sont conservées 13 mois</li>
                   <li>• Vous pouvez les modifier à tout moment</li>
                   <li>• La désactivation peut limiter certaines fonctionnalités</li>
@@ -332,22 +332,22 @@ export default function CookieConsent() {
             </div>
 
             {/* Footer Actions */}
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-4 border-t border-cosmic-glassborder">
-              <div className="text-xs text-text-muted">
-                <Link href="/legal/cookies" className="text-neon-cyan hover:underline">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-4 border-t border-gray-600">
+              <div className="text-xs text-gray-300">
+                <Link href="/legal/cookies" className="text-blue-400 hover:underline">
                   Politique complète des cookies
                 </Link>
               </div>
               <div className="flex gap-3">
                 <button
                   onClick={rejectOptional}
-                  className="px-4 py-2 text-sm bg-red-600/20 text-red-300 border border-red-500/30 rounded hover:bg-red-600/30 transition-colors"
+                  className="px-4 py-2 text-sm bg-red-600 text-white border border-red-500 rounded hover:bg-red-700 transition-colors"
                 >
                   Refuser optionnels
                 </button>
                 <button
                   onClick={saveCustomPreferences}
-                  className="px-6 py-2 text-sm bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/30 rounded hover:bg-neon-cyan/30 transition-colors font-semibold"
+                  className="px-6 py-2 text-sm bg-blue-600 text-white border border-blue-500 rounded hover:bg-blue-700 transition-colors font-semibold"
                 >
                   Enregistrer mes choix
                 </button>
