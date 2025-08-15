@@ -18,12 +18,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    console.log('🔍 Email verification attempt:', { email, token: token?.substring(0, 10) + '...', timestamp: new Date().toISOString() })
+    const tokenStr = Array.isArray(token) ? token[0] : token
+    console.log('🔍 Email verification attempt:', { email, token: tokenStr?.substring(0, 10) + '...', timestamp: new Date().toISOString() })
     
     // Vérifier le token de vérification dans la base
     const verificationToken = await prisma.verificationToken.findUnique({
       where: {
-        token: token as string
+        token: tokenStr as string
       }
     })
     
@@ -37,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (verificationToken.expires < new Date()) {
       // Supprimer le token expiré
       await prisma.verificationToken.delete({
-        where: { token: token as string }
+        where: { token: tokenStr as string }
       })
       return res.redirect('/auth/signin?error=TokenExpired')
     }
@@ -55,7 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Supprimer le token utilisé
     await prisma.verificationToken.delete({
-      where: { token: token as string }
+      where: { token: tokenStr as string }
     })
 
     // Rediriger vers la page de connexion avec message de succès
