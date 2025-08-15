@@ -44,13 +44,14 @@ export default function Mentions() {
                     <div>
                       <h3 className="text-lg font-semibold text-neon-pink mb-3">Informations sur l'éditeur</h3>
                       <div className="text-text-gray space-y-2">
-                        <p><strong>Raison sociale :</strong> Cyril Paquier</p>
+                        <p><strong>Raison sociale :</strong> Cyril Paquier (auto-entrepreneur)</p>
                         <p><strong>Nom commercial :</strong> CodeCraft Plus</p>
                         <p><strong>Forme juridique :</strong> Entrepreneur individuel</p>
                         <p><strong>Numéro SIREN :</strong> 989587399</p>
                         <p><strong>Numéro SIRET :</strong> 98958739900019</p>
                         <p><strong>Code APE/NAF :</strong> 1812Z</p>
                         <p><strong>Date d'immatriculation :</strong> 28/07/2025</p>
+                        <p className="text-sm text-yellow-400">ℹ️ Le nom et prénom constituent la raison sociale pour un auto-entrepreneur</p>
                       </div>
                     </div>
                     <div>
@@ -87,12 +88,12 @@ export default function Mentions() {
                     <div>
                       <h3 className="text-lg font-semibold text-neon-pink mb-3">Hébergeur Principal</h3>
                       <div className="text-text-gray space-y-2">
-                        <p><strong>Raison sociale :</strong> Vercel Inc.</p>
+                        <p><strong>Raison sociale :</strong> Railway Corp.</p>
                         <p><strong>Adresse :</strong><br/>
-                        440 N Barranca Ave<br/>
-                        Covina, CA 91723<br/>
+                        548 Market St PMB 77519<br/>
+                        San Francisco, CA 94104<br/>
                         États-Unis</p>
-                        <p><strong>Site web :</strong> <a href="https://vercel.com" className="text-neon-cyan hover:underline">vercel.com</a></p>
+                        <p><strong>Site web :</strong> <a href="https://railway.app" className="text-neon-cyan hover:underline">railway.app</a></p>
                       </div>
                     </div>
                     <div>
@@ -115,10 +116,10 @@ export default function Mentions() {
                   <div className="bg-cosmic-glass p-4 rounded-lg">
                     <h3 className="text-lg font-semibold text-neon-pink mb-3">🤖 Intelligence Artificielle</h3>
                     <div className="text-text-gray space-y-2">
-                      <p><strong>Service :</strong> Google Gemini AI</p>
+                      <p><strong>Service :</strong> OpenAI ChatGPT o3-mini</p>
                       <p><strong>Fonction :</strong> Analyse automatique des photographies</p>
-                      <p><strong>Éditeur :</strong> Google LLC</p>
-                      <p><strong>Localisation :</strong> Centres de données Google (UE et international)</p>
+                      <p><strong>Éditeur :</strong> OpenAI Inc.</p>
+                      <p><strong>Localisation :</strong> Centres de données OpenAI (UE et international)</p>
                       <p><strong>Traitement :</strong> Images transmises temporairement, supprimées après analyse</p>
                     </div>
                   </div>
