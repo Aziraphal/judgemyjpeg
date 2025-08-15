@@ -34,7 +34,10 @@ export default function AnalyzePage() {
       const visits = localStorage.getItem('analyze_visits') || '0'
       const visitCount = parseInt(visits)
       
-      if (visitCount > 10) {
+      // Si l'utilisateur a déjà terminé le tutoriel, le considérer comme intermédiaire minimum
+      const tutorialCompleted = localStorage.getItem('tutorial_analyze-page')
+      
+      if (tutorialCompleted || visitCount > 10) {
         setUserLevel('advanced')
       } else if (visitCount > 3) {
         setUserLevel('intermediate')
@@ -46,11 +49,12 @@ export default function AnalyzePage() {
     }
   }, [session])
 
-  // Démarrer tutorial automatiquement pour nouveaux utilisateurs
+  // Démarrer tutorial automatiquement pour nouveaux utilisateurs (désactivé pour éviter les répétitions)
   useEffect(() => {
-    if (session?.user && !tutorialCompleted && userLevel === 'beginner') {
-      setTimeout(() => startTutorial(), 1000)
-    }
+    // Auto-déclenchement désactivé - l'utilisateur peut cliquer sur le bouton 💡 pour lancer le tutoriel
+    // if (session?.user && !tutorialCompleted && userLevel === 'beginner') {
+    //   setTimeout(() => startTutorial(), 1000)
+    // }
   }, [session, tutorialCompleted, userLevel, startTutorial])
 
   // Étapes du tutorial
@@ -193,16 +197,14 @@ export default function AnalyzePage() {
               </RichTooltip>
 
               {/* Bouton tutorial */}
-              {tutorialCompleted && (
-                <ContextualTooltip content="Relancer le tutoriel">
-                  <button
-                    onClick={startTutorial}
-                    className="btn-neon-secondary text-sm px-3 py-2"
-                  >
-                    💡
-                  </button>
-                </ContextualTooltip>
-              )}
+              <ContextualTooltip content={tutorialCompleted ? "Relancer le tutoriel" : "Démarrer le tutoriel"}>
+                <button
+                  onClick={startTutorial}
+                  className="btn-neon-secondary text-sm px-3 py-2"
+                >
+                  💡
+                </button>
+              </ContextualTooltip>
               
               {result && (
                 <button
