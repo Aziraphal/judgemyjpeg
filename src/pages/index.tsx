@@ -59,11 +59,7 @@ export default function Home() {
           {session && (
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 space-y-3 sm:space-y-0">
               <div className="text-sm text-text-gray">
-                Bonjour, <span className={`font-semibold ${
-                  userSubscription?.status === 'premium' || userSubscription?.status === 'lifetime' || userSubscription?.subscriptionStatus === 'premium' || userSubscription?.subscriptionStatus === 'lifetime'
-                    ? 'text-yellow-400 drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]' // Effet doré brillant
-                    : 'text-neon-cyan'
-                }`}>
+                Bonjour, <span className="font-semibold text-neon-cyan">
                   {session.user?.nickname || userPreferences?.nickname || userPreferences?.displayName || session.user?.name}
                   {(userSubscription?.status === 'lifetime' || userSubscription?.subscriptionStatus === 'lifetime') && ' ✨'}
                   {(userSubscription?.status === 'premium' || userSubscription?.subscriptionStatus === 'premium') && ' 💎'}
