@@ -58,6 +58,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         subscriptionStatus: 'free',
         monthlyAnalysisCount: 0,
         lastAnalysisReset: new Date(),
+        // Créer automatiquement les préférences avec le nickname s'il existe
+        userPreferences: nickname ? {
+          create: {
+            displayName: nickname,
+            preferredAnalysisMode: 'professional',
+            defaultExportFormat: 'pdf',
+            theme: 'cosmic',
+            language: 'fr',
+            shareAnalytics: true,
+            publicProfile: false
+          }
+        } : undefined
       }
     })
 

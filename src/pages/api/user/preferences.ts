@@ -1,59 +1,117 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../auth/[...nextauth]'
+import { prisma } from '@/lib/prisma'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   console.log('=== API /user/preferences appelée ===')
   console.log('Method:', req.method)
-  console.log('Body:', req.body)
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Méthode non autorisée' })
-  }
-
-  try {
-    const session = await getServerSession(req, res, authOptions)
-    console.log('Session:', session)
-    
-    if (!session?.user?.email) {
-      console.log('Session manquante ou email manquant')
-      return res.status(401).json({ error: 'Non authentifié' })
-    }
-
-    const preferences = req.body
-
-    // Validation des données
-    if (!preferences.displayName?.trim()) {
-      return res.status(400).json({ error: 'Le nom d\'affichage est requis' })
-    }
-
-    // Pour l'instant, on simule la sauvegarde en base de données
-    // TODO: Implémenter la vraie sauvegarde avec Prisma
-    console.log('Sauvegarde des préférences utilisateur:', {
-      userEmail: session.user.email,
-      userName: session.user.name,
-      preferences: {
-        displayName: preferences.displayName,
-        nickname: preferences.nickname,
-        preferredAnalysisMode: preferences.preferredAnalysisMode,
-        defaultExportFormat: preferences.defaultExportFormat,
-        theme: preferences.theme,
-        shareAnalytics: preferences.shareAnalytics,
-        publicProfile: preferences.publicProfile
+  if (req.method === 'GET') {
+    // Récupérer les préférences
+    try {
+      const session = await getServerSession(req, res, authOptions)
+      
+      if (!session?.user?.id) {
+        return res.status(401).json({ error: 'Non authentifié' })
       }
-    })
 
-    // Simulation d'un délai de sauvegarde
-    await new Promise(resolve => setTimeout(resolve, 500))
+      const userPreferences = await prisma.userPreferences.findUnique({
+        where: { userId: session.user.id }
+      })
 
-    console.log('✅ Sauvegarde simulée réussie')
-    return res.status(200).json({ 
-      success: true, 
-      message: 'Préférences sauvegardées avec succès' 
-    })
+      if (!userPreferences) {
+        // Retourner des préférences par défaut
+        return res.status(200).json({
+          displayName: session.user.nickname || session.user.name || '',
+          preferredAnalysisMode: 'professional',
+          defaultExportFormat: 'pdf',
+          theme: 'cosmic',
+          language: 'fr',
+          shareAnalytics: true,
+          publicProfile: false
+        })
+      }
 
-  } catch (error) {
-    console.error('❌ Erreur sauvegarde préférences:', error)
-    return res.status(500).json({ error: 'Erreur serveur lors de la sauvegarde' })
+      return res.status(200).json({
+        displayName: userPreferences.displayName || session.user.nickname || session.user.name || '',
+        preferredAnalysisMode: userPreferences.preferredAnalysisMode,
+        defaultExportFormat: userPreferences.defaultExportFormat,
+        theme: userPreferences.theme,
+        language: userPreferences.language,
+        shareAnalytics: userPreferences.shareAnalytics,
+        publicProfile: userPreferences.publicProfile
+      })
+
+    } catch (error) {
+      console.error('❌ Erreur lecture préférences:', error)
+      return res.status(500).json({ error: 'Erreur serveur' })
+    }
   }
+
+  if (req.method === 'POST') {
+    // Sauvegarder les préférences
+    try {
+      const session = await getServerSession(req, res, authOptions)
+      
+      if (!session?.user?.id) {
+        return res.status(401).json({ error: 'Non authentifié' })
+      }
+
+      const preferences = req.body
+
+      // Validation des données
+      if (!preferences.displayName?.trim()) {
+        return res.status(400).json({ error: 'Le nom d\'affichage est requis' })
+      }
+
+      console.log('Sauvegarde des préférences utilisateur:', {
+        userId: session.user.id,
+        preferences
+      })
+
+      // Sauvegarder ou mettre à jour les préférences
+      const userPreferences = await prisma.userPreferences.upsert({
+        where: { userId: session.user.id },
+        update: {
+          displayName: preferences.displayName,
+          preferredAnalysisMode: preferences.preferredAnalysisMode || 'professional',
+          defaultExportFormat: preferences.defaultExportFormat || 'pdf',
+          theme: preferences.theme || 'cosmic',
+          language: preferences.language || 'fr',
+          shareAnalytics: preferences.shareAnalytics ?? true,
+          publicProfile: preferences.publicProfile ?? false,
+        },
+        create: {
+          userId: session.user.id,
+          displayName: preferences.displayName,
+          preferredAnalysisMode: preferences.preferredAnalysisMode || 'professional',
+          defaultExportFormat: preferences.defaultExportFormat || 'pdf',
+          theme: preferences.theme || 'cosmic',
+          language: preferences.language || 'fr',
+          shareAnalytics: preferences.shareAnalytics ?? true,
+          publicProfile: preferences.publicProfile ?? false,
+        }
+      })
+
+      // Mettre à jour aussi le nickname dans la table User pour cohérence avec NextAuth
+      await prisma.user.update({
+        where: { id: session.user.id },
+        data: { nickname: preferences.displayName }
+      })
+
+      console.log('✅ Préférences sauvegardées avec succès')
+      return res.status(200).json({ 
+        success: true, 
+        message: 'Préférences sauvegardées avec succès',
+        preferences: userPreferences
+      })
+
+    } catch (error) {
+      console.error('❌ Erreur sauvegarde préférences:', error)
+      return res.status(500).json({ error: 'Erreur serveur lors de la sauvegarde' })
+    }
+  }
+
+  return res.status(405).json({ error: 'Méthode non autorisée' })
 }

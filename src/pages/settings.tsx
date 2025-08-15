@@ -3,12 +3,13 @@
  */
 
 import { useState, useEffect } from 'react'
-import { useSession } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import TwoFactorManager from '@/components/TwoFactorManager'
 import ChangePasswordForm from '@/components/ChangePasswordForm'
 import SessionManager from '@/components/SessionManager'
+import { getUserDisplayName, getUserInitial } from '@/lib/user-display'
 
 export default function SettingsPage() {
   const { data: session, status } = useSession()
@@ -31,24 +32,51 @@ export default function SettingsPage() {
   const [isEditing, setIsEditing] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
 
-  // Charger les préférences sauvegardées au démarrage
+  // Charger les préférences depuis l'API au démarrage
   useEffect(() => {
-    if (session?.user?.email) {
-      const savedPrefs = localStorage.getItem(`userPrefs_${session.user.email}`)
+    if (session?.user?.id) {
+      loadUserPreferences()
+    }
+  }, [session])
+
+  const loadUserPreferences = async () => {
+    try {
+      const response = await fetch('/api/user/preferences', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      
+      if (response.ok) {
+        const prefs = await response.json()
+        setUserPreferences({
+          ...userPreferences,
+          ...prefs
+        })
+      } else {
+        // Si pas de préférences, utiliser les valeurs par défaut avec le nom de session
+        setUserPreferences({
+          ...userPreferences,
+          displayName: session?.user?.nickname || session?.user?.name || ''
+        })
+      }
+    } catch (error) {
+      console.error('Erreur chargement préférences:', error)
+      // Fallback vers localStorage
+      const savedPrefs = localStorage.getItem(`userPrefs_${session?.user?.email}`)
       if (savedPrefs) {
         try {
           const parsedPrefs = JSON.parse(savedPrefs)
           setUserPreferences({
             ...userPreferences,
             ...parsedPrefs,
-            displayName: parsedPrefs.displayName || session.user.name || '',
+            displayName: parsedPrefs.displayName || session?.user?.nickname || session?.user?.name || '',
           })
         } catch (error) {
-          console.error('Erreur lecture préférences:', error)
+          console.error('Erreur lecture préférences localStorage:', error)
         }
       }
     }
-  }, [session])
+  }
 
   const handleSaveProfile = async () => {
     setIsSaving(true)
@@ -67,13 +95,19 @@ export default function SettingsPage() {
       console.log('Response data:', data)
       
       if (response.ok) {
-        // Sauvegarder localement les préférences
+        // Sauvegarder localement les préférences pour backup
         if (session?.user?.email) {
           localStorage.setItem(`userPrefs_${session.user.email}`, JSON.stringify(userPreferences))
         }
         
         setMessage({ type: 'success', text: '✨ Profil mis à jour avec succès !' })
         setIsEditing(false)
+        
+        // Recharger la page pour mettre à jour la session
+        setTimeout(() => {
+          window.location.reload()
+        }, 1000)
+        
       } else {
         setMessage({ type: 'error', text: `❌ ${data.error || 'Erreur lors de la sauvegarde'}` })
       }
@@ -324,12 +358,12 @@ export default function SettingsPage() {
                         {/* Avatar et nom principal */}
                         <div className="flex items-center space-x-4 p-4 bg-cosmic-overlay rounded-lg">
                           <div className="w-16 h-16 bg-gradient-to-r from-neon-pink to-neon-cyan rounded-full flex items-center justify-center text-white font-bold text-xl">
-                            {(userPreferences.nickname || userPreferences.displayName)?.[0]?.toUpperCase() || session.user?.email?.[0]?.toUpperCase()}
+                            {getUserInitial(session, userPreferences)}
                           </div>
                           <div className="flex-1">
                             <div className="flex items-center space-x-2">
                               <span className="text-base sm:text-lg font-semibold text-text-white">
-                                {userPreferences.nickname || userPreferences.displayName || 'Utilisateur'}
+                                {getUserDisplayName(session, userPreferences)}
                               </span>
                               {/* Premium badge placeholder */}
                               <span className="text-yellow-400">💎</span>

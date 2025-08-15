@@ -252,7 +252,39 @@ export const authOptions: NextAuthOptions = {
       if (session?.user && token) {
         session.user.id = token.id as string
         session.user.email = token.email as string
-        session.user.nickname = token.nickname as string
+        
+        // Recharger les données utilisateur fraîches depuis la base de données
+        try {
+          const freshUser = await prisma.user.findUnique({
+            where: { id: token.id as string },
+            select: {
+              id: true,
+              email: true,
+              name: true,
+              nickname: true,
+              image: true,
+              userPreferences: {
+                select: {
+                  displayName: true
+                }
+              }
+            }
+          })
+          
+          if (freshUser) {
+            session.user.name = freshUser.name
+            // Prioriser displayName des préférences, puis nickname, puis name
+            session.user.nickname = freshUser.userPreferences?.displayName || freshUser.nickname || freshUser.name
+            session.user.image = freshUser.image
+          } else {
+            // Fallback au token si l'utilisateur n'existe plus
+            session.user.nickname = token.nickname as string
+          }
+        } catch (error) {
+          console.error('Erreur lors du rechargement des données utilisateur:', error)
+          // Fallback au token en cas d'erreur
+          session.user.nickname = token.nickname as string
+        }
         
         // Vérification de cohérence de session
         if (session.user.email !== token.email) {
