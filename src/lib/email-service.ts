@@ -189,48 +189,77 @@ export async function sendCriticalSecurityAlert(
  */
 function createVerificationEmailHTML(email: string, verificationUrl: string): string {
   return `
-    <div style="max-width: 600px; margin: 0 auto; font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; border-radius: 15px; overflow: hidden;">
-      <div style="background: linear-gradient(45deg, #FF006E, #00F5FF); padding: 30px; text-align: center;">
-        <h1 style="margin: 0; font-size: 2.5em; text-shadow: 0 0 20px rgba(255,255,255,0.5);">📸 JudgeMyJPEG</h1>
-        <p style="margin: 10px 0 0; font-size: 1.2em; opacity: 0.9;">L'IA qui juge vos photos sans pitié</p>
-      </div>
-      
-      <div style="padding: 40px 30px;">
-        <h2 style="color: #00F5FF; margin-bottom: 20px; text-align: center;">🚀 Vérifiez votre compte</h2>
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Vérifiez votre compte JudgeMyJPEG</title>
+    </head>
+    <body style="margin: 0; padding: 20px; background-color: #f4f4f4; font-family: Arial, sans-serif;">
+      <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
         
-        <p style="font-size: 16px; line-height: 1.6; margin-bottom: 30px; text-align: center;">
-          Cliquez sur le bouton ci-dessous pour vérifier votre adresse email et activer votre compte JudgeMyJPEG.
-        </p>
-        
-        <div style="text-align: center; margin: 40px 0;">
-          <a href="${verificationUrl}" style="
-            display: inline-block;
-            background: linear-gradient(45deg, #FF006E, #8B00FF);
-            color: white;
-            text-decoration: none;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 18px;
-            box-shadow: 0 10px 30px rgba(255, 0, 110, 0.3);
-          ">
-            ✅ Vérifier mon email
-          </a>
+        <!-- Header -->
+        <div style="background: linear-gradient(45deg, #FF006E, #00F5FF); padding: 30px; text-align: center;">
+          <h1 style="margin: 0; font-size: 28px; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">📸 JudgeMyJPEG</h1>
+          <p style="margin: 8px 0 0; font-size: 16px; color: rgba(255,255,255,0.9);">Analyse IA de vos photos</p>
         </div>
         
-        <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin-top: 30px;">
-          <p style="margin: 0; font-size: 14px; text-align: center; opacity: 0.8;">
-            🔒 Ce lien est valide pendant 24 heures<br>
-            Si vous n'avez pas créé de compte, ignorez cet email.
+        <!-- Content -->
+        <div style="padding: 40px 30px; background-color: #ffffff;">
+          <h2 style="color: #333333; margin: 0 0 20px; text-align: center; font-size: 24px;">Activez votre compte</h2>
+          
+          <p style="font-size: 16px; line-height: 1.6; margin-bottom: 30px; text-align: center; color: #555555;">
+            Bonjour ! <br>
+            Cliquez sur le bouton ci-dessous pour vérifier votre adresse email <strong>${email}</strong> et activer votre compte JudgeMyJPEG.
+          </p>
+          
+          <!-- CTA Button -->
+          <div style="text-align: center; margin: 40px 0;">
+            <a href="${verificationUrl}" style="
+              display: inline-block;
+              background: #FF006E;
+              color: white;
+              text-decoration: none;
+              padding: 16px 32px;
+              border-radius: 6px;
+              font-weight: bold;
+              font-size: 16px;
+              border: none;
+            ">
+              Vérifier mon email
+            </a>
+          </div>
+          
+          <!-- Alternative link -->
+          <div style="margin: 30px 0; padding: 20px; background-color: #f8f9fa; border-radius: 6px; border-left: 4px solid #FF006E;">
+            <p style="margin: 0; font-size: 14px; color: #666666;">
+              <strong>Le bouton ne fonctionne pas ?</strong><br>
+              Copiez et collez ce lien dans votre navigateur :<br>
+              <a href="${verificationUrl}" style="color: #FF006E; word-break: break-all;">${verificationUrl}</a>
+            </p>
+          </div>
+          
+          <!-- Security note -->
+          <div style="margin: 30px 0; padding: 15px; background-color: #e8f4fd; border-radius: 6px;">
+            <p style="margin: 0; font-size: 14px; color: #1e5a8a;">
+              🔒 <strong>Sécurité :</strong> Ce lien est valide pendant 24 heures.<br>
+              Si vous n'avez pas créé de compte, vous pouvez ignorer cet email.
+            </p>
+          </div>
+        </div>
+        
+        <!-- Footer -->
+        <div style="background-color: #f8f9fa; padding: 20px; text-align: center; border-top: 1px solid #e9ecef;">
+          <p style="margin: 0; font-size: 12px; color: #6c757d;">
+            © ${new Date().getFullYear()} JudgeMyJPEG - Analyse IA de photos<br>
+            Email envoyé automatiquement, merci de ne pas répondre.
           </p>
         </div>
+        
       </div>
-      
-      <div style="background: rgba(0,0,0,0.3); padding: 20px; text-align: center; font-size: 12px; opacity: 0.7;">
-        <p style="margin: 0;">© ${new Date().getFullYear()} JudgeMyJPEG - Propulsé par l'IA</p>
-        <p style="margin: 5px 0 0;">📧 noreply@judgemyjpeg.fr</p>
-      </div>
-    </div>
+    </body>
+    </html>
   `
 }
 

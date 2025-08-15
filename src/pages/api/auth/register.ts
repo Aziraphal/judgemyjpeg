@@ -2,6 +2,8 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
 import { validatePassword } from '@/lib/password-validation'
+import { sendVerificationEmail } from '@/lib/email-service'
+import crypto from 'crypto'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -59,13 +61,39 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     })
 
+    // Créer un token de vérification
+    const verificationToken = crypto.randomBytes(32).toString('hex')
+    const expires = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24h
+
+    await prisma.verificationToken.create({
+      data: {
+        identifier: email,
+        token: verificationToken,
+        expires
+      }
+    })
+
+    // Envoyer l'email de vérification
+    try {
+      const baseUrl = process.env.NEXTAUTH_URL || `https://${req.headers.host}`
+      const verificationUrl = `${baseUrl}/api/auth/verify-email?token=${verificationToken}&email=${encodeURIComponent(email)}`
+      
+      console.log('🔗 URL de vérification générée:', verificationUrl)
+      await sendVerificationEmail(email, verificationUrl)
+      console.log('📧 Email de vérification envoyé à:', email)
+    } catch (emailError) {
+      console.error('❌ Erreur envoi email:', emailError)
+      // Ne pas faire échouer l'inscription si l'email échoue
+    }
+
     // Retourner les données de l'utilisateur (sans le mot de passe)
     const { password: _, ...userWithoutPassword } = user
 
     res.status(201).json({
       success: true,
-      message: 'Compte créé avec succès',
-      user: userWithoutPassword
+      message: 'Compte créé avec succès. Vérifiez votre email pour activer votre compte.',
+      user: userWithoutPassword,
+      emailSent: true
     })
 
   } catch (error) {

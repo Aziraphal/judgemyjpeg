@@ -101,7 +101,7 @@ export default function SignUpPage() {
                 onClick={() => signIn('email', { email: formData.email })}
                 className="btn-neon-secondary text-sm"
               >
-                Renvoyer l'email
+                Envoyer l'email
               </button>
               <div>
                 <Link href="/auth/signin" className="text-text-muted text-sm hover:text-neon-cyan transition-colors">
@@ -208,6 +208,7 @@ export default function SignUpPage() {
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   className="w-full p-3 bg-cosmic-glass border border-cosmic-glassborder rounded-lg text-text-white placeholder-text-muted focus:outline-none focus:border-neon-cyan"
                   placeholder="Au moins 12 caractères sécurisés"
+                  autoComplete="new-password"
                   required
                 />
                 <PasswordStrengthIndicator 
@@ -228,6 +229,7 @@ export default function SignUpPage() {
                   onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                   className="w-full p-3 bg-cosmic-glass border border-cosmic-glassborder rounded-lg text-text-white placeholder-text-muted focus:outline-none focus:border-neon-cyan"
                   placeholder="Répétez votre mot de passe"
+                  autoComplete="new-password"
                   required
                 />
               </div>

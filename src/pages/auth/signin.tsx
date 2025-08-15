@@ -152,6 +152,7 @@ export default function SignInPage() {
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   className="w-full p-3 bg-cosmic-glass border border-cosmic-glassborder rounded-lg text-text-white placeholder-text-muted focus:outline-none focus:border-neon-cyan"
                   placeholder="••••••••"
+                  autoComplete="current-password"
                   required
                 />
               </div>
