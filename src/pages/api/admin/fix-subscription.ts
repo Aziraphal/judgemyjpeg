@@ -22,10 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Chercher l'utilisateur
     const user = await prisma.user.findUnique({
-      where: { email: userEmail },
-      include: {
-        subscription: true
-      }
+      where: { email: userEmail }
     })
 
     if (!user) {
@@ -38,7 +35,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       email: user.email,
       subscriptionStatus: user.subscriptionStatus,
       stripeCustomerId: user.stripeCustomerId,
-      currentSubscription: user.subscription
+      stripeSubscriptionId: user.stripeSubscriptionId,
+      currentPeriodEnd: user.currentPeriodEnd
     })
 
     // Forcer l'activation de l'abonnement
@@ -56,10 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Re-récupérer l'utilisateur après update
     const updatedUser = await prisma.user.findUnique({
-      where: { id: user.id },
-      include: {
-        subscription: true
-      }
+      where: { id: user.id }
     })
 
     res.status(200).json({
@@ -70,7 +65,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         email: updatedUser?.email,
         subscriptionStatus: updatedUser?.subscriptionStatus,
         stripeCustomerId: updatedUser?.stripeCustomerId,
-        subscription: updatedUser?.subscription
+        stripeSubscriptionId: updatedUser?.stripeSubscriptionId,
+        currentPeriodEnd: updatedUser?.currentPeriodEnd
       }
     })
 

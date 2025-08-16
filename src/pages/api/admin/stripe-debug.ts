@@ -22,21 +22,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // 1. Chercher l'utilisateur en DB
     const user = await prisma.user.findUnique({
-      where: { email: userEmail },
-      include: { subscription: true }
+      where: { email: userEmail }
     })
 
     if (!user) {
       return res.status(404).json({ error: 'Utilisateur non trouvé' })
     }
 
-    const debug = {
+    const debug: any = {
       user: {
         id: user.id,
         email: user.email,
         subscriptionStatus: user.subscriptionStatus,
         stripeCustomerId: user.stripeCustomerId,
-        subscription: user.subscription
+        stripeSubscriptionId: user.stripeSubscriptionId,
+        currentPeriodEnd: user.currentPeriodEnd
       },
       stripe: null,
       webhooks: null
