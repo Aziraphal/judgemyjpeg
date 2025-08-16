@@ -1,6 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
+// TEMPORAIREMENT DÉSACTIVÉ - API key invalide cause crashes
+// const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
 
 export interface UserInsights {
   patterns: {
@@ -38,7 +39,9 @@ export async function generateUserInsights(userData: {
   totalPhotos: number
 }): Promise<UserInsights> {
   try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+    // TEMPORAIREMENT DÉSACTIVÉ - Retourne le fallback directement
+    throw new Error('Gemini temporairement désactivé')
+    // const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
 
     // Préparer les données pour l'IA
     const photosSummary = userData.photos.map(photo => ({
