@@ -20,11 +20,11 @@ export const STRIPE_CONFIG = {
   // URLs de retour
   SUCCESS_URL: process.env.NODE_ENV === 'production' 
     ? 'https://judgemyjpeg.fr/success'
-    : 'http://localhost:3005/success',
+    : 'http://localhost:3001/success',
     
   CANCEL_URL: process.env.NODE_ENV === 'production'
     ? 'https://judgemyjpeg.fr/pricing'
-    : 'http://localhost:3005/pricing',
+    : 'http://localhost:3001/pricing',
     
   // Webhook endpoint
   WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET || '',

@@ -7,6 +7,8 @@ export default function SuccessPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [countdown, setCountdown] = useState(5)
+  const [subscription, setSubscription] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -14,25 +16,72 @@ export default function SuccessPage() {
       return
     }
 
-    // Countdown vers le dashboard
-    const timer = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer)
-          router.push('/dashboard')
-          return 0
-        }
-        return prev - 1
-      })
-    }, 1000)
+    // Vérifier le statut de l'abonnement
+    if (session) {
+      fetchSubscriptionStatus()
+    }
+  }, [status, session, router])
 
-    return () => clearInterval(timer)
-  }, [status, router])
+  useEffect(() => {
+    // Démarrer countdown seulement quand on a confirmé l'abonnement
+    if (subscription && !loading) {
+      const timer = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer)
+            router.push('/dashboard')
+            return 0
+          }
+          return prev - 1
+        })
+      }, 1000)
 
-  if (status === 'loading') {
+      return () => clearInterval(timer)
+    }
+  }, [subscription, loading, router])
+
+  const fetchSubscriptionStatus = async () => {
+    try {
+      const response = await fetch('/api/subscription/status')
+      if (response.ok) {
+        const data = await response.json()
+        setSubscription(data.subscription)
+      }
+    } catch (error) {
+      console.error('Erreur vérification abonnement:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (status === 'loading' || loading) {
     return (
       <div className="flex justify-center items-center min-h-screen particles-container">
         <div className="spinner-neon w-12 h-12"></div>
+        <div className="ml-4 text-text-gray">
+          {status === 'loading' ? 'Chargement...' : 'Vérification du paiement...'}
+        </div>
+      </div>
+    )
+  }
+
+  // Si pas d'abonnement premium après le paiement, afficher erreur
+  if (!loading && subscription?.subscriptionStatus === 'free') {
+    return (
+      <div className="flex justify-center items-center min-h-screen particles-container">
+        <div className="glass-card p-8 max-w-md text-center">
+          <div className="text-4xl mb-4">⚠️</div>
+          <h1 className="text-2xl font-bold text-text-white mb-4">Paiement en cours...</h1>
+          <p className="text-text-gray mb-6">
+            Votre paiement est en cours de traitement. Votre abonnement sera activé dans quelques minutes.
+          </p>
+          <button
+            onClick={() => router.push('/dashboard')}
+            className="btn-neon-cyan"
+          >
+            Retour au dashboard
+          </button>
+        </div>
       </div>
     )
   }
@@ -64,7 +113,11 @@ export default function SuccessPage() {
 
               <p className="text-xl text-text-gray mb-8">
                 Votre abonnement{' '}
-                <span className="text-neon-cyan font-semibold">Premium</span>{' '}
+                <span className={`font-semibold ${
+                  subscription?.subscriptionStatus === 'lifetime' ? 'text-neon-cyan' : 'text-neon-pink'
+                }`}>
+                  {subscription?.subscriptionStatus === 'lifetime' ? 'Lifetime' : 'Premium'}
+                </span>{' '}
                 a été activé avec succès !
               </p>
 

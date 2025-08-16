@@ -61,8 +61,8 @@ export default function Home() {
               <div className="text-sm text-text-gray">
                 Bonjour, <span className="font-semibold text-neon-cyan">
                   {session.user?.nickname || userPreferences?.nickname || userPreferences?.displayName || session.user?.name}
-                  {(userSubscription?.status === 'lifetime' || userSubscription?.subscriptionStatus === 'lifetime') && ' ✨'}
-                  {(userSubscription?.status === 'premium' || userSubscription?.subscriptionStatus === 'premium') && ' 💎'}
+                  {(userSubscription?.subscriptionStatus === 'lifetime') && ' ✨'}
+                  {(userSubscription?.subscriptionStatus === 'premium') && ' 💎'}
                 </span>
               </div>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">

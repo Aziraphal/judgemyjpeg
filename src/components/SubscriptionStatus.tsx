@@ -395,16 +395,14 @@ export default function SubscriptionStatus({ compact = false }: SubscriptionStat
               </div>
             </div>
 
-            {(subscription.subscriptionStatus === 'premium' || subscription.subscriptionStatus === 'lifetime') && (
-              <div className="mt-6 p-6 bg-gradient-to-r from-neon-cyan/10 to-neon-pink/10 rounded-lg border border-neon-cyan/30">
-                <div className="text-center">
-                  <h5 className="font-bold text-neon-cyan mb-2">🎉 Merci d'être Premium !</h5>
-                  <p className="text-text-gray text-sm">
-                    Vous soutenez le développement de nouvelles features IA
-                  </p>
-                </div>
+            <div className="mt-6 p-6 bg-gradient-to-r from-neon-cyan/10 to-neon-pink/10 rounded-lg border border-neon-cyan/30">
+              <div className="text-center">
+                <h5 className="font-bold text-neon-cyan mb-2">🎉 Merci d'être Premium !</h5>
+                <p className="text-text-gray text-sm">
+                  Vous soutenez le développement de nouvelles features IA
+                </p>
               </div>
-            )}
+            </div>
           </>
         )}
       </div>

@@ -8,6 +8,34 @@ export default function PricingPage() {
   const router = useRouter()
   const [loading, setLoading] = useState<string | null>(null)
 
+  // Fonction de test pour le développement
+  const handleTestSubscription = async (subscriptionType: 'premium' | 'lifetime') => {
+    if (process.env.NODE_ENV === 'production') return
+    
+    setLoading(`test-${subscriptionType}`)
+    
+    try {
+      const response = await fetch('/api/stripe/test-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ subscriptionType })
+      })
+
+      if (response.ok) {
+        alert(`Test réussi ! Abonnement ${subscriptionType} activé`)
+        router.push('/success')
+      } else {
+        const error = await response.json()
+        alert(`Erreur: ${error.error}`)
+      }
+    } catch (error) {
+      console.error('Test error:', error)
+      alert('Erreur lors du test')
+    } finally {
+      setLoading(null)
+    }
+  }
+
   const handleSubscribe = async (priceType: 'monthly' | 'lifetime') => {
     if (!session) {
       router.push('/')
@@ -193,6 +221,17 @@ export default function PricingPage() {
                   'S\'abonner maintenant'
                 )}
               </button>
+
+              {/* Bouton de test en développement */}
+              {process.env.NODE_ENV === 'development' && session && (
+                <button
+                  onClick={() => handleTestSubscription('premium')}
+                  disabled={loading === 'test-premium'}
+                  className="w-full mt-2 btn-neon-secondary text-sm"
+                >
+                  {loading === 'test-premium' ? 'Test...' : '🧪 Test Premium (Dev)'}
+                </button>
+              )}
             </div>
 
             {/* Plan Lifetime */}
@@ -248,6 +287,17 @@ export default function PricingPage() {
                   'Acheter maintenant'
                 )}
               </button>
+
+              {/* Bouton de test en développement */}
+              {process.env.NODE_ENV === 'development' && session && (
+                <button
+                  onClick={() => handleTestSubscription('lifetime')}
+                  disabled={loading === 'test-lifetime'}
+                  className="w-full mt-2 btn-neon-secondary text-sm"
+                >
+                  {loading === 'test-lifetime' ? 'Test...' : '🧪 Test Lifetime (Dev)'}
+                </button>
+              )}
             </div>
           </div>
 
