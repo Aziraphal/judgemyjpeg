@@ -300,6 +300,13 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
       cache: {
         hit: fromCache,
         imageHash: imageHash.substring(0, 8) // Premiers 8 caractères pour debug
+      },
+      // Données pour tracking Google Analytics côté client
+      tracking: {
+        tone: analysisTone,
+        language: analysisLanguage,
+        score: analysis.score,
+        isTopPhoto: analysis.score >= 85
       }
     })
 

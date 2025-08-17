@@ -11,6 +11,7 @@ import InteractiveTutorial, { useTutorial } from '@/components/InteractiveTutori
 import ProgressiveDisclosure, { useProgressiveDisclosure, SkillLevelGroup } from '@/components/ProgressiveDisclosure'
 import ContextualTooltip, { RichTooltip } from '@/components/ContextualTooltip'
 import { PhotoAnalysis, AnalysisTone, AnalysisLanguage } from '@/services/openai'
+import { trackPhotoAnalysis } from '@/lib/gtag'
 
 export default function AnalyzePage() {
   const { data: session, status } = useSession()
@@ -113,8 +114,17 @@ export default function AnalyzePage() {
     return null
   }
 
-  const handleAnalysisComplete = (analysisResult: { photo: any; analysis: PhotoAnalysis }) => {
+  const handleAnalysisComplete = (analysisResult: { photo: any; analysis: PhotoAnalysis; tracking?: any }) => {
     setResult(analysisResult)
+    
+    // Track vers Google Analytics si données tracking disponibles
+    if (analysisResult.tracking) {
+      trackPhotoAnalysis(
+        analysisResult.tracking.tone,
+        analysisResult.tracking.language,
+        analysisResult.tracking.score
+      )
+    }
   }
 
   const handleNewAnalysis = () => {

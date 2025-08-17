@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
+import { trackSubscription } from '@/lib/gtag'
 
 export default function SuccessPage() {
   const { data: session, status } = useSession()
@@ -55,6 +56,13 @@ export default function SuccessPage() {
       if (response.ok) {
         const data = await response.json()
         setSubscription(data.subscription)
+        
+        // Track succès abonnement vers Google Analytics
+        if (data.subscription?.subscriptionStatus === 'premium') {
+          trackSubscription('premium', 'success')
+        } else if (data.subscription?.subscriptionStatus === 'lifetime') {
+          trackSubscription('lifetime', 'success')
+        }
       } else {
         throw new Error(`API error: ${response.status}`)
       }

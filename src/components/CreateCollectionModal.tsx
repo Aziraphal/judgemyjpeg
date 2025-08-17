@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { trackCollectionAction } from '@/lib/gtag'
 
 interface CreateCollectionModalProps {
   isOpen: boolean
@@ -44,6 +45,10 @@ export default function CreateCollectionModal({ isOpen, onClose, onCollectionCre
 
       if (response.ok) {
         const data = await response.json()
+        
+        // Track création collection vers Google Analytics
+        trackCollectionAction('create')
+        
         onCollectionCreated(data.collection)
         resetForm()
         onClose()

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
+import { trackSubscription } from '@/lib/gtag'
 
 export default function PricingPage() {
   const { data: session, status } = useSession()
@@ -43,6 +44,9 @@ export default function PricingPage() {
     }
 
     setLoading(priceType)
+
+    // Track début processus abonnement
+    trackSubscription(priceType === 'monthly' ? 'premium' : 'lifetime', 'start')
 
     try {
       const response = await fetch('/api/stripe/create-checkout', {
