@@ -13,9 +13,19 @@ interface BatchPhoto {
 interface BatchReport {
   totalPhotos: number
   avgScore: number
-  topPhoto: BatchPhoto | null
-  worstPhoto: BatchPhoto | null
-  categoryAnalysis: {
+  bestPhoto: {
+    id: string
+    filename: string
+    score: number
+    reason: string
+  }
+  worstPhoto: {
+    id: string
+    filename: string
+    score: number
+    issues: string[]
+  }
+  categoryAverages: {
     composition: number
     lighting: number
     focus: number
@@ -25,6 +35,9 @@ interface BatchReport {
     storytelling: number
   }
   overallRecommendations: string[]
+  photographyStyle: string
+  improvementPriority: string
+  famousPhotosCount: number
 }
 
 export class PDFExporter {
@@ -141,8 +154,8 @@ export class PDFExporter {
     const stats = [
       `📸 Nombre total de photos analysées: ${report.totalPhotos}`,
       `⭐ Score moyen obtenu: ${report.avgScore}/100`,
-      `🏆 Meilleure photo: ${report.topPhoto?.analysis?.score || 'N/A'}/100`,
-      `💪 Photo à améliorer: ${report.worstPhoto?.analysis?.score || 'N/A'}/100`
+      `🏆 Meilleure photo: ${report.bestPhoto.score}/100`,
+      `💪 Photo à améliorer: ${report.worstPhoto.score}/100`
     ]
     
     stats.forEach(stat => {
@@ -156,13 +169,13 @@ export class PDFExporter {
     this.addSubTitle('Analyse par Catégorie')
     
     const categories = [
-      { name: 'Composition', score: report.categoryAnalysis.composition, max: 15 },
-      { name: 'Éclairage', score: report.categoryAnalysis.lighting, max: 15 },
-      { name: 'Mise au point', score: report.categoryAnalysis.focus, max: 15 },
-      { name: 'Exposition', score: report.categoryAnalysis.exposure, max: 15 },
-      { name: 'Créativité', score: report.categoryAnalysis.creativity, max: 15 },
-      { name: 'Émotion', score: report.categoryAnalysis.emotion, max: 15 },
-      { name: 'Narration', score: report.categoryAnalysis.storytelling, max: 10 }
+      { name: 'Composition', score: report.categoryAverages.composition, max: 15 },
+      { name: 'Éclairage', score: report.categoryAverages.lighting, max: 15 },
+      { name: 'Mise au point', score: report.categoryAverages.focus, max: 15 },
+      { name: 'Exposition', score: report.categoryAverages.exposure, max: 15 },
+      { name: 'Créativité', score: report.categoryAverages.creativity, max: 15 },
+      { name: 'Émotion', score: report.categoryAverages.emotion, max: 15 },
+      { name: 'Narration', score: report.categoryAverages.storytelling, max: 10 }
     ]
     
     categories.forEach(cat => {

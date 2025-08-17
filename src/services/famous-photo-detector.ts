@@ -151,7 +151,7 @@ function analyzeComposition(analysis: any): FamousPhotoInfo {
   // Analyse des scores parfaits suspicieux
   const scores = analysis.partialScores
   if (scores) {
-    const totalScore = Object.values(scores).reduce((a: any, b: any) => a + b, 0)
+    const totalScore = Object.values(scores).reduce((a: number, b: any) => a + (b as number), 0)
     const maxPossible = 15 + 15 + 15 + 15 + 15 + 15 + 10 // Total max possible
     
     // Score suspicieusement parfait (>95%)

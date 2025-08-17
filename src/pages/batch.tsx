@@ -19,9 +19,19 @@ interface BatchPhoto {
 interface BatchReport {
   totalPhotos: number
   avgScore: number
-  topPhoto: BatchPhoto | null
-  worstPhoto: BatchPhoto | null
-  categoryAnalysis: {
+  bestPhoto: {
+    id: string
+    filename: string
+    score: number
+    reason: string
+  }
+  worstPhoto: {
+    id: string
+    filename: string
+    score: number
+    issues: string[]
+  }
+  categoryAverages: {
     composition: number
     lighting: number  
     focus: number
@@ -31,6 +41,9 @@ interface BatchReport {
     storytelling: number
   }
   overallRecommendations: string[]
+  photographyStyle: string
+  improvementPriority: string
+  famousPhotosCount: number
 }
 
 export default function BatchAnalysis() {
@@ -150,10 +163,13 @@ export default function BatchAnalysis() {
           setReport({
             totalPhotos: data.report.totalPhotos,
             avgScore: data.report.avgScore,
-            topPhoto: finalPhotos.find(p => p.analysis && p.analysis.score === Math.max(...finalPhotos.filter(p => p.analysis).map(p => p.analysis!.score))) || null,
-            worstPhoto: finalPhotos.length > 1 ? finalPhotos.find(p => p.analysis && p.analysis.score === Math.min(...finalPhotos.filter(p => p.analysis).map(p => p.analysis!.score))) || null : null,
-            categoryAnalysis: data.report.categoryAverages,
-            overallRecommendations: data.report.overallRecommendations
+            bestPhoto: data.report.bestPhoto,
+            worstPhoto: data.report.worstPhoto,
+            categoryAverages: data.report.categoryAverages,
+            overallRecommendations: data.report.overallRecommendations,
+            photographyStyle: data.report.photographyStyle,
+            improvementPriority: data.report.improvementPriority,
+            famousPhotosCount: data.report.famousPhotosCount
           })
         } else {
           // Générer le rapport côté client en fallback
@@ -219,7 +235,7 @@ export default function BatchAnalysis() {
       creativity: 0, emotion: 0, storytelling: 0
     })
     
-    const categoryAnalysis = {
+    const categoryAverages = {
       composition: Math.round(categoryTotals.composition / successfulAnalyses.length),
       lighting: Math.round(categoryTotals.lighting / successfulAnalyses.length),
       focus: Math.round(categoryTotals.focus / successfulAnalyses.length),
@@ -230,15 +246,33 @@ export default function BatchAnalysis() {
     }
     
     // Recommandations globales basées sur les faiblesses communes
-    const overallRecommendations = generateOverallRecommendations(categoryAnalysis, successfulAnalyses)
+    const overallRecommendations = generateOverallRecommendations(categoryAverages, successfulAnalyses)
     
     const report: BatchReport = {
       totalPhotos: successfulAnalyses.length,
       avgScore,
-      topPhoto,
-      worstPhoto: successfulAnalyses.length > 1 ? worstPhoto : null,
-      categoryAnalysis,
-      overallRecommendations
+      bestPhoto: {
+        id: topPhoto.id,
+        filename: topPhoto.file.name,
+        score: topPhoto.analysis!.score,
+        reason: 'Score le plus élevé du lot'
+      },
+      worstPhoto: successfulAnalyses.length > 1 ? {
+        id: worstPhoto.id,
+        filename: worstPhoto.file.name,
+        score: worstPhoto.analysis!.score,
+        issues: ['Score le plus bas du lot']
+      } : {
+        id: '',
+        filename: '',
+        score: 0,
+        issues: ['Pas assez de photos pour comparaison']
+      },
+      categoryAverages: categoryAverages,
+      overallRecommendations,
+      photographyStyle: 'Style mixte détecté',
+      improvementPriority: Object.entries(categoryAverages).sort(([,a], [,b]) => a - b)[0][0],
+      famousPhotosCount: 0
     }
     
     setReport(report)
