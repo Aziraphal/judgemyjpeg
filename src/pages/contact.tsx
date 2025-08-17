@@ -72,8 +72,8 @@ export default function Contact() {
   return (
     <>
       <Head>
-        <title>Contact & Support - JudgeMyJPEG</title>
-        <meta name="description" content="Contactez l'équipe JudgeMyJPEG pour toute question, suggestion ou problème technique" />
+        <title>Contact & Support | Aide analyse photo IA - JudgeMyJPEG</title>
+        <meta name="description" content="Besoin d'aide avec l'analyse de vos photos ? Contactez notre support technique. Questions sur l'abonnement, bugs ou suggestions d'amélioration." />
       </Head>
 
       <main className="min-h-screen bg-cosmic-overlay particles-container relative">

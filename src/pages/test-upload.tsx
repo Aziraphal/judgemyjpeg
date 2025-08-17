@@ -24,6 +24,7 @@ export default function TestUploadPage() {
     <>
       <Head>
         <title>Test Upload Railway - JudgeMyJPEG</title>
+        <meta name="robots" content="noindex, nofollow" />
         <meta name="description" content="Test des uploads sans authentification" />
       </Head>
 

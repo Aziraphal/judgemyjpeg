@@ -106,6 +106,7 @@ export default function SuccessPage() {
     <>
       <Head>
         <title>Paiement réussi - JudgeMyJPEG</title>
+        <meta name="robots" content="noindex, nofollow" />
         <meta name="description" content="Votre abonnement a été activé avec succès !" />
       </Head>
 

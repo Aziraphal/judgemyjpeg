@@ -43,9 +43,45 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>JudgeMyJPEG - L'IA qui juge vos photos sans pitié</title>
-        <meta name="description" content="L'IA qui analyse vos photos avec humour ou professionnalisme selon votre choix !" />
+        <title>JudgeMyJPEG | Analyse photo IA - Note tes photos sur 100</title>
+        <meta name="description" content="Fais analyser tes photos par une IA spécialisée ! Note sur 100, conseils techniques personnalisés. Mode pro ou humoristique. Essai gratuit disponible." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content="JudgeMyJPEG | Analyse photo IA - Note tes photos sur 100" />
+        <meta property="og:description" content="Fais analyser tes photos par une IA spécialisée ! Note sur 100, conseils techniques personnalisés. Mode pro ou humoristique." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.judgemyjpeg.fr" />
+        <meta property="og:image" content="https://www.judgemyjpeg.fr/favicon.ico" />
+        <meta property="og:locale" content="fr_FR" />
+        <meta property="og:site_name" content="JudgeMyJPEG" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="JudgeMyJPEG | Analyse photo IA" />
+        <meta name="twitter:description" content="Fais analyser tes photos par une IA spécialisée ! Note sur 100 + conseils techniques." />
+        <meta name="twitter:image" content="https://www.judgemyjpeg.fr/favicon.ico" />
+        
+        {/* Schema.org JSON-LD */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "JudgeMyJPEG",
+            "description": "Service d'analyse de photos par intelligence artificielle",
+            "url": "https://www.judgemyjpeg.fr",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://www.judgemyjpeg.fr/analyze",
+              "query-input": "required name=search_term_string"
+            },
+            "provider": {
+              "@type": "Organization",
+              "name": "CodeCraft Plus",
+              "url": "https://www.judgemyjpeg.fr"
+            }
+          })}
+        </script>
       </Head>
       
       <main className="min-h-screen bg-cosmic-overlay particles-container relative">

@@ -80,8 +80,8 @@ export default function PricingPage() {
   return (
     <>
       <Head>
-        <title>Tarifs - JudgeMyJPEG</title>
-        <meta name="description" content="Choisissez votre plan pour des analyses photo illimitées" />
+        <title>Tarifs & Abonnements | Plans analyse photo IA - JudgeMyJPEG</title>
+        <meta name="description" content="Découvrez nos plans d'abonnement pour l'analyse photo IA. Gratuit 3 analyses/mois, Premium illimité 9.99€, Lifetime 99€. Essai gratuit disponible." />
       </Head>
 
       <main className="min-h-screen bg-cosmic-overlay particles-container relative">

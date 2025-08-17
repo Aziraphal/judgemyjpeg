@@ -1,0 +1,16 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /auth/
+Disallow: /success
+Disallow: /test-upload
+Disallow: /status
+Disallow: /offline
+
+# Host
+Host: https://www.judgemyjpeg.fr
+
+# Sitemaps
+Sitemap: https://www.judgemyjpeg.fr/sitemap.xml
