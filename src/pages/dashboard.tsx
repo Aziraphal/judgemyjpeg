@@ -80,7 +80,7 @@ export default function DashboardPage() {
 
   const formatMonth = (monthStr: string) => {
     const [year, month] = monthStr.split('-')
-    const monthNames = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc']
+    const monthNames = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
     return `${monthNames[parseInt(month) - 1]} ${year}`
   }
 
