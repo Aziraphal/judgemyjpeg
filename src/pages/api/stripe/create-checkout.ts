@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const { priceType } = req.body
 
-    if (!priceType || !['monthly', 'lifetime'].includes(priceType)) {
+    if (!priceType || !['monthly', 'lifetime', 'starter'].includes(priceType)) {
       return res.status(400).json({ error: 'Type de prix invalide' })
     }
 
@@ -55,6 +55,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Déterminer le prix selon le type
     const priceId = priceType === 'monthly' 
       ? STRIPE_CONFIG.MONTHLY_PRICE_ID 
+      : priceType === 'starter'
+      ? STRIPE_CONFIG.LIFETIME_PRICE_ID  // Utilise le même price_id 1€ 
       : STRIPE_CONFIG.LIFETIME_PRICE_ID
 
     // Créer la session de checkout

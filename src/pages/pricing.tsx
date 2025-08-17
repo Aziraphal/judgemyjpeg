@@ -36,7 +36,7 @@ export default function PricingPage() {
     }
   }
 
-  const handleSubscribe = async (priceType: 'monthly' | 'lifetime') => {
+  const handleSubscribe = async (priceType: 'monthly' | 'lifetime' | 'starter') => {
     if (!session) {
       router.push('/')
       return
@@ -116,7 +116,7 @@ export default function PricingPage() {
           </div>
 
           {/* Plans tarifaires */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8 max-w-7xl mx-auto">
             
             {/* Plan Gratuit */}
             <div className="glass-card p-8 hover-glow border-2 border-cosmic-glassborder">
@@ -232,6 +232,61 @@ export default function PricingPage() {
                   {loading === 'test-premium' ? 'Test...' : '🧪 Test Premium (Dev)'}
                 </button>
               )}
+            </div>
+
+            {/* Plan Starter - Nouveau plan à 1€ */}
+            <div className="glass-card p-8 hover-glow border-2 border-green-500">
+              <div className="text-center mb-6">
+                <div className="text-3xl mb-4">🌱</div>
+                <h3 className="text-2xl font-bold text-text-white mb-2">Starter</h3>
+                <p className="text-text-gray">Première étape accessible</p>
+              </div>
+
+              <div className="text-center mb-8">
+                <div className="text-4xl font-bold text-green-400 mb-2">1€</div>
+                <div className="text-text-muted">à vie</div>
+                <div className="text-xs text-green-400 mt-1">🎯 Parfait pour débuter</div>
+              </div>
+
+              <div className="space-y-4 mb-8">
+                <div className="flex items-center space-x-3">
+                  <span className="text-green-400">✓</span>
+                  <span className="text-text-white">20 analyses par mois</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <span className="text-green-400">✓</span>
+                  <span className="text-text-white">Mode Pro & Cassant</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <span className="text-green-400">✓</span>
+                  <span className="text-text-white">Images partageables</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <span className="text-red-400">✗</span>
+                  <span className="text-text-muted">Export PDF</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <span className="text-red-400">✗</span>
+                  <span className="text-text-muted">Générateur Instagram</span>
+                </div>
+              </div>
+
+              <button
+                onClick={() => handleSubscribe('starter')}
+                disabled={loading === 'starter' || !session}
+                className="w-full bg-green-500 hover:bg-green-400 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+              >
+                {loading === 'starter' ? (
+                  <span className="flex items-center justify-center space-x-2">
+                    <div className="spinner-neon w-4 h-4"></div>
+                    <span>Redirection...</span>
+                  </span>
+                ) : !session ? (
+                  'Se connecter d\'abord'
+                ) : (
+                  'Commencer à 1€'
+                )}
+              </button>
             </div>
 
             {/* Plan Lifetime */}

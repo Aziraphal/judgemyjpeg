@@ -75,12 +75,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
               logger.info('Premium subscription activated', { userId }, userId, ip)
             } else {
-              // Paiement unique (lifetime)
-              await updateUserSubscription(userId, 'lifetime', {
-                customerId: session.customer as string
-              })
-
-              logger.info('Lifetime subscription activated', { userId }, userId, ip)
+              // Paiement unique - déterminer si c'est starter ou lifetime selon le montant
+              const lineItems = await stripe.checkout.sessions.listLineItems(session.id)
+              const amount = lineItems.data[0]?.price?.unit_amount || 0
+              
+              if (amount <= 100) { // 1€ = 100 centimes
+                // Plan starter à 1€
+                await updateUserSubscription(userId, 'starter', {
+                  customerId: session.customer as string
+                })
+                logger.info('Starter subscription activated', { userId }, userId, ip)
+              } else {
+                // Plan lifetime (99€)
+                await updateUserSubscription(userId, 'lifetime', {
+                  customerId: session.customer as string
+                })
+                logger.info('Lifetime subscription activated', { userId }, userId, ip)
+              }
             }
             break
           }
