@@ -127,12 +127,6 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
             </div>
           </div>
 
-          <div className="text-center">
-            <div className="inline-flex items-center space-x-2 text-text-muted text-sm">
-              <span>💡</span>
-              <span>Même analyse technique, même score - seul le style d'expression change !</span>
-            </div>
-          </div>
         </div>
       )}
 
