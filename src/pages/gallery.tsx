@@ -37,7 +37,7 @@ export default function GalleryPage() {
 
   const fetchAllPhotos = async () => {
     try {
-      const response = await fetch('/api/photos/all')
+      const response = await fetch('/api/photos/top')
       if (response.ok) {
         const data = await response.json()
         setAllPhotos(data.photos)
@@ -102,7 +102,7 @@ export default function GalleryPage() {
   return (
     <>
       <Head>
-        <title>Toutes mes Photos - JudgeMyJPEG</title>
+        <title>Top Photos - JudgeMyJPEG</title>
         <meta name="description" content="Explorez toutes vos photos analysées" />
       </Head>
 
@@ -115,7 +115,7 @@ export default function GalleryPage() {
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-6xl font-bold text-glow mb-4">
-              📷 Toutes mes{' '}
+              🏆 Top{' '}
               <span className="text-transparent bg-gradient-to-r from-neon-pink to-neon-cyan bg-clip-text">
                 Photos
               </span>

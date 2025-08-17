@@ -2,10 +2,12 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from './auth/[...nextauth]'
 import { analyzePhoto, PhotoAnalysis } from '@/services/openai'
+import { BatchAnalyzer } from '@/services/batch-analyzer'
 import { PrismaClient } from '@prisma/client'
 import { rateLimit } from '@/lib/rate-limit'
 
 const prisma = new PrismaClient()
+const batchAnalyzer = new BatchAnalyzer()
 
 interface BatchAnalysisRequest {
   images: {
@@ -22,10 +24,29 @@ interface BatchAnalysisResponse {
     id: string
     analysis?: PhotoAnalysis
     error?: string
+    rank?: number // Position dans le classement
+    isFamous?: boolean // Photo célèbre détectée
+    famousInfo?: {
+      photographer?: string
+      title?: string
+      confidence: number
+    }
   }[]
   report: {
     totalPhotos: number
     avgScore: number
+    bestPhoto: {
+      id: string
+      filename: string
+      score: number
+      reason: string // Pourquoi c'est la meilleure
+    }
+    worstPhoto: {
+      id: string
+      filename: string
+      score: number
+      issues: string[] // Problèmes principaux
+    }
     categoryAverages: {
       composition: number
       lighting: number
@@ -36,6 +57,9 @@ interface BatchAnalysisResponse {
       storytelling: number
     }
     overallRecommendations: string[]
+    photographyStyle: string // Style dominant détecté
+    improvementPriority: string // Axe d'amélioration prioritaire
+    famousPhotosCount: number // Nombre de photos célèbres détectées
   }
 }
 
@@ -108,9 +132,9 @@ export default async function handler(
 
     console.log(`🚀 Début analyse batch: ${images.length} photos pour ${session.user.email}`)
 
-    // Analyser chaque image
-    const results = []
-    const successfulAnalyses: PhotoAnalysis[] = []
+    // Analyser chaque image avec le nouveau système intelligent
+    const analysisResults = []
+    const photosForBatch = []
 
     for (let i = 0; i < images.length; i++) {
       const image = images[i]
@@ -119,6 +143,14 @@ export default async function handler(
         console.log(`📸 Analyse ${i + 1}/${images.length}: ${image.filename}`)
         
         const analysis = await analyzePhoto(image.data, tone)
+        
+        // Préparer pour l'analyse batch
+        photosForBatch.push({
+          id: image.id,
+          filename: image.filename,
+          analysis: analysis,
+          imageBase64: image.data
+        })
         
         // Sauvegarder en base
         await prisma.photo.create({
@@ -130,27 +162,68 @@ export default async function handler(
             userId: user.id
           }
         })
-
-        results.push({
-          id: image.id,
-          analysis
-        })
-        
-        successfulAnalyses.push(analysis)
         
       } catch (error) {
         console.error(`❌ Erreur analyse ${image.filename}:`, error)
-        results.push({
+        analysisResults.push({
           id: image.id,
           error: 'Erreur lors de l\'analyse'
         })
       }
     }
 
-    // Générer le rapport comparatif
-    const report = generateBatchReport(successfulAnalyses)
-
-    console.log(`✅ Analyse batch terminée: ${successfulAnalyses.length}/${images.length} réussies`)
+    // Générer le rapport intelligent avec classement et détection célébrités
+    let report = null
+    const results = []
+    
+    if (photosForBatch.length > 0) {
+      const batchReport = await batchAnalyzer.analyzeBatch(photosForBatch)
+      
+      // Construire les résultats avec ranking et détection célébrités
+      for (const rankedPhoto of batchReport.ranking) {
+        results.push({
+          id: rankedPhoto.id,
+          analysis: rankedPhoto.analysis,
+          rank: rankedPhoto.rank,
+          isFamous: rankedPhoto.isFamous,
+          famousInfo: rankedPhoto.famousInfo
+        })
+      }
+      
+      report = {
+        totalPhotos: batchReport.totalPhotos,
+        avgScore: batchReport.avgScore,
+        bestPhoto: batchReport.bestPhoto,
+        worstPhoto: batchReport.worstPhoto,
+        categoryAverages: batchReport.categoryAverages,
+        overallRecommendations: batchReport.overallRecommendations,
+        photographyStyle: batchReport.photographyStyle,
+        improvementPriority: batchReport.improvementPriority,
+        famousPhotosCount: batchReport.famousPhotosCount
+      }
+      
+      console.log(`✅ Analyse batch terminée: ${photosForBatch.length}/${images.length} réussies`)
+      console.log(`🏆 Meilleure photo: ${batchReport.bestPhoto.filename} (${batchReport.bestPhoto.score}/100)`)
+      console.log(`🎨 Photos célèbres détectées: ${batchReport.famousPhotosCount}`)
+      
+    } else {
+      // Ajouter les erreurs d'analyse
+      results.push(...analysisResults)
+      report = {
+        totalPhotos: 0,
+        avgScore: 0,
+        bestPhoto: { id: '', filename: '', score: 0, reason: 'Aucune analyse réussie' },
+        worstPhoto: { id: '', filename: '', score: 0, issues: ['Aucune analyse réussie'] },
+        categoryAverages: {
+          composition: 0, lighting: 0, focus: 0, exposure: 0,
+          creativity: 0, emotion: 0, storytelling: 0
+        },
+        overallRecommendations: ['Aucune analyse réussie'],
+        photographyStyle: 'Indéterminé',
+        improvementPriority: 'Réussir l\'upload des photos',
+        famousPhotosCount: 0
+      }
+    }
 
     return res.status(200).json({
       success: true,

@@ -6,6 +6,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { PhotoAnalysis } from '@/services/openai'
 import { PDFExporter } from '@/services/pdf-export'
+import BatchReportIntelligent from '@/components/BatchReportIntelligent'
 
 interface BatchPhoto {
   id: string
@@ -503,144 +504,19 @@ export default function BatchAnalysis() {
             </div>
           )}
 
-          {/* Report */}
+          {/* Rapport Intelligent */}
           {report && (
-            <div className="space-y-8">
-              {/* Summary */}
-              <div className="glass-card p-8">
-                <h3 className="text-2xl font-bold text-text-white mb-6 flex items-center">
-                  <span className="text-3xl mr-3">📊</span>
-                  Rapport comparatif
-                </h3>
-                
-                <div className="grid md:grid-cols-3 gap-6 mb-8">
-                  <div className="text-center">
-                    <div className="text-3xl mb-2">📸</div>
-                    <div className="text-2xl font-bold text-neon-cyan">{report.totalPhotos}</div>
-                    <div className="text-text-gray">Photos analysées</div>
-                  </div>
-                  
-                  <div className="text-center">
-                    <div className="text-3xl mb-2">⭐</div>
-                    <div className={`text-2xl font-bold ${getScoreColor(report.avgScore)}`}>
-                      {report.avgScore}/100
-                    </div>
-                    <div className="text-text-gray">Score moyen</div>
-                  </div>
-                  
-                  <div className="text-center">
-                    <div className="text-3xl mb-2">🏆</div>
-                    <div className="text-2xl font-bold text-yellow-400">
-                      {report.topPhoto?.analysis?.score}/100
-                    </div>
-                    <div className="text-text-gray">Meilleur score</div>
-                  </div>
-                </div>
-
-                {/* Top/Worst Photos */}
-                <div className="grid md:grid-cols-2 gap-6">
-                  {report.topPhoto && (
-                    <div className="glass-card p-4">
-                      <h4 className="font-bold text-yellow-400 mb-3 flex items-center">
-                        🏆 Votre meilleure photo
-                      </h4>
-                      <div className="aspect-video relative rounded-lg overflow-hidden mb-3">
-                        <Image
-                          src={report.topPhoto.url}
-                          alt={report.topPhoto.file.name}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                      <p className="text-sm text-text-white truncate">{report.topPhoto.file.name}</p>
-                      <p className="text-xs text-text-gray">Score: {report.topPhoto.analysis?.score}/100</p>
-                    </div>
-                  )}
-                  
-                  {report.worstPhoto && (
-                    <div className="glass-card p-4">
-                      <h4 className="font-bold text-neon-pink mb-3 flex items-center">
-                        💪 Photo à améliorer
-                      </h4>
-                      <div className="aspect-video relative rounded-lg overflow-hidden mb-3">
-                        <Image
-                          src={report.worstPhoto.url}
-                          alt={report.worstPhoto.file.name}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                      <p className="text-sm text-text-white truncate">{report.worstPhoto.file.name}</p>
-                      <p className="text-xs text-text-gray">Score: {report.worstPhoto.analysis?.score}/100</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Category Analysis */}
-              <div className="glass-card p-8">
-                <h3 className="text-xl font-bold text-text-white mb-6 flex items-center">
-                  <span className="text-2xl mr-2">🎯</span>
-                  Analyse par catégorie
-                </h3>
-                
-                <div className="space-y-4">
-                  {Object.entries(report.categoryAnalysis).map(([category, score]) => {
-                    const categoryNames = {
-                      composition: 'Composition',
-                      lighting: 'Éclairage', 
-                      focus: 'Mise au point',
-                      exposure: 'Exposition',
-                      creativity: 'Créativité',
-                      emotion: 'Émotion',
-                      storytelling: 'Narration'
-                    }
-                    
-                    const maxScore = category === 'storytelling' ? 10 : 15
-                    
-                    return (
-                      <div key={category} className="flex items-center justify-between p-3 bg-cosmic-glass rounded-lg">
-                        <span className="text-text-white font-medium">
-                          {categoryNames[category as keyof typeof categoryNames]}
-                        </span>
-                        <div className="flex items-center space-x-3">
-                          <div className="w-32 h-2 bg-cosmic-glassborder rounded-full overflow-hidden">
-                            <div 
-                              className={`h-full transition-all duration-500 ${
-                                score >= maxScore * 0.8 ? 'bg-neon-cyan' :
-                                score >= maxScore * 0.6 ? 'bg-yellow-400' :
-                                'bg-neon-pink'
-                              }`}
-                              style={{ width: `${(score / maxScore) * 100}%` }}
-                            />
-                          </div>
-                          <span className={`font-bold min-w-[50px] text-right ${getScoreColor((score/maxScore)*100)}`}>
-                            {score}/{maxScore}
-                          </span>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-
-              {/* Overall Recommendations */}
-              <div className="glass-card p-8">
-                <h3 className="text-xl font-bold text-text-white mb-6 flex items-center">
-                  <span className="text-2xl mr-2">💡</span>
-                  Recommandations globales
-                </h3>
-                
-                <ul className="space-y-3">
-                  {report.overallRecommendations.map((recommendation, index) => (
-                    <li key={index} className="flex items-start glass-card p-4">
-                      <span className="text-neon-cyan mr-3 text-xl flex-shrink-0">✨</span>
-                      <span className="text-text-white leading-relaxed">{recommendation}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+            <BatchReportIntelligent 
+              report={report} 
+              photos={photos.filter(p => p.analysis).map(p => ({
+                id: p.id,
+                filename: p.file.name,
+                analysis: p.analysis!,
+                rank: 0, // Sera mis à jour par le composant
+                isFamous: false, // Sera déterminé par l'API
+                famousInfo: undefined
+              }))}
+            />
           )}
         </div>
       </main>
