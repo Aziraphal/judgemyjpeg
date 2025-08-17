@@ -66,7 +66,7 @@ const nextConfig = {
               script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://www.googletagmanager.com;
               style-src 'self' 'unsafe-inline';
               img-src 'self' data: blob: https://res.cloudinary.com https://lh3.googleusercontent.com;
-              connect-src 'self' https://api.stripe.com https://generativelanguage.googleapis.com https://www.google-analytics.com https://analytics.google.com;
+              connect-src 'self' https://api.stripe.com https://generativelanguage.googleapis.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://*.google-analytics.com;
               frame-src https://js.stripe.com;
               font-src 'self' data:;
             `.replace(/\s{2,}/g, ' ').trim()

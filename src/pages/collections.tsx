@@ -63,7 +63,7 @@ export default function CollectionsPage() {
   }
 
   const handleCollectionCreated = (newCollection: Collection) => {
-    setCollections(prev => [newCollection, ...prev])
+    setCollections(prev => [newCollection, ...(prev || [])])
   }
 
   const handleRemoveFromCollection = async (collectionId: string, photoId: string) => {
@@ -182,7 +182,7 @@ export default function CollectionsPage() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {collections.map((collection) => (
+                  {(collections || []).map((collection) => (
                     <div
                       key={collection.id}
                       className="glass-card p-6 hover-glow group cursor-pointer"
@@ -208,9 +208,9 @@ export default function CollectionsPage() {
 
                       {/* Preview photos */}
                       <div className="mb-4">
-                        {collection.items.length > 0 ? (
+                        {(collection.items || []).length > 0 ? (
                           <div className="grid grid-cols-3 gap-1">
-                            {collection.items.slice(0, 3).map((item, index) => (
+                            {(collection.items || []).slice(0, 3).map((item, index) => (
                               <div
                                 key={item.id}
                                 className="aspect-square relative rounded-lg overflow-hidden group-hover:scale-105 transition-transform duration-300"
@@ -286,7 +286,7 @@ export default function CollectionsPage() {
               </div>
 
               {/* Photos de la collection */}
-              {selectedCollection.items.length === 0 ? (
+              {(selectedCollection.items || []).length === 0 ? (
                 <div className="glass-card p-12 text-center">
                   <div className="text-6xl mb-6">📷</div>
                   <h3 className="text-2xl font-bold text-text-white mb-4">
@@ -304,7 +304,7 @@ export default function CollectionsPage() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {selectedCollection.items.map((item) => (
+                  {(selectedCollection.items || []).map((item) => (
                     <div key={item.id} className="glass-card p-4 hover-glow group">
                       <div className="relative">
                         <Image
