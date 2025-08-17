@@ -26,7 +26,13 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     console.log('User email:', user.email)
     console.log('Subscription status:', subscription)
 
-    res.status(200).json({ subscription })
+    // Déterminer si l'utilisateur est premium
+    const isPremium = subscription && (subscription.subscriptionStatus === 'premium' || subscription.subscriptionStatus === 'lifetime')
+
+    res.status(200).json({ 
+      subscription,
+      isPremium: isPremium || false
+    })
 
   } catch (error) {
     logger.error('Subscription status failed', error, req.user.id, ip)
