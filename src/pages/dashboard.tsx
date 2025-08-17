@@ -148,6 +148,7 @@ export default function DashboardPage() {
               <button
                 onClick={() => router.push('/gallery')}
                 className="btn-neon-secondary text-sm px-4 py-2"
+                title="Photos avec score ≥ 85"
               >
                 🏆 Top Photos
               </button>
@@ -274,10 +275,10 @@ export default function DashboardPage() {
                   </h3>
                   
                   <button
-                    onClick={() => router.push('/gallery')}
+                    onClick={() => router.push('/collections')}
                     className="btn-neon-secondary text-sm"
                   >
-                    Voir tout →
+                    Toutes mes photos →
                   </button>
                 </div>
 

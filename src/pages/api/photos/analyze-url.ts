@@ -97,6 +97,50 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
       }
     })
 
+    // Si la photo a un score ≥ 85, l'ajouter automatiquement à la collection "Top Photos"
+    if (analysis.score >= 85) {
+      try {
+        // Chercher ou créer la collection "Top Photos" pour cet utilisateur
+        let topPhotosCollection = await prisma.collection.findFirst({
+          where: {
+            userId: user.id,
+            name: '🏆 Top Photos'
+          }
+        })
+
+        if (!topPhotosCollection) {
+          // Créer la collection automatiquement
+          topPhotosCollection = await prisma.collection.create({
+            data: {
+              userId: user.id,
+              name: '🏆 Top Photos',
+              description: 'Collection automatique de vos meilleures photos (score ≥ 85)'
+            }
+          })
+        }
+
+        // Ajouter la photo à la collection (si pas déjà présente)
+        const existingPhotoInCollection = await prisma.collectionItem.findFirst({
+          where: {
+            photoId: photo.id,
+            collectionId: topPhotosCollection.id
+          }
+        })
+
+        if (!existingPhotoInCollection) {
+          await prisma.collectionItem.create({
+            data: {
+              photoId: photo.id,
+              collectionId: topPhotosCollection.id
+            }
+          })
+        }
+      } catch (error) {
+        console.error('Erreur ajout Top Photos collection:', error)
+        // Ne pas faire échouer l'analyse si problème collection
+      }
+    }
+
     // Audit: Successful photo analysis
     await auditLogger.photoAnalysis(req.user.id, photo.filename, analysis.score)
     
