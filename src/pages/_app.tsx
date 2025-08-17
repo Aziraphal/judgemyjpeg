@@ -48,7 +48,7 @@ export default function App({
         <meta name="theme-color" content="#FF006E" />
 
         {/* Google Search Console Verification */}
-        <meta name="google-site-verification" content="REMPLACE_PAR_TON_CODE_GOOGLE" />
+        <meta name="google-site-verification" content="YfeeUTQ42Qwb2-7dxicfHr6r7-6TL1E3GbfYyR828eo" />
 
         <link rel="manifest" href="/manifest.json" />
         <link rel="shortcut icon" href="/favicon.ico" />
