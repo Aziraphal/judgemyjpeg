@@ -11,6 +11,11 @@
     @apply bg-cosmic-gradient min-h-screen text-text-white overflow-x-hidden;
   }
   
+  /* Fix pour orientation des images (Samsung, iPhone, etc.) */
+  img {
+    image-orientation: from-image;
+  }
+  
   /* Scrollbar styling */
   ::-webkit-scrollbar {
     width: 8px;

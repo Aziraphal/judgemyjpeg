@@ -51,6 +51,7 @@ export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [loading, setLoading] = useState(true)
   const [collectionModalPhoto, setCollectionModalPhoto] = useState<any>(null)
+  const [selectedPhoto, setSelectedPhoto] = useState<any>(null)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -285,12 +286,16 @@ export default function DashboardPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                     {stats.latestPhotos.map((photo) => (
                       <div key={photo.id} className="group relative">
-                        <div className="aspect-square relative rounded-lg overflow-hidden hover-glow">
+                        <div 
+                          className="aspect-square relative rounded-lg overflow-hidden hover-glow cursor-pointer"
+                          onClick={() => setSelectedPhoto(photo)}
+                        >
                           <Image
                             src={photo.url}
                             alt={photo.filename}
                             fill
                             className="object-cover group-hover:scale-110 transition-transform duration-300"
+                            style={{ imageOrientation: 'from-image' }}
                           />
                           
                           {/* Score badge */}
@@ -423,9 +428,55 @@ export default function DashboardPage() {
       {/* Modal Collection */}
       {collectionModalPhoto && (
         <AddToCollectionModal
-          photo={collectionModalPhoto}
+          isOpen={true}
+          photoId={collectionModalPhoto.id}
+          photoName={collectionModalPhoto.filename}
           onClose={() => setCollectionModalPhoto(null)}
         />
+      )}
+
+      {/* Modal photo détail */}
+      {selectedPhoto && (
+        <div 
+          className="fixed inset-0 bg-cosmic-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={() => setSelectedPhoto(null)}
+        >
+          <div 
+            className="glass-card p-6 max-w-4xl max-h-[90vh] overflow-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-start mb-4">
+              <h3 className="text-2xl font-bold text-text-white">
+                {selectedPhoto.filename}
+              </h3>
+              <button
+                onClick={() => setSelectedPhoto(null)}
+                className="btn-neon-secondary text-lg px-3 py-1"
+              >
+                ×
+              </button>
+            </div>
+            
+            <Image
+              src={selectedPhoto.url}
+              alt={selectedPhoto.filename}
+              width={800}
+              height={600}
+              className="rounded-lg w-full h-auto object-contain"
+              style={{ imageOrientation: 'from-image' }}
+            />
+            
+            <div className="mt-4 flex justify-between items-center">
+              <div className="px-4 py-2 rounded-full bg-gradient-to-r from-neon-pink to-neon-cyan text-white font-bold">
+                🎯 {selectedPhoto.score}/100
+              </div>
+              
+              <div className="text-text-muted text-sm">
+                {new Date(selectedPhoto.createdAt).toLocaleDateString('fr-FR')}
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </>
   )

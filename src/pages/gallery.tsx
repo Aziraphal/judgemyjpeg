@@ -184,6 +184,7 @@ export default function GalleryPage() {
                         width={400}
                         height={300}
                         className="rounded-lg w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                        style={{ imageOrientation: 'from-image' }}
                       />
                       
                       {/* Badge score */}
@@ -277,6 +278,7 @@ export default function GalleryPage() {
                 width={800}
                 height={600}
                 className="rounded-lg w-full h-auto object-contain"
+                style={{ imageOrientation: 'from-image' }}
               />
               
               <div className="mt-4 flex justify-between items-center">

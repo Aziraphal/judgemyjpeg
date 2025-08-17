@@ -106,6 +106,7 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional' 
                 width={500}
                 height={400}
                 className="rounded-xl w-full h-auto object-cover neon-border group-hover:shadow-neon-cyan transition-all duration-300"
+                style={{ imageOrientation: 'from-image' }}
               />
             </div>
           </div>
