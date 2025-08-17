@@ -33,17 +33,21 @@ export default function GalleryPage() {
     if (session) {
       fetchAllPhotos()
     }
-  }, [session, status])
+  }, [session, status, router])
 
   const fetchAllPhotos = async () => {
     try {
       const response = await fetch('/api/photos/top')
       if (response.ok) {
         const data = await response.json()
-        setAllPhotos(data.photos)
+        setAllPhotos(data.topPhotos || [])
+      } else {
+        console.error('Erreur API:', response.status)
+        setAllPhotos([])
       }
     } catch (error) {
       console.error('Erreur chargement photos:', error)
+      setAllPhotos([])
     } finally {
       setLoading(false)
     }
