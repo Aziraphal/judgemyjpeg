@@ -54,7 +54,7 @@ const nextConfig = {
               default-src 'self';
               script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com;
               style-src 'self' 'unsafe-inline';
-              img-src 'self' data: https://res.cloudinary.com https://lh3.googleusercontent.com;
+              img-src 'self' data: blob: https://res.cloudinary.com https://lh3.googleusercontent.com;
               connect-src 'self' https://api.stripe.com https://generativelanguage.googleapis.com;
               frame-src https://js.stripe.com;
               font-src 'self' data:;

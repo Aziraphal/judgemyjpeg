@@ -110,10 +110,10 @@ export default async function handler(
     }
 
     // Limiter le nombre d'images selon le statut
-    const maxImages = isPremium ? 10 : 3
+    const maxImages = isPremium ? 5 : 3
     if (images.length > maxImages) {
       return res.status(400).json({ 
-        error: `Limite dépassée : ${maxImages} images max${!isPremium ? ' (Premium: 10)' : ''}` 
+        error: `Limite dépassée : ${maxImages} images max${!isPremium ? ' (Premium: 5)' : ''}` 
       })
     }
 
@@ -125,8 +125,9 @@ export default async function handler(
       
       // Vérifier la taille base64 (approximatif)
       const sizeInBytes = (image.data.length * 3) / 4
-      if (sizeInBytes > 10 * 1024 * 1024) { // 10MB
-        return res.status(400).json({ error: `Image trop volumineuse: ${image.filename}` })
+      const sizeMB = Math.round(sizeInBytes / (1024 * 1024) * 10) / 10
+      if (sizeInBytes > 15 * 1024 * 1024) { // 15MB
+        return res.status(400).json({ error: `Image trop volumineuse: ${image.filename} (${sizeMB}MB). Limite: 15MB par photo.` })
       }
     }
 

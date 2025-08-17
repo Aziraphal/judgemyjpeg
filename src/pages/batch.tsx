@@ -82,8 +82,8 @@ export default function BatchAnalysis() {
   }, [status])
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    // Limite à 10 photos pour le premium
-    const maxFiles = isPremium ? 10 : 3
+    // Limite à 5 photos pour le premium
+    const maxFiles = isPremium ? 5 : 3
     const selectedFiles = acceptedFiles.slice(0, maxFiles)
     
     const newPhotos: BatchPhoto[] = selectedFiles.map((file, index) => ({
@@ -101,7 +101,7 @@ export default function BatchAnalysis() {
     accept: {
       'image/*': ['.jpeg', '.jpg', '.png', '.webp']
     },
-    maxFiles: isPremium ? 10 : 3,
+    maxFiles: isPremium ? 5 : 3,
     maxSize: 10 * 1024 * 1024 // 10MB
   })
 
@@ -176,12 +176,17 @@ export default function BatchAnalysis() {
           generateReport(finalPhotos)
         }
       } else {
+        // Lire le message d'erreur de l'API
+        const errorData = await response.json().catch(() => ({ error: 'Erreur inconnue' }))
+        alert(`Erreur d'analyse: ${errorData.error}`)
+        
         // Marquer toutes comme erreur
         const errorPhotos = updatedPhotos.map(p => ({ ...p, status: 'error' as const }))
         setPhotos(errorPhotos)
       }
     } catch (error) {
       console.error('Erreur analyse batch:', error)
+      alert('Erreur de réseau ou images trop volumineuses. Essayez avec moins de photos ou des images plus petites.')
       const errorPhotos = photos.map(p => ({ ...p, status: 'error' as const }))
       setPhotos(errorPhotos)
     } finally {
@@ -365,7 +370,7 @@ export default function BatchAnalysis() {
               {isPremium && <span className="text-yellow-400 ml-3">💎</span>}
             </h1>
             <p className="text-xl text-text-gray max-w-2xl mx-auto">
-              Analysez jusqu'à {isPremium ? '10' : '3'} photos simultanément et obtenez un{' '}
+              Analysez jusqu'à {isPremium ? '5' : '3'} photos simultanément et obtenez un{' '}
               <span className="text-neon-cyan font-semibold">rapport comparatif</span>
             </p>
           </div>
@@ -376,7 +381,7 @@ export default function BatchAnalysis() {
                 <div className="text-4xl mb-3">🔒</div>
                 <h3 className="text-xl font-bold text-yellow-400 mb-2">Fonctionnalité Premium</h3>
                 <p className="text-text-gray mb-4">
-                  Version gratuite : 3 photos max. Version premium : 10 photos + rapport avancé
+                  Version gratuite : 3 photos max. Version premium : 5 photos + rapport avancé
                 </p>
                 <button
                   onClick={() => router.push('/premium')}
@@ -445,7 +450,7 @@ export default function BatchAnalysis() {
                   {isDragActive ? 'Déposez vos photos ici' : 'Glissez-déposez vos photos'}
                 </h3>
                 <p className="text-text-gray mb-4">
-                  ou cliquez pour sélectionner • Max {isPremium ? '10' : '3'} photos • 10MB max
+                  ou cliquez pour sélectionner • Max {isPremium ? '5' : '3'} photos • 15MB max
                 </p>
                 <div className="text-sm text-text-muted">
                   Formats supportés : JPEG, PNG, WebP
@@ -459,7 +464,7 @@ export default function BatchAnalysis() {
             <div className="glass-card p-8 mb-8">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-text-white">
-                  Photos sélectionnées ({photos.length}/{isPremium ? '10' : '3'})
+                  Photos sélectionnées ({photos.length}/{isPremium ? '5' : '3'})
                 </h3>
                 {!isAnalyzing && !report && (
                   <button
