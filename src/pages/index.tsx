@@ -157,13 +157,12 @@ export default function Home() {
                 
                 {/* Actions secondaires */}
                 <div className="flex flex-wrap justify-center gap-3 max-w-2xl mx-auto">
-                  {/* TODO: Réactiver dans une future mise à jour
                   <button 
                     onClick={() => window.location.href = '/batch'}
                     className="btn-neon-secondary text-sm px-4 py-2"
                   >
                     📊 Analyse en lot
-                  </button> */}
+                  </button>
                   <button 
                     onClick={() => window.location.href = '/gallery'}
                     className="btn-neon-secondary text-sm px-4 py-2"
