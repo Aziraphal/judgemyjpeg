@@ -157,7 +157,7 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     const tone = Array.isArray(fields.tone) ? fields.tone[0] : fields.tone
     const language = Array.isArray(fields.language) ? fields.language[0] : fields.language
     
-    const analysisTone: AnalysisTone = (tone === 'roast' || tone === 'professional') ? tone : 'professional'
+    const analysisTone: AnalysisTone = (tone === 'roast' || tone === 'professional' || tone === 'expert') ? tone : 'professional'
     const analysisLanguage: AnalysisLanguage = (['fr', 'en', 'es', 'de', 'it', 'pt'].includes(language as string)) ? language as AnalysisLanguage : 'fr'
 
     const base64Image = fileBuffer.toString('base64')
