@@ -78,8 +78,15 @@ export default function AddToCollectionModal({ isOpen, onClose, photoId, photoNa
   }
 
   const handleCollectionCreated = (newCollection: Collection) => {
-    setCollections(prev => [newCollection, ...prev])
-    setIsCreateModalOpen(false)
+    try {
+      setCollections(prev => [newCollection, ...prev])
+      setIsCreateModalOpen(false)
+    } catch (error) {
+      console.error('Erreur mise à jour collections:', error)
+      // Fallback: rechargement complet des collections
+      fetchCollections()
+      setIsCreateModalOpen(false)
+    }
   }
 
   if (!isOpen) return null
