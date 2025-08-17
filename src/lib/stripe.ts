@@ -14,9 +14,6 @@ export const STRIPE_CONFIG = {
   // Prix mensuels
   MONTHLY_PRICE_ID: process.env.STRIPE_MONTHLY_PRICE_ID || 'price_monthly_999',
   
-  // Prix starter 1€
-  STARTER_PRICE_ID: process.env.STRIPE_STARTER_PRICE_ID || 'price_starter_100',
-  
   // Prix à vie 99€
   LIFETIME_PRICE_ID: process.env.STRIPE_LIFETIME_PRICE_ID || 'price_lifetime_9900',
   
@@ -40,7 +37,7 @@ export const createCheckoutSession = async (
 ) => {
   return await stripe.checkout.sessions.create({
     customer: customerId,
-    mode: (priceId === STRIPE_CONFIG.LIFETIME_PRICE_ID || priceId === STRIPE_CONFIG.STARTER_PRICE_ID) ? 'payment' : 'subscription',
+    mode: priceId === STRIPE_CONFIG.LIFETIME_PRICE_ID ? 'payment' : 'subscription',
     payment_method_types: ['card'],
     line_items: [
       {

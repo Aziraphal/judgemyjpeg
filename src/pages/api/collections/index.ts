@@ -55,9 +55,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
 
         res.status(201).json({ collection })
-      } catch (error) {
+      } catch (createError: any) {
+        console.error('Erreur création collection:', createError)
         // Collection avec ce nom existe déjà
-        res.status(400).json({ error: 'Une collection avec ce nom existe déjà' })
+        if (createError.code === 'P2002') {
+          res.status(400).json({ error: 'Une collection avec ce nom existe déjà' })
+        } else {
+          res.status(500).json({ error: 'Erreur lors de la création de la collection' })
+        }
       }
     } else {
       res.status(405).json({ error: 'Method not allowed' })

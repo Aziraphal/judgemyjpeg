@@ -49,9 +49,11 @@ export default function CreateCollectionModal({ isOpen, onClose, onCollectionCre
         onClose()
       } else {
         const errorData = await response.json()
+        console.error('Erreur API collection:', errorData)
         setError(errorData.error || 'Erreur lors de la création')
       }
     } catch (error) {
+      console.error('Erreur création collection:', error)
       setError('Erreur de connexion')
     } finally {
       setIsCreating(false)

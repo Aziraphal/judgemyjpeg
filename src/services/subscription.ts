@@ -2,7 +2,7 @@ import { prisma } from '@/lib/prisma'
 
 export interface UserSubscription {
   id: string
-  subscriptionStatus: 'free' | 'premium' | 'lifetime' | 'starter'
+  subscriptionStatus: 'free' | 'premium' | 'lifetime'
   monthlyAnalysisCount: number
   maxMonthlyAnalyses: number
   canAnalyze: boolean
@@ -35,8 +35,8 @@ export async function getUserSubscription(userId: string): Promise<UserSubscript
 
   let currentCount = user.monthlyAnalysisCount
 
-  if (shouldReset && (user.subscriptionStatus === 'free' || user.subscriptionStatus === 'starter')) {
-    // Réinitialiser le compteur pour les utilisateurs gratuits et starter
+  if (shouldReset && user.subscriptionStatus === 'free') {
+    // Réinitialiser le compteur pour les utilisateurs gratuits
     await prisma.user.update({
       where: { id: userId },
       data: {
@@ -50,7 +50,6 @@ export async function getUserSubscription(userId: string): Promise<UserSubscript
   // Déterminer les limites selon le plan
   const limits = {
     free: 3,
-    starter: 20,     // 20 analyses par mois
     premium: 999999, // Illimité
     lifetime: 999999  // Illimité
   }
@@ -58,16 +57,16 @@ export async function getUserSubscription(userId: string): Promise<UserSubscript
   const maxAnalyses = limits[user.subscriptionStatus as keyof typeof limits] || 3
   const canAnalyze = ['premium', 'lifetime'].includes(user.subscriptionStatus) || currentCount < maxAnalyses
 
-  // Calculer les jours jusqu'au reset pour les utilisateurs gratuits et starter
+  // Calculer les jours jusqu'au reset pour les utilisateurs gratuits
   let daysUntilReset: number | undefined
-  if (user.subscriptionStatus === 'free' || user.subscriptionStatus === 'starter') {
+  if (user.subscriptionStatus === 'free') {
     const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1)
     daysUntilReset = Math.ceil((nextMonth.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
   }
 
   return {
     id: user.id,
-    subscriptionStatus: user.subscriptionStatus as 'free' | 'premium' | 'lifetime' | 'starter',
+    subscriptionStatus: user.subscriptionStatus as 'free' | 'premium' | 'lifetime',
     monthlyAnalysisCount: currentCount,
     maxMonthlyAnalyses: maxAnalyses,
     canAnalyze,
@@ -82,7 +81,7 @@ export async function incrementAnalysisCount(userId: string): Promise<void> {
     throw new Error('Limite d\'analyses atteinte pour ce mois')
   }
 
-  if (subscription.subscriptionStatus === 'free' || subscription.subscriptionStatus === 'starter') {
+  if (subscription.subscriptionStatus === 'free') {
     await prisma.user.update({
       where: { id: userId },
       data: {
@@ -97,7 +96,7 @@ export async function incrementAnalysisCount(userId: string): Promise<void> {
 
 export async function updateUserSubscription(
   userId: string, 
-  subscriptionStatus: 'free' | 'premium' | 'lifetime' | 'starter',
+  subscriptionStatus: 'free' | 'premium' | 'lifetime',
   stripeData?: {
     customerId?: string
     subscriptionId?: string

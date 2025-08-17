@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import ContextualTooltip, { RichTooltip } from './ContextualTooltip'
 
 export type AnalysisTone = 'professional' | 'roast' | 'expert'
 
@@ -57,27 +56,21 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
       {/* Sélection rapide */}
       <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-3 sm:mb-4">
         {Object.entries(toneOptions).map(([tone, config]) => (
-          <RichTooltip
+          <button
             key={tone}
-            title={config.label}
-            description={config.tooltip}
-            icon={config.icon}
+            onClick={() => onToneChange(tone as AnalysisTone)}
+            className={`p-2 sm:p-4 rounded-lg border-2 transition-all duration-300 hover:scale-105 w-full ${
+              selectedTone === tone 
+                ? config.selectedColor 
+                : config.color + ' hover:border-opacity-75'
+            }`}
           >
-            <button
-              onClick={() => onToneChange(tone as AnalysisTone)}
-              className={`p-2 sm:p-4 rounded-lg border-2 transition-all duration-300 hover:scale-105 w-full ${
-                selectedTone === tone 
-                  ? config.selectedColor 
-                  : config.color + ' hover:border-opacity-75'
-              }`}
-            >
-              <div className="text-center">
-                <div className="text-2xl sm:text-3xl mb-1 sm:mb-2">{config.icon}</div>
-                <div className="text-text-white font-semibold mb-1 text-sm sm:text-base">{config.label}</div>
-                <div className="text-text-muted text-xs hidden sm:block">{config.description}</div>
-              </div>
-            </button>
-          </RichTooltip>
+            <div className="text-center">
+              <div className="text-2xl sm:text-3xl mb-1 sm:mb-2">{config.icon}</div>
+              <div className="text-text-white font-semibold mb-1 text-sm sm:text-base">{config.label}</div>
+              <div className="text-text-muted text-xs hidden sm:block">{config.description}</div>
+            </div>
+          </button>
         ))}
       </div>
 

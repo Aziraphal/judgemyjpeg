@@ -19,7 +19,7 @@ interface Photo {
 export default function GalleryPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
-  const [topPhotos, setTopPhotos] = useState<Photo[]>([])
+  const [allPhotos, setAllPhotos] = useState<Photo[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null)
   const [collectionModalPhoto, setCollectionModalPhoto] = useState<Photo | null>(null)
@@ -31,26 +31,26 @@ export default function GalleryPage() {
     }
 
     if (session) {
-      fetchTopPhotos()
+      fetchAllPhotos()
     }
   }, [session, status])
 
-  const fetchTopPhotos = async () => {
+  const fetchAllPhotos = async () => {
     try {
-      const response = await fetch('/api/photos/top')
+      const response = await fetch('/api/photos/all')
       if (response.ok) {
         const data = await response.json()
-        setTopPhotos(data.topPhotos)
+        setAllPhotos(data.photos)
       }
     } catch (error) {
-      console.error('Erreur chargement top photos:', error)
+      console.error('Erreur chargement photos:', error)
     } finally {
       setLoading(false)
     }
   }
 
   const handleFavoriteToggle = (photoId: string, isFavorite: boolean) => {
-    setTopPhotos(prev => 
+    setAllPhotos(prev => 
       prev.map(photo => 
         photo.id === photoId 
           ? { ...photo, isFavorite }
@@ -70,7 +70,7 @@ export default function GalleryPage() {
       })
 
       if (response.ok) {
-        setTopPhotos(prev => prev.filter(photo => photo.id !== photoId))
+        setAllPhotos(prev => prev.filter(photo => photo.id !== photoId))
         
         // Si on était en train de voir cette photo, fermer la modal
         if (selectedPhoto?.id === photoId) {
@@ -102,8 +102,8 @@ export default function GalleryPage() {
   return (
     <>
       <Head>
-        <title>Top Photos - Photo Judge</title>
-        <meta name="description" content="Vos meilleures photos avec un score supérieur à 85" />
+        <title>Toutes mes Photos - JudgeMyJPEG</title>
+        <meta name="description" content="Explorez toutes vos photos analysées" />
       </Head>
 
       <main className="min-h-screen bg-cosmic-overlay particles-container relative">
@@ -115,16 +115,16 @@ export default function GalleryPage() {
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-6xl font-bold text-glow mb-4">
-              🏆 Top{' '}
+              📷 Toutes mes{' '}
               <span className="text-transparent bg-gradient-to-r from-neon-pink to-neon-cyan bg-clip-text">
                 Photos
               </span>
             </h1>
             <p className="text-xl text-text-gray max-w-2xl mx-auto">
-              Vos{' '}
-              <span className="text-neon-cyan font-semibold">chefs-d'œuvre</span>{' '}
-              avec un score supérieur à{' '}
-              <span className="text-neon-pink font-semibold">85/100</span>
+              Explorez{' '}
+              <span className="text-neon-cyan font-semibold">toutes vos photos</span>{' '}
+              analysées et organisez-les en{' '}
+              <span className="text-neon-pink font-semibold">collections</span>
             </p>
           </div>
 
@@ -149,7 +149,7 @@ export default function GalleryPage() {
           </div>
 
           {/* Gallery Grid */}
-          {topPhotos.length === 0 ? (
+          {allPhotos.length === 0 ? (
             <div className="glass-card p-12 text-center max-w-2xl mx-auto">
               <div className="text-6xl mb-6">🎯</div>
               <h3 className="text-2xl font-bold text-text-white mb-4">
@@ -169,7 +169,7 @@ export default function GalleryPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {topPhotos.map((photo) => {
+              {allPhotos.map((photo) => {
                 const badge = getScoreBadge(photo.score)
                 return (
                   <div

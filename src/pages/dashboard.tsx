@@ -6,6 +6,7 @@ import Image from 'next/image'
 import StatCard from '@/components/StatCard'
 import ScoreChart from '@/components/ScoreChart'
 import FavoriteButton from '@/components/FavoriteButton'
+import AddToCollectionModal from '@/components/AddToCollectionModal'
 
 interface DashboardStats {
   overview: {
@@ -49,6 +50,7 @@ export default function DashboardPage() {
   const router = useRouter()
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [loading, setLoading] = useState(true)
+  const [collectionModalPhoto, setCollectionModalPhoto] = useState<any>(null)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -296,13 +298,20 @@ export default function DashboardPage() {
                             {photo.score}/100
                           </div>
                           
-                          {/* Favori */}
-                          <div className="absolute top-2 right-2">
+                          {/* Actions */}
+                          <div className="absolute top-2 right-2 flex flex-col space-y-1">
                             <FavoriteButton
                               photoId={photo.id}
                               initialIsFavorite={photo.favoriteCount > 0}
                               size="sm"
                             />
+                            <button
+                              onClick={() => setCollectionModalPhoto(photo)}
+                              className="w-8 h-8 rounded-full bg-cosmic-glass backdrop-blur-sm text-white hover:bg-neon-cyan hover:text-black transition-all duration-200 flex items-center justify-center text-sm"
+                              title="Ajouter à une collection"
+                            >
+                              📁
+                            </button>
                           </div>
                         </div>
                         
@@ -410,6 +419,14 @@ export default function DashboardPage() {
           )}
         </div>
       </main>
+
+      {/* Modal Collection */}
+      {collectionModalPhoto && (
+        <AddToCollectionModal
+          photo={collectionModalPhoto}
+          onClose={() => setCollectionModalPhoto(null)}
+        />
+      )}
     </>
   )
 }
