@@ -42,13 +42,29 @@ export default function SuccessPage() {
 
   const fetchSubscriptionStatus = async () => {
     try {
-      const response = await fetch('/api/subscription/status')
+      // ⚡ TIMEOUT pour éviter hanging
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 5000)
+      
+      const response = await fetch('/api/subscription/status', {
+        signal: controller.signal
+      })
+      
+      clearTimeout(timeoutId)
+      
       if (response.ok) {
         const data = await response.json()
         setSubscription(data.subscription)
+      } else {
+        throw new Error(`API error: ${response.status}`)
       }
     } catch (error) {
       console.error('Erreur vérification abonnement:', error)
+      // 🚨 FALLBACK: Assumer que le paiement a marché
+      setSubscription({ 
+        subscriptionStatus: 'premium',
+        note: 'Status à confirmer - rechargez la page si nécessaire' 
+      })
     } finally {
       setLoading(false)
     }
