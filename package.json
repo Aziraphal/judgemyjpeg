@@ -10,7 +10,9 @@
     "lint": "next lint",
     "analyze": "ANALYZE=true npm run build",
     "typecheck": "tsc --noEmit",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "lighthouse": "lhci autorun",
+    "lighthouse:local": "lhci collect --url=http://localhost:3005 && lhci assert"
   },
   "dependencies": {
     "@google/generative-ai": "^0.1.3",
@@ -46,6 +48,7 @@
     "typescript": "^5"
   },
   "devDependencies": {
+    "@lhci/cli": "^0.10.0",
     "@next/bundle-analyzer": "^15.4.6",
     "@types/formidable": "^3.4.5",
     "@types/node": "^20",
