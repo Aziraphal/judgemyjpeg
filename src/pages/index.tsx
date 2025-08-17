@@ -212,6 +212,12 @@ export default function Home() {
                     📁 Collections
                   </button>
                   <button 
+                    onClick={() => window.location.href = '/blog'}
+                    className="btn-neon-secondary text-sm px-4 py-2"
+                  >
+                    📚 Guides Photo
+                  </button>
+                  <button 
                     onClick={() => window.location.href = '/pricing'}
                     className="btn-neon-cyan text-sm px-4 py-2"
                   >

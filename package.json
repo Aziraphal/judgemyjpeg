@@ -8,6 +8,7 @@
     "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "next lint",
+    "analyze": "ANALYZE=true npm run build",
     "typecheck": "tsc --noEmit",
     "postinstall": "prisma generate"
   },
@@ -45,6 +46,7 @@
     "typescript": "^5"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^15.4.6",
     "@types/formidable": "^3.4.5",
     "@types/node": "^20",
     "@types/react": "^18",

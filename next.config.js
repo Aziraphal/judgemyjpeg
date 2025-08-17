@@ -1,4 +1,7 @@
 const { withSentryConfig } = require("@sentry/nextjs");
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+})
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -66,7 +69,7 @@ const nextConfig = {
   },
 }
 
-module.exports = withSentryConfig(nextConfig, {
+module.exports = withBundleAnalyzer(withSentryConfig(nextConfig, {
   // For all available options, see:
   // https://github.com/getsentry/sentry-webpack-plugin#options
 
@@ -99,4 +102,4 @@ module.exports = withSentryConfig(nextConfig, {
   // https://docs.sentry.io/product/crons/
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
   automaticVercelMonitors: true,
-})
+}))
