@@ -309,6 +309,16 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
     🎨 SECTION "editingRecommendations" : Suggestions pour retoucher CETTE PHOTO ACTUELLE
     `
 
+    // DEBUG: Log pour vérifier le ton utilisé
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔍 ANALYSE DEBUG:', {
+        tone,
+        promptLength: fullPrompt.length,
+        promptStart: fullPrompt.substring(0, 150),
+        isExpertMode: tone === 'expert'
+      })
+    }
+
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [

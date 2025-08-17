@@ -61,9 +61,14 @@ cp .env.example .env
 # Générer le client Prisma
 npx prisma generate
 
-# Démarrer en développement (port 3001)
+# Démarrer en développement (port 3005 - JAMAIS 3000)
 npm run dev
 ```
+
+### ⚠️ **IMPORTANT - Configuration Ports**
+- **✅ Port autorisé** : 3005 (configuré dans next.config.js)
+- **❌ Port INTERDIT** : 3000 (conflits avec d'autres services)
+- **🔧 Modification port** : Via `next.config.js` ou variable d'environnement `PORT=3005`
 
 ## 🌐 Déploiement
 
@@ -137,7 +142,7 @@ src/
 - ✅ **Suppression Vercel** : Migration complète vers Railway
 - ✅ **Code cleanup** : Suppression fichiers doublons et dépendances inutiles
 - ✅ **Analyse en lot** : Temporairement désactivée (future MAJ)
-- ✅ **Port 3001** : Évitement des conflits de port
+- ✅ **Port 3005** : Évitement des conflits de port (JAMAIS 3000)
 
 ### 🔧 **Fonctionnalités Existantes**
 - ✅ **Mode Expert IA** : Analyse photographique niveau professionnel
