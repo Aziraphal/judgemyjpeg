@@ -34,10 +34,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       STRIPE_CONFIG.WEBHOOK_SECRET
     )
 
-    logger.info('Stripe webhook received', { eventType: event.type }, undefined, ip)
+    // 🚨 LOGGING CRITIQUE pour debugging
+    console.log('=== WEBHOOK STRIPE REÇU ===')
+    console.log('Event ID:', event.id)
+    console.log('Event Type:', event.type)
+    console.log('Event Created:', new Date(event.created * 1000).toISOString())
+    console.log('Data Object:', JSON.stringify(event.data.object, null, 2))
+    
+    logger.info('Stripe webhook received', { 
+      eventId: event.id,
+      eventType: event.type, 
+      created: event.created 
+    }, undefined, ip)
 
     // ✅ RÉPONDRE 200 IMMÉDIATEMENT (bonne pratique Stripe)
-    res.status(200).json({ received: true })
+    res.status(200).json({ received: true, eventId: event.id })
 
     // ⚡ TRAITEMENT ASYNCHRONE (évite timeouts)
     setImmediate(async () => {
@@ -133,7 +144,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             logger.warn('Unhandled webhook event', { eventType: event.type }, undefined, ip)
         }
       } catch (asyncError) {
-        logger.error('Async webhook processing error', asyncError, undefined, ip)
+        console.error('=== ERREUR TRAITEMENT WEBHOOK ASYNC ===')
+        console.error('Event ID:', event.id)
+        console.error('Event Type:', event.type)
+        console.error('Error:', asyncError)
+        logger.error('Async webhook processing error', { 
+          eventId: event.id, 
+          eventType: event.type, 
+          error: asyncError 
+        }, undefined, ip)
       }
     })
 
