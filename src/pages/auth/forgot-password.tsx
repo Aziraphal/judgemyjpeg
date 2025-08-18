@@ -24,7 +24,7 @@ export default function ForgotPassword() {
       if (response.ok) {
         setMessage({
           type: 'success',
-          text: 'Un email de réinitialisation a été envoyé si cette adresse existe dans notre système.'
+          text: 'Un email de réinitialisation a été envoyé si cette adresse existe dans le système.'
         })
         setEmail('')
       } else {

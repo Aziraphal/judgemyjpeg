@@ -147,12 +147,12 @@ export default function CookieConsent() {
                       Gestion des cookies
                     </h3>
                     <p className="text-xs sm:text-sm text-gray-200">
-                      Nous utilisons des cookies pour améliorer votre expérience et analyser notre trafic. 
+                      Ce site utilise des cookies pour améliorer votre expérience et analyser le trafic. 
                       Les cookies essentiels au fonctionnement sont automatiquement acceptés.
                     </p>
                     <p className="text-xs text-gray-300 mt-1 sm:mt-2">
-                      En continuant, vous acceptez notre utilisation des cookies. 
-                      Consultez notre{' '}
+                      En continuant, vous acceptez l'utilisation des cookies. 
+                      Consultez la{' '}
                       <Link href="/legal/cookies" className="text-blue-300 hover:underline">
                         politique de cookies
                       </Link>{' '}
@@ -249,7 +249,7 @@ export default function CookieConsent() {
                   </label>
                 </div>
                 <p className="text-sm text-gray-200 mb-2">
-                  Nous aident à comprendre comment vous utilisez le site pour l'améliorer.
+                  Aident à comprendre comment vous utilisez le site pour l'améliorer.
                 </p>
                 <details className="text-xs text-gray-300">
                   <summary className="cursor-pointer hover:text-gray-200">Voir les détails</summary>

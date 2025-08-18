@@ -73,7 +73,7 @@ export default function Contact() {
     <>
       <Head>
         <title>Contact & Support | Aide analyse photo IA - JudgeMyJPEG</title>
-        <meta name="description" content="Besoin d'aide avec l'analyse de vos photos ? Contactez notre support technique. Questions sur l'abonnement, bugs ou suggestions d'amélioration." />
+        <meta name="description" content="Besoin d'aide avec l'analyse de vos photos ? Contactez le support technique. Questions sur l'abonnement, bugs ou suggestions d'amélioration." />
       </Head>
 
       <main className="min-h-screen bg-cosmic-overlay particles-container relative">
@@ -87,7 +87,7 @@ export default function Contact() {
               </span>
             </h1>
             <p className="text-text-gray max-w-2xl mx-auto">
-              Une question ? Un problème ? Notre équipe est là pour vous aider !
+              Une question ? Un problème ? Je suis là pour vous aider !
             </p>
           </div>
 
@@ -150,7 +150,7 @@ export default function Contact() {
               {/* Formulaire de contact */}
               <div className="lg:col-span-2">
                 <div className="glass-card p-8">
-                  <h2 className="text-2xl font-bold text-neon-pink mb-6">💬 Nous Contacter</h2>
+                  <h2 className="text-2xl font-bold text-neon-pink mb-6">💬 Me Contacter</h2>
                   
                   {submitStatus === 'success' && (
                     <div className="mb-6 p-4 bg-green-500/10 border border-green-500/50 rounded-lg">
@@ -158,7 +158,7 @@ export default function Contact() {
                         <span className="text-green-400 text-xl">✅</span>
                         <div>
                           <h3 className="font-semibold text-green-400">Message envoyé !</h3>
-                          <p className="text-green-300 text-sm">Nous vous répondrons sous 2-6 heures en moyenne.</p>
+                          <p className="text-green-300 text-sm">Je vous répondrai sous 2-6 heures en moyenne.</p>
                         </div>
                       </div>
                     </div>
@@ -170,7 +170,7 @@ export default function Contact() {
                         <span className="text-red-400 text-xl">❌</span>
                         <div>
                           <h3 className="font-semibold text-red-400">Erreur d'envoi</h3>
-                          <p className="text-red-300 text-sm">Veuillez réessayer ou nous contacter par email.</p>
+                          <p className="text-red-300 text-sm">Veuillez réessayer ou me contacter par email.</p>
                         </div>
                       </div>
                     </div>
@@ -399,7 +399,7 @@ export default function Contact() {
                       <li>• Indiquez votre plan d'abonnement</li>
                     </ul>
                     <p className="text-neon-pink text-xs mt-4">
-                      ✨ Avant de nous contacter, consultez notre FAQ qui répond à 80% des questions !
+                      ✨ Avant de me contacter, consultez la FAQ qui répond à 80% des questions !
                     </p>
                   </div>
                 </div>

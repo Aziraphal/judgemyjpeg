@@ -19,11 +19,11 @@ const blogPosts: BlogPost[] = [
   {
     id: '1',
     title: 'Comment juger une bonne photo ? Guide complet 2025',
-    excerpt: 'Découvrez les 7 critères essentiels que notre IA utilise pour évaluer vos photos. Composition, éclairage, netteté... tout ce qu\'il faut savoir.',
+    excerpt: 'Découvrez les 7 critères essentiels que l'IA utilise pour évaluer vos photos. Composition, éclairage, netteté... tout ce qu\'il faut savoir.',
     content: `
 # Comment juger une bonne photo ? Guide complet 2025
 
-Vous vous demandez ce qui fait qu'une photo est "bonne" ? Notre IA analyse **7 critères techniques** pour donner une note objective sur 100.
+Vous vous demandez ce qui fait qu'une photo est "bonne" ? L'IA analyse **7 critères techniques** pour donner une note objective sur 100.
 
 ## 1. Composition (15 points)
 - **Règle des tiers** : Placement des éléments sur les lignes de force
@@ -61,7 +61,7 @@ Vous vous demandez ce qui fait qu'une photo est "bonne" ? Notre IA analyse **7 c
 - **Message** : Intention claire
 
 ### Astuce Pro 💡
-Notre IA peut analyser votre photo en **mode professionnel** pour des conseils techniques précis, ou en **mode cassant** pour un retour humoristique mais constructif !
+L'IA peut analyser votre photo en **mode professionnel** pour des conseils techniques précis, ou en **mode cassant** pour un retour humoristique mais constructif !
 
 [Analyser ma photo maintenant →](/analyser-photo)
     `,
@@ -74,11 +74,11 @@ Notre IA peut analyser votre photo en **mode professionnel** pour des conseils t
   {
     id: '2', 
     title: 'Top 5 erreurs en photo que l\'IA repère instantanément',
-    excerpt: 'Ces erreurs communes ruinent vos photos ! Notre intelligence artificielle les détecte en quelques secondes. Apprenez à les éviter.',
+    excerpt: 'Ces erreurs communes ruinent vos photos ! L'intelligence artificielle les détecte en quelques secondes. Apprenez à les éviter.',
     content: `
 # Top 5 erreurs en photo que l'IA repère instantanément
 
-Notre IA analyse **des milliers de photos** chaque mois. Voici les 5 erreurs les plus fréquentes qu'elle détecte :
+L'IA analyse **des milliers de photos** chaque mois. Voici les 5 erreurs les plus fréquentes qu'elle détecte :
 
 ## 1. 🎯 Centre mort : Sujet au milieu
 **Problème** : Placer systématiquement le sujet au centre
@@ -101,7 +101,7 @@ Notre IA analyse **des milliers de photos** chaque mois. Voici les 5 erreurs les
 **Solution** : Règle 1/focale ou utilisez un trépied
 
 ### Le saviez-vous ? 🤖
-Notre IA peut analyser ces défauts en **moins de 30 secondes** et vous proposer des corrections spécifiques !
+L'IA peut analyser ces défauts en **moins de 30 secondes** et vous proposer des corrections spécifiques !
 
 [Voir nos tarifs →](/tarifs)
     `,
@@ -118,7 +118,7 @@ Notre IA peut analyser ces défauts en **moins de 30 secondes** et vous proposer
     content: `
 # Pourquoi utiliser une IA pour évaluer ses photos JPEG ?
 
-L'**intelligence artificielle** transforme la manière dont nous évaluons nos photos. Voici pourquoi c'est révolutionnaire :
+L'**intelligence artificielle** transforme la manière d'évaluer les photos. Voici pourquoi c'est révolutionnaire :
 
 ## 🎯 Objectivité totale
 - **Sans biais personnel** : L'IA juge selon des critères techniques purs

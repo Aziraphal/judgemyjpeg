@@ -83,7 +83,7 @@ export default function SignUpPage() {
             <div className="text-6xl mb-4">📧</div>
             <h2 className="text-2xl font-bold text-neon-cyan mb-4">Vérifiez votre email</h2>
             <p className="text-text-gray mb-6">
-              Nous avons envoyé un lien de vérification à <br/>
+              Un lien de vérification a été envoyé à <br/>
               <span className="text-neon-pink font-semibold">{formData.email}</span>
             </p>
             <div className="bg-cosmic-glass/50 border border-cosmic-glassborder rounded-lg p-4 mb-6">

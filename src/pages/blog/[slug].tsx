@@ -20,18 +20,18 @@ const blogPosts: BlogPost[] = [
   {
     id: '1',
     title: 'Comment juger une bonne photo ? Guide complet 2025',
-    excerpt: 'Découvrez les 7 critères essentiels que notre IA utilise pour évaluer vos photos. Composition, éclairage, netteté... tout ce qu\'il faut savoir.',
+    excerpt: 'Découvrez les 7 critères essentiels que l'IA utilise pour évaluer vos photos. Composition, éclairage, netteté... tout ce qu\'il faut savoir.',
     content: `
 # Comment juger une bonne photo ? Guide complet 2025
 
-Vous vous demandez ce qui fait qu'une photo est "bonne" ? Notre IA analyse **7 critères techniques** pour donner une note objective sur 100.
+Vous vous demandez ce qui fait qu'une photo est "bonne" ? L'IA analyse **7 critères techniques** pour donner une note objective sur 100.
 
 ## 1. Composition (15 points)
 - **Règle des tiers** : Placement des éléments sur les lignes de force
 - **Équilibre visuel** : Répartition harmonieuse des masses  
 - **Cadrage** : Choix du format et des limites de l'image
 
-La composition est la **fondation** de toute bonne photo. Notre IA vérifie automatiquement :
+La composition est la **fondation** de toute bonne photo. L'IA vérifie automatiquement :
 - Position du sujet selon la règle des tiers
 - Équilibre des masses visuelles
 - Utilisation créative des lignes directrices
@@ -68,9 +68,9 @@ L'éclairage fait **toute la différence**. Une photo techniquement parfaite peu
 - **Contexte** : Éléments narratifs
 - **Message** : Intention claire
 
-### Comment notre IA analyse-t-elle tout ça ?
+### Comment l'IA analyse-t-elle tout ça ?
 
-Notre **intelligence artificielle** a été entraînée sur plus de **100 000 photos** évaluées par des professionnels. Elle peut :
+Cette **intelligence artificielle** a été entraînée sur plus de **100 000 photos** évaluées par des professionnels. Elle peut :
 
 1. **Détecter automatiquement** les défauts techniques
 2. **Mesurer l'impact émotionnel** grâce à l'analyse sémantique
@@ -104,7 +104,7 @@ Notre **intelligence artificielle** a été entraînée sur plus de **100 000 ph
 - Créativité: 12/15 (angle original)
 
 ### Astuce Pro 💡
-Analysez **plusieurs photos similaires** pour identifier vos patterns d'erreur. Notre IA en mode batch peut comparer jusqu'à 5 photos simultanément !
+Analysez **plusieurs photos similaires** pour identifier vos patterns d'erreur. L'IA en mode batch peut comparer jusqu'à 5 photos simultanément !
 
 **Prêt à tester ?** Uploadez votre photo et choisissez votre mode d'analyse.
     `,
@@ -117,11 +117,11 @@ Analysez **plusieurs photos similaires** pour identifier vos patterns d'erreur. 
   {
     id: '2', 
     title: 'Top 5 erreurs en photo que l\'IA repère instantanément',
-    excerpt: 'Ces erreurs communes ruinent vos photos ! Notre intelligence artificielle les détecte en quelques secondes. Apprenez à les éviter.',
+    excerpt: 'Ces erreurs communes ruinent vos photos ! L'intelligence artificielle les détecte en quelques secondes. Apprenez à les éviter.',
     content: `
 # Top 5 erreurs en photo que l'IA repère instantanément
 
-Après avoir analysé **plus de 50 000 photos**, notre IA a identifié les erreurs les plus fréquentes. Ces fautes techniques font chuter votre note de façon drastique !
+Après avoir analysé **plus de 50 000 photos**, l'IA a identifié les erreurs les plus fréquentes. Ces fautes techniques font chuter votre note de façon drastique !
 
 ## 1. 🎯 Centre mort : Sujet systématiquement au milieu
 
@@ -159,7 +159,7 @@ Après avoir analysé **plus de 50 000 photos**, notre IA a identifié les erreu
 
 **Le problème** : Ligne d'horizon inclinée par négligence.
 
-Notre IA mesure automatiquement l'inclinaison et pénalise **sévèrement** au-delà de 2° :
+L'IA mesure automatiquement l'inclinaison et pénalise **sévèrement** au-delà de 2° :
 - 1-2° : -2 points  
 - 3-5° : -5 points
 - 5°+ : -10 points (catastrophique)
@@ -196,7 +196,7 @@ Notre IA mesure automatiquement l'inclinaison et pénalise **sévèrement** au-d
 - Smartphone → 1/60s minimum
 
 **Algorithme de détection IA** :
-Notre système analyse la netteté pixel par pixel et détecte :
+Le système analyse la netteté pixel par pixel et détecte :
 - Micro-flous invisibles à l'œil nu
 - Flou directionnel (mouvement caméra)
 - Flou de mise au point vs flou de mouvement
@@ -224,7 +224,7 @@ Votre photo est comparée à :
 
 ### Le saviez-vous ? 🤖
 
-Notre IA peut détecter :
+L'IA peut détecter :
 - **L'appareil utilisé** (smartphone vs reflex)
 - **Les retouches** (naturel vs sur-traité)  
 - **Le niveau du photographe** (débutant vs expert)
@@ -234,7 +234,7 @@ Notre IA peut détecter :
 
 **Challenge** : Envoyez 3 photos différentes et voyez si vous faites les mêmes erreurs !
 
-Notre **mode batch** peut analyser jusqu'à 5 photos simultanément pour identifier vos patterns.
+Le **mode batch** peut analyser jusqu'à 5 photos simultanément pour identifier vos patterns.
     `,
     publishedAt: '2025-01-16',
     readTime: '6 min', 
@@ -282,7 +282,7 @@ L'**intelligence artificielle** révolutionne l'apprentissage de la photographie
 ## 📈 Apprentissage personnalisé et progression mesurable
 
 ### Suivi de progression unique
-Notre IA suit **votre évolution personnelle** :
+L'IA suit **votre évolution personnelle** :
 
 **Semaine 1** : Score moyen 56/100
 - Faiblesse : Composition (8/15)
@@ -304,7 +304,7 @@ L'IA s'adapte à **votre niveau** :
 
 ## 🔍 Analyse technique ultra-poussée
 
-### Ce que voit notre IA (impossible pour l'œil humain)
+### Ce que voit l'IA (impossible pour l'œil humain)
 
 **Analyse pixel-level** :
 - Netteté : Mesure MTF précise au pixel
@@ -339,7 +339,7 @@ L'IA s'adapte à **votre niveau** :
 
 ## 🚀 Technologies d'avant-garde
 
-### Notre stack IA
+### La stack IA
 - **Vision Computer** : GPT-4 Vision fine-tuné  
 - **Base de données** : 100k photos professionnelles
 - **Scoring algorithm** : 7 critères pondérés
@@ -566,7 +566,7 @@ export default function BlogPostPage({ post }: BlogPostPageProps) {
               Envie de tester ces conseils ?
             </h3>
             <p className="text-text-gray mb-6">
-              Analysez vos photos avec notre IA et mettez en pratique ces techniques
+              Analysez vos photos avec l'IA et mettez en pratique ces techniques
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/analyze" className="btn-neon-pink">

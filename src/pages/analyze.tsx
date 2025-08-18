@@ -135,7 +135,7 @@ export default function AnalyzePage() {
     <>
       <Head>
         <title>Analyser une photo | IA analyse JPEG - JudgeMyJPEG</title>
-        <meta name="description" content="Faites analyser vos photos par notre IA spécialisée. Note sur 100, conseils techniques et améliorations personnalisées. Mode professionnel ou humoristique." />
+        <meta name="description" content="Faites analyser vos photos par une IA spécialisée. Note sur 100, conseils techniques et améliorations personnalisées. Mode professionnel ou humoristique." />
       </Head>
 
       <main className={`min-h-screen particles-container relative transition-all duration-1000 ${
