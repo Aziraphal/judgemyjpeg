@@ -85,9 +85,14 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <a href="mailto:contact.judgemyjpeg@gmail.com" className="text-text-muted hover:text-neon-cyan transition-colors">
-                  Email Support
-                </a>
+                <Link href="/ressources" className="text-text-muted hover:text-neon-cyan transition-colors">
+                  Ressources Gratuites
+                </Link>
+              </li>
+              <li>
+                <Link href="/partenariats" className="text-text-muted hover:text-neon-cyan transition-colors">
+                  Partenariats
+                </Link>
               </li>
             </ul>
           </div>
