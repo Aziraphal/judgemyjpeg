@@ -10,6 +10,7 @@ local LrView = import 'LrView'
 local LrBinding = import 'LrBinding'
 local LrHttp = import 'LrHttp'
 local LrFunctionContext = import 'LrFunctionContext'
+local LrColor = import 'LrColor'
 
 -- Informations du plugin
 local function showPluginInfo()

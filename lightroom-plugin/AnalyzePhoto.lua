@@ -18,6 +18,8 @@ local LrFileUtils = import 'LrFileUtils'
 local LrPathUtils = import 'LrPathUtils'
 local LrBase64 = import 'LrBase64'
 local LrPhotos = import 'LrPhotos'
+local LrFunctionContext = import 'LrFunctionContext'
+local LrColor = import 'LrColor'
 
 -- Configuration
 local JUDGEMYJPEG_API_URL = 'https://judgemyjpeg.fr/api/photos/analyze'

@@ -13,6 +13,7 @@ local LrLogger = import 'LrLogger'
 local LrHttp = import 'LrHttp'
 local LrTasks = import 'LrTasks'
 local LrFunctionContext = import 'LrFunctionContext'
+local LrColor = import 'LrColor'
 
 local logger = LrLogger('JudgeMyJPEG-Settings')
 

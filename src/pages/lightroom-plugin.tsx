@@ -74,7 +74,7 @@ export default function LightroomPluginPage() {
   ]
 
   const requirements = [
-    'Adobe Lightroom Classic CC 2015 ou plus récent',
+    'Adobe Lightroom Classic (payant ~33€/mois) - version 2015+',
     'Compte JudgeMyJPEG (gratuit avec 3 analyses/mois)',
     'Connexion internet pour les analyses',
     'Espace disque : 2MB pour le plugin'
@@ -87,7 +87,7 @@ export default function LightroomPluginPage() {
     },
     {
       question: 'Fonctionne-t-il avec Lightroom CC ?',
-      answer: 'Le plugin est conçu pour Lightroom Classic. Lightroom CC (cloud) n\'est pas supporté pour le moment.'
+      answer: 'Non, le plugin fonctionne uniquement avec Lightroom Classic (payant ~33€/mois). Lightroom CC (version cloud ~12€/mois) ne supporte aucun plugin externe.'
     },
     {
       question: 'Mes photos sont-elles envoyées sur internet ?',
@@ -176,15 +176,29 @@ export default function LightroomPluginPage() {
               <div className="text-6xl">🔧</div>
             </div>
             
+            {/* Avertissement important */}
+            <div className="glass-card p-4 max-w-2xl mx-auto mb-8 border-l-4 border-yellow-400">
+              <div className="flex items-center space-x-3">
+                <span className="text-3xl">⚠️</span>
+                <div className="text-left">
+                  <div className="text-yellow-400 font-semibold text-lg">Lightroom Classic requis</div>
+                  <div className="text-text-gray text-sm">
+                    Ce plugin fonctionne uniquement avec <strong>Lightroom Classic</strong> (environ 33€/mois). 
+                    <br />Il n'est <strong>pas compatible</strong> avec Lightroom CC (version cloud).
+                  </div>
+                </div>
+              </div>
+            </div>
+            
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               <span className="text-transparent bg-gradient-to-r from-neon-pink to-neon-cyan bg-clip-text">
-                Plugin Lightroom
+                Plugin Lightroom Classic
               </span>
             </h1>
             
             <p className="text-xl md:text-2xl text-text-gray mb-8 max-w-3xl mx-auto">
               Analysez vos photos avec l'IA <span className="text-neon-cyan font-semibold">JudgeMyJPEG</span> directement depuis 
-              <span className="text-neon-pink font-semibold"> Adobe Lightroom</span>. 
+              <span className="text-neon-pink font-semibold"> Adobe Lightroom Classic</span>. 
               Workflow natif, métadonnées automatiques, analyse par lot.
             </p>
 
