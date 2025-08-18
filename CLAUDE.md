@@ -137,6 +137,12 @@ npm run lint            # ESLint (désactivé en build)
 - Optimisation bundle size
 - Monitoring performance en prod
 
+### 📸 **Lightroom Plugin (Plus facile)**
+- **Technologie** : Lua scripting (SDK officiel Adobe)
+- **Difficulté** : ⭐⭐⭐ (Modérée)
+- **Temps de dev** : 2-3 semaines
+- **Avantages** : API stable, documentation complète
+
 ## 📝 **Informations Business**
 - **Propriétaire** : Cyril Paquier (CodeCraft Plus)
 - **SIRET** : 98958739900019
