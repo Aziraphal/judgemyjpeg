@@ -56,6 +56,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             name,
             description: description || null,
             color: color || '#FF006E',
+          },
+          include: {
+            items: {
+              include: {
+                photo: true
+              },
+              orderBy: {
+                photo: {
+                  score: 'desc'
+                }
+              }
+            },
+            _count: {
+              select: { items: true }
+            }
           }
         })
 

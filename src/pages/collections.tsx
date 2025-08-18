@@ -83,19 +83,19 @@ export default function CollectionsPage() {
         if (selectedCollection && selectedCollection.id === collectionId) {
           setSelectedCollection(prev => prev ? {
             ...prev,
-            items: prev.items.filter(item => item.photo.id !== photoId),
-            _count: { items: prev._count.items - 1 }
+            items: (prev.items || []).filter(item => item.photo.id !== photoId),
+            _count: { items: (prev._count?.items || 0) - 1 }
           } : null)
         }
 
         // Mettre à jour la liste des collections
         setCollections(prev => 
-          prev.map(col => 
+          (prev || []).map(col => 
             col.id === collectionId 
               ? { 
                   ...col, 
-                  _count: { items: col._count.items - 1 },
-                  items: col.items.filter(item => item.photo.id !== photoId)
+                  _count: { items: (col._count?.items || 0) - 1 },
+                  items: (col.items || []).filter(item => item.photo.id !== photoId)
                 }
               : col
           )
