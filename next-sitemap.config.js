@@ -2,6 +2,7 @@
 module.exports = {
   siteUrl: 'https://www.judgemyjpeg.fr',
   generateRobotsTxt: true,
+  generateIndexSitemap: false, // Génère un seul fichier sitemap.xml au lieu d'un index
   additionalPaths: async (config) => [
     // URLs françaises SEO-friendly
     { loc: '/analyser-photo', priority: 1.0, changefreq: 'daily' },
