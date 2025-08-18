@@ -64,6 +64,7 @@ model User {
   sessions             Session[]
   userSessions         UserSession[]
   userPreferences      UserPreferences?
+  reports              Report[]
 
   @@index([subscriptionStatus])
   @@index([createdAt])
@@ -110,6 +111,7 @@ model Photo {
   potentialScore  Float?
   collectionItems CollectionItem[]
   favorites       Favorite[]
+  reports         Report[]
   user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, createdAt])
@@ -198,4 +200,28 @@ model UserSession {
   @@index([ipAddress, createdAt])
   @@index([expiresAt])
   @@index([lastActivity])
+}
+
+model Report {
+  id          String   @id @default(cuid())
+  reporterId  String
+  photoId     String?
+  photoUrl    String?
+  reason      String   // nudity, violence, hate, illegal, harassment, privacy, spam, other
+  details     String?
+  status      String   @default("pending") // pending, reviewed, resolved, dismissed
+  reporterIp  String?
+  reviewedBy  String?
+  reviewedAt  DateTime?
+  resolution  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  reporter    User     @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+  photo       Photo?   @relation(fields: [photoId], references: [id], onDelete: Cascade)
+
+  @@index([reporterId, createdAt])
+  @@index([status, createdAt])
+  @@index([reason, createdAt])
+  @@index([reporterIp, createdAt])
 }

@@ -88,16 +88,35 @@ export default function Terms() {
 
               <section>
                 <h2 className="text-2xl font-bold text-neon-cyan mb-4">4. Restrictions d'Usage</h2>
-                <div className="text-text-gray space-y-3">
-                  <p>Il est strictement interdit de :</p>
+                <div className="text-text-gray space-y-4">
+                  <p><strong className="text-red-400">⚠️ AVERTISSEMENT :</strong> Le non-respect de ces restrictions entraîne la suspension immédiate du compte et peut faire l'objet de poursuites légales.</p>
+                  
+                  <h3 className="text-lg font-semibold text-neon-pink mt-6">🚫 Contenus strictement interdits</h3>
                   <ul className="list-disc list-inside ml-4 space-y-2">
-                    <li>Uploader des images pornographiques, violentes ou illégales</li>
-                    <li>Uploader des images dont vous ne détenez pas les droits</li>
-                    <li>Utiliser le service pour harceler ou nuire à autrui</li>
-                    <li>Tenter de contourner les limitations techniques</li>
-                    <li>Faire du reverse engineering de notre IA</li>
-                    <li>Utiliser le service à des fins de spam ou de phishing</li>
-                    <li>Surcharger nos serveurs (plus de 100 requêtes/minute)</li>
+                    <li><strong>Nudité et contenu sexuel</strong> : Photos de nudité partielle ou totale, contenu érotique, pornographie</li>
+                    <li><strong>Violence et gore</strong> : Scènes de violence, torture, blessures graphiques, cadavres, suicide</li>
+                    <li><strong>Contenu illégal</strong> : Drogues, armes, activités criminelles, contrefaçons, fraude</li>
+                    <li><strong>Harcèlement et haine</strong> : Contenu raciste, discriminatoire, incitation à la violence, harcèlement</li>
+                    <li><strong>Mineurs en danger</strong> : Toute image compromettante de personnes mineures</li>
+                    <li><strong>Vie privée</strong> : Photos prises sans consentement, surveillance illégale</li>
+                    <li><strong>Propriété intellectuelle</strong> : Images protégées par des droits d'auteur sans autorisation</li>
+                  </ul>
+                  
+                  <h3 className="text-lg font-semibold text-neon-pink mt-6">🔧 Restrictions techniques</h3>
+                  <ul className="list-disc list-inside ml-4 space-y-2">
+                    <li>Faire du reverse engineering de l'IA</li>
+                    <li>Tenter de contourner les limitations (rate limiting, quotas)</li>
+                    <li>Automatisation massive ou scraping</li>
+                    <li>Surcharge intentionnelle des serveurs</li>
+                    <li>Utilisation de proxies pour multiplier les comptes gratuits</li>
+                  </ul>
+                  
+                  <h3 className="text-lg font-semibold text-neon-pink mt-6">⚖️ Détection automatique</h3>
+                  <p>Notre système utilise l'OpenAI Moderation API et des algorithmes de détection pour identifier automatiquement les contenus interdits. Les violations sont enregistrées et peuvent entraîner :</p>
+                  <ul className="list-disc list-inside ml-4 space-y-1">
+                    <li>Suspension immédiate du compte (1er avertissement : 24h, 2ème : 7 jours, 3ème : définitive)</li>
+                    <li>Signalement aux autorités compétentes (contenu illégal)</li>
+                    <li>Conservation des logs à des fins légales (conformément à la loi française)</li>
                   </ul>
                 </div>
               </section>

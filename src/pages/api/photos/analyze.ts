@@ -10,6 +10,7 @@ import { readFileSync } from 'fs'
 import { validateUpload } from '@/lib/file-validation'
 import { AuditLogger } from '@/lib/audit-trail'
 import { cacheService } from '@/lib/cache-service'
+import { moderateImage, ModerationResult } from '@/lib/moderation'
 
 export const config = {
   api: {
@@ -52,6 +53,42 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
 
     // Lire le fichier pour validation
     let fileBuffer = readFileSync(file.filepath)
+    
+    // 🛡️ MODÉRATION CONTENU
+    try {
+      const sharp = require('sharp')
+      const imageMetadata = await sharp(fileBuffer).metadata()
+      
+      const moderationResult = await moderateImage(
+        file.originalFilename || 'photo.jpg',
+        imageMetadata,
+        imageMetadata.width,
+        imageMetadata.height
+      )
+      
+      if (moderationResult.flagged) {
+        // Log de sécurité
+        logger.warn('Content blocked by moderation', {
+          reason: moderationResult.reason,
+          categories: Object.keys(moderationResult.categories).filter(
+            key => moderationResult.categories[key as keyof typeof moderationResult.categories]
+          ),
+          filename: file.originalFilename,
+          ip
+        }, req.user.id, ip)
+        
+        // Note: Audit trail déjà dans les logs ci-dessus
+        
+        return res.status(400).json({
+          error: 'Contenu non autorisé',
+          reason: 'Cette image ne respecte pas nos conditions d\'utilisation.',
+          details: moderationResult.reason
+        })
+      }
+    } catch (error) {
+      logger.error('Moderation system error', { error: error instanceof Error ? error.message : 'Unknown error' }, req.user.id, ip)
+      // Continuer en cas d'erreur de modération pour ne pas bloquer le service
+    }
     
     // COMPRESSION SERVEUR AUTOMATIQUE si >4MB
     if (fileBuffer.length > 4 * 1024 * 1024) {

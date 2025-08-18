@@ -5,6 +5,7 @@ import { analyzePhoto, PhotoAnalysis } from '@/services/openai'
 import { BatchAnalyzer } from '@/services/batch-analyzer'
 import { PrismaClient } from '@prisma/client'
 import { rateLimit } from '@/lib/rate-limit'
+import { moderateText } from '@/lib/moderation'
 
 const prisma = new PrismaClient()
 const batchAnalyzer = new BatchAnalyzer()
@@ -121,6 +122,19 @@ export default async function handler(
     for (const image of images) {
       if (!image.data || !image.id || !image.filename) {
         return res.status(400).json({ error: 'Données d\'image invalides' })
+      }
+      
+      // 🛡️ Modération du nom de fichier
+      try {
+        const moderationResult = await moderateText(image.filename)
+        if (moderationResult.flagged) {
+          console.warn(`🚨 Contenu bloqué: ${image.filename} - ${moderationResult.reason}`)
+          return res.status(400).json({ 
+            error: `Contenu non autorisé: "${image.filename}" - ${moderationResult.reason}`
+          })
+        }
+      } catch (moderationError) {
+        console.error('Erreur modération:', moderationError)
       }
       
       // Vérifier la taille base64 (approximatif)
