@@ -17,9 +17,10 @@ interface AnalysisResultProps {
   }
   analysis: PhotoAnalysis
   tone?: AnalysisTone
+  onNewAnalysis?: () => void
 }
 
-export default function AnalysisResult({ photo, analysis, tone = 'professional' }: AnalysisResultProps) {
+export default function AnalysisResult({ photo, analysis, tone = 'professional', onNewAnalysis }: AnalysisResultProps) {
   const { data: session } = useSession()
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false)
   
@@ -596,6 +597,21 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional' 
         analysis={analysis}
         tone={tone}
       />
+
+      {/* Bouton Nouvelle Analyse (Mobile uniquement) */}
+      {onNewAnalysis && (
+        <div className="block md:hidden mt-8 pt-6 border-t border-cosmic-glassborder">
+          <button
+            onClick={onNewAnalysis}
+            className="w-full btn-neon-pink text-lg py-4 font-semibold"
+          >
+            📸 Analyser une nouvelle photo
+          </button>
+          <p className="text-text-muted text-center text-sm mt-2">
+            Testez une autre photo pour comparer vos résultats
+          </p>
+        </div>
+      )}
 
       {/* Modal ajouter à collection */}
       <AddToCollectionModal

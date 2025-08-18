@@ -24,6 +24,7 @@ export default function AnalyzePage() {
   const [selectedLanguage, setSelectedLanguage] = useState<AnalysisLanguage>('fr')
   const [isUploading, setIsUploading] = useState(false)
   const [userLevel, setUserLevel] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner')
+  const [showAdvancedOptions, setShowAdvancedOptions] = useState(false)
   
   // Tutorial système
   const { isActive: tutorialActive, hasCompleted: tutorialCompleted, startTutorial, completeTutorial } = useTutorial('analyze-page')
@@ -177,44 +178,55 @@ export default function AnalyzePage() {
 
             {/* Actions utilisateur */}
             <div className="flex items-center space-x-2">
-              {/* Sélecteur de langue */}
-              <RichTooltip 
-                title="Langue d'analyse"
-                description="Choisissez la langue dans laquelle vous souhaitez recevoir votre analyse détaillée"
-                icon="🌍"
+              {/* Bouton Options avancées sur mobile */}
+              <button
+                onClick={() => setShowAdvancedOptions(!showAdvancedOptions)}
+                className="md:hidden btn-neon-secondary text-sm px-3 py-2"
               >
-                <div className="relative" data-tutorial="language-selector">
-                  <select
-                    value={selectedLanguage}
-                    onChange={(e) => setSelectedLanguage(e.target.value as AnalysisLanguage)}
-                    className="btn-neon-secondary text-sm appearance-none pr-8 cursor-pointer"
-                    style={{
-                      color: 'white',
-                      backgroundColor: 'rgba(15, 23, 42, 0.9)'
-                    }}
-                  >
-                    <option value="fr" style={{ backgroundColor: '#1e293b', color: 'white' }}>🇫🇷 Français</option>
-                    <option value="en" style={{ backgroundColor: '#1e293b', color: 'white' }}>🇬🇧 English</option>
-                    <option value="es" style={{ backgroundColor: '#1e293b', color: 'white' }}>🇪🇸 Español</option>
-                    <option value="de" style={{ backgroundColor: '#1e293b', color: 'white' }}>🇩🇪 Deutsch</option>
-                    <option value="it" style={{ backgroundColor: '#1e293b', color: 'white' }}>🇮🇹 Italiano</option>
-                    <option value="pt" style={{ backgroundColor: '#1e293b', color: 'white' }}>🇵🇹 Português</option>
-                  </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <span className="text-text-gray">▼</span>
-                  </div>
-                </div>
-              </RichTooltip>
+                ⚙️
+              </button>
 
-              {/* Bouton tutorial */}
-              <ContextualTooltip content={tutorialCompleted ? "Relancer le tutoriel" : "Démarrer le tutoriel"}>
-                <button
-                  onClick={startTutorial}
-                  className="btn-neon-secondary text-sm px-3 py-2"
+              {/* Options toujours visibles sur desktop */}
+              <div className="hidden md:flex items-center space-x-2">
+                {/* Sélecteur de langue */}
+                <RichTooltip 
+                  title="Langue d'analyse"
+                  description="Choisissez la langue dans laquelle vous souhaitez recevoir votre analyse détaillée"
+                  icon="🌍"
                 >
-                  💡
-                </button>
-              </ContextualTooltip>
+                  <div className="relative" data-tutorial="language-selector">
+                    <select
+                      value={selectedLanguage}
+                      onChange={(e) => setSelectedLanguage(e.target.value as AnalysisLanguage)}
+                      className="btn-neon-secondary text-sm appearance-none pr-8 cursor-pointer"
+                      style={{
+                        color: 'white',
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)'
+                      }}
+                    >
+                      <option value="fr" style={{ backgroundColor: '#1e293b', color: 'white' }}>🇫🇷 Français</option>
+                      <option value="en" style={{ backgroundColor: '#1e293b', color: 'white' }}>🇬🇧 English</option>
+                      <option value="es" style={{ backgroundColor: '#1e293b', color: 'white' }}>🇪🇸 Español</option>
+                      <option value="de" style={{ backgroundColor: '#1e293b', color: 'white' }}>🇩🇪 Deutsch</option>
+                      <option value="it" style={{ backgroundColor: '#1e293b', color: 'white' }}>🇮🇹 Italiano</option>
+                      <option value="pt" style={{ backgroundColor: '#1e293b', color: 'white' }}>🇵🇹 Português</option>
+                    </select>
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                      <span className="text-text-gray">▼</span>
+                    </div>
+                  </div>
+                </RichTooltip>
+
+                {/* Bouton tutorial */}
+                <ContextualTooltip content={tutorialCompleted ? "Relancer le tutoriel" : "Démarrer le tutoriel"}>
+                  <button
+                    onClick={startTutorial}
+                    className="btn-neon-secondary text-sm px-3 py-2"
+                  >
+                    💡
+                  </button>
+                </ContextualTooltip>
+              </div>
               
               {result && (
                 <button
@@ -225,6 +237,49 @@ export default function AnalyzePage() {
                 </button>
               )}
             </div>
+
+            {/* Options avancées sur mobile (pliables) */}
+            {showAdvancedOptions && (
+              <div className="md:hidden mt-4 p-4 bg-cosmic-glass border border-cosmic-glassborder rounded-lg">
+                <div className="flex justify-between items-center mb-3">
+                  <h3 className="text-neon-cyan font-semibold">⚙️ Options avancées</h3>
+                  <button
+                    onClick={() => setShowAdvancedOptions(false)}
+                    className="text-text-muted hover:text-white transition-colors"
+                  >
+                    ✕
+                  </button>
+                </div>
+                
+                {/* Sélecteur de langue mobile */}
+                <div className="mb-4">
+                  <label className="block text-text-white text-sm mb-2">🌍 Langue d'analyse</label>
+                  <select
+                    value={selectedLanguage}
+                    onChange={(e) => setSelectedLanguage(e.target.value as AnalysisLanguage)}
+                    className="w-full bg-cosmic-glass border border-cosmic-glassborder rounded text-text-white p-2"
+                  >
+                    <option value="fr">🇫🇷 Français</option>
+                    <option value="en">🇬🇧 English</option>
+                    <option value="es">🇪🇸 Español</option>
+                    <option value="de">🇩🇪 Deutsch</option>
+                    <option value="it">🇮🇹 Italiano</option>
+                    <option value="pt">🇵🇹 Português</option>
+                  </select>
+                </div>
+
+                {/* Bouton tutorial mobile */}
+                <button
+                  onClick={() => {
+                    startTutorial()
+                    setShowAdvancedOptions(false)
+                  }}
+                  className="w-full btn-neon-secondary text-sm py-3"
+                >
+                  💡 {tutorialCompleted ? "Relancer le tutoriel" : "Démarrer le tutoriel"}
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Contenu principal */}
@@ -334,7 +389,17 @@ export default function AnalyzePage() {
               </div>
             </div>
           ) : (
-            <AnalysisResult photo={result.photo} analysis={result.analysis} tone={selectedTone} />
+            <AnalysisResult 
+              photo={result.photo} 
+              analysis={result.analysis} 
+              tone={selectedTone}
+              onNewAnalysis={() => {
+                setResult(null)
+                setIsUploading(false)
+                // Scroll vers le haut pour l'upload
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+              }}
+            />
           )}
         </div>
 

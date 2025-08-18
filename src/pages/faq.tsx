@@ -225,6 +225,73 @@ export default function FAQ() {
       question: 'Puis-je utiliser JudgeMyJPEG à des fins commerciales ?',
       answer: 'Oui pour les plans payants ! Premium/Lifetime : usage commercial autorisé, analyses pour clients, intégration en agence photo. Plan gratuit : usage personnel uniquement. Les analyses générées vous appartiennent. Consultez nos CGU pour les détails.',
       tags: ['commercial', 'professionnel', 'licence', 'usage']
+    },
+
+    // Nouvelles questions - Modération et sécurité
+    {
+      id: '30',
+      category: 'security',
+      question: 'Quels types de photos sont interdites ?',
+      answer: 'Pour votre sécurité et respecter les lois : nudité, contenu sexuel, violence, gore, contenu illégal (drogues, armes), harcèlement, discrimination, photos prises sans consentement. Notre système détecte automatiquement ces contenus via OpenAI Moderation API.',
+      important: true,
+      tags: ['modération', 'interdit', 'sécurité', 'contenu']
+    },
+    {
+      id: '31',
+      category: 'security',
+      question: 'Que se passe-t-il si j\'uploade un contenu interdit ?',
+      answer: 'Le contenu est automatiquement bloqué avant analyse. 1er avertissement : 24h de suspension. 2ème : 7 jours. 3ème : suspension définitive. Contenu illégal = signalement aux autorités + conservation des logs (loi française).',
+      important: true,
+      tags: ['sanctions', 'suspension', 'modération', 'avertissement']
+    },
+    {
+      id: '32',
+      category: 'security',
+      question: 'Comment signaler un contenu inapproprié ?',
+      answer: 'Bouton "Signaler" sur chaque photo dans les galeries. 8 catégories : nudité, violence, haine, contenu illégal, harcèlement, vie privée, spam, autre. Limite : 10 signalements/jour pour éviter les abus. Signalements traités sous 24h.',
+      tags: ['signalement', 'report', 'inapproprié', 'modération']
+    },
+    {
+      id: '33',
+      category: 'technical',
+      question: 'Pourquoi mon analyse est-elle bloquée ?',
+      answer: 'Causes possibles : nom de fichier suspect, dimensions d\'image anormales (trop petites/ratios extrêmes), métadonnées EXIF suspectes, contenu détecté par l\'IA de modération. Renommez votre fichier et réessayez.',
+      tags: ['bloqué', 'erreur', 'modération', 'fichier']
+    },
+    {
+      id: '34',
+      category: 'features',
+      question: 'Nouveautés 2025 : quoi de neuf ?',
+      answer: 'Collections automatiques "Top Photos" (score ≥85), bouton "Nouvelle analyse" sur mobile, options avancées masquées par défaut sur mobile, page d\'erreur avec retry automatique, modération renforcée, contenu marketing avec guides gratuits.',
+      tags: ['nouveautés', '2025', 'fonctionnalités', 'mobile']
+    },
+    {
+      id: '35',
+      category: 'features',
+      question: 'Qu\'est-ce que la collection "Top Photos" ?',
+      answer: 'Collection automatique créée pour chaque utilisateur. Les photos avec un score ≥85 y sont ajoutées automatiquement. Accessible via le dashboard, permet de retrouver facilement vos meilleures réussites photographiques.',
+      tags: ['collection', 'top photos', 'automatique', 'score']
+    },
+    {
+      id: '36',
+      category: 'mobile',
+      question: 'Interface mobile améliorée : quels changements ?',
+      answer: 'Options avancées (langue, tutorial) masquées par défaut - accessible via bouton ⚙️. Bouton "Analyser une nouvelle photo" après chaque résultat. Scroll automatique vers l\'upload. Interface épurée pour une expérience mobile optimale.',
+      tags: ['mobile', 'UX', 'interface', 'amélioration']
+    },
+    {
+      id: '37',
+      category: 'troubleshooting',
+      question: 'Erreur serveur : que faire ?',
+      answer: 'Page d\'erreur 500 avec retry automatique. Testez votre connexion, videz le cache navigateur, attendez 5 minutes max. Bouton "Réessayer" vérifie la connectivité. Si persistant : contactez le support via le formulaire.',
+      tags: ['erreur', 'serveur', '500', 'retry', 'panne']
+    },
+    {
+      id: '38',
+      category: 'content',
+      question: 'Guides gratuits et ressources : où les trouver ?',
+      answer: 'Page /ressources avec guides PDF téléchargeables : "10 Erreurs IA détecte", "Checklist Instagram", "Formation Score IA". Presets Lightroom gratuits. Templates email pour partenariats. Contenu mis à jour régulièrement.',
+      tags: ['guides', 'gratuit', 'ressources', 'pdf', 'lightroom']
     }
   ]
 
@@ -239,6 +306,8 @@ export default function FAQ() {
     { id: 'legal', name: 'Juridique', icon: '⚖️' },
     { id: 'privacy', name: 'Confidentialité', icon: '🔐' },
     { id: 'usage', name: 'Utilisation', icon: '📸' },
+    { id: 'features', name: 'Fonctionnalités', icon: '✨' },
+    { id: 'content', name: 'Ressources', icon: '📚' },
     { id: 'troubleshooting', name: 'Problèmes', icon: '🔧' }
   ]
 
