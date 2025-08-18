@@ -9,11 +9,13 @@ local LrDialogs = import 'LrDialogs'
 local LrView = import 'LrView'
 local LrBinding = import 'LrBinding'
 local LrHttp = import 'LrHttp'
+local LrFunctionContext = import 'LrFunctionContext'
 
 -- Informations du plugin
 local function showPluginInfo()
-    local f = LrView.osFactory()
-    local properties = LrBinding.makePropertyTable()
+    LrFunctionContext.callWithContext('pluginInfo', function(context)
+        local f = LrView.osFactory()
+        local properties = LrBinding.makePropertyTable(context)
     
     local contents = f:column {
         bind_to_object = properties,
@@ -115,12 +117,13 @@ local function showPluginInfo()
         }
     }
     
-    LrDialogs.presentModalDialog {
-        title = 'À propos de JudgeMyJPEG',
-        contents = contents,
-        cancelVerb = '< exclude "Cancel" >',
-        actionVerb = 'Fermer'
-    }
+        LrDialogs.presentModalDialog {
+            title = 'À propos de JudgeMyJPEG',
+            contents = contents,
+            cancelVerb = '< exclude "Cancel" >',
+            actionVerb = 'Fermer'
+        }
+    end)
 end
 
 -- Point d'entrée pour les infos

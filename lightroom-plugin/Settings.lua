@@ -12,14 +12,16 @@ local LrPrefs = import 'LrPrefs'
 local LrLogger = import 'LrLogger'
 local LrHttp = import 'LrHttp'
 local LrTasks = import 'LrTasks'
+local LrFunctionContext = import 'LrFunctionContext'
 
 local logger = LrLogger('JudgeMyJPEG-Settings')
 
 -- Interface de configuration
 local function showSettingsDialog()
-    local f = LrView.osFactory()
-    local properties = LrBinding.makePropertyTable()
-    local prefs = LrPrefs.prefsForPlugin()
+    LrFunctionContext.callWithContext('settingsDialog', function(context)
+        local f = LrView.osFactory()
+        local properties = LrBinding.makePropertyTable(context)
+        local prefs = LrPrefs.prefsForPlugin()
     
     -- Initialiser les propriétés avec les préférences existantes
     properties.apiKey = prefs.apiKey or ''
@@ -235,9 +237,10 @@ local function showSettingsDialog()
         prefs.exportQuality = properties.exportQuality
         prefs.maxImageSize = properties.maxImageSize
         
-        LrDialogs.message('Paramètres sauvegardés', 
-            'La configuration JudgeMyJPEG a été mise à jour avec succès.')
-    end
+            LrDialogs.message('Paramètres sauvegardés', 
+                'La configuration JudgeMyJPEG a été mise à jour avec succès.')
+        end
+    end)
 end
 
 -- Point d'entrée

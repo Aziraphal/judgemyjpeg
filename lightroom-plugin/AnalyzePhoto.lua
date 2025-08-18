@@ -141,8 +141,9 @@ end
 
 -- Afficher les résultats dans une dialog
 function showAnalysisResults(analysis, photo)
-    local f = LrView.osFactory()
-    local properties = LrBinding.makePropertyTable()
+    LrFunctionContext.callWithContext('analysisResults', function(context)
+        local f = LrView.osFactory()
+        local properties = LrBinding.makePropertyTable(context)
     
     -- Formater le score avec couleur
     local scoreColor = analysis.score >= 85 and 'green' or 
@@ -232,12 +233,13 @@ function showAnalysisResults(analysis, photo)
         }
     }
     
-    LrDialogs.presentModalDialog {
-        title = 'Analyse JudgeMyJPEG - ' .. photo:getFormattedMetadata('fileName'),
-        contents = contents,
-        cancelVerb = '< exclude "Cancel" >',
-        actionVerb = 'Fermer'
-    }
+        LrDialogs.presentModalDialog {
+            title = 'Analyse JudgeMyJPEG - ' .. photo:getFormattedMetadata('fileName'),
+            contents = contents,
+            cancelVerb = '< exclude "Cancel" >',
+            actionVerb = 'Fermer'
+        }
+    end)
 end
 
 -- Inclusion JSON library simple

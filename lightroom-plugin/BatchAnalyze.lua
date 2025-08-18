@@ -22,9 +22,10 @@ local logger = LrLogger('JudgeMyJPEG-Batch')
 
 -- Interface de configuration du lot
 local function showBatchConfigDialog(photoCount)
-    local f = LrView.osFactory()
-    local properties = LrBinding.makePropertyTable()
-    local prefs = LrPrefs.prefsForPlugin()
+    return LrFunctionContext.callWithContext('batchConfig', function(context)
+        local f = LrView.osFactory()
+        local properties = LrBinding.makePropertyTable(context)
+        local prefs = LrPrefs.prefsForPlugin()
     
     -- Initialiser avec les préférences
     properties.tone = prefs.defaultTone or 'professional'
@@ -139,16 +140,17 @@ local function showBatchConfigDialog(photoCount)
         cancelVerb = 'Annuler'
     }
     
-    if result == 'ok' then
-        return {
-            tone = properties.tone,
-            language = properties.language,
-            maxConcurrent = properties.maxConcurrent,
-            delayBetweenRequests = properties.delayBetweenRequests
-        }
-    end
-    
-    return nil
+        if result == 'ok' then
+            return {
+                tone = properties.tone,
+                language = properties.language,
+                maxConcurrent = properties.maxConcurrent,
+                delayBetweenRequests = properties.delayBetweenRequests
+            }
+        end
+        
+        return nil
+    end)
 end
 
 -- Fonction d'analyse d'une photo individuelle
