@@ -274,7 +274,7 @@ export default function DashboardPage() {
                   </h3>
                   
                   <button
-                    onClick={() => router.push('/collections')}
+                    onClick={() => router.push('/all-photos')}
                     className="btn-neon-secondary text-sm"
                   >
                     Toutes mes photos →
