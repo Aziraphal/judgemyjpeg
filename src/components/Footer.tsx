@@ -58,11 +58,6 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/lightroom-plugin" className="text-text-muted hover:text-neon-cyan transition-colors">
-                  Plugin Lightroom
-                </Link>
-              </li>
-              <li>
                 <Link href="/insights" className="text-text-muted hover:text-neon-cyan transition-colors">
                   Insights
                 </Link>

@@ -194,12 +194,6 @@ export default function Home() {
                 {/* Actions secondaires */}
                 <div className="flex flex-wrap justify-center gap-3 max-w-2xl mx-auto">
                   <button 
-                    onClick={() => window.location.href = '/lightroom-plugin'}
-                    className="btn-neon-cyan text-sm px-4 py-2"
-                  >
-                    🔧 Plugin Lightroom
-                  </button>
-                  <button 
                     onClick={() => window.location.href = '/batch'}
                     className="btn-neon-secondary text-sm px-4 py-2"
                   >
