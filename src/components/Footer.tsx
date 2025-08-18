@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="container mx-auto px-4">
         
         {/* Contenu principal du footer */}
-        <div className="grid md:grid-cols-4 gap-8 mb-8">
+        <div className="grid md:grid-cols-5 gap-6 mb-8">
           
           {/* Colonne 1 : Marque */}
           <div>
@@ -92,7 +92,39 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Colonne 4 : Légal */}
+          {/* Colonne 4 : SEO Français */}
+          <div>
+            <h4 className="text-text-white font-semibold mb-4">Analyse Photo</h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="/analyser-photo" className="text-text-muted hover:text-neon-cyan transition-colors">
+                  Analyser Photo IA
+                </Link>
+              </li>
+              <li>
+                <Link href="/analyse-lot" className="text-text-muted hover:text-neon-cyan transition-colors">
+                  Analyse en Lot
+                </Link>
+              </li>
+              <li>
+                <Link href="/collections-photos" className="text-text-muted hover:text-neon-cyan transition-colors">
+                  Collections Photos
+                </Link>
+              </li>
+              <li>
+                <Link href="/toutes-mes-photos" className="text-text-muted hover:text-neon-cyan transition-colors">
+                  Toutes mes Photos
+                </Link>
+              </li>
+              <li>
+                <Link href="/tarifs" className="text-text-muted hover:text-neon-cyan transition-colors">
+                  Tarifs & Plans
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Colonne 5 : Légal */}
           <div>
             <h4 className="text-text-white font-semibold mb-4">Légal</h4>
             <ul className="space-y-2 text-sm">

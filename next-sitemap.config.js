@@ -36,8 +36,11 @@ module.exports = {
   changefreq: 'daily',
   priority: 1.0,
   transform: async (config, path) => {
-    // Pages principales avec priorité élevée
-    const highPriority = ['/', '/analyze', '/pricing', '/faq', '/contact']
+    // Pages principales avec priorité élevée (français + anglais)
+    const highPriority = [
+      '/', '/analyze', '/pricing', '/faq', '/contact', '/blog',
+      '/analyser-photo', '/tarifs', '/analyse-lot', '/collections-photos'
+    ]
     
     return {
       loc: path,

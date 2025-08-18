@@ -63,7 +63,7 @@ Vous vous demandez ce qui fait qu'une photo est "bonne" ? Notre IA analyse **7 c
 ### Astuce Pro 💡
 Notre IA peut analyser votre photo en **mode professionnel** pour des conseils techniques précis, ou en **mode cassant** pour un retour humoristique mais constructif !
 
-[Analyser ma photo maintenant →](/analyze)
+[Analyser ma photo maintenant →](/analyser-photo)
     `,
     publishedAt: '2025-01-17',
     readTime: '5 min',
@@ -103,7 +103,7 @@ Notre IA analyse **des milliers de photos** chaque mois. Voici les 5 erreurs les
 ### Le saviez-vous ? 🤖
 Notre IA peut analyser ces défauts en **moins de 30 secondes** et vous proposer des corrections spécifiques !
 
-[Tester l'analyse IA →](/analyze)
+[Voir nos tarifs →](/tarifs)
     `,
     publishedAt: '2025-01-16',
     readTime: '3 min', 
@@ -150,7 +150,7 @@ L'**intelligence artificielle** transforme la manière dont nous évaluons nos p
 
 *"L'IA m'a fait progresser plus vite qu'un an de tutos YouTube."* - Thomas, photographe amateur
 
-[Essayer gratuitement →](/analyze)
+[Analyser en lot →](/analyse-lot)
     `,
     publishedAt: '2025-01-15',
     readTime: '4 min',
