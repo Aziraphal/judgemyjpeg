@@ -19,7 +19,7 @@ const blogPosts: BlogPost[] = [
   {
     id: '1',
     title: 'Comment juger une bonne photo ? Guide complet 2025',
-    excerpt: 'Découvrez les 7 critères essentiels que l'IA utilise pour évaluer vos photos. Composition, éclairage, netteté... tout ce qu\'il faut savoir.',
+    excerpt: "Découvrez les 7 critères essentiels que l'IA utilise pour évaluer vos photos. Composition, éclairage, netteté... tout ce qu'il faut savoir.",
     content: `
 # Comment juger une bonne photo ? Guide complet 2025
 
@@ -73,8 +73,8 @@ L'IA peut analyser votre photo en **mode professionnel** pour des conseils techn
   },
   {
     id: '2', 
-    title: 'Top 5 erreurs en photo que l\'IA repère instantanément',
-    excerpt: 'Ces erreurs communes ruinent vos photos ! L'intelligence artificielle les détecte en quelques secondes. Apprenez à les éviter.',
+    title: "Top 5 erreurs en photo que l'IA repère instantanément",
+    excerpt: "Ces erreurs communes ruinent vos photos ! L'intelligence artificielle les détecte en quelques secondes. Apprenez à les éviter.",
     content: `
 # Top 5 erreurs en photo que l'IA repère instantanément
 
@@ -114,7 +114,7 @@ L'IA peut analyser ces défauts en **moins de 30 secondes** et vous proposer des
   {
     id: '3',
     title: 'Pourquoi utiliser une IA pour évaluer ses photos JPEG ?',
-    excerpt: 'L\'intelligence artificielle révolutionne l\'évaluation photo. Objectivité, rapidité, apprentissage... découvrez tous les avantages.',
+    excerpt: "L'intelligence artificielle révolutionne l'évaluation photo. Objectivité, rapidité, apprentissage... découvrez tous les avantages.",
     content: `
 # Pourquoi utiliser une IA pour évaluer ses photos JPEG ?
 
