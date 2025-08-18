@@ -61,7 +61,7 @@ export default function Mentions() {
                         9 Allée de la Meilleraie<br/>
                         85340 Les Sables-d'Olonne<br/>
                         France</p>
-                        <p><strong>Email :</strong> contact@judgemyjpeg.com</p>
+                        <p><strong>Email :</strong> contact.judgemyjpeg@gmail.com</p>
                         <p><strong>Téléphone :</strong> [À définir]</p>
                       </div>
                     </div>
@@ -256,7 +256,7 @@ export default function Mentions() {
                       signaler tout contenu illicite hébergé sur notre plateforme.
                     </p>
                     <div className="space-y-2">
-                      <p><strong>Email :</strong> contact@judgemyjpeg.com</p>
+                      <p><strong>Email :</strong> contact.judgemyjpeg@gmail.com</p>
                       <p><strong>Objet :</strong> Signalement de contenu - [Nature du problème]</p>
                       <p><strong>Informations à fournir :</strong></p>
                       <ul className="list-disc list-inside ml-4 space-y-1">
@@ -279,7 +279,7 @@ export default function Mentions() {
                   <div className="bg-cosmic-glass p-6 rounded-lg">
                     <h3 className="text-lg font-semibold text-neon-pink mb-3">📞 Support Utilisateurs</h3>
                     <div className="text-text-gray space-y-2">
-                      <p><strong>Email :</strong> contact@judgemyjpeg.com</p>
+                      <p><strong>Email :</strong> contact.judgemyjpeg@gmail.com</p>
                       <p><strong>FAQ :</strong> <a href="/faq" className="text-neon-cyan hover:underline">Questions fréquentes</a></p>
                       <p><strong>Horaires :</strong> 9h-18h (jours ouvrés)</p>
                       <p><strong>Langue :</strong> Français, Anglais</p>
@@ -289,10 +289,10 @@ export default function Mentions() {
                   <div className="bg-cosmic-glass p-6 rounded-lg">
                     <h3 className="text-lg font-semibold text-neon-pink mb-3">⚖️ Questions Légales</h3>
                     <div className="text-text-gray space-y-2">
-                      <p><strong>Email :</strong> contact@judgemyjpeg.com</p>
-                      <p><strong>Confidentialité :</strong> contact@judgemyjpeg.com</p>
-                      <p><strong>Signalements :</strong> contact@judgemyjpeg.com</p>
-                      <p><strong>Partenariats :</strong> contact@judgemyjpeg.com</p>
+                      <p><strong>Email :</strong> contact.judgemyjpeg@gmail.com</p>
+                      <p><strong>Confidentialité :</strong> contact.judgemyjpeg@gmail.com</p>
+                      <p><strong>Signalements :</strong> contact.judgemyjpeg@gmail.com</p>
+                      <p><strong>Partenariats :</strong> contact.judgemyjpeg@gmail.com</p>
                     </div>
                   </div>
                 </div>

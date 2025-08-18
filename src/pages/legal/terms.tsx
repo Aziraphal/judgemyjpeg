@@ -272,8 +272,8 @@ export default function Terms() {
                     Pour toute question concernant ces conditions d'utilisation :
                   </p>
                   <ul className="list-none space-y-1">
-                    <li><strong>Email :</strong> contact@judgemyjpeg.com</li>
-                    <li><strong>Support :</strong> contact@judgemyjpeg.com</li>
+                    <li><strong>Email :</strong> contact.judgemyjpeg@gmail.com</li>
+                    <li><strong>Support :</strong> contact.judgemyjpeg@gmail.com</li>
                     <li><strong>Adresse :</strong> 9 Allée de la Meilleraie, 85340 Les Sables-d'Olonne, France</li>
                   </ul>
                 </div>

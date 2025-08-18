@@ -62,7 +62,7 @@ Cordialement,
 **Cyril Paquier**  
 Fondateur - JudgeMyJPEG  
 📱 06 XX XX XX XX  
-📧 cyril@judgemyjpeg.com  
+📧 contact.judgemyjpeg@gmail.com  
 🌐 www.judgemyjpeg.fr
 
 *PS2 : Si le timing n'est pas bon, je serais ravi de vous rencontrer au prochain salon de la photo pour une démo en personne !*

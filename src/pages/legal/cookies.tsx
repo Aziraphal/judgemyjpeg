@@ -342,10 +342,10 @@ export default function Cookies() {
                   </p>
                   <div className="bg-cosmic-glass p-4 rounded-lg">
                     <ul className="space-y-2 text-sm">
-                      <li><strong>Email général :</strong> contact@judgemyjpeg.com</li>
-                      <li><strong>Questions cookies :</strong> contact@judgemyjpeg.com</li>
-                      <li><strong>Contact :</strong> contact@judgemyjpeg.com</li>
-                      <li><strong>Support technique :</strong> contact@judgemyjpeg.com</li>
+                      <li><strong>Email général :</strong> contact.judgemyjpeg@gmail.com</li>
+                      <li><strong>Questions cookies :</strong> contact.judgemyjpeg@gmail.com</li>
+                      <li><strong>Contact :</strong> contact.judgemyjpeg@gmail.com</li>
+                      <li><strong>Support technique :</strong> contact.judgemyjpeg@gmail.com</li>
                     </ul>
                   </div>
                 </div>

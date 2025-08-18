@@ -28,7 +28,7 @@ const partnerships: PartnershipType[] = [
       "Audience francophone engagée",
       "Publication d'au moins 2 posts par mois"
     ],
-    contact: "partenariats@judgemyjpeg.com",
+    contact: "contact.judgemyjpeg@gmail.com",
     icon: "📸"
   },
   {
@@ -47,7 +47,7 @@ const partnerships: PartnershipType[] = [
       "Intégration dans le programme officiel",
       "Formateur référent dédié"
     ],
-    contact: "education@judgemyjpeg.com",
+    contact: "contact.judgemyjpeg@gmail.com",
     icon: "🎓"
   },
   {
@@ -66,7 +66,7 @@ const partnerships: PartnershipType[] = [
       "Publication régulière de tests matériel",
       "Équipe éditoriale dédiée photo"
     ],
-    contact: "presse@judgemyjpeg.com", 
+    contact: "contact.judgemyjpeg@gmail.com", 
     icon: "📰"
   },
   {
@@ -85,7 +85,7 @@ const partnerships: PartnershipType[] = [
       "Intégration technique propre",
       "Respect des guidelines d'usage"
     ],
-    contact: "dev@judgemyjpeg.com",
+    contact: "contact.judgemyjpeg@gmail.com",
     icon: "⚙️"
   }
 ]
@@ -233,41 +233,27 @@ export default function PartenariatsPage() {
             ))}
           </div>
 
-          {/* Success Stories */}
-          <div className="glass-card p-8 mb-12">
-            <h2 className="text-2xl font-bold text-text-white mb-6 text-center">
-              🌟 Témoignages Partenaires
+          {/* Call to action */}
+          <div className="glass-card p-8 mb-12 text-center">
+            <h2 className="text-2xl font-bold text-text-white mb-4">
+              🚀 Prêt à devenir partenaire ?
             </h2>
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="bg-cosmic-glass p-6 rounded-lg border border-cosmic-glassborder">
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-neon-pink rounded-full flex items-center justify-center mr-4">
-                    <span className="text-white font-bold">MP</span>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-text-white">Marie Photographe</h4>
-                    <p className="text-text-muted text-sm">@mariephoto • 12K followers</p>
-                  </div>
-                </div>
-                <p className="text-text-gray italic">
-                  "En 3 mois de partenariat, j'ai vu mes photos progresser énormément. Mes abonnés adorent les analyses avant/après que je partage !"
-                </p>
-              </div>
-              
-              <div className="bg-cosmic-glass p-6 rounded-lg border border-cosmic-glassborder">
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-neon-cyan rounded-full flex items-center justify-center mr-4">
-                    <span className="text-black font-bold">EP</span>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-text-white">École Photographie</h4>
-                    <p className="text-text-muted text-sm">Paris • 200+ étudiants</p>
-                  </div>
-                </div>
-                <p className="text-text-gray italic">
-                  "L'intégration dans nos cours a révolutionné l'apprentissage. Les étudiants comprennent leurs erreurs plus rapidement."
-                </p>
-              </div>
+            <p className="text-text-gray mb-6 max-w-2xl mx-auto">
+              Rejoignez les premiers partenaires de cette IA française innovante et bénéficiez d'un avantage concurrentiel dans votre domaine.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a
+                href="mailto:contact.judgemyjpeg@gmail.com?subject=Demande de partenariat"
+                className="btn-neon-pink"
+              >
+                📧 Nous contacter
+              </a>
+              <a
+                href="/analyser-photo"
+                className="btn-neon-secondary"
+              >
+                🧪 Tester l'IA gratuitement
+              </a>
             </div>
           </div>
 

@@ -141,7 +141,7 @@ npm run lint            # ESLint (désactivé en build)
 - **Propriétaire** : Cyril Paquier (CodeCraft Plus)
 - **SIRET** : 98958739900019
 - **Adresse** : 9 Allée de la Meilleraie, 85340 Les Sables-d'Olonne
-- **Contact** : contact@judgemyjpeg.com (email unique)
+- **Contact** : contact.judgemyjpeg@gmail.com (email unique)
 - **Médiateur** : CNPM-MÉDIATION pour litiges consommation
 
 ---

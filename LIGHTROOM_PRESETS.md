@@ -336,7 +336,7 @@ Ces presets sont **100% gratuits** et distribués sous licence Creative Commons.
 ## 📞 **SUPPORT & COMMUNAUTÉ**
 
 ### 🤝 **AIDE INSTALLATION**
-Email : support@judgemyjpeg.com  
+Email : contact.judgemyjpeg@gmail.com  
 Discord : Communauté JudgeMyJPEG  
 YouTube : Tutoriels vidéo installation
 
