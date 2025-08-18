@@ -2,6 +2,18 @@
 module.exports = {
   siteUrl: 'https://www.judgemyjpeg.fr',
   generateRobotsTxt: true,
+  additionalPaths: async (config) => [
+    // URLs françaises SEO-friendly
+    { loc: '/analyser-photo', priority: 1.0, changefreq: 'daily' },
+    { loc: '/tarifs', priority: 1.0, changefreq: 'daily' },
+    { loc: '/analyse-lot', priority: 1.0, changefreq: 'daily' },
+    { loc: '/collections-photos', priority: 1.0, changefreq: 'daily' },
+    { loc: '/toutes-mes-photos', priority: 0.8, changefreq: 'daily' },
+    { loc: '/tableau-bord', priority: 0.7, changefreq: 'daily' },
+    // Pages partenariats & ressources
+    { loc: '/ressources', priority: 0.9, changefreq: 'weekly' },
+    { loc: '/partenariats', priority: 0.8, changefreq: 'weekly' }
+  ],
   exclude: [
     '/admin',
     '/admin/*',
