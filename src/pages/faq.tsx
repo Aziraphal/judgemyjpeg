@@ -69,7 +69,7 @@ export default function FAQ() {
       id: '8',
       category: 'subscription',
       question: 'Combien d\'analyses ai-je avec le plan gratuit ?',
-      answer: '5 analyses par mois calendaire. Le compteur se remet à zéro le 1er de chaque mois. Vous gardez accès à toutes vos analyses passées même après avoir atteint la limite.',
+      answer: '3 analyses par mois calendaire. Le compteur se remet à zéro le 1er de chaque mois. Vous gardez accès à toutes vos analyses passées même après avoir atteint la limite.',
       important: true
     },
     {

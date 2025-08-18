@@ -142,7 +142,7 @@ export default function PricingPage() {
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="text-neon-cyan">✓</span>
-                  <span className="text-text-white">Mode Pro & Cassant</span>
+                  <span className="text-text-white">Mode Pro, Cassant & Expert</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="text-neon-cyan">✓</span>

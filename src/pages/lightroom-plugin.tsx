@@ -62,7 +62,7 @@ export default function LightroomPluginPage() {
     {
       step: '3',
       title: 'Configurer',
-      description: 'Saisissez votre clé API JudgeMyJPEG dans les paramètres du plugin',
+      description: 'Connectez-vous avec votre compte JudgeMyJPEG dans les paramètres du plugin',
       icon: '🔑'
     },
     {
@@ -75,7 +75,7 @@ export default function LightroomPluginPage() {
 
   const requirements = [
     'Adobe Lightroom Classic CC 2015 ou plus récent',
-    'Compte JudgeMyJPEG avec clé API',
+    'Compte JudgeMyJPEG (gratuit avec 3 analyses/mois)',
     'Connexion internet pour les analyses',
     'Espace disque : 2MB pour le plugin'
   ]
@@ -99,7 +99,7 @@ export default function LightroomPluginPage() {
     },
     {
       question: 'Combien de photos puis-je analyser ?',
-      answer: 'Selon votre abonnement JudgeMyJPEG : gratuit (10/mois), premium (illimité). Le plugin gère les lots de 1 à 50 photos.'
+      answer: 'Selon votre abonnement JudgeMyJPEG : gratuit (3/mois), premium (illimité). Le plugin gère les lots de 1 à 50 photos.'
     }
   ]
 
@@ -294,17 +294,17 @@ export default function LightroomPluginPage() {
                 <div>
                   <h3 className="text-xl font-semibold text-text-white mb-4 flex items-center">
                     <span className="text-2xl mr-3">🔑</span>
-                    Obtenir une clé API
+                    Créer un compte
                   </h3>
                   <div className="space-y-3">
                     <p className="text-text-gray">
-                      1. Créez un compte sur JudgeMyJPEG (gratuit)
+                      1. Créez un compte JudgeMyJPEG (gratuit)
                     </p>
                     <p className="text-text-gray">
-                      2. Accédez à votre tableau de bord
+                      2. 3 analyses gratuites par mois incluses
                     </p>
                     <p className="text-text-gray">
-                      3. Copiez votre clé API personnelle
+                      3. Connexion automatique depuis le plugin
                     </p>
                     <Link href="/auth/signup" className="btn-neon-secondary text-sm inline-block mt-3">
                       Créer un compte →
