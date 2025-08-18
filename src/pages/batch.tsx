@@ -550,6 +550,7 @@ export default function BatchAnalysis() {
               photos={photos.filter(p => p.analysis).map(p => ({
                 id: p.id,
                 filename: p.file.name,
+                url: p.url, // Ajout de l'URL pour afficher la photo
                 analysis: p.analysis!,
                 rank: 0, // Sera mis à jour par le composant
                 isFamous: false, // Sera déterminé par l'API

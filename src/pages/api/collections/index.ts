@@ -26,6 +26,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           items: {
             include: {
               photo: true
+            },
+            orderBy: {
+              photo: {
+                score: 'desc' // Tri par score décroissant (meilleur en premier)
+              }
             }
           },
           _count: {

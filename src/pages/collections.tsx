@@ -13,6 +13,9 @@ interface Photo {
   score: number
   createdAt: string
   isFavorite?: boolean
+  analysis?: string
+  improvements?: string
+  suggestions?: string
 }
 
 interface Collection {
@@ -36,6 +39,7 @@ export default function CollectionsPage() {
   const [loading, setLoading] = useState(true)
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null)
+  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -312,7 +316,8 @@ export default function CollectionsPage() {
                           alt={item.photo.filename}
                           width={400}
                           height={300}
-                          className="rounded-lg w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="rounded-lg w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300 cursor-pointer"
+                          onClick={() => setSelectedPhoto(item.photo)}
                         />
                         
                         {/* Score badge */}
@@ -363,6 +368,122 @@ export default function CollectionsPage() {
           onClose={() => setIsCreateModalOpen(false)}
           onCollectionCreated={handleCollectionCreated}
         />
+
+        {/* Modal agrandissement photo */}
+        {selectedPhoto && (
+          <div 
+            className="fixed inset-0 bg-cosmic-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setSelectedPhoto(null)}
+          >
+            <div 
+              className="glass-card p-6 max-w-6xl max-h-[90vh] overflow-auto w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <h3 className="text-2xl font-bold text-text-white mb-2">
+                    {selectedPhoto.filename}
+                  </h3>
+                  {selectedPhoto.score && (
+                    <div className={`text-lg font-bold ${selectedPhoto.score >= 85 ? 'text-green-400' : selectedPhoto.score >= 70 ? 'text-yellow-400' : selectedPhoto.score >= 50 ? 'text-orange-400' : 'text-red-400'}`}>
+                      🎯 {selectedPhoto.score}/100
+                    </div>
+                  )}
+                </div>
+                <button
+                  onClick={() => setSelectedPhoto(null)}
+                  className="btn-neon-secondary text-lg px-3 py-1"
+                >
+                  ×
+                </button>
+              </div>
+              
+              <div className="grid md:grid-cols-2 gap-6">
+                {/* Image */}
+                <div>
+                  <Image
+                    src={selectedPhoto.url}
+                    alt={selectedPhoto.filename}
+                    width={600}
+                    height={400}
+                    className="rounded-lg w-full h-auto object-contain"
+                    style={{ imageOrientation: 'from-image' }}
+                  />
+                </div>
+                
+                {/* Analyse détaillée */}
+                <div className="space-y-4">
+                  {(() => {
+                    if (!selectedPhoto.analysis) return <p className="text-text-gray">Aucune analyse disponible</p>
+                    
+                    let analysis
+                    try {
+                      analysis = JSON.parse(selectedPhoto.analysis)
+                    } catch {
+                      return <p className="text-text-gray">Analyse non disponible</p>
+                    }
+                    
+                    return (
+                      <>
+                        {analysis.critique && (
+                          <div>
+                            <h4 className="font-bold text-neon-cyan mb-2">📝 Analyse :</h4>
+                            <p className="text-text-gray">{analysis.critique}</p>
+                          </div>
+                        )}
+                        
+                        {analysis.strengths && analysis.strengths.length > 0 && (
+                          <div>
+                            <h4 className="font-bold text-green-400 mb-2">✅ Points forts :</h4>
+                            <ul className="list-disc list-inside text-text-gray space-y-1">
+                              {analysis.strengths.map((strength: string, index: number) => (
+                                <li key={index}>{strength}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        
+                        {analysis.improvements && analysis.improvements.length > 0 && (
+                          <div>
+                            <h4 className="font-bold text-yellow-400 mb-2">🔧 Améliorations :</h4>
+                            <ul className="list-disc list-inside text-text-gray space-y-1">
+                              {analysis.improvements.map((improvement: string, index: number) => (
+                                <li key={index}>{improvement}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        
+                        {analysis.suggestions && analysis.suggestions.length > 0 && (
+                          <div>
+                            <h4 className="font-bold text-neon-pink mb-2">💡 Suggestions :</h4>
+                            <ul className="list-disc list-inside text-text-gray space-y-1">
+                              {analysis.suggestions.map((suggestion: string, index: number) => (
+                                <li key={index}>{suggestion}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </>
+                    )
+                  })()}
+                  
+                  <div className="pt-4 border-t border-cosmic-glassborder">
+                    <p className="text-text-muted text-sm">
+                      Analysée le {new Date(selectedPhoto.createdAt).toLocaleDateString('fr-FR', { 
+                        day: 'numeric', 
+                        month: 'long', 
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </>
   )

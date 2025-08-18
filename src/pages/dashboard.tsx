@@ -146,11 +146,10 @@ export default function DashboardPage() {
                 📊 Analyse en lot
               </button>
               <button
-                onClick={() => router.push('/gallery')}
+                onClick={() => router.push('/all-photos')}
                 className="btn-neon-secondary text-sm px-4 py-2"
-                title="Photos avec score ≥ 85"
               >
-                🏆 Top Photos
+                📸 Toutes mes photos
               </button>
               <button
                 onClick={() => router.push('/insights')}
