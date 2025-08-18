@@ -40,9 +40,6 @@ module.exports = {
           '/offline'
         ]
       }
-    ],
-    additionalSitemaps: [
-      'https://www.judgemyjpeg.fr/sitemap.xml'
     ]
   },
   changefreq: 'daily',
