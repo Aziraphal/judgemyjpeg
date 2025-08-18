@@ -337,8 +337,13 @@ export default function AllPhotosPage() {
                           <div>
                             <h4 className="font-bold text-yellow-400 mb-2">🔧 Améliorations :</h4>
                             <ul className="list-disc list-inside text-text-gray space-y-1">
-                              {analysis.improvements.map((improvement: string, index: number) => (
-                                <li key={index}>{improvement}</li>
+                              {analysis.improvements.map((improvement: any, index: number) => (
+                                <li key={index}>
+                                  {typeof improvement === 'string' ? improvement : improvement.description || improvement.impact}
+                                  {typeof improvement === 'object' && improvement.scoreGain && (
+                                    <span className="text-green-400 ml-2">(+{improvement.scoreGain} pts)</span>
+                                  )}
+                                </li>
                               ))}
                             </ul>
                           </div>
@@ -348,8 +353,10 @@ export default function AllPhotosPage() {
                           <div>
                             <h4 className="font-bold text-neon-pink mb-2">💡 Suggestions :</h4>
                             <ul className="list-disc list-inside text-text-gray space-y-1">
-                              {analysis.suggestions.map((suggestion: string, index: number) => (
-                                <li key={index}>{suggestion}</li>
+                              {analysis.suggestions.map((suggestion: any, index: number) => (
+                                <li key={index}>
+                                  {typeof suggestion === 'string' ? suggestion : JSON.stringify(suggestion)}
+                                </li>
                               ))}
                             </ul>
                           </div>
