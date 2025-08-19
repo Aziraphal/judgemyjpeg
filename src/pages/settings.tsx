@@ -31,6 +31,7 @@ export default function SettingsPage() {
   })
   const [isEditing, setIsEditing] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
+  const [isExporting, setIsExporting] = useState(false)
 
   // Charger les préférences depuis l'API au démarrage
   useEffect(() => {
@@ -116,6 +117,44 @@ export default function SettingsPage() {
       setMessage({ type: 'error', text: '❌ Erreur de connexion. Veuillez réessayer.' })
     } finally {
       setIsSaving(false)
+      setTimeout(() => setMessage(null), 5000)
+    }
+  }
+
+  // Fonction d'export des données RGPD
+  const handleExportData = async () => {
+    if (isExporting) return
+    
+    setIsExporting(true)
+    
+    try {
+      const response = await fetch('/api/user/export-data', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      
+      if (response.ok) {
+        // Créer le téléchargement
+        const blob = await response.blob()
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `judgemyjpeg-donnees-${new Date().toISOString().split('T')[0]}.json`
+        document.body.appendChild(a)
+        a.click()
+        window.URL.revokeObjectURL(url)
+        document.body.removeChild(a)
+        
+        setMessage({ type: 'success', text: '📥 Export réussi ! Vos données ont été téléchargées.' })
+      } else {
+        const errorData = await response.json()
+        setMessage({ type: 'error', text: `❌ ${errorData.error || 'Erreur lors de l\'export'}` })
+      }
+    } catch (error) {
+      console.error('Export error:', error)
+      setMessage({ type: 'error', text: '❌ Erreur de connexion. Réessayez plus tard.' })
+    } finally {
+      setIsExporting(false)
       setTimeout(() => setMessage(null), 5000)
     }
   }
@@ -646,6 +685,38 @@ export default function SettingsPage() {
                           🗑️ <span className="hidden sm:inline">Supprimer toutes mes photos</span><span className="sm:hidden">Suppr. photos</span>
                         </button>
                       </div>
+                    </div>
+
+                    {/* Export données RGPD */}
+                    <div className="glass-card p-4 sm:p-6 bg-cosmic-glass border border-neon-cyan/30">
+                      <h3 className="text-base sm:text-lg font-semibold text-neon-cyan mb-4 flex items-center">
+                        <span className="text-xl mr-2">📥</span>
+                        <span className="hidden sm:inline">Mes données personnelles</span>
+                        <span className="sm:hidden">Mes données</span>
+                      </h3>
+                      <p className="text-text-gray text-sm mb-4">
+                        Conformément au RGPD, vous pouvez télécharger toutes vos données personnelles dans un format lisible.
+                      </p>
+                      <button 
+                        onClick={handleExportData}
+                        disabled={isExporting}
+                        className="btn-neon-cyan text-sm flex items-center space-x-2"
+                      >
+                        {isExporting ? (
+                          <>
+                            <div className="spinner-neon w-4 h-4"></div>
+                            <span>Export en cours...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>📥</span>
+                            <span>Télécharger mes données (RGPD)</span>
+                          </>
+                        )}
+                      </button>
+                      <p className="text-xs text-text-muted mt-2">
+                        Inclut : profil, photos, analyses, collections, statistiques
+                      </p>
                     </div>
 
                     {/* Informations légales */}
