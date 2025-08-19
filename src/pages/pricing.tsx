@@ -85,7 +85,7 @@ export default function PricingPage() {
     <>
       <Head>
         <title>Tarifs & Abonnements | Plans analyse photo IA - JudgeMyJPEG</title>
-        <meta name="description" content="Découvrez nos plans d'abonnement pour l'analyse photo IA. Gratuit 3 analyses/mois, Premium illimité 9.99€, Lifetime 99€. Essai gratuit disponible." />
+        <meta name="description" content="Découvrez nos plans d'abonnement pour l'analyse photo IA. Gratuit 3 analyses/mois, Starter Pack 4.99€, Premium 9.98€/mois, Annuel 79€/an. Analyses illimitées." />
       </Head>
 
       <main className="min-h-screen bg-cosmic-overlay particles-container relative">
@@ -120,7 +120,7 @@ export default function PricingPage() {
           </div>
 
           {/* Plans tarifaires */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-6 max-w-7xl mx-auto">
             
             {/* Plan Gratuit */}
             <div className="glass-card p-8 hover-glow border-2 border-cosmic-glassborder">
@@ -163,6 +163,58 @@ export default function PricingPage() {
                 className="w-full btn-neon-secondary opacity-50 cursor-not-allowed"
               >
                 Plan actuel
+              </button>
+            </div>
+
+            {/* Plan Starter Pack */}
+            <div className="glass-card p-8 hover-glow border-2 border-yellow-500 relative">
+              {/* Badge achat unique */}
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                <div className="bg-yellow-500 text-black px-4 py-1 rounded-full text-sm font-semibold">
+                  ⚡ ACHAT UNIQUE
+                </div>
+              </div>
+
+              <div className="text-center mb-6">
+                <div className="text-3xl mb-4">🛒</div>
+                <h3 className="text-2xl font-bold text-text-white mb-2">Starter Pack</h3>
+                <p className="text-text-gray">Testez davantage</p>
+              </div>
+
+              <div className="text-center mb-8">
+                <div className="text-4xl font-bold text-yellow-400 mb-2">4,99€</div>
+                <div className="text-text-muted">achat unique</div>
+              </div>
+
+              <div className="space-y-4 mb-8">
+                <div className="flex items-center space-x-3">
+                  <span className="text-yellow-400">✓</span>
+                  <span className="text-text-white font-semibold">10 analyses bonus</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <span className="text-yellow-400">✓</span>
+                  <span className="text-text-white">Tous les modes (Pro, Roast, Expert)</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <span className="text-yellow-400">✓</span>
+                  <span className="text-text-white">3 partages sociaux</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <span className="text-yellow-400">✓</span>
+                  <span className="text-text-white">3 exports PDF</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <span className="text-yellow-400">✓</span>
+                  <span className="text-text-white">Limité à 1 par compte</span>
+                </div>
+              </div>
+
+              <button
+                onClick={() => handleSubscribe('starter')}
+                disabled={loading === 'starter'}
+                className="w-full btn-neon-yellow"
+              >
+                {loading === 'starter' ? 'Commande...' : '🛒 Acheter maintenant'}
               </button>
             </div>
 
@@ -318,7 +370,7 @@ export default function PricingPage() {
                   Puis-je changer de plan à tout moment ?
                 </h3>
                 <p className="text-text-gray">
-                  Oui ! Vous pouvez passer du plan gratuit au premium, ou acheter le plan lifetime à tout moment.
+                  Oui ! Vous pouvez passer du plan gratuit au premium/annuel, ou acheter le Starter Pack à tout moment. Le Starter Pack est limité à 1 achat par compte.
                 </p>
               </div>
 

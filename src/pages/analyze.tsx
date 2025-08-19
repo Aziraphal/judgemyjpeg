@@ -10,8 +10,10 @@ import SubscriptionStatus from '@/components/SubscriptionStatus'
 import InteractiveTutorial, { useTutorial } from '@/components/InteractiveTutorial'
 import ProgressiveDisclosure, { useProgressiveDisclosure, SkillLevelGroup } from '@/components/ProgressiveDisclosure'
 import ContextualTooltip, { RichTooltip } from '@/components/ContextualTooltip'
+import StarterPackModal from '@/components/StarterPackModal'
 import { PhotoAnalysis, AnalysisTone, AnalysisLanguage } from '@/services/openai'
 import { trackPhotoAnalysis } from '@/lib/gtag'
+import { useAnalysisLimit } from '@/hooks/useAnalysisLimit'
 
 export default function AnalyzePage() {
   const { data: session, status } = useSession()
@@ -25,10 +27,21 @@ export default function AnalyzePage() {
   const [isUploading, setIsUploading] = useState(false)
   const [userLevel, setUserLevel] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner')
   const [showAdvancedOptions, setShowAdvancedOptions] = useState(false)
+  const [showStarterModal, setShowStarterModal] = useState(false)
   
   // Tutorial système
   const { isActive: tutorialActive, hasCompleted: tutorialCompleted, startTutorial, completeTutorial } = useTutorial('analyze-page')
   const { isOpen: progressiveOpen, toggleSection } = useProgressiveDisclosure(userLevel)
+  
+  // Hook pour gérer les limites d'analyses
+  const { 
+    canAnalyze, 
+    isExhausted, 
+    shouldShowStarterModal, 
+    daysUntilReset, 
+    starterPack,
+    refreshStatus 
+  } = useAnalysisLimit()
 
   // Déterminer niveau utilisateur basé sur l'historique
   useEffect(() => {
@@ -50,6 +63,18 @@ export default function AnalyzePage() {
       localStorage.setItem('analyze_visits', (visitCount + 1).toString())
     }
   }, [session])
+
+  // Afficher le modal starter pack si les analyses sont épuisées
+  useEffect(() => {
+    if (shouldShowStarterModal && !showStarterModal) {
+      // Délai de 1 seconde pour l'UX
+      const timer = setTimeout(() => {
+        setShowStarterModal(true)
+      }, 1000)
+      
+      return () => clearTimeout(timer)
+    }
+  }, [shouldShowStarterModal, showStarterModal])
 
   // Démarrer tutorial automatiquement pour nouveaux utilisateurs (désactivé pour éviter les répétitions)
   useEffect(() => {
@@ -378,6 +403,7 @@ export default function AnalyzePage() {
                       tone={selectedTone}
                       language={selectedLanguage}
                       onUploadStateChange={setIsUploading}
+                      onAnalysisLimitReached={() => setShowStarterModal(true)}
                     />
                   </div>
                 </div>
@@ -412,6 +438,13 @@ export default function AnalyzePage() {
           theme="cosmic"
         />
       </main>
+
+      {/* Modal Starter Pack */}
+      <StarterPackModal
+        isOpen={showStarterModal}
+        onClose={() => setShowStarterModal(false)}
+        remainingDays={daysUntilReset}
+      />
     </>
   )
 }

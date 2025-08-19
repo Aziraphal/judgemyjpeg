@@ -53,6 +53,25 @@
     @apply border border-neon-cyan/30 backdrop-blur-sm;
   }
   
+  .btn-neon-yellow {
+    @apply bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-bold py-3 px-8 rounded-full;
+    @apply hover:shadow-yellow-400 transition-all duration-300 transform hover:scale-105;
+    @apply border border-yellow-400/30 backdrop-blur-sm;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(234, 179, 8, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(234, 179, 8, 0.6);
+    }
+  }
+  
   .btn-neon-secondary {
     @apply bg-cosmic-glass border border-cosmic-glassborder text-text-gray font-medium py-3 px-6 rounded-full;
     @apply hover:bg-cosmic-glassborder hover:text-text-white transition-all duration-300;

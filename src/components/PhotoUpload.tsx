@@ -8,9 +8,10 @@ interface PhotoUploadProps {
   language: AnalysisLanguage
   testMode?: boolean // Mode test sans auth
   onUploadStateChange?: (isUploading: boolean) => void
+  onAnalysisLimitReached?: () => void // Déclencher le modal starter pack
 }
 
-export default function PhotoUpload({ onAnalysisComplete, tone, language, testMode = false, onUploadStateChange }: PhotoUploadProps) {
+export default function PhotoUpload({ onAnalysisComplete, tone, language, testMode = false, onUploadStateChange, onAnalysisLimitReached }: PhotoUploadProps) {
   const [isUploading, setIsUploading] = useState(false)
   const [dragActive, setDragActive] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -174,6 +175,11 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
         console.error(`Server error ${response.status}:`, errorData.error || 'Unknown')
+        
+        // Si erreur de limite atteinte, déclencher le modal starter pack
+        if (errorData.error?.includes('limite') || errorData.error?.includes('atteinte')) {
+          onAnalysisLimitReached?.()
+        }
         
         throw new Error(errorData.error || 'Erreur lors de l\'analyse')
       }
