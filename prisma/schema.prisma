@@ -57,6 +57,13 @@ model User {
   twoFactorEnabled     Boolean       @default(false)
   twoFactorSecret      String?
   twoFactorVerified    DateTime?
+  
+  // Starter Pack (one-shot à l'inscription)
+  starterPackUsed      Boolean       @default(false)
+  starterAnalysisCount Int           @default(10)    // 10 analyses bonus
+  starterSharesCount   Int           @default(3)     // 3 partages sociaux
+  starterExportsCount  Int           @default(3)     // 3 exports PDF
+  starterPackActivated DateTime?                     // Date d'activation
   accounts             Account[]
   collections          Collection[]
   favorites            Favorite[]

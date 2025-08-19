@@ -7,6 +7,14 @@ export interface UserSubscription {
   maxMonthlyAnalyses: number
   canAnalyze: boolean
   daysUntilReset?: number
+  // Starter Pack
+  starterPack: {
+    hasStarterPack: boolean
+    analysisCount: number
+    sharesCount: number
+    exportsCount: number
+    activatedAt?: Date
+  }
 }
 
 export async function getUserSubscription(userId: string): Promise<UserSubscription> {
@@ -17,7 +25,13 @@ export async function getUserSubscription(userId: string): Promise<UserSubscript
       subscriptionStatus: true,
       monthlyAnalysisCount: true,
       lastAnalysisReset: true,
-      currentPeriodEnd: true
+      currentPeriodEnd: true,
+      // Starter Pack fields
+      starterPackUsed: true,
+      starterAnalysisCount: true,
+      starterSharesCount: true,
+      starterExportsCount: true,
+      starterPackActivated: true
     }
   })
 
@@ -55,7 +69,12 @@ export async function getUserSubscription(userId: string): Promise<UserSubscript
   }
 
   const maxAnalyses = limits[user.subscriptionStatus as keyof typeof limits] || 3
-  const canAnalyze = ['premium', 'annual'].includes(user.subscriptionStatus) || currentCount < maxAnalyses
+  
+  // Vérifier si l'utilisateur peut analyser (plan premium/annual OU dans les limites OU starter pack)
+  const hasStarterAnalyses = !user.starterPackUsed && user.starterAnalysisCount > 0
+  const canAnalyze = ['premium', 'annual'].includes(user.subscriptionStatus) || 
+                    currentCount < maxAnalyses || 
+                    hasStarterAnalyses
 
   // Calculer les jours jusqu'au reset pour les utilisateurs gratuits
   let daysUntilReset: number | undefined
@@ -70,7 +89,14 @@ export async function getUserSubscription(userId: string): Promise<UserSubscript
     monthlyAnalysisCount: currentCount,
     maxMonthlyAnalyses: maxAnalyses,
     canAnalyze,
-    daysUntilReset
+    daysUntilReset,
+    starterPack: {
+      hasStarterPack: !user.starterPackUsed,
+      analysisCount: user.starterAnalysisCount || 0,
+      sharesCount: user.starterSharesCount || 0,
+      exportsCount: user.starterExportsCount || 0,
+      activatedAt: user.starterPackActivated
+    }
   }
 }
 
@@ -81,7 +107,18 @@ export async function incrementAnalysisCount(userId: string): Promise<void> {
     throw new Error('Limite d\'analyses atteinte pour ce mois')
   }
 
-  if (subscription.subscriptionStatus === 'free') {
+  // Utiliser prioritairement les analyses du starter pack
+  if (subscription.starterPack.hasStarterPack && subscription.starterPack.analysisCount > 0) {
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        starterAnalysisCount: {
+          decrement: 1
+        }
+      }
+    })
+  } else if (subscription.subscriptionStatus === 'free') {
+    // Utiliser les analyses mensuelles gratuites
     await prisma.user.update({
       where: { id: userId },
       data: {
@@ -112,6 +149,63 @@ export async function updateUserSubscription(
       currentPeriodEnd: stripeData?.currentPeriodEnd,
       // Reset du compteur si upgrade
       ...(subscriptionStatus !== 'free' && { monthlyAnalysisCount: 0 })
+    }
+  })
+}
+
+// Nouvelles fonctions pour le Starter Pack
+export async function canUseStarterShare(userId: string): Promise<boolean> {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { starterPackUsed: true, starterSharesCount: true, subscriptionStatus: true }
+  })
+  
+  return user ? (
+    ['premium', 'annual'].includes(user.subscriptionStatus) ||
+    (!user.starterPackUsed && user.starterSharesCount > 0)
+  ) : false
+}
+
+export async function canUseStarterExport(userId: string): Promise<boolean> {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { starterPackUsed: true, starterExportsCount: true, subscriptionStatus: true }
+  })
+  
+  return user ? (
+    ['premium', 'annual'].includes(user.subscriptionStatus) ||
+    (!user.starterPackUsed && user.starterExportsCount > 0)
+  ) : false
+}
+
+export async function useStarterShare(userId: string): Promise<void> {
+  const canUse = await canUseStarterShare(userId)
+  if (!canUse) {
+    throw new Error('Aucun partage disponible dans votre starter pack')
+  }
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      starterSharesCount: {
+        decrement: 1
+      }
+    }
+  })
+}
+
+export async function useStarterExport(userId: string): Promise<void> {
+  const canUse = await canUseStarterExport(userId)
+  if (!canUse) {
+    throw new Error('Aucun export PDF disponible dans votre starter pack')
+  }
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      starterExportsCount: {
+        decrement: 1
+      }
     }
   })
 }

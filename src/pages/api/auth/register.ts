@@ -54,10 +54,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         nickname: nickname || null,
         email,
         password: hashedPassword,
-        // Nouveaux utilisateurs commencent en free
+        // Nouveaux utilisateurs commencent en free avec Starter Pack
         subscriptionStatus: 'free',
         monthlyAnalysisCount: 0,
         lastAnalysisReset: new Date(),
+        // 🎁 STARTER PACK automatique pour tous les nouveaux utilisateurs
+        starterPackUsed: false,
+        starterAnalysisCount: 10,    // 10 analyses bonus
+        starterSharesCount: 3,       // 3 partages sociaux
+        starterExportsCount: 3,      // 3 exports PDF
+        starterPackActivated: new Date(),
         // Créer automatiquement les préférences avec le nickname s'il existe
         userPreferences: nickname ? {
           create: {
