@@ -37,7 +37,7 @@ export default function PricingPage() {
     }
   }
 
-  const handleSubscribe = async (priceType: 'monthly' | 'annual') => {
+  const handleSubscribe = async (priceType: 'starter' | 'monthly' | 'annual') => {
     if (!session) {
       router.push('/')
       return
@@ -46,7 +46,13 @@ export default function PricingPage() {
     setLoading(priceType)
 
     // Track début processus abonnement
-    trackSubscription(priceType === 'monthly' ? 'premium' : 'annual', 'start')
+    let trackingType: string
+    switch (priceType) {
+      case 'starter': trackingType = 'starter'; break
+      case 'monthly': trackingType = 'premium'; break
+      case 'annual': trackingType = 'annual'; break
+    }
+    trackSubscription(trackingType, 'start')
 
     try {
       const response = await fetch('/api/stripe/create-checkout', {
