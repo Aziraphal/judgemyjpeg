@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const { priceType } = req.body
 
-    if (!priceType || !['monthly', 'annual'].includes(priceType)) {
+    if (!priceType || !['starter', 'monthly', 'annual'].includes(priceType)) {
       return res.status(400).json({ error: 'Type de prix invalide' })
     }
 
@@ -30,9 +30,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(404).json({ error: 'Utilisateur non trouvé' })
     }
 
-    // Vérifier qu'il n'est pas déjà premium/annual
-    if (user.subscriptionStatus === 'premium' || user.subscriptionStatus === 'annual') {
-      return res.status(400).json({ error: 'Vous avez déjà un abonnement actif' })
+    // Vérifications selon le type de plan
+    if (priceType === 'starter') {
+      // Vérifier qu'il peut acheter le starter pack
+      if (user.subscriptionStatus !== 'free') {
+        return res.status(400).json({ error: 'Le Starter Pack n\'est disponible que pour les comptes gratuits' })
+      }
+      if (user.starterPackPurchased) {
+        return res.status(400).json({ error: 'Vous avez déjà acheté le Starter Pack (limité à 1 par compte)' })
+      }
+    } else {
+      // Vérifier qu'il n'est pas déjà premium/annual
+      if (user.subscriptionStatus === 'premium' || user.subscriptionStatus === 'annual') {
+        return res.status(400).json({ error: 'Vous avez déjà un abonnement actif' })
+      }
     }
 
     // Créer ou récupérer le customer Stripe
@@ -53,9 +64,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Déterminer le prix selon le type
-    const priceId = priceType === 'monthly' 
-      ? STRIPE_CONFIG.MONTHLY_PRICE_ID 
-      : STRIPE_CONFIG.ANNUAL_PRICE_ID
+    let priceId: string
+    switch (priceType) {
+      case 'starter':
+        priceId = STRIPE_CONFIG.STARTER_PRICE_ID
+        break
+      case 'monthly':
+        priceId = STRIPE_CONFIG.MONTHLY_PRICE_ID
+        break
+      case 'annual':
+        priceId = STRIPE_CONFIG.ANNUAL_PRICE_ID
+        break
+      default:
+        return res.status(400).json({ error: 'Type de prix non supporté' })
+    }
 
     // Créer la session de checkout
     const checkoutSession = await createCheckoutSession(

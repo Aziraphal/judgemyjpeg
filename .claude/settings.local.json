@@ -3,7 +3,8 @@
   "permissions": {
     "allow": [
       "Bash(npm run build:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(npx prisma:*)"
     ],
     "deny": [],
     "additionalDirectories": [

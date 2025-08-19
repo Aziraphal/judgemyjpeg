@@ -58,12 +58,13 @@ model User {
   twoFactorSecret      String?
   twoFactorVerified    DateTime?
   
-  // Starter Pack (one-shot à l'inscription)
-  starterPackUsed      Boolean       @default(false)
-  starterAnalysisCount Int           @default(10)    // 10 analyses bonus
-  starterSharesCount   Int           @default(3)     // 3 partages sociaux
-  starterExportsCount  Int           @default(3)     // 3 exports PDF
-  starterPackActivated DateTime?                     // Date d'activation
+  // Starter Pack (one-shot payant €4.99)
+  starterPackPurchased Boolean       @default(false) // A acheté le starter pack
+  starterPackUsed      Boolean       @default(false) // A épuisé le starter pack
+  starterAnalysisCount Int           @default(0)     // Analyses restantes (10 après achat)
+  starterSharesCount   Int           @default(0)     // Partages restants (3 après achat)
+  starterExportsCount  Int           @default(0)     // Exports restants (3 après achat)
+  starterPackActivated DateTime?                     // Date d'activation/achat
   accounts             Account[]
   collections          Collection[]
   favorites            Favorite[]

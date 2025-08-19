@@ -54,16 +54,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         nickname: nickname || null,
         email,
         password: hashedPassword,
-        // Nouveaux utilisateurs commencent en free avec Starter Pack
+        // Nouveaux utilisateurs commencent en free (3 analyses/mois)
         subscriptionStatus: 'free',
         monthlyAnalysisCount: 0,
         lastAnalysisReset: new Date(),
-        // 🎁 STARTER PACK automatique pour tous les nouveaux utilisateurs
+        // Starter Pack doit être acheté (€4.99)
+        starterPackPurchased: false,
         starterPackUsed: false,
-        starterAnalysisCount: 10,    // 10 analyses bonus
-        starterSharesCount: 3,       // 3 partages sociaux
-        starterExportsCount: 3,      // 3 exports PDF
-        starterPackActivated: new Date(),
+        starterAnalysisCount: 0,
+        starterSharesCount: 0,
+        starterExportsCount: 0,
         // Créer automatiquement les préférences avec le nickname s'il existe
         userPreferences: nickname ? {
           create: {

@@ -11,6 +11,9 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 
 // Configuration des produits Stripe
 export const STRIPE_CONFIG = {
+  // Prix Starter Pack €4.99 (one-shot)
+  STARTER_PRICE_ID: process.env.STRIPE_STARTER_PRICE_ID || 'price_starter_499',
+  
   // Prix mensuels €9.98/mois
   MONTHLY_PRICE_ID: process.env.STRIPE_MONTHLY_PRICE_ID || 'price_monthly_998',
   
@@ -37,7 +40,7 @@ export const createCheckoutSession = async (
 ) => {
   return await stripe.checkout.sessions.create({
     customer: customerId,
-    mode: 'subscription', // Tous les plans sont maintenant en subscription
+    mode: priceId === STRIPE_CONFIG.STARTER_PRICE_ID ? 'payment' : 'subscription', // Starter Pack = payment one-shot, autres = subscription
     payment_method_types: ['card'],
     line_items: [
       {

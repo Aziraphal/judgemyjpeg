@@ -37,7 +37,27 @@ async function setupStripePlans() {
       return;
     }
 
-    // 2. Créer le prix mensuel €9.98/mois
+    // 2. Créer le prix Starter Pack €4.99 (one-shot)
+    let starterPrice;
+    
+    try {
+      starterPrice = await stripe.prices.create({
+        product: product.id,
+        unit_amount: 499, // €4.99 en centimes
+        currency: 'eur',
+        // PAS de recurring = paiement one-shot
+        metadata: {
+          plan_type: 'starter',
+          features: '10_analysis,3_shares,3_exports,all_modes',
+          description: 'One-shot purchase for testing'
+        }
+      });
+      console.log('✅ Prix Starter Pack créé:', starterPrice.id, '- €4.99 (one-shot)');
+    } catch (error) {
+      console.error('❌ Erreur prix starter:', error.message);
+    }
+
+    // 3. Créer le prix mensuel €9.98/mois
     let monthlyPrice;
     
     try {
@@ -59,7 +79,7 @@ async function setupStripePlans() {
       console.error('❌ Erreur prix mensuel:', error.message);
     }
 
-    // 3. Créer le prix annuel €79/an (économie de ~€40/an)
+    // 4. Créer le prix annuel €79/an (économie de ~€40/an)
     let annualPrice;
     
     try {
@@ -82,9 +102,13 @@ async function setupStripePlans() {
       console.error('❌ Erreur prix annuel:', error.message);
     }
 
-    // 4. Afficher les IDs à configurer
+    // 5. Afficher les IDs à configurer
     console.log('\n📋 CONFIGURATION REQUISE:');
     console.log('Ajoutez ces variables dans votre .env.local:\n');
+    
+    if (starterPrice) {
+      console.log(`STRIPE_STARTER_PRICE_ID=${starterPrice.id}`);
+    }
     
     if (monthlyPrice) {
       console.log(`STRIPE_MONTHLY_PRICE_ID=${monthlyPrice.id}`);

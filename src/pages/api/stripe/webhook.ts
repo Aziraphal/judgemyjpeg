@@ -75,12 +75,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
               logger.info('Premium subscription activated', { userId }, userId, ip)
             } else {
-              // Paiement unique (annual)
-              await updateUserSubscription(userId, 'annual', {
-                customerId: session.customer as string
-              })
-
-              logger.info('Annual subscription activated', { userId }, userId, ip)
+              // Paiement unique - déterminer le type selon le price_id
+              const priceType = session.metadata?.priceType || 'unknown'
+              
+              if (priceType === 'starter') {
+                // Activer le starter pack
+                const { activateStarterPack } = await import('@/services/subscription')
+                await activateStarterPack(userId)
+                logger.info('Starter Pack activated', { userId, amount: session.amount_total }, userId, ip)
+              } else {
+                // Paiement unique (annual)
+                await updateUserSubscription(userId, 'annual', {
+                  customerId: session.customer as string
+                })
+                logger.info('Annual subscription activated', { userId }, userId, ip)
+              }
             }
             break
           }

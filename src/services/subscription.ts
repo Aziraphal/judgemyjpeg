@@ -10,6 +10,7 @@ export interface UserSubscription {
   // Starter Pack
   starterPack: {
     hasStarterPack: boolean
+    purchased: boolean
     analysisCount: number
     sharesCount: number
     exportsCount: number
@@ -27,6 +28,7 @@ export async function getUserSubscription(userId: string): Promise<UserSubscript
       lastAnalysisReset: true,
       currentPeriodEnd: true,
       // Starter Pack fields
+      starterPackPurchased: true,
       starterPackUsed: true,
       starterAnalysisCount: true,
       starterSharesCount: true,
@@ -70,8 +72,8 @@ export async function getUserSubscription(userId: string): Promise<UserSubscript
 
   const maxAnalyses = limits[user.subscriptionStatus as keyof typeof limits] || 3
   
-  // Vérifier si l'utilisateur peut analyser (plan premium/annual OU dans les limites OU starter pack)
-  const hasStarterAnalyses = !user.starterPackUsed && user.starterAnalysisCount > 0
+  // Vérifier si l'utilisateur peut analyser (plan premium/annual OU dans les limites OU starter pack acheté)
+  const hasStarterAnalyses = user.starterPackPurchased && !user.starterPackUsed && user.starterAnalysisCount > 0
   const canAnalyze = ['premium', 'annual'].includes(user.subscriptionStatus) || 
                     currentCount < maxAnalyses || 
                     hasStarterAnalyses
@@ -91,7 +93,8 @@ export async function getUserSubscription(userId: string): Promise<UserSubscript
     canAnalyze,
     daysUntilReset,
     starterPack: {
-      hasStarterPack: !user.starterPackUsed,
+      hasStarterPack: user.starterPackPurchased && !user.starterPackUsed,
+      purchased: user.starterPackPurchased,
       analysisCount: user.starterAnalysisCount || 0,
       sharesCount: user.starterSharesCount || 0,
       exportsCount: user.starterExportsCount || 0,
@@ -107,14 +110,15 @@ export async function incrementAnalysisCount(userId: string): Promise<void> {
     throw new Error('Limite d\'analyses atteinte pour ce mois')
   }
 
-  // Utiliser prioritairement les analyses du starter pack
+  // Utiliser prioritairement les analyses du starter pack acheté
   if (subscription.starterPack.hasStarterPack && subscription.starterPack.analysisCount > 0) {
+    const newCount = subscription.starterPack.analysisCount - 1
     await prisma.user.update({
       where: { id: userId },
       data: {
-        starterAnalysisCount: {
-          decrement: 1
-        }
+        starterAnalysisCount: newCount,
+        // Marquer comme épuisé si plus d'analyses, partages et exports
+        starterPackUsed: newCount === 0 && subscription.starterPack.sharesCount === 0 && subscription.starterPack.exportsCount === 0
       }
     })
   } else if (subscription.subscriptionStatus === 'free') {
@@ -200,12 +204,49 @@ export async function useStarterExport(userId: string): Promise<void> {
     throw new Error('Aucun export PDF disponible dans votre starter pack')
   }
 
+  const subscription = await getUserSubscription(userId)
+  const newCount = subscription.starterPack.exportsCount - 1
+
   await prisma.user.update({
     where: { id: userId },
     data: {
-      starterExportsCount: {
-        decrement: 1
-      }
+      starterExportsCount: newCount,
+      // Marquer comme épuisé si plus d'analyses, partages et exports
+      starterPackUsed: subscription.starterPack.analysisCount === 0 && subscription.starterPack.sharesCount === 0 && newCount === 0
     }
   })
+}
+
+// Fonction pour activer le starter pack après achat Stripe
+export async function activateStarterPack(userId: string): Promise<void> {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { starterPackPurchased: true }
+  })
+
+  if (user?.starterPackPurchased) {
+    throw new Error('Starter pack déjà acheté pour ce compte')
+  }
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      starterPackPurchased: true,
+      starterPackUsed: false,
+      starterAnalysisCount: 10,
+      starterSharesCount: 3,
+      starterExportsCount: 3,
+      starterPackActivated: new Date()
+    }
+  })
+}
+
+// Vérifier si l'utilisateur peut acheter le starter pack
+export async function canPurchaseStarterPack(userId: string): Promise<boolean> {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { starterPackPurchased: true, subscriptionStatus: true }
+  })
+
+  return user ? (!user.starterPackPurchased && user.subscriptionStatus === 'free') : false
 }
