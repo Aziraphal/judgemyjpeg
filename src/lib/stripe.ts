@@ -11,11 +11,11 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 
 // Configuration des produits Stripe
 export const STRIPE_CONFIG = {
-  // Prix mensuels
-  MONTHLY_PRICE_ID: process.env.STRIPE_MONTHLY_PRICE_ID || 'price_monthly_999',
+  // Prix mensuels €9.98/mois
+  MONTHLY_PRICE_ID: process.env.STRIPE_MONTHLY_PRICE_ID || 'price_monthly_998',
   
-  // Prix à vie 99€
-  LIFETIME_PRICE_ID: process.env.STRIPE_LIFETIME_PRICE_ID || 'price_lifetime_9900',
+  // Prix annuel €79/an
+  ANNUAL_PRICE_ID: process.env.STRIPE_ANNUAL_PRICE_ID || 'price_annual_7900',
   
   // URLs de retour
   SUCCESS_URL: process.env.NODE_ENV === 'production' 
@@ -37,7 +37,7 @@ export const createCheckoutSession = async (
 ) => {
   return await stripe.checkout.sessions.create({
     customer: customerId,
-    mode: priceId === STRIPE_CONFIG.LIFETIME_PRICE_ID ? 'payment' : 'subscription',
+    mode: 'subscription', // Tous les plans sont maintenant en subscription
     payment_method_types: ['card'],
     line_items: [
       {
