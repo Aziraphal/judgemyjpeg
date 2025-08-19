@@ -27,7 +27,7 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     console.log('Subscription status:', subscription)
 
     // Déterminer si l'utilisateur est premium
-    const isPremium = subscription && (subscription.subscriptionStatus === 'premium' || subscription.subscriptionStatus === 'lifetime')
+    const isPremium = subscription && (subscription.subscriptionStatus === 'premium' || subscription.subscriptionStatus === 'annual')
 
     res.status(200).json({ 
       subscription,

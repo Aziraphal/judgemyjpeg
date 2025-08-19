@@ -75,12 +75,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
               logger.info('Premium subscription activated', { userId }, userId, ip)
             } else {
-              // Paiement unique (lifetime)
-              await updateUserSubscription(userId, 'lifetime', {
+              // Paiement unique (annual)
+              await updateUserSubscription(userId, 'annual', {
                 customerId: session.customer as string
               })
 
-              logger.info('Lifetime subscription activated', { userId }, userId, ip)
+              logger.info('Annual subscription activated', { userId }, userId, ip)
             }
             break
           }
