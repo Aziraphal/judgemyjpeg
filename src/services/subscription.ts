@@ -73,7 +73,7 @@ export async function getUserSubscription(userId: string): Promise<UserSubscript
   const maxAnalyses = limits[user.subscriptionStatus as keyof typeof limits] || 3
   
   // Vérifier si l'utilisateur peut analyser (plan premium/annual OU dans les limites OU starter pack acheté)
-  const hasStarterAnalyses = user.starterPackPurchased && !user.starterPackUsed && user.starterAnalysisCount > 0
+  const hasStarterAnalyses = (user.starterPackPurchased ?? false) && !(user.starterPackUsed ?? false) && (user.starterAnalysisCount ?? 0) > 0
   const canAnalyze = ['premium', 'annual'].includes(user.subscriptionStatus) || 
                     currentCount < maxAnalyses || 
                     hasStarterAnalyses
@@ -93,11 +93,11 @@ export async function getUserSubscription(userId: string): Promise<UserSubscript
     canAnalyze,
     daysUntilReset,
     starterPack: {
-      hasStarterPack: user.starterPackPurchased && !user.starterPackUsed,
-      purchased: user.starterPackPurchased,
-      analysisCount: user.starterAnalysisCount || 0,
-      sharesCount: user.starterSharesCount || 0,
-      exportsCount: user.starterExportsCount || 0,
+      hasStarterPack: (user.starterPackPurchased ?? false) && !(user.starterPackUsed ?? false),
+      purchased: user.starterPackPurchased ?? false,
+      analysisCount: user.starterAnalysisCount ?? 0,
+      sharesCount: user.starterSharesCount ?? 0,
+      exportsCount: user.starterExportsCount ?? 0,
       activatedAt: user.starterPackActivated || undefined
     }
   }
@@ -248,5 +248,5 @@ export async function canPurchaseStarterPack(userId: string): Promise<boolean> {
     select: { starterPackPurchased: true, subscriptionStatus: true }
   })
 
-  return user ? (!user.starterPackPurchased && user.subscriptionStatus === 'free') : false
+  return user ? (!(user.starterPackPurchased ?? false) && user.subscriptionStatus === 'free') : false
 }

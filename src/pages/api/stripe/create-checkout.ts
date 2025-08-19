@@ -32,12 +32,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Vérifications selon le type de plan
     if (priceType === 'starter') {
-      // Vérifier qu'il peut acheter le starter pack
-      if (user.subscriptionStatus !== 'free') {
-        return res.status(400).json({ error: 'Le Starter Pack n\'est disponible que pour les comptes gratuits' })
-      }
-      if (user.starterPackPurchased) {
-        return res.status(400).json({ error: 'Vous avez déjà acheté le Starter Pack (limité à 1 par compte)' })
+      // Utiliser la fonction de service pour vérifier l'éligibilité
+      const { canPurchaseStarterPack } = await import('@/services/subscription')
+      const canPurchase = await canPurchaseStarterPack(user.id)
+      
+      if (!canPurchase) {
+        if (user.subscriptionStatus !== 'free') {
+          return res.status(400).json({ error: 'Le Starter Pack n\'est disponible que pour les comptes gratuits' })
+        }
+        if (user.starterPackPurchased ?? false) {
+          return res.status(400).json({ error: 'Vous avez déjà acheté le Starter Pack (limité à 1 par compte)' })
+        }
       }
     } else {
       // Vérifier qu'il n'est pas déjà premium/annual
