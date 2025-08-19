@@ -10,7 +10,7 @@ export default function PricingPage() {
   const [loading, setLoading] = useState<string | null>(null)
 
   // Fonction de test pour le développement
-  const handleTestSubscription = async (subscriptionType: 'premium' | 'lifetime') => {
+  const handleTestSubscription = async (subscriptionType: 'premium' | 'annual') => {
     if (process.env.NODE_ENV === 'production') return
     
     setLoading(`test-${subscriptionType}`)
@@ -37,7 +37,7 @@ export default function PricingPage() {
     }
   }
 
-  const handleSubscribe = async (priceType: 'monthly' | 'lifetime') => {
+  const handleSubscribe = async (priceType: 'monthly' | 'annual') => {
     if (!session) {
       router.push('/')
       return
@@ -46,7 +46,7 @@ export default function PricingPage() {
     setLoading(priceType)
 
     // Track début processus abonnement
-    trackSubscription(priceType === 'monthly' ? 'premium' : 'lifetime', 'start')
+    trackSubscription(priceType === 'monthly' ? 'premium' : 'annual', 'start')
 
     try {
       const response = await fetch('/api/stripe/create-checkout', {
@@ -242,15 +242,15 @@ export default function PricingPage() {
             {/* Plan Lifetime */}
             <div className="glass-card p-8 hover-glow border-2 border-neon-cyan">
               <div className="text-center mb-6">
-                <div className="text-3xl mb-4">🚀</div>
-                <h3 className="text-2xl font-bold text-text-white mb-2">Lifetime</h3>
-                <p className="text-text-gray">Investissement unique</p>
+                <div className="text-3xl mb-4">📅</div>
+                <h3 className="text-2xl font-bold text-text-white mb-2">Annuel</h3>
+                <p className="text-text-gray">Meilleure valeur</p>
               </div>
 
               <div className="text-center mb-8">
-                <div className="text-4xl font-bold text-neon-cyan mb-2">99€</div>
-                <div className="text-text-muted">à vie</div>
-                <div className="text-xs text-neon-pink mt-1">💎 Plus de 10 mois = rentable</div>
+                <div className="text-4xl font-bold text-neon-cyan mb-2">79€</div>
+                <div className="text-text-muted">par an</div>
+                <div className="text-xs text-neon-pink mt-1">💎 Économisez 33% vs mensuel</div>
               </div>
 
               <div className="space-y-4 mb-8">
@@ -260,28 +260,28 @@ export default function PricingPage() {
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="text-neon-cyan">✓</span>
-                  <span className="text-text-white font-semibold">Accès à vie</span>
+                  <span className="text-text-white font-semibold">Analyses illimitées</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="text-neon-cyan">✓</span>
-                  <span className="text-text-white">Futures fonctionnalités incluses</span>
+                  <span className="text-text-white">Économie de 40€/an</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="text-neon-cyan">✓</span>
-                  <span className="text-text-white">Support prioritaire à vie</span>
+                  <span className="text-text-white">Support prioritaire</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="text-neon-cyan">✓</span>
-                  <span className="text-text-white">Badge "Early Adopter"</span>
+                  <span className="text-text-white">Engagement réduit</span>
                 </div>
               </div>
 
               <button
-                onClick={() => handleSubscribe('lifetime')}
-                disabled={loading === 'lifetime' || !session}
+                onClick={() => handleSubscribe('annual')}
+                disabled={loading === 'annual' || !session}
                 className="w-full btn-neon-cyan"
               >
-                {loading === 'lifetime' ? (
+                {loading === 'annual' ? (
                   <span className="flex items-center justify-center space-x-2">
                     <div className="spinner-neon w-4 h-4"></div>
                     <span>Redirection...</span>
@@ -289,18 +289,18 @@ export default function PricingPage() {
                 ) : !session ? (
                   'Se connecter d\'abord'
                 ) : (
-                  'Acheter maintenant'
+                  'S\'abonner pour 1 an'
                 )}
               </button>
 
               {/* Bouton de test en développement */}
               {process.env.NODE_ENV === 'development' && session && (
                 <button
-                  onClick={() => handleTestSubscription('lifetime')}
-                  disabled={loading === 'test-lifetime'}
+                  onClick={() => handleTestSubscription('annual')}
+                  disabled={loading === 'test-annual'}
                   className="w-full mt-2 btn-neon-secondary text-sm"
                 >
-                  {loading === 'test-lifetime' ? 'Test...' : '🧪 Test Lifetime (Dev)'}
+                  {loading === 'test-annual' ? 'Test...' : '🧪 Test Annuel (Dev)'}
                 </button>
               )}
             </div>

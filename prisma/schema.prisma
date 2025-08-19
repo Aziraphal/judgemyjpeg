@@ -65,6 +65,7 @@ model User {
   userSessions         UserSession[]
   userPreferences      UserPreferences?
   reports              Report[]
+  feedbacks            Feedback[]
 
   @@index([subscriptionStatus])
   @@index([createdAt])
@@ -224,4 +225,27 @@ model Report {
   @@index([status, createdAt])
   @@index([reason, createdAt])
   @@index([reporterIp, createdAt])
+}
+
+model Feedback {
+  id          String   @id @default(cuid())
+  userId      String?
+  email       String?
+  type        String   // 'bug', 'feature', 'general', 'love', 'confusion'
+  category    String?  // 'interface', 'ai_analysis', 'performance', 'pricing'
+  rating      Int?     // 1-5 étoiles
+  title       String?  // Titre court du feedback
+  message     String   // Message principal
+  page        String?  // Page où le feedback a été donné
+  userAgent   String?
+  metadata    String?  // JSON avec contexte technique
+  status      String   @default("new") // 'new', 'read', 'implemented', 'ignored'
+  adminNotes  String?  // Notes internes pour admin
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([type, createdAt])
+  @@index([status, createdAt])
+  @@index([rating, createdAt])
 }

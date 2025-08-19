@@ -81,14 +81,14 @@ export default function FAQ() {
     {
       id: '10',
       category: 'subscription',
-      question: 'Puis-je passer du plan mensuel au plan Lifetime ?',
-      answer: 'Oui ! Contactez le support avec votre demande. Nous calculons au prorata et vous facturons la différence. Le plan Lifetime inclut toutes les futures fonctionnalités sans surcoût.'
+      question: 'Puis-je passer du plan mensuel au plan Annuel ?',
+      answer: 'Oui ! Contactez le support avec votre demande. Nous calculons au prorata et vous facturons la différence. Le plan Annuel vous fait économiser 33% sur le prix mensuel.'
     },
     {
       id: '11',
       category: 'subscription',
       question: 'Y a-t-il des remboursements ?',
-      answer: 'Remboursement intégral sous 14 jours pour les nouveaux abonnements. Plan Lifetime : remboursement sous 30 jours. Pas de remboursement au prorata en cours de mois. Annulation possible à tout moment.'
+      answer: 'Remboursement intégral sous 14 jours pour les nouveaux abonnements. Plan Annuel : remboursement sous 30 jours au prorata. Pas de remboursement au prorata en cours de mois pour le plan mensuel. Annulation possible à tout moment.'
     },
 
     // Confidentialité
@@ -96,7 +96,7 @@ export default function FAQ() {
       id: '12',
       category: 'privacy',
       question: 'Que faites-vous de mes photos ?',
-      answer: 'Vos photos sont temporairement envoyées à notre service d\'IA pour analyse, puis supprimées des serveurs. Chez nous : 30 jours (gratuit), 1 an (premium), illimité (lifetime). Vous pouvez supprimer vos photos à tout moment. Nous ne les utilisons JAMAIS à d\'autres fins.',
+      answer: 'Vos photos sont temporairement envoyées à notre service d\'IA pour analyse, puis supprimées des serveurs. Chez nous : 30 jours (gratuit), 1 an (premium/annuel). Vous pouvez supprimer vos photos à tout moment. Nous ne les utilisons JAMAIS à d\'autres fins.',
       important: true
     },
     {
@@ -223,7 +223,7 @@ export default function FAQ() {
       id: '29',
       category: 'legal',
       question: 'Puis-je utiliser JudgeMyJPEG à des fins commerciales ?',
-      answer: 'Oui pour les plans payants ! Premium/Lifetime : usage commercial autorisé, analyses pour clients, intégration en agence photo. Plan gratuit : usage personnel uniquement. Les analyses générées vous appartiennent. Consultez nos CGU pour les détails.',
+      answer: 'Oui pour les plans payants ! Premium/Annuel : usage commercial autorisé, analyses pour clients, intégration en agence photo. Plan gratuit : usage personnel uniquement. Les analyses générées vous appartiennent. Consultez nos CGU pour les détails.',
       tags: ['commercial', 'professionnel', 'licence', 'usage']
     },
 

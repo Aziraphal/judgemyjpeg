@@ -14,54 +14,36 @@ interface Resource {
 
 const resources: Resource[] = [
   {
-    title: "Guide Complet : 10 Erreurs Photo que l'IA Détecte Instantanément",
-    description: "Découvrez les défauts techniques et artistiques les plus courants analysés par notre IA. Avec exemples avant/après et solutions pratiques.",
+    title: "🚧 Ressources en Préparation",
+    description: "Nous travaillons actuellement sur une collection complète de guides, templates et outils gratuits. Revenez bientôt !",
     type: "guide",
-    link: "/blog/10-erreurs-photos-ia-detecte",
-    tags: ["erreurs photo", "technique", "IA", "amélioration"],
+    link: "/blog",
+    tags: ["bientôt disponible", "en développement"],
     difficulty: "débutant"
   },
   {
-    title: "Checklist PDF : Optimiser ses Photos pour les Réseaux Sociaux", 
-    description: "Liste de vérification complète pour maximiser l'impact de vos photos Instagram, Facebook et TikTok.",
-    type: "template",
-    link: "/ressources/checklist-reseaux-sociaux.pdf",
-    tags: ["réseaux sociaux", "checklist", "optimisation"],
-    difficulty: "débutant",
-    downloadable: true
-  },
-  {
-    title: "Étude de Cas : 100 Photos Analysées par l'IA",
-    description: "Analyse statistique complète des défauts les plus fréquents et des améliorations possibles sur un échantillon de 100 photos.",
-    type: "study", 
-    link: "/blog/etude-100-photos-ia",
-    tags: ["étude", "statistiques", "analyse", "tendances"],
-    difficulty: "intermédiaire"
-  },
-  {
-    title: "Templates Lightroom : Corrections Basées sur l'IA",
-    description: "Presets Lightroom créés à partir des recommandations les plus fréquentes de notre IA pour différents types de photos.",
-    type: "template",
-    link: "/ressources/presets-lightroom-ia.zip",
-    tags: ["Lightroom", "presets", "correction", "retouche"],
-    difficulty: "avancé",
-    downloadable: true
-  },
-  {
-    title: "Formation Gratuite : Comprendre les Scores IA",
-    description: "Mini-cours pour décoder les évaluations de l'IA et appliquer les conseils d'amélioration efficacement.",
+    title: "📚 Blog JudgeMyJPEG", 
+    description: "Découvrez nos articles sur la photographie et l'intelligence artificielle pour améliorer vos compétences.",
     type: "guide",
-    link: "/formation/scores-ia",
-    tags: ["formation", "scores", "compréhension", "application"],
+    link: "/blog",
+    tags: ["articles", "conseils", "photographie"],
     difficulty: "débutant"
   },
   {
-    title: "API Documentation : Intégrer l'Analyse IA",
-    description: "Documentation technique complète pour intégrer notre moteur d'analyse photo dans vos applications.",
+    title: "❓ FAQ - Questions Fréquentes",
+    description: "Trouvez rapidement les réponses aux questions les plus courantes sur JudgeMyJPEG et ses fonctionnalités.",
+    type: "guide", 
+    link: "/faq",
+    tags: ["aide", "support", "questions"],
+    difficulty: "débutant"
+  },
+  {
+    title: "📸 Analyser vos Photos Maintenant",
+    description: "Le meilleur moyen d'apprendre est de pratiquer ! Analysez vos photos avec notre IA dès maintenant.",
     type: "tool",
-    link: "/api/documentation",
-    tags: ["API", "développement", "intégration", "technique"],
-    difficulty: "avancé"
+    link: "/analyze",
+    tags: ["analyse", "pratique", "IA"],
+    difficulty: "débutant"
   }
 ]
 
@@ -140,19 +122,19 @@ export default function RessourcesPage() {
             </div>
           </div>
 
-          {/* CTA Premium */}
-          <div className="glass-card p-6 mb-12 border border-neon-pink/30">
+          {/* Notice Construction */}
+          <div className="glass-card p-6 mb-12 border border-yellow-400/30">
             <div className="flex flex-col md:flex-row items-center justify-between">
               <div className="mb-4 md:mb-0">
                 <h3 className="text-xl font-bold text-text-white mb-2">
-                  🚀 Accès Premium aux Ressources Avancées
+                  🚧 Ressources en Construction
                 </h3>
                 <p className="text-text-gray">
-                  Templates exclusifs, formations vidéo et outils professionnels pour photographes
+                  Nous préparons une collection complète de guides, templates et outils gratuits. En attendant, profitez de nos analyses IA !
                 </p>
               </div>
-              <Link href="/tarifs" className="btn-neon-pink whitespace-nowrap">
-                💎 Voir les Plans
+              <Link href="/analyze" className="btn-neon-cyan whitespace-nowrap">
+                📸 Analyser maintenant
               </Link>
             </div>
           </div>

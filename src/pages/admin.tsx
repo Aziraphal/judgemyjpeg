@@ -7,7 +7,7 @@ export default function AdminPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [email, setEmail] = useState('')
-  const [plan, setPlan] = useState<'free' | 'premium' | 'lifetime'>('premium')
+  const [plan, setPlan] = useState<'free' | 'premium' | 'annual'>('premium')
   const [secret, setSecret] = useState('')
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<string | null>(null)
@@ -134,7 +134,7 @@ export default function AdminPage() {
                   >
                     <option value="free">🆓 Gratuit</option>
                     <option value="premium">💎 Premium</option>
-                    <option value="lifetime">🚀 Lifetime</option>
+                    <option value="annual">📅 Annuel</option>
                   </select>
                 </div>
 

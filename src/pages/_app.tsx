@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app'
 import { SessionProvider } from 'next-auth/react'
 import SecurityStatusBar from '@/components/SecurityStatusBar'
 import CookieConsent from '@/components/CookieConsent'
+import FeedbackButton from '@/components/FeedbackButton'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
@@ -99,6 +100,11 @@ export default function App({
         {process.env.NODE_ENV === 'development' && !hideSecurityBar && <SecurityStatusBar compact position="top" />}
         <Component {...pageProps} />
         <CookieConsent />
+        
+        {/* Bouton feedback flottant sur toutes les pages (sauf admin) */}
+        {!router.pathname.startsWith('/admin') && !router.pathname.startsWith('/auth') && (
+          <FeedbackButton variant="floating" size="md" />
+        )}
       </SessionProvider>
     </>
   )

@@ -53,10 +53,10 @@ export default function SubscriptionStatus({ compact = false }: SubscriptionStat
 
   const getStatusConfig = () => {
     switch (subscription.subscriptionStatus) {
-      case 'lifetime':
+      case 'annual':
         return {
-          icon: '🚀',
-          label: 'Lifetime',
+          icon: '📅',
+          label: 'Annuel',
           color: 'text-neon-cyan',
           bgColor: 'bg-neon-cyan/10',
           borderColor: 'border-neon-cyan/50'
@@ -265,17 +265,17 @@ export default function SubscriptionStatus({ compact = false }: SubscriptionStat
                 </button>
               </div>
 
-              {/* Plan Lifetime */}
+              {/* Plan Annuel */}
               <div className="bg-gradient-to-b from-neon-cyan/20 to-neon-pink/20 border border-neon-cyan/50 rounded-lg p-6 relative">
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                   <span className="bg-neon-cyan text-black px-3 py-1 rounded-full text-xs font-bold">MEILLEURE VALEUR</span>
                 </div>
                 
                 <div className="text-center mb-4">
-                  <h5 className="text-lg font-bold text-neon-cyan">🚀 Lifetime</h5>
-                  <div className="text-3xl font-bold text-neon-cyan mt-2 mb-1">99€</div>
-                  <div className="text-text-muted text-sm">paiement unique</div>
-                  <div className="text-xs text-neon-cyan mt-1 font-semibold">Économie de 60€/an</div>
+                  <h5 className="text-lg font-bold text-neon-cyan">📅 Annuel</h5>
+                  <div className="text-3xl font-bold text-neon-cyan mt-2 mb-1">79€</div>
+                  <div className="text-text-muted text-sm">par an</div>
+                  <div className="text-xs text-neon-cyan mt-1 font-semibold">Économie de 40€/an</div>
                 </div>
                 
                 <div className="space-y-3">
@@ -285,19 +285,19 @@ export default function SubscriptionStatus({ compact = false }: SubscriptionStat
                   </div>
                   <div className="flex items-center space-x-3">
                     <span className="text-neon-cyan">✓</span>
-                    <span className="text-text-white text-sm">Accès à vie garanti</span>
+                    <span className="text-text-white text-sm">Analyses illimitées</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <span className="text-neon-cyan">✓</span>
-                    <span className="text-text-white text-sm">Nouvelles features incluses</span>
+                    <span className="text-text-white text-sm">Engagement annuel</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <span className="text-neon-cyan">✓</span>
-                    <span className="text-text-white text-sm">Badge membre fondateur</span>
+                    <span className="text-text-white text-sm">Facturation annuelle</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <span className="text-neon-cyan">✓</span>
-                    <span className="text-text-white text-sm">Support VIP</span>
+                    <span className="text-text-white text-sm">Support prioritaire</span>
                   </div>
                 </div>
                 
@@ -305,7 +305,7 @@ export default function SubscriptionStatus({ compact = false }: SubscriptionStat
                   onClick={() => router.push('/pricing')}
                   className="w-full mt-4 btn-neon-cyan"
                 >
-                  Choisir Lifetime
+                  Choisir Annuel
                 </button>
               </div>
             </div>
