@@ -95,7 +95,7 @@ export async function getUserSubscription(userId: string): Promise<UserSubscript
       analysisCount: user.starterAnalysisCount || 0,
       sharesCount: user.starterSharesCount || 0,
       exportsCount: user.starterExportsCount || 0,
-      activatedAt: user.starterPackActivated
+      activatedAt: user.starterPackActivated || undefined
     }
   }
 }
