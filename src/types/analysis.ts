@@ -26,7 +26,13 @@ export const PHOTO_TYPES_CONFIG = {
     emoji: '🎯',
     description: 'Analyse complète sans spécialisation - idéal pour tous types de photos',
     focusAreas: ['composition', 'technique', 'esthétique', 'impact visuel'],
-    criteria: 'Analyse équilibrée couvrant tous les aspects photographiques essentiels'
+    criteria: 'Analyse équilibrée couvrant tous les aspects photographiques essentiels',
+    specificCriteria: {
+      composition: 'Règle des tiers, lignes directrices, équilibre visuel',
+      technique: 'Netteté, exposition, profondeur de champ, qualité générale',
+      couleurs: 'Harmonie chromatique, saturation, température de couleur',
+      creativite: 'Originalité, impact émotionnel, message transmis'
+    }
   },
   portrait: {
     name: 'Portrait',
