@@ -1,4 +1,4 @@
-import { PhotoAnalysis } from './openai'
+import { PhotoAnalysis } from '@/types/analysis'
 import { detectFamousPhoto, FamousPhotoInfo } from './famous-photo-detector'
 
 export interface BatchPhoto {

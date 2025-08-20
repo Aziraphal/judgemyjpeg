@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { PhotoAnalysis, AnalysisTone, AnalysisLanguage, PhotoType } from '@/services/openai'
+import { PhotoAnalysis, AnalysisTone, AnalysisLanguage, PhotoType } from '@/types/analysis'
 import ContextualTooltip, { RichTooltip } from './ContextualTooltip'
 import PhotoTypeSelector from './PhotoTypeSelector'
 import { extractExifData } from '@/utils/exifExtractor'

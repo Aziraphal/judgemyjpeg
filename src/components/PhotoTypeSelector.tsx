@@ -1,4 +1,4 @@
-import { PhotoType, PHOTO_TYPES_CONFIG } from '@/services/openai'
+import { PhotoType, PHOTO_TYPES_CONFIG } from '@/types/analysis'
 import { useState } from 'react'
 
 interface PhotoTypeSelectorProps {

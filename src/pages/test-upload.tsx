@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Head from 'next/head'
 import PhotoUpload from '@/components/PhotoUpload'
 import AnalysisResult from '@/components/AnalysisResult'
-import { PhotoAnalysis, AnalysisTone, AnalysisLanguage } from '@/services/openai'
+import { PhotoAnalysis, AnalysisTone, AnalysisLanguage } from '@/types/analysis'
 
 export default function TestUploadPage() {
   const [result, setResult] = useState<{

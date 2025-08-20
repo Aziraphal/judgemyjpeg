@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { PhotoAnalysis, analyzePhoto } from '@/services/openai'
+import { PhotoAnalysis } from '@/types/analysis'
 
 interface ScoreTestProps {
   imageBase64: string
@@ -16,14 +16,36 @@ export default function ScoreConsistencyTest({ imageBase64 }: ScoreTestProps) {
     setResults({ testing: true })
     
     try {
-      const [professionalResult, roastResult] = await Promise.all([
-        analyzePhoto(imageBase64, 'professional'),
-        analyzePhoto(imageBase64, 'roast')
+      // Appeler l'API au lieu d'importer directement analyzePhoto
+      const [professionalResponse, roastResponse] = await Promise.all([
+        fetch('/api/photos/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            imageBase64,
+            tone: 'professional',
+            language: 'fr',
+            photoType: 'other'
+          })
+        }),
+        fetch('/api/photos/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            imageBase64,
+            tone: 'roast',
+            language: 'fr',
+            photoType: 'other'
+          })
+        })
       ])
       
+      const professionalResult = await professionalResponse.json()
+      const roastResult = await roastResponse.json()
+      
       setResults({
-        professional: professionalResult,
-        roast: roastResult,
+        professional: professionalResult.analysis,
+        roast: roastResult.analysis,
         testing: false
       })
     } catch (error) {

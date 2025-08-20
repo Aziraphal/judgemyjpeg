@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { useDropzone } from 'react-dropzone'
 import Head from 'next/head'
 import Image from 'next/image'
-import { PhotoAnalysis } from '@/services/openai'
+import { PhotoAnalysis } from '@/types/analysis'
 import { PDFExporter } from '@/services/pdf-export'
 import BatchReportIntelligent from '@/components/BatchReportIntelligent'
 

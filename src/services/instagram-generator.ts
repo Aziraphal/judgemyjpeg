@@ -1,4 +1,4 @@
-import { PhotoAnalysis } from './openai'
+import { PhotoAnalysis } from '@/types/analysis'
 
 export interface InstagramPost {
   caption: string

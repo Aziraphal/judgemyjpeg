@@ -1,4 +1,4 @@
-import { PhotoAnalysis } from '@/services/openai'
+import { PhotoAnalysis } from '@/types/analysis'
 import crypto from 'crypto'
 
 // Interface pour le cache

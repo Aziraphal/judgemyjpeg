@@ -1,4 +1,4 @@
-import { PhotoAnalysis, AnalysisTone } from '@/services/openai'
+import { PhotoAnalysis, AnalysisTone } from '@/types/analysis'
 import Image from 'next/image'
 import FavoriteButton from '@/components/FavoriteButton'
 import AddToCollectionModal from '@/components/AddToCollectionModal'

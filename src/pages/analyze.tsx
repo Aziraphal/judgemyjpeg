@@ -11,7 +11,7 @@ import InteractiveTutorial, { useTutorial } from '@/components/InteractiveTutori
 import ProgressiveDisclosure, { useProgressiveDisclosure, SkillLevelGroup } from '@/components/ProgressiveDisclosure'
 import ContextualTooltip, { RichTooltip } from '@/components/ContextualTooltip'
 import StarterPackModal from '@/components/StarterPackModal'
-import { PhotoAnalysis, AnalysisTone, AnalysisLanguage, PhotoType } from '@/services/openai'
+import { PhotoAnalysis, AnalysisTone, AnalysisLanguage, PhotoType } from '@/types/analysis'
 import { trackPhotoAnalysis } from '@/lib/gtag'
 import { useAnalysisLimit } from '@/hooks/useAnalysisLimit'
 

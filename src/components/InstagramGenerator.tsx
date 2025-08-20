@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { PhotoAnalysis } from '@/services/openai'
+import { PhotoAnalysis } from '@/types/analysis'
 import { InstagramGenerator, InstagramPost } from '@/services/instagram-generator'
 
 interface InstagramGeneratorProps {

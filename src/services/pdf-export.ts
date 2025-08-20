@@ -1,6 +1,6 @@
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
-import { PhotoAnalysis } from './openai'
+import { PhotoAnalysis } from '@/types/analysis'
 
 interface BatchPhoto {
   id: string
