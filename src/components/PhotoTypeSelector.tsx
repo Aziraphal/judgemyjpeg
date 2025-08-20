@@ -64,11 +64,11 @@ export default function PhotoTypeSelector({
           />
           
           {/* Menu déroulant */}
-          <div className="absolute z-20 w-full mt-2 glass-card border border-cosmic-glassborder rounded-lg shadow-xl max-h-80 overflow-y-auto">
+          <div className="absolute z-20 w-full mt-2 bg-black border-2 border-white/20 rounded-lg shadow-2xl max-h-80 overflow-y-auto">
             {/* En-tête informatif */}
-            <div className="px-3 py-2 border-b border-cosmic-glassborder bg-cosmic-overlay">
-              <p className="text-xs text-white font-medium">
-                🎯 Sélectionnez le type pour une analyse IA spécialisée et des conseils adaptés
+            <div className="px-4 py-3 border-b border-white/10 bg-black">
+              <p className="text-sm text-white font-bold">
+                🎯 Sélectionnez le type pour une analyse IA spécialisée
               </p>
             </div>
             <div className="p-2 space-y-1">
@@ -83,10 +83,10 @@ export default function PhotoTypeSelector({
                       setIsOpen(false)
                     }}
                     className={`
-                      w-full flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 text-left
+                      w-full flex items-center space-x-3 p-4 rounded-lg transition-all duration-200 text-left
                       ${isSelected 
-                        ? 'bg-neon-pink/20 border border-neon-pink/50 text-white' 
-                        : 'hover:bg-cosmic-glass hover:border-cosmic-glassborder border border-transparent text-text-white hover:text-neon-pink'
+                        ? 'bg-white text-black border-2 border-white shadow-lg' 
+                        : 'bg-black text-white hover:bg-gray-800 border border-gray-700 hover:border-white/30'
                       }
                     `}
                   >
@@ -94,21 +94,21 @@ export default function PhotoTypeSelector({
                       {config.emoji}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <div className={`font-medium ${isSelected ? 'text-white' : ''}`}>
+                      <div className={`font-bold text-base ${isSelected ? 'text-black' : 'text-white'}`}>
                         {config.name}
                       </div>
-                      <div className={`text-sm line-clamp-2 ${isSelected ? 'text-white/90' : 'text-text-muted'}`}>
+                      <div className={`text-sm line-clamp-2 ${isSelected ? 'text-gray-700' : 'text-gray-300'}`}>
                         {config.description}
                       </div>
                       {/* Focus areas preview */}
-                      <div className={`text-xs mt-1 ${isSelected ? 'text-white/70' : 'text-text-muted/80'}`}>
+                      <div className={`text-xs mt-1 ${isSelected ? 'text-gray-600' : 'text-gray-400'}`}>
                         {config.focusAreas.slice(0, 2).join(' • ')}
                         {config.focusAreas.length > 2 && '...'}
                       </div>
                     </div>
                     {isSelected && (
                       <div className="flex-shrink-0">
-                        <svg className="w-5 h-5 text-neon-pink" fill="currentColor" viewBox="0 0 20 20">
+                        <svg className="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
                       </div>

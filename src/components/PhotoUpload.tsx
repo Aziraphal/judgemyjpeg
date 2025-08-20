@@ -16,7 +16,7 @@ interface PhotoUploadProps {
   onPhotoTypeChange?: (type: PhotoType) => void
 }
 
-export default function PhotoUpload({ onAnalysisComplete, tone, language, testMode = false, onUploadStateChange, onAnalysisLimitReached, photoType = 'other', onPhotoTypeChange }: PhotoUploadProps) {
+export default function PhotoUpload({ onAnalysisComplete, tone, language, testMode = false, onUploadStateChange, onAnalysisLimitReached, photoType = 'general', onPhotoTypeChange }: PhotoUploadProps) {
   const [isUploading, setIsUploading] = useState(false)
   const [dragActive, setDragActive] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)

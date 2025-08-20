@@ -18,7 +18,7 @@ export async function analyzePhoto(
   tone: AnalysisTone = 'professional',
   language: AnalysisLanguage = 'fr',
   exifData?: ExifData | null,
-  photoType: PhotoType = 'other',
+  photoType: PhotoType = 'general',
   userId?: string
 ): Promise<PhotoAnalysis> {
   try {

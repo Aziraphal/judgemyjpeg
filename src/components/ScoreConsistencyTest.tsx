@@ -25,7 +25,7 @@ export default function ScoreConsistencyTest({ imageBase64 }: ScoreTestProps) {
             imageBase64,
             tone: 'professional',
             language: 'fr',
-            photoType: 'other'
+            photoType: 'general'
           })
         }),
         fetch('/api/photos/analyze', {
@@ -35,7 +35,7 @@ export default function ScoreConsistencyTest({ imageBase64 }: ScoreTestProps) {
             imageBase64,
             tone: 'roast',
             language: 'fr',
-            photoType: 'other'
+            photoType: 'general'
           })
         })
       ])

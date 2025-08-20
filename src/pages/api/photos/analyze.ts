@@ -199,7 +199,7 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     
     const analysisTone: AnalysisTone = (tone === 'roast' || tone === 'professional' || tone === 'expert') ? tone : 'professional'
     const analysisLanguage: AnalysisLanguage = (['fr', 'en', 'es', 'de', 'it', 'pt'].includes(language as string)) ? language as AnalysisLanguage : 'fr'
-    const analysisPhotoType: PhotoType = (['portrait', 'landscape', 'street', 'macro', 'architecture', 'nature', 'sport', 'night', 'wedding', 'abstract', 'documentary', 'fashion', 'food', 'travel', 'other'].includes(photoType as string)) ? photoType as PhotoType : 'other'
+    const analysisPhotoType: PhotoType = (['general', 'portrait', 'landscape', 'street', 'macro', 'architecture', 'nature', 'sport', 'night', 'wedding', 'abstract', 'documentary', 'fashion', 'food', 'travel', 'other'].includes(photoType as string)) ? photoType as PhotoType : 'general'
 
     // Récupérer les données EXIF si fournies (mode Expert)
     let exifData: ExifData | null = null

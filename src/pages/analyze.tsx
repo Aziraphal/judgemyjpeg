@@ -24,7 +24,7 @@ export default function AnalyzePage() {
   } | null>(null)
   const [selectedTone, setSelectedTone] = useState<AnalysisTone>('professional')
   const [selectedLanguage, setSelectedLanguage] = useState<AnalysisLanguage>('fr')
-  const [selectedPhotoType, setSelectedPhotoType] = useState<PhotoType>('other')
+  const [selectedPhotoType, setSelectedPhotoType] = useState<PhotoType>('general')
   const [isUploading, setIsUploading] = useState(false)
   const [userLevel, setUserLevel] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner')
   const [showAdvancedOptions, setShowAdvancedOptions] = useState(false)

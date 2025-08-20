@@ -2,6 +2,7 @@
 export type AnalysisTone = 'professional' | 'roast' | 'expert'
 export type AnalysisLanguage = 'fr' | 'en' | 'es' | 'de' | 'it' | 'pt'
 export type PhotoType = 
+  | 'general'
   | 'portrait' 
   | 'landscape' 
   | 'street' 
@@ -20,6 +21,13 @@ export type PhotoType =
 
 // Configuration des types de photo avec prompts spécialisés
 export const PHOTO_TYPES_CONFIG = {
+  general: {
+    name: 'Analyse générale',
+    emoji: '🎯',
+    description: 'Analyse complète sans spécialisation - idéal pour tous types de photos',
+    focusAreas: ['composition', 'technique', 'esthétique', 'impact visuel'],
+    criteria: 'Analyse équilibrée couvrant tous les aspects photographiques essentiels'
+  },
   portrait: {
     name: 'Portrait',
     emoji: '👤',
