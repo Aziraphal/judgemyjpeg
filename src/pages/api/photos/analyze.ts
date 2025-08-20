@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { withAuth, AuthenticatedRequest } from '@/lib/auth-middleware'
 import { logger, getClientIP } from '@/lib/logger'
-import { analyzePhoto, AnalysisTone, AnalysisLanguage } from '@/services/openai'
+import { analyzePhoto, AnalysisTone, AnalysisLanguage, PhotoType } from '@/services/openai'
 import { uploadPhoto } from '@/services/cloudinary'
 import { ExifData } from '@/types/exif'
 import { prisma } from '@/lib/prisma'
@@ -191,12 +191,14 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
       }, req.user.id, ip)
     }
 
-    // Récupérer le ton et la langue sélectionnés
+    // Récupérer le ton, la langue et le type de photo sélectionnés
     const tone = Array.isArray(fields.tone) ? fields.tone[0] : fields.tone
     const language = Array.isArray(fields.language) ? fields.language[0] : fields.language
+    const photoType = Array.isArray(fields.photoType) ? fields.photoType[0] : fields.photoType
     
     const analysisTone: AnalysisTone = (tone === 'roast' || tone === 'professional' || tone === 'expert') ? tone : 'professional'
     const analysisLanguage: AnalysisLanguage = (['fr', 'en', 'es', 'de', 'it', 'pt'].includes(language as string)) ? language as AnalysisLanguage : 'fr'
+    const analysisPhotoType: PhotoType = (['portrait', 'landscape', 'street', 'macro', 'architecture', 'nature', 'sport', 'night', 'wedding', 'abstract', 'documentary', 'fashion', 'food', 'travel', 'other'].includes(photoType as string)) ? photoType as PhotoType : 'other'
 
     // Récupérer les données EXIF si fournies (mode Expert)
     let exifData: ExifData | null = null
@@ -237,8 +239,8 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
       // Upload vers Cloudinary seulement si pas en cache
       const uploadResult = await uploadPhoto(fileBuffer, file.originalFilename || 'photo')
       
-      // Analyser avec OpenAI GPT-4o-mini avec le ton sélectionné et EXIF si disponible
-      analysis = await analyzePhoto(base64Image, analysisTone, analysisLanguage, exifData)
+      // Analyser avec OpenAI GPT-4o-mini avec le ton, type photo sélectionnés et EXIF si disponible
+      analysis = await analyzePhoto(base64Image, analysisTone, analysisLanguage, exifData, analysisPhotoType, user.id)
       
       // Mettre en cache le résultat (TTL: 24h)
       await cacheService.cacheAnalysis(imageHash, analysis, analysisTone, analysisLanguage, 86400)
@@ -290,6 +292,15 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
         score: analysis.score,
         improvements: JSON.stringify(analysis.improvements),
         suggestions: JSON.stringify(analysis.suggestions),
+        // NOUVEAUX CHAMPS TRACKING
+        photoType: analysisPhotoType,
+        analysisTone: analysisTone,
+        analysisLanguage: analysisLanguage,
+        hasExifData: !!exifData,
+        exifData: exifData ? JSON.stringify(exifData) : null,
+        sessionId: analysis.analysisMetadata?.sessionId,
+        analysisMetadata: analysis.analysisMetadata ? JSON.stringify(analysis.analysisMetadata) : null,
+        partialScores: analysis.partialScores ? JSON.stringify(analysis.partialScores) : null,
       }
     })
 

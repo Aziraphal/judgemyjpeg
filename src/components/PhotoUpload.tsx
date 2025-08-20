@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
-import { PhotoAnalysis, AnalysisTone, AnalysisLanguage } from '@/services/openai'
+import { PhotoAnalysis, AnalysisTone, AnalysisLanguage, PhotoType } from '@/services/openai'
 import ContextualTooltip, { RichTooltip } from './ContextualTooltip'
+import PhotoTypeSelector from './PhotoTypeSelector'
 import { extractExifData } from '@/utils/exifExtractor'
 import { ExifData } from '@/types/exif'
 
@@ -11,9 +12,11 @@ interface PhotoUploadProps {
   testMode?: boolean // Mode test sans auth
   onUploadStateChange?: (isUploading: boolean) => void
   onAnalysisLimitReached?: () => void // Déclencher le modal starter pack
+  photoType?: PhotoType
+  onPhotoTypeChange?: (type: PhotoType) => void
 }
 
-export default function PhotoUpload({ onAnalysisComplete, tone, language, testMode = false, onUploadStateChange, onAnalysisLimitReached }: PhotoUploadProps) {
+export default function PhotoUpload({ onAnalysisComplete, tone, language, testMode = false, onUploadStateChange, onAnalysisLimitReached, photoType = 'other', onPhotoTypeChange }: PhotoUploadProps) {
   const [isUploading, setIsUploading] = useState(false)
   const [dragActive, setDragActive] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -170,6 +173,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
       formData.append('photo', processedFile)
       formData.append('tone', tone)
       formData.append('language', language)
+      formData.append('photoType', photoType)
       
       // Ajouter les données EXIF si disponibles
       if (exifData) {
@@ -280,9 +284,29 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
   // SUPPRIMÉ: Upload direct Cloudinary (plus nécessaire avec Railway)
 
   return (
-    <div className="w-full max-w-lg sm:max-w-2xl mx-auto">
+    <div className="w-full max-w-lg sm:max-w-2xl mx-auto space-y-6">
+      {/* Sélecteur de type de photo */}
+      {onPhotoTypeChange && (
+        <div className="space-y-3">
+          <label className="block text-sm font-medium text-text-white">
+            <span className="flex items-center space-x-2">
+              <span className="text-neon-cyan">📸</span>
+              <span>Type de photographie</span>
+            </span>
+          </label>
+          <PhotoTypeSelector
+            selectedType={photoType}
+            onTypeChange={onPhotoTypeChange}
+            disabled={isUploading}
+          />
+          <p className="text-xs text-text-muted">
+            💡 Sélectionnez le type pour une analyse IA spécialisée et des conseils adaptés
+          </p>
+        </div>
+      )}
+
       {errorMessage && (
-        <div className="mb-4 p-3 bg-red-900/30 border border-red-500/30 rounded-lg text-red-300">
+        <div className="p-3 bg-red-900/30 border border-red-500/30 rounded-lg text-red-300">
           <div className="flex items-center justify-between">
             <div className="flex-1">{errorMessage}</div>
             <button

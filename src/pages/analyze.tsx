@@ -11,7 +11,7 @@ import InteractiveTutorial, { useTutorial } from '@/components/InteractiveTutori
 import ProgressiveDisclosure, { useProgressiveDisclosure, SkillLevelGroup } from '@/components/ProgressiveDisclosure'
 import ContextualTooltip, { RichTooltip } from '@/components/ContextualTooltip'
 import StarterPackModal from '@/components/StarterPackModal'
-import { PhotoAnalysis, AnalysisTone, AnalysisLanguage } from '@/services/openai'
+import { PhotoAnalysis, AnalysisTone, AnalysisLanguage, PhotoType } from '@/services/openai'
 import { trackPhotoAnalysis } from '@/lib/gtag'
 import { useAnalysisLimit } from '@/hooks/useAnalysisLimit'
 
@@ -24,6 +24,7 @@ export default function AnalyzePage() {
   } | null>(null)
   const [selectedTone, setSelectedTone] = useState<AnalysisTone>('professional')
   const [selectedLanguage, setSelectedLanguage] = useState<AnalysisLanguage>('fr')
+  const [selectedPhotoType, setSelectedPhotoType] = useState<PhotoType>('other')
   const [isUploading, setIsUploading] = useState(false)
   const [userLevel, setUserLevel] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner')
   const [showAdvancedOptions, setShowAdvancedOptions] = useState(false)
@@ -353,6 +354,8 @@ export default function AnalyzePage() {
                       onAnalysisComplete={handleAnalysisComplete} 
                       tone={selectedTone}
                       language={selectedLanguage}
+                      photoType={selectedPhotoType}
+                      onPhotoTypeChange={setSelectedPhotoType}
                       onUploadStateChange={setIsUploading}
                       onAnalysisLimitReached={() => setShowStarterModal(true)}
                     />

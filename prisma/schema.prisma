@@ -118,6 +118,15 @@ model Photo {
   isTopPhoto      Boolean          @default(false)
   improvements    String?
   potentialScore  Float?
+  // NOUVEAUX CHAMPS TRACKING ET TYPES
+  photoType       String           @default("other") // portrait, landscape, street, macro, etc.
+  analysisTone    String           @default("professional") // professional, roast, expert
+  analysisLanguage String          @default("fr") // fr, en, es, de, it, pt
+  hasExifData     Boolean          @default(false)
+  exifData        String?          // JSON des données EXIF
+  sessionId       String?          // ID de session pour tracking
+  analysisMetadata String?         // JSON métadonnées d'analyse
+  partialScores   String?          // JSON scores détaillés (composition, lighting, etc.)
   collectionItems CollectionItem[]
   favorites       Favorite[]
   reports         Report[]
@@ -127,6 +136,9 @@ model Photo {
   @@index([score])
   @@index([isTopPhoto])
   @@index([createdAt])
+  @@index([photoType])
+  @@index([analysisTone])
+  @@index([hasExifData])
 }
 
 model Collection {
