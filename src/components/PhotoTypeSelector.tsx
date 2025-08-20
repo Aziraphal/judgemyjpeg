@@ -65,6 +65,12 @@ export default function PhotoTypeSelector({
           
           {/* Menu déroulant */}
           <div className="absolute z-20 w-full mt-2 glass-card border border-cosmic-glassborder rounded-lg shadow-xl max-h-80 overflow-y-auto">
+            {/* En-tête informatif */}
+            <div className="px-3 py-2 border-b border-cosmic-glassborder bg-cosmic-overlay">
+              <p className="text-xs text-white font-medium">
+                🎯 Sélectionnez le type pour une analyse IA spécialisée et des conseils adaptés
+              </p>
+            </div>
             <div className="p-2 space-y-1">
               {Object.entries(PHOTO_TYPES_CONFIG).map(([key, config]) => {
                 const isSelected = key === selectedType
@@ -79,7 +85,7 @@ export default function PhotoTypeSelector({
                     className={`
                       w-full flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 text-left
                       ${isSelected 
-                        ? 'bg-neon-cyan/20 border border-neon-cyan/50 text-neon-cyan' 
+                        ? 'bg-neon-pink/20 border border-neon-pink/50 text-white' 
                         : 'hover:bg-cosmic-glass hover:border-cosmic-glassborder border border-transparent text-text-white hover:text-neon-pink'
                       }
                     `}
@@ -88,21 +94,21 @@ export default function PhotoTypeSelector({
                       {config.emoji}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <div className={`font-medium ${isSelected ? 'text-neon-cyan' : ''}`}>
+                      <div className={`font-medium ${isSelected ? 'text-white' : ''}`}>
                         {config.name}
                       </div>
-                      <div className={`text-sm line-clamp-2 ${isSelected ? 'text-neon-cyan/80' : 'text-text-muted'}`}>
+                      <div className={`text-sm line-clamp-2 ${isSelected ? 'text-white/90' : 'text-text-muted'}`}>
                         {config.description}
                       </div>
                       {/* Focus areas preview */}
-                      <div className={`text-xs mt-1 ${isSelected ? 'text-neon-cyan/60' : 'text-text-muted/80'}`}>
+                      <div className={`text-xs mt-1 ${isSelected ? 'text-white/70' : 'text-text-muted/80'}`}>
                         {config.focusAreas.slice(0, 2).join(' • ')}
                         {config.focusAreas.length > 2 && '...'}
                       </div>
                     </div>
                     {isSelected && (
                       <div className="flex-shrink-0">
-                        <svg className="w-5 h-5 text-neon-cyan" fill="currentColor" viewBox="0 0 20 20">
+                        <svg className="w-5 h-5 text-neon-pink" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
                       </div>

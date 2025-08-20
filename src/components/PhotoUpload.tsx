@@ -299,7 +299,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
             onTypeChange={onPhotoTypeChange}
             disabled={isUploading}
           />
-          <p className="text-xs text-text-muted">
+          <p className="text-xs text-text-gray font-medium">
             💡 Sélectionnez le type pour une analyse IA spécialisée et des conseils adaptés
           </p>
         </div>
