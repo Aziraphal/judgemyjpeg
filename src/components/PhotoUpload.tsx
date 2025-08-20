@@ -160,13 +160,30 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
       let exifData: ExifData | null = null
       if (tone === 'expert') {
         try {
-          console.log('🔍 Extraction EXIF pour mode Expert...')
+          console.log('🔍 DEBUG: Extraction EXIF pour mode Expert...')
+          console.log('📄 DEBUG: File info:', {
+            name: processedFile.name,
+            size: processedFile.size,
+            type: processedFile.type,
+            lastModified: new Date(processedFile.lastModified).toISOString()
+          })
+          
           exifData = await extractExifData(processedFile)
+          
           if (exifData) {
-            console.log('📊 EXIF data extracted:', Object.keys(exifData))
+            console.log('✅ DEBUG: EXIF data extracted successfully:', {
+              keys: Object.keys(exifData),
+              camera: exifData.camera,
+              iso: exifData.iso,
+              aperture: exifData.aperture,
+              shutterSpeed: exifData.shutterSpeed,
+              focalLength: exifData.focalLength
+            })
+          } else {
+            console.log('❌ DEBUG: No EXIF data found')
           }
         } catch (exifError) {
-          console.warn('⚠️ EXIF extraction failed:', exifError)
+          console.error('⚠️ DEBUG: EXIF extraction failed:', exifError)
         }
       }
       

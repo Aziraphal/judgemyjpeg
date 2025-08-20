@@ -200,11 +200,27 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
 
     // Récupérer les données EXIF si fournies (mode Expert)
     let exifData: ExifData | null = null
+    
+    console.log('🔍 DEBUG SERVER: Checking for EXIF data in fields...')
+    console.log('📋 DEBUG SERVER: Available fields:', Object.keys(fields))
+    
     if (fields.exifData) {
       try {
         const rawExifData = Array.isArray(fields.exifData) ? fields.exifData[0] : fields.exifData
+        console.log('📦 DEBUG SERVER: Raw EXIF data length:', rawExifData?.length || 0)
+        console.log('📄 DEBUG SERVER: Raw EXIF preview:', rawExifData?.substring(0, 100))
+        
         const parsedExifData = JSON.parse(rawExifData) as ExifData
         exifData = parsedExifData
+        
+        console.log('✅ DEBUG SERVER: EXIF parsed successfully:', {
+          hasCamera: !!parsedExifData.camera,
+          hasISO: !!parsedExifData.iso,
+          hasAperture: !!parsedExifData.aperture,
+          keys: Object.keys(parsedExifData),
+          sample: parsedExifData
+        })
+        
         logger.info('EXIF data received for Expert analysis', {
           hasCamera: !!parsedExifData.camera,
           hasISO: !!parsedExifData.iso,
@@ -212,9 +228,12 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
           keys: Object.keys(parsedExifData)
         }, req.user.id, ip)
       } catch (parseError) {
+        console.error('❌ DEBUG SERVER: Failed to parse EXIF data:', parseError)
         logger.warn('Failed to parse EXIF data', parseError, req.user.id, ip)
         exifData = null
       }
+    } else {
+      console.log('❌ DEBUG SERVER: No exifData field found in form')
     }
 
     const base64Image = fileBuffer.toString('base64')
