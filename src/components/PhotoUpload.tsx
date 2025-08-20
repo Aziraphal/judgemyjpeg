@@ -1,6 +1,8 @@
 import { useState, useRef } from 'react'
 import { PhotoAnalysis, AnalysisTone, AnalysisLanguage } from '@/services/openai'
 import ContextualTooltip, { RichTooltip } from './ContextualTooltip'
+import { extractExifData } from '@/utils/exifExtractor'
+import { ExifData } from '@/types/exif'
 
 interface PhotoUploadProps {
   onAnalysisComplete: (result: { photo: any; analysis: PhotoAnalysis }) => void
@@ -154,10 +156,29 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
       const finalSizeMB = Math.round(processedFile.size / 1024 / 1024 * 100) / 100
       console.log(`Processing file for ${tone} analysis...`)
       
+      // Extraire les données EXIF pour le mode Expert
+      let exifData: ExifData | null = null
+      if (tone === 'expert') {
+        try {
+          console.log('🔍 Extraction EXIF pour mode Expert...')
+          exifData = await extractExifData(processedFile)
+          if (exifData) {
+            console.log('📊 EXIF data extracted:', Object.keys(exifData))
+          }
+        } catch (exifError) {
+          console.warn('⚠️ EXIF extraction failed:', exifError)
+        }
+      }
+      
       const formData = new FormData()
       formData.append('photo', processedFile)
       formData.append('tone', tone)
       formData.append('language', language)
+      
+      // Ajouter les données EXIF si disponibles
+      if (exifData) {
+        formData.append('exifData', JSON.stringify(exifData))
+      }
 
       // Utiliser l'API de test si en mode test
       const apiUrl = testMode ? '/api/photos/analyze-test' : '/api/photos/analyze'

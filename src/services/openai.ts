@@ -1,4 +1,6 @@
 import OpenAI from 'openai'
+import { ExifData } from '@/types/exif'
+import { generateShootingConditionsSummary } from '@/utils/exifExtractor'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!
@@ -53,12 +55,22 @@ export interface PhotoAnalysis {
     difficulty: 'facile' | 'moyen' | 'difficile'
     expectedImprovement: string
   }[]
+  // NOUVELLES DONNÉES EXIF
+  exifData?: ExifData
+  exifAnalysis?: {
+    exposureAssessment: string
+    equipmentRecommendations: string[]
+    technicalIssues: string[]
+    shootingConditions: string
+  }
+  hasExifData: boolean
 }
 
 export async function analyzePhoto(
   imageBase64: string, 
   tone: AnalysisTone = 'professional',
-  language: AnalysisLanguage = 'fr'
+  language: AnalysisLanguage = 'fr',
+  exifData?: ExifData | null
 ): Promise<PhotoAnalysis> {
   try {
     // Configuration des langues
@@ -72,6 +84,33 @@ export async function analyzePhoto(
     }
 
     const currentLang = languageConfig[language]
+
+    // Générer le résumé des conditions de prise de vue si EXIF disponible
+    const shootingConditions = exifData ? generateShootingConditionsSummary(exifData) : null
+    
+    // Construire la section EXIF pour le prompt Expert
+    const exifSection = exifData && tone === 'expert' ? `
+    
+📊 DONNÉES TECHNIQUES RÉELLES EXTRAITES DE L'IMAGE :
+${exifData.camera ? `• Appareil : ${exifData.camera}` : ''}
+${exifData.lens ? `• Objectif : ${exifData.lens}` : ''}
+${exifData.iso ? `• ISO : ${exifData.iso}` : ''}
+${exifData.aperture ? `• Ouverture : ${exifData.aperture}` : ''}
+${exifData.shutterSpeed ? `• Vitesse : ${exifData.shutterSpeed}` : ''}
+${exifData.focalLength ? `• Focale : ${exifData.focalLength}` : ''}
+${exifData.exposureMode ? `• Mode exposition : ${exifData.exposureMode}` : ''}
+${exifData.whiteBalance ? `• Balance des blancs : ${exifData.whiteBalance}` : ''}
+${exifData.flashMode ? `• Flash : ${exifData.flashMode}` : ''}
+${exifData.dimensions ? `• Dimensions : ${exifData.dimensions.width}×${exifData.dimensions.height}` : ''}
+${shootingConditions ? `• Conditions déduites : ${shootingConditions}` : ''}
+
+⚠️ OBLIGATIONS AVEC CES DONNÉES RÉELLES :
+- ANALYSE ces paramètres exacts sans les deviner
+- JUGE la cohérence ISO/ouverture/vitesse pour les conditions
+- IDENTIFIE les erreurs techniques basées sur ces réglages
+- COMMENTE l'adéquation matériel/objectif pour le résultat
+- DONNE des recommandations précises selon l'équipement utilisé
+` : ''
 
     const analysisPrompt = tone === 'roast' 
       ? `🔥 MODE ROAST - CRITIQUE PHOTO IMPITOYABLE 🔥
@@ -144,7 +183,7 @@ Compare OBLIGATOIREMENT à : Cartier-Bresson (géométrie), Adams (zones), Leibo
 - Analyse comme pour sélection d'exposition
 
 CETTE PHOTO EST-ELLE PUBLIABLE ? JUSTIFIE CHAQUE POINT SANS MÉNAGEMENT.
-
+${exifSection}
 RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
       : `💼 MODE PROFESSIONNEL - ANALYSE PÉDAGOGIQUE
 
@@ -332,9 +371,15 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
       partialScores.emotion +
       partialScores.storytelling
     
+    // Générer l'analyse EXIF si données disponibles
+    const exifAnalysisData = exifData ? generateExifAnalysis(exifData) : undefined
+    
     const analysis: PhotoAnalysis = {
       ...rawAnalysis,
-      score: calculatedScore
+      score: calculatedScore,
+      exifData: exifData || undefined,
+      exifAnalysis: exifAnalysisData,
+      hasExifData: !!exifData
     }
     
     return analysis
@@ -345,4 +390,76 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
     }
     throw new Error('Impossible d\'analyser la photo')
   }
+}
+
+/**
+ * Génère une analyse technique basée sur les données EXIF
+ */
+function generateExifAnalysis(exif: ExifData) {
+  const analysis = {
+    exposureAssessment: '',
+    equipmentRecommendations: [] as string[],
+    technicalIssues: [] as string[],
+    shootingConditions: ''
+  }
+  
+  // Évaluation de l'exposition basée sur le triangle d'exposition
+  if (exif.iso && exif.aperture && exif.shutterSpeed) {
+    const isoNum = exif.iso
+    
+    if (isoNum <= 200) {
+      analysis.exposureAssessment = "Excellentes conditions lumineuses - ISO faible optimal pour la qualité d'image"
+    } else if (isoNum <= 800) {
+      analysis.exposureAssessment = "Conditions lumineuses correctes - ISO modéré, bon compromis qualité/sensibilité"
+    } else if (isoNum <= 3200) {
+      analysis.exposureAssessment = "Faible luminosité - ISO élevé peut introduire du bruit numérique"
+    } else {
+      analysis.exposureAssessment = "Conditions très sombres - ISO très élevé, bruit significatif probable"
+      analysis.technicalIssues.push("ISO extrêmement élevé - risque de bruit important")
+    }
+  }
+  
+  // Recommandations équipement
+  if (exif.camera) {
+    if (exif.camera.toLowerCase().includes('canon')) {
+      analysis.equipmentRecommendations.push("Exploiter le Dynamic Range optimisé Canon en post-traitement")
+    } else if (exif.camera.toLowerCase().includes('sony')) {
+      analysis.equipmentRecommendations.push("Profiter de la gestion ISO excellente Sony pour les hauts ISO")
+    } else if (exif.camera.toLowerCase().includes('nikon')) {
+      analysis.equipmentRecommendations.push("Utiliser la colorimétrie naturelle Nikon pour les tons chair")
+    }
+  }
+  
+  // Analyse de la focale et perspective
+  if (exif.focalLength) {
+    const focalNum = parseInt(exif.focalLength.replace('mm', ''))
+    if (focalNum <= 24) {
+      analysis.equipmentRecommendations.push("Grand angle - attention aux distorsions en périphérie")
+    } else if (focalNum >= 85) {
+      analysis.equipmentRecommendations.push("Focale portrait - excellente compression spatiale pour isoler le sujet")
+    }
+  }
+  
+  // Détection problèmes techniques potentiels
+  if (exif.shutterSpeed) {
+    const speed = exif.shutterSpeed
+    if (speed.includes('1/') && parseInt(speed.split('/')[1]) < 60) {
+      analysis.technicalIssues.push("Vitesse lente - risque de flou de bougé sans stabilisation")
+    }
+  }
+  
+  // Analyse ouverture et profondeur de champ
+  if (exif.aperture) {
+    const fNumber = parseFloat(exif.aperture.replace('f/', ''))
+    if (fNumber <= 1.8) {
+      analysis.equipmentRecommendations.push("Très grande ouverture - profondeur de champ ultra-réduite, mise au point critique")
+    } else if (fNumber >= 8) {
+      analysis.equipmentRecommendations.push("Petite ouverture - excellente netteté globale mais attention à la diffraction")
+    }
+  }
+  
+  // Conditions de prise de vue déduites
+  analysis.shootingConditions = generateShootingConditionsSummary(exif)
+  
+  return analysis
 }

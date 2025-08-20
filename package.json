@@ -28,6 +28,7 @@
     "archiver": "^7.0.1",
     "bcryptjs": "^3.0.2",
     "cloudinary": "^2.7.0",
+    "exifreader": "^4.31.1",
     "formidable": "^3.5.4",
     "geoip-lite": "^1.4.10",
     "html2canvas": "^1.4.1",

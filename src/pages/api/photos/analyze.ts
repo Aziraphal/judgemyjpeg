@@ -3,6 +3,7 @@ import { withAuth, AuthenticatedRequest } from '@/lib/auth-middleware'
 import { logger, getClientIP } from '@/lib/logger'
 import { analyzePhoto, AnalysisTone, AnalysisLanguage } from '@/services/openai'
 import { uploadPhoto } from '@/services/cloudinary'
+import { ExifData } from '@/types/exif'
 import { prisma } from '@/lib/prisma'
 import { getUserSubscription, incrementAnalysisCount } from '@/services/subscription'
 import formidable, { File } from 'formidable'
@@ -197,6 +198,25 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     const analysisTone: AnalysisTone = (tone === 'roast' || tone === 'professional' || tone === 'expert') ? tone : 'professional'
     const analysisLanguage: AnalysisLanguage = (['fr', 'en', 'es', 'de', 'it', 'pt'].includes(language as string)) ? language as AnalysisLanguage : 'fr'
 
+    // Récupérer les données EXIF si fournies (mode Expert)
+    let exifData: ExifData | null = null
+    if (fields.exifData) {
+      try {
+        const rawExifData = Array.isArray(fields.exifData) ? fields.exifData[0] : fields.exifData
+        const parsedExifData = JSON.parse(rawExifData) as ExifData
+        exifData = parsedExifData
+        logger.info('EXIF data received for Expert analysis', {
+          hasCamera: !!parsedExifData.camera,
+          hasISO: !!parsedExifData.iso,
+          hasAperture: !!parsedExifData.aperture,
+          keys: Object.keys(parsedExifData)
+        }, req.user.id, ip)
+      } catch (parseError) {
+        logger.warn('Failed to parse EXIF data', parseError, req.user.id, ip)
+        exifData = null
+      }
+    }
+
     const base64Image = fileBuffer.toString('base64')
     
     // Générer hash unique pour cette image
@@ -217,8 +237,8 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
       // Upload vers Cloudinary seulement si pas en cache
       const uploadResult = await uploadPhoto(fileBuffer, file.originalFilename || 'photo')
       
-      // Analyser avec OpenAI GPT-4o-mini avec le ton sélectionné
-      analysis = await analyzePhoto(base64Image, analysisTone, analysisLanguage)
+      // Analyser avec OpenAI GPT-4o-mini avec le ton sélectionné et EXIF si disponible
+      analysis = await analyzePhoto(base64Image, analysisTone, analysisLanguage, exifData)
       
       // Mettre en cache le résultat (TTL: 24h)
       await cacheService.cacheAnalysis(imageHash, analysis, analysisTone, analysisLanguage, 86400)

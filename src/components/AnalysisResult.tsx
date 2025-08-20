@@ -4,6 +4,7 @@ import FavoriteButton from '@/components/FavoriteButton'
 import AddToCollectionModal from '@/components/AddToCollectionModal'
 import SocialShare from '@/components/SocialShare'
 import InstagramGenerator from '@/components/InstagramGenerator'
+import ExifDisplay from '@/components/ExifDisplay'
 import { PDFExporter } from '@/services/pdf-export'
 import { useState } from 'react'
 import { useSession } from 'next-auth/react'
@@ -110,6 +111,11 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
                 style={{ imageOrientation: 'from-image' }}
               />
             </div>
+            
+            {/* Affichage des données EXIF pour le mode Expert */}
+            {tone === 'expert' && analysis.hasExifData && analysis.exifData && (
+              <ExifDisplay exifData={analysis.exifData} className="mt-4" />
+            )}
           </div>
           
           <div className="space-y-4 sm:space-y-6">
