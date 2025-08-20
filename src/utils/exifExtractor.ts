@@ -8,11 +8,8 @@ import { ExifData, RawExifTags, EXIF_CONFIG } from '@/types/exif'
  */
 export async function extractExifData(file: File): Promise<ExifData | null> {
   try {
-    console.log('🔧 DEBUG: Starting EXIF extraction...')
-    
     // Convertir le fichier en ArrayBuffer pour ExifReader
     const arrayBuffer = await file.arrayBuffer()
-    console.log('📦 DEBUG: ArrayBuffer size:', arrayBuffer.byteLength)
     
     // Extraire les tags EXIF
     const tags = ExifReader.load(arrayBuffer, {
@@ -20,22 +17,9 @@ export async function extractExifData(file: File): Promise<ExifData | null> {
       includeUnknown: false
     }) as RawExifTags
     
-    console.log('🏷️ DEBUG: Raw tags found:', tags ? Object.keys(tags).length : 0)
-    
     if (!tags || Object.keys(tags).length === 0) {
-      console.log('❌ DEBUG: Aucune donnée EXIF trouvée')
       return null
     }
-    
-    console.log('📊 DEBUG: Tags EXIF extraits:', {
-      totalTags: Object.keys(tags).length,
-      availableTags: Object.keys(tags).slice(0, 10), // Premiers 10 tags
-      hasMake: !!tags.Make,
-      hasModel: !!tags.Model,
-      hasISO: !!tags.ISO || !!tags.ISOSpeedRatings,
-      hasFNumber: !!tags.FNumber,
-      hasExposureTime: !!tags.ExposureTime
-    })
     
     // Parser les données importantes
     const exifData: ExifData = {
@@ -69,18 +53,10 @@ export async function extractExifData(file: File): Promise<ExifData | null> {
     }
     
     // Filtrer les valeurs undefined pour avoir un objet propre
-    const cleanedData = cleanExifData(exifData)
-    
-    console.log('🧹 DEBUG: Cleaned EXIF data:', {
-      hasData: Object.keys(cleanedData).length > 0,
-      keys: Object.keys(cleanedData),
-      sample: cleanedData
-    })
-    
-    return cleanedData
+    return cleanExifData(exifData)
     
   } catch (error) {
-    console.error('❌ DEBUG: Erreur extraction EXIF:', error)
+    console.error('❌ Erreur extraction EXIF:', error)
     return null
   }
 }
