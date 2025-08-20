@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/pages/api/auth/[...nextauth]'
 import { prisma } from '@/lib/prisma'
 import { createCheckoutSession, createStripeCustomer, STRIPE_CONFIG } from '@/lib/stripe'
+import { canPurchaseStarterPack } from '@/services/subscription'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -32,17 +33,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Vérifications selon le type de plan
     if (priceType === 'starter') {
-      // Utiliser la fonction de service pour vérifier l'éligibilité
-      const { canPurchaseStarterPack } = await import('@/services/subscription')
       const canPurchase = await canPurchaseStarterPack(user.id)
       
       if (!canPurchase) {
         if (user.subscriptionStatus !== 'free') {
-          return res.status(400).json({ error: 'Le Starter Pack n\'est disponible que pour les comptes gratuits' })
+          return res.status(400).json({ 
+            error: `Le Starter Pack n'est disponible que pour les comptes gratuits (votre statut: ${user.subscriptionStatus})` 
+          })
         }
         if (user.starterPackPurchased ?? false) {
           return res.status(400).json({ error: 'Vous avez déjà acheté le Starter Pack (limité à 1 par compte)' })
         }
+        
+        return res.status(400).json({ 
+          error: `Erreur inattendue - Statut: ${user.subscriptionStatus}, Purchased: ${user.starterPackPurchased}` 
+        })
       }
     } else {
       // Vérifier qu'il n'est pas déjà premium/annual

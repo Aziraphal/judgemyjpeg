@@ -256,9 +256,10 @@ export default function AnalyzePage() {
               {result && (
                 <button
                   onClick={handleNewAnalysis}
-                  className="btn-neon-pink text-sm"
+                  className="btn-neon-pink text-sm px-2 py-2 md:px-4"
                 >
-                  📸 Nouvelle analyse
+                  <span className="hidden sm:inline">📸 Nouvelle analyse</span>
+                  <span className="sm:hidden">🔄</span>
                 </button>
               )}
             </div>
@@ -331,57 +332,7 @@ export default function AnalyzePage() {
                     />
                   </div>
 
-                  {/* Options avancées avec Progressive Disclosure */}
-                  {userLevel !== 'beginner' && (
-                    <div className="mt-6" data-tutorial="advanced-options">
-                      <SkillLevelGroup level={userLevel}>
-                        <ProgressiveDisclosure
-                          trigger="Options avancées"
-                          level={userLevel}
-                          title="Personnalisation approfondie"
-                          description="Configurez les paramètres avancés de l'analyse"
-                        >
-                          <div className="space-y-4 mt-4">
-                            <div className="glass-card p-4">
-                              <h4 className="text-sm font-semibold text-neon-cyan mb-3">
-                                🎯 Ciblage de l'analyse
-                              </h4>
-                              <div className="space-y-2">
-                                <label className="flex items-center space-x-2">
-                                  <input type="checkbox" className="rounded" />
-                                  <span className="text-text-gray text-sm">Focus sur la composition</span>
-                                </label>
-                                <label className="flex items-center space-x-2">
-                                  <input type="checkbox" className="rounded" />
-                                  <span className="text-text-gray text-sm">Analyse des couleurs détaillée</span>
-                                </label>
-                                <label className="flex items-center space-x-2">
-                                  <input type="checkbox" className="rounded" />
-                                  <span className="text-text-gray text-sm">Conseils d'amélioration spécifiques</span>
-                                </label>
-                              </div>
-                            </div>
-
-                            <div className="glass-card p-4">
-                              <h4 className="text-sm font-semibold text-neon-cyan mb-3">
-                                ⚡ Performance
-                              </h4>
-                              <div className="space-y-2">
-                                <label className="flex items-center justify-between">
-                                  <span className="text-text-gray text-sm">Analyse rapide</span>
-                                  <input type="checkbox" className="rounded" />
-                                </label>
-                                <label className="flex items-center justify-between">
-                                  <span className="text-text-gray text-sm">Cache local</span>
-                                  <input type="checkbox" className="rounded" defaultChecked />
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </ProgressiveDisclosure>
-                      </SkillLevelGroup>
-                    </div>
-                  )}
+                  {/* Note: Options avancées supprimées car non implémentées dans l'API */}
                 </div>
 
                 {/* Colonne droite : Upload photo */}

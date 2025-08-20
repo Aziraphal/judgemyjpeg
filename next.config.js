@@ -11,13 +11,6 @@ const nextConfig = {
     // Désactiver ESLint pendant le build pour les tests de performance
     ignoreDuringBuilds: true,
   },
-  
-  // Configuration port de développement (JAMAIS 3000)
-  ...(process.env.NODE_ENV === 'development' && {
-    devServer: {
-      port: process.env.PORT || 3005
-    }
-  }),
   images: {
     domains: ['res.cloudinary.com', 'lh3.googleusercontent.com'],
     formats: ['image/webp', 'image/avif'],

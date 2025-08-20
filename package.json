@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "PORT=3005 next dev",
+    "dev": "next dev -p 3008",
     "build": "prisma generate && next build",
     "postbuild": "next-sitemap",
     "start": "next start",
