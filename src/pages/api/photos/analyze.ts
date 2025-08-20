@@ -221,6 +221,16 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
 
     const base64Image = fileBuffer.toString('base64')
     
+    // Récupérer l'utilisateur dès maintenant pour l'analyse
+    const user = await prisma.user.findUnique({
+      where: { email: req.user.email }
+    })
+
+    if (!user) {
+      logger.error('User not found after authentication', { email: req.user.email }, req.user.id, ip)
+      return res.status(404).json({ error: 'Utilisateur non trouvé' })
+    }
+    
     // Générer hash unique pour cette image
     const imageHash = cacheService.generateImageHash(fileBuffer)
     
@@ -256,15 +266,7 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     // Upload vers Cloudinary (nécessaire pour sauvegarder même si analyse en cache)
     const uploadResult = await uploadPhoto(fileBuffer, file.originalFilename || 'photo')
 
-    // Sauvegarder en base - utilisateur déjà disponible via middleware
-    const user = await prisma.user.findUnique({
-      where: { email: req.user.email }
-    })
-
-    if (!user) {
-      logger.error('User not found after authentication', { email: req.user.email }, req.user.id, ip)
-      return res.status(404).json({ error: 'Utilisateur non trouvé' })
-    }
+    // Utilisateur déjà récupéré plus haut
 
     // Vérifier les limites d'abonnement
     const subscription = await getUserSubscription(user.id)
