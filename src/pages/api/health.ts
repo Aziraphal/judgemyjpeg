@@ -1,148 +1,99 @@
-/**
- * Health Check Endpoint - Production Monitoring
- * Checks all critical services status
- */
-
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/lib/prisma'
 
-interface HealthStatus {
+interface HealthResponse {
   status: 'healthy' | 'degraded' | 'unhealthy'
   timestamp: string
   services: {
-    database: {
-      status: 'up' | 'down'
-      responseTime?: number
-      error?: string
-    }
-    email: {
-      status: 'up' | 'down'
-      provider: string
-    }
-    monitoring: {
-      status: 'up' | 'down'
-      sentry: boolean
-      analytics: boolean
-    }
+    database: 'up' | 'down' | 'slow'
+    openai: 'up' | 'down' | 'limited'
+    storage: 'up' | 'down'
   }
-  version: string
-  uptime: number
+  metrics?: {
+    responseTime: number
+    dbResponseTime?: number
+    memoryUsage?: number
+  }
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<HealthStatus>) {
-  const startTime = Date.now()
-  
-  // Check database connection
-  const dbCheck = await checkDatabase()
-  
-  // Check email service
-  const emailCheck = await checkEmailService()
-  
-  // Check monitoring services
-  const monitoringCheck = checkMonitoring()
-  
-  const responseTime = Date.now() - startTime
-  
-  // Determine overall status
-  const allServicesUp = dbCheck.status === 'up' && 
-                       emailCheck.status === 'up' && 
-                       monitoringCheck.status === 'up'
-  
-  const someServicesDown = dbCheck.status === 'down' || 
-                          emailCheck.status === 'down'
-  
-  const overallStatus: HealthStatus['status'] = 
-    allServicesUp ? 'healthy' : 
-    someServicesDown ? 'unhealthy' : 
-    'degraded'
-
-  const healthStatus: HealthStatus = {
-    status: overallStatus,
-    timestamp: new Date().toISOString(),
-    services: {
-      database: dbCheck,
-      email: emailCheck,
-      monitoring: monitoringCheck
-    },
-    version: process.env.npm_package_version || '1.0.0',
-    uptime: process.uptime()
-  }
-
-  // Set appropriate status code
-  const statusCode = overallStatus === 'healthy' ? 200 : 
-                    overallStatus === 'degraded' ? 200 : 503
-
-  res.status(statusCode).json(healthStatus)
-}
-
-async function checkDatabase() {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<HealthResponse>) {
   const startTime = Date.now()
   
   try {
-    // Simple connectivity test
-    await prisma.$queryRaw`SELECT 1`
+    const services = {
+      database: 'down' as const,
+      openai: 'up' as const, // Assume OK si pas de test
+      storage: 'up' as const  // Assume OK si pas de test
+    }
     
-    // Check if we can read from main tables
-    const userCount = await prisma.user.count()
-    const photoCount = await prisma.photo.count()
+    // Test de la base de données
+    const dbStart = Date.now()
+    try {
+      await prisma.$queryRaw`SELECT 1`
+      const dbTime = Date.now() - dbStart
+      services.database = dbTime > 1000 ? 'slow' : 'up'
+    } catch (error) {
+      services.database = 'down'
+    }
+    
+    // Test OpenAI (optionnel, peut être coûteux)
+    try {
+      const response = await fetch('https://api.openai.com/v1/models', {
+        headers: {
+          'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+        },
+        signal: AbortSignal.timeout(5000) // 5s timeout
+      })
+      
+      if (response.status === 429) {
+        services.openai = 'limited'
+      } else if (!response.ok) {
+        services.openai = 'down'
+      }
+    } catch (error) {
+      services.openai = 'down'
+    }
+    
+    // Déterminer le status global
+    let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy'
+    
+    if (services.database === 'down') {
+      status = 'unhealthy'
+    } else if (services.database === 'slow' || services.openai === 'down' || services.openai === 'limited') {
+      status = 'degraded'
+    }
     
     const responseTime = Date.now() - startTime
     
-    return {
-      status: 'up' as const,
-      responseTime,
-      metadata: {
-        users: userCount,
-        photos: photoCount
+    const health: HealthResponse = {
+      status,
+      timestamp: new Date().toISOString(),
+      services,
+      metrics: {
+        responseTime,
+        memoryUsage: process.memoryUsage().heapUsed / 1024 / 1024 // MB
       }
     }
-  } catch (error) {
-    return {
-      status: 'down' as const,
-      responseTime: Date.now() - startTime,
-      error: error instanceof Error ? error.message : 'Unknown database error'
-    }
-  }
-}
-
-async function checkEmailService() {
-  try {
-    // Check if Resend API key is configured
-    const hasResendKey = !!process.env.RESEND_API_KEY
     
-    if (!hasResendKey) {
-      return {
-        status: 'down' as const,
-        provider: 'resend',
-        error: 'RESEND_API_KEY not configured'
+    // Status HTTP selon la santé
+    const httpStatus = status === 'healthy' ? 200 : status === 'degraded' ? 200 : 503
+    
+    res.status(httpStatus).json(health)
+    
+  } catch (error) {
+    const health: HealthResponse = {
+      status: 'unhealthy',
+      timestamp: new Date().toISOString(),
+      services: {
+        database: 'down',
+        openai: 'down',
+        storage: 'down'
+      },
+      metrics: {
+        responseTime: Date.now() - startTime
       }
     }
-
-    // In production, you might want to do a real API test
-    // For now, just check configuration
-    return {
-      status: 'up' as const,
-      provider: 'resend'
-    }
-  } catch (error) {
-    return {
-      status: 'down' as const,
-      provider: 'resend',
-      error: error instanceof Error ? error.message : 'Email service error'
-    }
+    
+    res.status(503).json(health)
   }
 }
-
-function checkMonitoring() {
-  const sentryConfigured = !!process.env.NEXT_PUBLIC_SENTRY_DSN
-  const analyticsEnabled = true // Analytics enabled
-  
-  return {
-    status: (sentryConfigured && analyticsEnabled) ? 'up' as const : 'down' as const,
-    sentry: sentryConfigured,
-    analytics: analyticsEnabled
-  }
-}
-
-// Export the health check function for use in other parts of the app
-export { checkDatabase, checkEmailService, checkMonitoring }
