@@ -12,7 +12,9 @@
     "typecheck": "tsc --noEmit",
     "postinstall": "prisma generate",
     "lighthouse": "lhci autorun",
-    "lighthouse:local": "lhci collect --url=http://localhost:3005 && lhci assert"
+    "lighthouse:local": "lhci collect --url=http://localhost:3005 && lhci assert",
+    "load-test": "node scripts/load-test.js",
+    "load-test:prod": "TEST_URL=https://www.judgemyjpeg.fr node scripts/load-test.js"
   },
   "dependencies": {
     "@google/generative-ai": "^0.1.3",
@@ -58,6 +60,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "autocannon": "^8.0.0",
     "autoprefixer": "^10",
     "eslint": "^8",
     "eslint-config-next": "14.0.0",
