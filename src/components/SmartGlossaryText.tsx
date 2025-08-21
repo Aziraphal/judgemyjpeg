@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import Link from 'next/link'
 import { glossaryData } from '@/data/glossary'
+import GlossaryModal from './GlossaryModal'
 
 interface SmartGlossaryTextProps {
   text: string
@@ -9,6 +9,8 @@ interface SmartGlossaryTextProps {
 
 export default function SmartGlossaryText({ text, className = '' }: SmartGlossaryTextProps) {
   const [highlightedTerms, setHighlightedTerms] = useState<Set<string>>(new Set())
+  const [modalOpen, setModalOpen] = useState(false)
+  const [selectedTerm, setSelectedTerm] = useState<string | null>(null)
 
   // Liste des termes à détecter (triés par longueur décroissante pour éviter les conflits)
   const termsToDetect = glossaryData
@@ -57,16 +59,18 @@ export default function SmartGlossaryText({ text, className = '' }: SmartGlossar
               original: match,
               termId: id,
               replacement: (
-                <Link
+                <button
                   key={uniqueKey}
-                  href={`/glossaire#${id}`}
-                  className="inline-flex items-center space-x-1 text-neon-cyan hover:text-neon-pink transition-colors border-b border-dotted border-neon-cyan/50 hover:border-neon-pink/50"
+                  onClick={() => {
+                    setSelectedTerm(term)
+                    setModalOpen(true)
+                  }}
+                  className="inline-flex items-center space-x-1 text-neon-cyan hover:text-neon-pink transition-colors border-b border-dotted border-neon-cyan/50 hover:border-neon-pink/50 cursor-pointer"
                   title={`Voir la définition de "${term}"`}
-                  target="_blank"
                 >
                   <span>{match}</span>
                   <span className="text-xs opacity-75">🔍</span>
-                </Link>
+                </button>
               )
             })
           })
@@ -130,15 +134,25 @@ export default function SmartGlossaryText({ text, className = '' }: SmartGlossar
             <span>💡</span>
             <span>Cliquez sur les termes surlignés pour voir leur définition</span>
           </span>
-          <Link 
-            href="/glossaire"
+          <button 
+            onClick={() => setModalOpen(true)}
             className="text-neon-cyan hover:text-neon-pink transition-colors flex items-center space-x-1"
           >
             <span>📚</span>
-            <span>Glossaire complet</span>
-          </Link>
+            <span>Glossaire</span>
+          </button>
         </div>
       )}
+
+      {/* Modal pour les définitions */}
+      <GlossaryModal
+        isOpen={modalOpen}
+        onClose={() => {
+          setModalOpen(false)
+          setSelectedTerm(null)
+        }}
+        searchTerm={selectedTerm || undefined}
+      />
     </div>
   )
 }

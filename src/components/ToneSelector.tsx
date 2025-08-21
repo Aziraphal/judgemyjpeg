@@ -47,14 +47,46 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
           <span className="sm:hidden">Ton d'analyse</span>
         </h3>
         <div className="flex items-center space-x-2">
-          <Link 
-            href="/glossaire"
-            className="btn-neon-secondary text-xs sm:text-sm px-2 sm:px-3 flex items-center space-x-1 hover:scale-105 transition-transform"
-            title="Découvrir le vocabulaire photographique"
-          >
-            <span>❓</span>
-            <span className="hidden sm:inline">Vocabulaire</span>
-          </Link>
+          <div className="relative group">
+            <button
+              className="btn-neon-secondary text-xs sm:text-sm px-2 sm:px-3 flex items-center space-x-1 hover:scale-105 transition-transform"
+              title="Aide et ressources"
+            >
+              <span>❓</span>
+              <span className="hidden sm:inline">Aide</span>
+            </button>
+            
+            {/* Menu dropdown */}
+            <div className="absolute top-full right-0 mt-2 w-48 glass-card border border-cosmic-glassborder rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+              <div className="p-2">
+                <Link 
+                  href="/glossaire"
+                  target="_blank"
+                  className="flex items-center space-x-2 w-full p-2 text-left text-sm text-text-white hover:bg-cosmic-glassborder rounded transition-colors"
+                >
+                  <span>📚</span>
+                  <span>Glossaire photographique</span>
+                </Link>
+                <a 
+                  href="/faq"
+                  target="_blank"
+                  className="flex items-center space-x-2 w-full p-2 text-left text-sm text-text-white hover:bg-cosmic-glassborder rounded transition-colors"
+                >
+                  <span>❓</span>
+                  <span>Questions fréquentes</span>
+                </a>
+                <a 
+                  href="/contact"
+                  target="_blank"
+                  className="flex items-center space-x-2 w-full p-2 text-left text-sm text-text-white hover:bg-cosmic-glassborder rounded transition-colors"
+                >
+                  <span>💌</span>
+                  <span>Nous contacter</span>
+                </a>
+              </div>
+            </div>
+          </div>
+          
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="btn-neon-secondary text-xs sm:text-sm px-2 sm:px-3"

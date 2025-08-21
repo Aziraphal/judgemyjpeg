@@ -6,7 +6,7 @@ import SocialShare from '@/components/SocialShare'
 import InstagramGenerator from '@/components/InstagramGenerator'
 import ExifDisplay from '@/components/ExifDisplay'
 import { PDFExporter } from '@/services/pdf-export'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import SmartGlossaryText from '@/components/SmartGlossaryText'
 
@@ -25,6 +25,20 @@ interface AnalysisResultProps {
 export default function AnalysisResult({ photo, analysis, tone = 'professional', onNewAnalysis }: AnalysisResultProps) {
   const { data: session } = useSession()
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false)
+  const [showHelpBanner, setShowHelpBanner] = useState(true)
+
+  // Vérifier localStorage pour masquer le bandeau après première visite
+  useEffect(() => {
+    const hasSeenGlossaryHelp = localStorage.getItem('hasSeenGlossaryHelp')
+    if (hasSeenGlossaryHelp) {
+      setShowHelpBanner(false)
+    }
+  }, [])
+
+  const hideHelpBanner = () => {
+    setShowHelpBanner(false)
+    localStorage.setItem('hasSeenGlossaryHelp', 'true')
+  }
   
   const getAIPersonality = (score: number) => {
     if (score <= 25) return { name: 'Chef Militaire', emoji: '🪖', color: 'text-red-500' }
@@ -98,31 +112,41 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
       <div className="hidden sm:block absolute -top-10 -right-10 w-20 h-20 bg-glow-pink rounded-full blur-xl opacity-20 animate-float"></div>
       <div className="hidden sm:block absolute top-1/2 -left-10 w-16 h-16 bg-glow-cyan rounded-full blur-lg opacity-15 animate-float" style={{animationDelay: '1s'}}></div>
       
-      {/* Bandeau aide glossaire */}
-      <div className="glass-card p-3 sm:p-4 border border-neon-cyan/30 bg-gradient-to-r from-neon-cyan/5 to-transparent">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <span className="text-xl">💡</span>
-            <div>
-              <p className="text-sm text-text-white font-medium">
-                Termes techniques pas clairs ?
-              </p>
-              <p className="text-xs text-text-muted hidden sm:block">
-                Cliquez sur les mots surlignés pour voir leur définition
-              </p>
+      {/* Bandeau aide glossaire (masqué après première visite) */}
+      {showHelpBanner && (
+        <div className="glass-card p-3 sm:p-4 border border-neon-cyan/30 bg-gradient-to-r from-neon-cyan/5 to-transparent animate-fadeIn">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <span className="text-xl">💡</span>
+              <div>
+                <p className="text-sm text-text-white font-medium">
+                  Termes techniques pas clairs ?
+                </p>
+                <p className="text-xs text-text-muted hidden sm:block">
+                  Cliquez sur les mots surlignés en bleu pour voir leur définition
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <a
+                href="/glossaire"
+                target="_blank"
+                className="btn-neon-secondary text-xs px-3 py-2 flex items-center space-x-1 hover:scale-105 transition-transform"
+              >
+                <span>📚</span>
+                <span className="hidden sm:inline">Glossaire</span>
+              </a>
+              <button
+                onClick={hideHelpBanner}
+                className="text-text-muted hover:text-text-white text-lg hover:scale-110 transition-all"
+                title="Masquer cette aide"
+              >
+                ×
+              </button>
             </div>
           </div>
-          <a
-            href="/glossaire"
-            target="_blank"
-            className="btn-neon-secondary text-xs px-3 py-2 flex items-center space-x-1 hover:scale-105 transition-transform"
-          >
-            <span>📚</span>
-            <span className="hidden sm:inline">Glossaire photo</span>
-            <span className="sm:hidden">Glossaire</span>
-          </a>
         </div>
-      </div>
+      )}
       
       {/* Photo et Score */}
       <div className="glass-card p-4 sm:p-8 hover-glow">
