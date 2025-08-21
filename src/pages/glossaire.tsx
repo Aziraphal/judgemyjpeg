@@ -74,6 +74,17 @@ export default function GlossairePage() {
       <main className="min-h-screen bg-cosmic-overlay relative">
         <div className="container mx-auto px-4 py-8">
           
+          {/* Navigation de retour */}
+          <div className="mb-8">
+            <Link 
+              href="/"
+              className="inline-flex items-center space-x-2 text-neon-cyan hover:text-neon-pink transition-colors group"
+            >
+              <span className="text-xl group-hover:-translate-x-1 transition-transform">←</span>
+              <span>Retour à l'accueil</span>
+            </Link>
+          </div>
+
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold mb-4">

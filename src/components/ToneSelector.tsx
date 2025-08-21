@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Link from 'next/link'
 
 export type AnalysisTone = 'professional' | 'roast' | 'expert'
 
@@ -45,12 +46,22 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
           <span className="hidden sm:inline">Choisissez le ton de l'analyse</span>
           <span className="sm:hidden">Ton d'analyse</span>
         </h3>
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="btn-neon-secondary text-xs sm:text-sm px-2 sm:px-3"
-        >
-          {isExpanded ? '▼' : '▶'} <span className="hidden sm:inline">Personnaliser</span>
-        </button>
+        <div className="flex items-center space-x-2">
+          <Link 
+            href="/glossaire"
+            className="btn-neon-secondary text-xs sm:text-sm px-2 sm:px-3 flex items-center space-x-1 hover:scale-105 transition-transform"
+            title="Découvrir le vocabulaire photographique"
+          >
+            <span>❓</span>
+            <span className="hidden sm:inline">Vocabulaire</span>
+          </Link>
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="btn-neon-secondary text-xs sm:text-sm px-2 sm:px-3"
+          >
+            {isExpanded ? '▼' : '▶'} <span className="hidden sm:inline">Personnaliser</span>
+          </button>
+        </div>
       </div>
 
       {/* Sélection rapide */}

@@ -8,6 +8,7 @@ import ExifDisplay from '@/components/ExifDisplay'
 import { PDFExporter } from '@/services/pdf-export'
 import { useState } from 'react'
 import { useSession } from 'next-auth/react'
+import SmartGlossaryText from '@/components/SmartGlossaryText'
 
 interface AnalysisResultProps {
   photo: {
@@ -96,6 +97,32 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
       {/* Floating decorative elements */}
       <div className="hidden sm:block absolute -top-10 -right-10 w-20 h-20 bg-glow-pink rounded-full blur-xl opacity-20 animate-float"></div>
       <div className="hidden sm:block absolute top-1/2 -left-10 w-16 h-16 bg-glow-cyan rounded-full blur-lg opacity-15 animate-float" style={{animationDelay: '1s'}}></div>
+      
+      {/* Bandeau aide glossaire */}
+      <div className="glass-card p-3 sm:p-4 border border-neon-cyan/30 bg-gradient-to-r from-neon-cyan/5 to-transparent">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <span className="text-xl">💡</span>
+            <div>
+              <p className="text-sm text-text-white font-medium">
+                Termes techniques pas clairs ?
+              </p>
+              <p className="text-xs text-text-muted hidden sm:block">
+                Cliquez sur les mots surlignés pour voir leur définition
+              </p>
+            </div>
+          </div>
+          <a
+            href="/glossaire"
+            target="_blank"
+            className="btn-neon-secondary text-xs px-3 py-2 flex items-center space-x-1 hover:scale-105 transition-transform"
+          >
+            <span>📚</span>
+            <span className="hidden sm:inline">Glossaire photo</span>
+            <span className="sm:hidden">Glossaire</span>
+          </a>
+        </div>
+      </div>
       
       {/* Photo et Score */}
       <div className="glass-card p-4 sm:p-8 hover-glow">
@@ -411,7 +438,10 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
           {analysis.suggestions.map((suggestion, index) => (
             <li key={index} className="flex items-start glass-card p-4 hover:bg-cosmic-glassborder transition-all duration-300">
               <span className="text-neon-pink mr-3 text-xl flex-shrink-0">✨</span>
-              <span className="text-text-white leading-relaxed">{suggestion}</span>
+              <SmartGlossaryText 
+                text={suggestion} 
+                className="text-text-white leading-relaxed"
+              />
             </li>
           ))}
         </ul>
@@ -452,7 +482,10 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
                       {tip.difficulty}
                     </span>
                   </div>
-                  <p className="text-text-gray leading-relaxed text-sm">{tip.tip}</p>
+                  <SmartGlossaryText 
+                    text={tip.tip} 
+                    className="text-text-gray leading-relaxed text-sm"
+                  />
                 </div>
               )
             })}
@@ -495,7 +528,10 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
                       {rec.difficulty}
                     </span>
                   </div>
-                  <p className="text-text-gray leading-relaxed text-sm mb-3">{rec.suggestion}</p>
+                  <SmartGlossaryText 
+                    text={rec.suggestion} 
+                    className="text-text-gray leading-relaxed text-sm mb-3"
+                  />
                   <div className="text-xs text-neon-pink font-semibold">
                     ✨ {rec.expectedImprovement}
                   </div>
