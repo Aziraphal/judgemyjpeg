@@ -85,6 +85,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/glossaire" className="text-text-muted hover:text-neon-cyan transition-colors">
+                  📚 Glossaire Photo
+                </Link>
+              </li>
+              <li>
                 <Link href="/ressources" className="text-text-muted hover:text-neon-cyan transition-colors">
                   Ressources Gratuites
                 </Link>
