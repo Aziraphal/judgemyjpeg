@@ -1,13 +1,16 @@
 # *
 User-agent: *
 Allow: /
-Disallow: /admin
-Disallow: /api/
-Disallow: /auth/
-Disallow: /success
-Disallow: /test-upload
-Disallow: /status
-Disallow: /offline
+Disallow: /admin*
+Disallow: /api/*
+Disallow: /auth/*
+Disallow: /*success*
+Disallow: /test-upload*
+Disallow: /status*
+Disallow: /offline*
+Disallow: /_next/*
+Disallow: /node_modules/*
+Disallow: *.disabled*
 
 # Host
 Host: https://www.judgemyjpeg.fr
