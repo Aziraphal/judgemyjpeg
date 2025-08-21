@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { glossaryData } from '@/data/glossary'
 import GlossaryModal from './GlossaryModal'
+import GlossaryTooltip from './GlossaryTooltip'
 
 interface SmartGlossaryTextProps {
   text: string
@@ -59,18 +60,15 @@ export default function SmartGlossaryText({ text, className = '' }: SmartGlossar
               original: match,
               termId: id,
               replacement: (
-                <button
-                  key={uniqueKey}
-                  onClick={() => {
-                    setSelectedTerm(term)
-                    setModalOpen(true)
-                  }}
-                  className="inline-flex items-center space-x-1 text-neon-cyan hover:text-neon-pink transition-colors border-b border-dotted border-neon-cyan/50 hover:border-neon-pink/50 cursor-pointer"
-                  title={`Voir la définition de "${term}"`}
-                >
-                  <span>{match}</span>
-                  <span className="text-xs opacity-75">🔍</span>
-                </button>
+                <GlossaryTooltip key={uniqueKey} term={term}>
+                  <button
+                    className="inline-flex items-center space-x-1 text-neon-cyan hover:text-neon-pink transition-colors border-b border-dotted border-neon-cyan/50 hover:border-neon-pink/50 cursor-pointer"
+                    title={`Voir la définition de "${term}"`}
+                  >
+                    <span>{match}</span>
+                    <span className="text-xs opacity-75">🔍</span>
+                  </button>
+                </GlossaryTooltip>
               )
             })
           })

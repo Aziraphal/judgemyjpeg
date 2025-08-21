@@ -1,93 +1,91 @@
-import { useState } from 'react'
 import { glossaryData } from '@/data/glossary'
+import * as Popover from '@radix-ui/react-popover'
 
 interface GlossaryTooltipProps {
   term: string
   children: React.ReactNode
-  className?: string
 }
 
-export default function GlossaryTooltip({ term, children, className = '' }: GlossaryTooltipProps) {
-  const [isVisible, setIsVisible] = useState(false)
-  
-  // Recherche du terme dans le glossaire (insensible à la casse)
+export default function GlossaryTooltip({ term, children }: GlossaryTooltipProps) {
+  // Trouve la définition du terme
   const glossaryTerm = glossaryData.find(
     t => t.term.toLowerCase() === term.toLowerCase() ||
          t.term.toLowerCase().includes(term.toLowerCase())
   )
 
   if (!glossaryTerm) {
-    // Si le terme n'existe pas dans le glossaire, retourne le children sans tooltip
     return <>{children}</>
   }
 
-  return (
-    <div className="relative inline-block">
-      <span
-        className={`cursor-help border-b border-dotted border-neon-cyan text-neon-cyan hover:text-neon-pink transition-colors ${className}`}
-        onMouseEnter={() => setIsVisible(true)}
-        onMouseLeave={() => setIsVisible(false)}
-      >
-        {children}
-      </span>
-      
-      {isVisible && (
-        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 z-50">
-          <div className="glass-card p-4 max-w-sm border border-cosmic-glassborder shadow-xl">
-            <div className="text-sm font-semibold text-text-white mb-2">
-              {glossaryTerm.term}
-            </div>
-            <div className="text-xs text-text-gray mb-2">
-              {glossaryTerm.definition}
-            </div>
-            {glossaryTerm.example && (
-              <div className="text-xs text-text-muted italic">
-                Ex: {glossaryTerm.example}
-              </div>
-            )}
-            {/* Petite flèche */}
-            <div className="absolute top-full left-1/2 transform -translate-x-1/2">
-              <div className="border-4 border-transparent border-t-cosmic-glass"></div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
-
-// Hook pour transformer automatiquement le texte avec des tooltips
-export function useGlossaryText(text: string): React.ReactNode {
-  if (!text) return text
-
-  // Liste des termes à détecter (triés par longueur décroissante pour éviter les conflits)
-  const termsToDetect = glossaryData
-    .map(t => t.term)
-    .sort((a, b) => b.length - a.length)
-
-  let result: React.ReactNode = text
-  
-  termsToDetect.forEach((term, index) => {
-    const regex = new RegExp(`\\b${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi')
-    
-    if (typeof result === 'string' && regex.test(result)) {
-      const parts = result.split(regex)
-      const matches = result.match(regex) || []
-      
-      const newResult: React.ReactNode[] = []
-      parts.forEach((part, i) => {
-        newResult.push(part)
-        if (matches[i]) {
-          newResult.push(
-            <GlossaryTooltip key={`${term}-${i}`} term={term}>
-              {matches[i]}
-            </GlossaryTooltip>
-          )
-        }
-      })
-      result = newResult
+  const getLevelColor = (level: string) => {
+    switch (level) {
+      case 'debutant': return 'text-green-400 bg-green-500/10 border-green-500/30'
+      case 'intermediaire': return 'text-yellow-400 bg-yellow-500/10 border-yellow-500/30'
+      case 'avance': return 'text-red-400 bg-red-500/10 border-red-500/30'
+      default: return 'text-gray-400 bg-gray-500/10 border-gray-500/30'
     }
-  })
+  }
 
-  return result
+  return (
+    <Popover.Root>
+      <Popover.Trigger asChild>
+        {children}
+      </Popover.Trigger>
+      
+      <Popover.Portal>
+        <Popover.Content
+          className="z-50 max-w-sm p-4 bg-cosmic-dark border border-cosmic-glassborder rounded-lg shadow-xl backdrop-blur-lg"
+          sideOffset={8}
+          align="start"
+          collisionPadding={16}
+        >
+          {/* Header avec terme et niveau */}
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-bold text-text-white text-lg">
+              {glossaryTerm.term}
+            </h3>
+            <span className={`text-xs px-2 py-1 rounded border ${getLevelColor(glossaryTerm.level)}`}>
+              {glossaryTerm.level}
+            </span>
+          </div>
+
+          {/* Définition principale */}
+          <p className="text-text-gray text-sm leading-relaxed mb-3">
+            {glossaryTerm.definition}
+          </p>
+
+          {/* Exemple si disponible */}
+          {glossaryTerm.example && (
+            <div className="bg-cosmic-glass p-3 rounded-lg mb-3">
+              <div className="text-xs text-text-muted mb-1 flex items-center">
+                <span className="mr-1">💡</span>
+                Exemple :
+              </div>
+              <div className="text-text-white text-sm italic">
+                "{glossaryTerm.example}"
+              </div>
+            </div>
+          )}
+
+          {/* Footer avec actions */}
+          <div className="flex items-center justify-between pt-2 border-t border-cosmic-glassborder">
+            <span className="text-xs text-text-muted capitalize">
+              {glossaryTerm.category}
+            </span>
+            <a
+              href="/glossaire"
+              target="_blank"
+              className="text-xs text-neon-cyan hover:text-neon-pink transition-colors flex items-center space-x-1"
+            >
+              <span>📚</span>
+              <span>Voir plus</span>
+            </a>
+          </div>
+
+          {/* Flèche du popover */}
+          <Popover.Arrow className="fill-cosmic-dark" />
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
+  )
 }
