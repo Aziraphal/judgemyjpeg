@@ -134,7 +134,7 @@ export default function FeedbackModal({ isOpen, onClose, initialPage }: Feedback
                       className={`p-3 rounded-lg border-2 transition-all text-sm ${
                         formData.type === type.value
                           ? 'border-neon-cyan bg-neon-cyan bg-opacity-10 text-neon-cyan'
-                          : 'border-cosmic-glassborder hover:border-neon-cyan hover:border-opacity-50'
+                          : 'border-cosmic-glassborder text-text-white hover:border-neon-cyan hover:border-opacity-50 hover:text-neon-cyan'
                       }`}
                     >
                       <div className="text-lg mb-1">{type.emoji}</div>
@@ -175,7 +175,7 @@ export default function FeedbackModal({ isOpen, onClose, initialPage }: Feedback
                 <select
                   value={formData.category}
                   onChange={(e) => setFormData({...formData, category: e.target.value})}
-                  className="w-full p-3 bg-cosmic-dark border border-cosmic-glassborder rounded-lg text-text-white focus:border-neon-cyan focus:outline-none"
+                  className="w-full p-3 bg-cosmic-dark border border-cosmic-glassborder rounded-lg text-text-white focus:border-neon-cyan focus:outline-none [&>option]:bg-cosmic-dark [&>option]:text-text-white"
                 >
                   <option value="">Sélectionnez...</option>
                   {categories.map((cat) => (
@@ -238,7 +238,7 @@ export default function FeedbackModal({ isOpen, onClose, initialPage }: Feedback
                 <button
                   type="button"
                   onClick={onClose}
-                  className="flex-1 py-3 border border-cosmic-glassborder rounded-lg text-text-muted hover:text-text-white transition-colors"
+                  className="flex-1 py-3 border border-cosmic-glassborder rounded-lg text-text-white hover:text-neon-cyan hover:border-neon-cyan transition-colors"
                 >
                   Annuler
                 </button>
