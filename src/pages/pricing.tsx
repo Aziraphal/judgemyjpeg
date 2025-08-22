@@ -91,7 +91,7 @@ export default function PricingPage() {
     <>
       <Head>
         <title>Tarifs & Abonnements | Plans analyse photo IA - JudgeMyJPEG</title>
-        <meta name="description" content="Découvrez nos plans d'abonnement pour l'analyse photo IA. Gratuit 3 analyses/mois, Starter Pack 4.99€, Premium 9.98€/mois, Annuel 79€/an. Analyses illimitées." />
+        <meta name="description" content="Découvrez nos plans d'abonnement pour l'analyse photo IA. Gratuit 3 analyses/mois, Starter Pack 4.99€, Premium 9.99€/mois, Annuel 79€/an. Analyses illimitées." />
       </Head>
 
       <main className="min-h-screen bg-cosmic-overlay particles-container relative">
@@ -240,7 +240,7 @@ export default function PricingPage() {
               </div>
 
               <div className="text-center mb-8">
-                <div className="text-4xl font-bold text-neon-pink mb-2">9,98€</div>
+                <div className="text-4xl font-bold text-neon-pink mb-2">9,99€</div>
                 <div className="text-text-muted">par mois</div>
               </div>
 

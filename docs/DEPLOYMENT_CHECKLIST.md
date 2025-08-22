@@ -133,7 +133,7 @@ openssl rand -base64 32
 6. [ ] Collections fonctionnelles
 
 ### Tests paiement :
-1. [ ] Paiement mensuel €9.98 fonctionne
+1. [ ] Paiement mensuel €9.99 fonctionne
 2. [ ] Paiement annuel €79 fonctionne  
 3. [ ] Webhook reçu + compte mis à jour
 4. [ ] Analyses illimitées activées

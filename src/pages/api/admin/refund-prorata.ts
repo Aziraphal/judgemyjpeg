@@ -73,7 +73,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     } else if (user.subscriptionStatus === 'premium') {
       // Plan mensuel : remboursement sous 14 jours uniquement
       if (daysSinceStart <= 14) {
-        refundAmount = 998 // 9,98€ en centimes
+        refundAmount = 999 // 9,99€ en centimes
         refundReason = 'Remboursement intégral (droit de rétractation 14j)'
       } else {
         return res.status(400).json({ 

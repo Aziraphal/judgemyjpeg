@@ -21,7 +21,7 @@ Description: Analyses photo IA illimitées + fonctionnalités premium
 ### C. Ajouter les prix
 **Prix 1 - Mensuel :**
 ```
-Prix: €9.98
+Prix: €9.99
 Récurrence: Mensuel
 ID suggéré: price_monthly_judgemyjpeg_998
 ```
@@ -99,7 +99,7 @@ RESEND_API_KEY=re_VOTRE_CLE_RESEND
 
 ### A. Test des paiements
 1. Créer un compte test sur votre site
-2. Tenter un paiement mensuel (€9.98)
+2. Tenter un paiement mensuel (€9.99)
 3. Tenter un paiement annuel (€79)
 4. Vérifier dans Stripe Dashboard → Payments
 
@@ -186,7 +186,7 @@ ngrok http 3002
 - 2 plans seulement
 
 **Nouvelle config :**
-- Plan Mensuel €9.98
+- Plan Mensuel €9.99
 - Plan Annuel €79 (économie €40/an) 
 - Starter Pack 10 analyses
 - Conformité RGPD complète

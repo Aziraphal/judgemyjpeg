@@ -230,7 +230,7 @@ export default function SubscriptionStatus({ compact = false }: SubscriptionStat
                 
                 <div className="text-center mb-4">
                   <h5 className="text-lg font-bold text-neon-pink">💎 Premium</h5>
-                  <div className="text-3xl font-bold text-neon-pink mt-2 mb-1">9,98€</div>
+                  <div className="text-3xl font-bold text-neon-pink mt-2 mb-1">9,99€</div>
                   <div className="text-text-muted text-sm">par mois</div>
                 </div>
                 

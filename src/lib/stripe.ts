@@ -14,8 +14,8 @@ export const STRIPE_CONFIG = {
   // Prix Starter Pack €4.99 (one-shot)
   STARTER_PRICE_ID: process.env.STRIPE_STARTER_PRICE_ID || 'price_starter_499',
   
-  // Prix mensuels €9.98/mois
-  MONTHLY_PRICE_ID: process.env.STRIPE_MONTHLY_PRICE_ID || 'price_monthly_998',
+  // Prix mensuels €9.99/mois
+  MONTHLY_PRICE_ID: process.env.STRIPE_MONTHLY_PRICE_ID || 'price_monthly_999',
   
   // Prix annuel €79/an
   ANNUAL_PRICE_ID: process.env.STRIPE_ANNUAL_PRICE_ID || 'price_annual_7900',
