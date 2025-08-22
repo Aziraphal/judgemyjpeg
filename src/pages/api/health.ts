@@ -20,10 +20,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   const startTime = Date.now()
   
   try {
-    const services = {
-      database: 'down' as const,
-      openai: 'up' as const, // Assume OK si pas de test
-      storage: 'up' as const  // Assume OK si pas de test
+    const services: {
+      database: 'up' | 'down' | 'slow'
+      openai: 'up' | 'down' | 'limited'
+      storage: 'up' | 'down'
+    } = {
+      database: 'down',
+      openai: 'up', // Assume OK si pas de test
+      storage: 'up'  // Assume OK si pas de test
     }
     
     // Test de la base de données
