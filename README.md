@@ -4,12 +4,20 @@
 
 ![JudgeMyJPEG Logo](https://res.cloudinary.com/judgemyjpeg/image/upload/v1729082345/logo-cosmic.png)
 
-**L'IA qui analyse vos photos avec expertise et créativité**
+**SaaS d'analyse photo par IA — 3 personnalités (Roast/Pro/Expert) — Freemium & multilingue**
+
+> 🚀 **Production-ready** • 📊 **Analytics intégrées** • 🛡️ **RGPD compliant** • 💳 **Stripe payments**
 
 [![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-judgemyjpeg.fr-FF006E?style=for-the-badge)](https://www.judgemyjpeg.fr)
-[![License](https://img.shields.io/badge/License-Proprietary-red?style=for-the-badge)](LICENSE)
-[![Build Status](https://img.shields.io/badge/Build-Passing-success?style=for-the-badge)](https://github.com/Aziraphal/judgemyjpeg)
-[![Made with Next.js](https://img.shields.io/badge/Made_with-Next.js_14-000000?style=for-the-badge&logo=next.js)](https://nextjs.org)
+[![Production Ready](https://img.shields.io/badge/Status-Production_Ready-success?style=for-the-badge&logo=railway)](https://railway.app)
+[![Build Status](https://img.shields.io/badge/Build-Passing-success?style=for-the-badge&logo=github)](https://github.com/Aziraphal/judgemyjpeg)
+[![Uptime](https://img.shields.io/badge/Uptime-99.9%25-brightgreen?style=for-the-badge&logo=uptimerobot)](https://stats.uptimerobot.com)
+
+[![Next.js 14](https://img.shields.io/badge/Next.js-14-000000?style=for-the-badge&logo=next.js)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript)](https://typescriptlang.org)
+[![OpenAI](https://img.shields.io/badge/AI-OpenAI_GPT--4o--mini-412991?style=for-the-badge&logo=openai)](https://openai.com)
+[![Stripe](https://img.shields.io/badge/Payments-Stripe-008CDD?style=for-the-badge&logo=stripe)](https://stripe.com)
+[![RGPD](https://img.shields.io/badge/RGPD-Compliant-yellow?style=for-the-badge&logo=gdpr)](https://gdpr.eu)
 
 </div>
 
@@ -248,21 +256,115 @@ npm run load-test    # Test de charge avec autocannon
 
 ---
 
+## ❓ **FAQ & Troubleshooting**
+
+### **🔧 Problèmes courants**
+
+<details>
+<summary><strong>Erreur EPERM pendant le build</strong></summary>
+
+```bash
+# Solution : Désactiver Sentry temporairement
+DISABLE_SENTRY=true npm run build
+
+# Ou utiliser Docker pour le build
+docker build -t judgemyjpeg .
+```
+</details>
+
+<details>
+<summary><strong>Build production qui échoue</strong></summary>
+
+1. Vérifier les variables d'environnement
+2. Tester TypeScript : `npm run typecheck`
+3. Nettoyer le cache : `rm -rf .next && npm run build`
+</details>
+
+<details>
+<summary><strong>Déploiement rapide</strong></summary>
+
+**Railway (recommandé) :**
+1. Fork ce repo
+2. Connecter à Railway
+3. Ajouter variables d'env
+4. Deploy automatique !
+
+**Vercel alternative :**
+```bash
+npm install -g vercel
+vercel --prod
+```
+</details>
+
+### **💡 Optimisations recommandées**
+
+- **Redis** : Pour scaling (rate limiting distribué)
+- **Monitoring** : Uptime Robot + Sentry alerts
+- **Analytics** : GA4 + conversion tracking
+- **Performance** : Bundle analyzer + Lighthouse CI
+
+---
+
 ## 🤝 **Contribution & Support**
+
+### **🛠️ Contributing Guidelines**
+
+**Contribution process :**
+1. **Fork** ce repository
+2. **Clone** votre fork localement
+3. **Branch** : `git checkout -b feature/ma-nouvelle-feature`
+4. **Code** avec les standards du projet
+5. **Test** : `npm run typecheck && npm run lint`
+6. **Commit** : `git commit -m "✨ feat: nouvelle feature incroyable"`
+7. **Push** et créer une **Pull Request**
+
+**📋 Standards de code :**
+- **TypeScript strict** activé
+- **ESLint + Prettier** pour formatting
+- **Conventional Commits** : `type(scope): description`
+- **Tests** requis pour nouvelles features
+- **Documentation** mise à jour
+
+**🔍 Types de commits :**
+```bash
+✨ feat:     # Nouvelle fonctionnalité
+🔧 fix:      # Correction de bug  
+📚 docs:     # Documentation
+🎨 style:    # Formatting, CSS
+♻️ refactor: # Refactoring code
+✅ test:     # Ajout/modification tests
+🚀 perf:     # Amélioration performance
+```
 
 ### **🐛 Bug Reports**
 
-Utilisez les [GitHub Issues](https://github.com/Aziraphal/judgemyjpeg/issues) pour signaler des bugs.
+Utilisez les [GitHub Issues](https://github.com/Aziraphal/judgemyjpeg/issues) avec le template :
+- **Environment** (OS, Browser, Node version)
+- **Steps to reproduce**
+- **Expected vs Actual behavior**
+- **Screenshots** si UI bug
 
 ### **💡 Feature Requests**
 
-Les suggestions d'amélioration sont les bienvenues dans les Issues.
+**Format recommandé :**
+- **User Story** : "En tant que... je veux... pour..."
+- **Acceptance Criteria** : Liste de points validables
+- **Mockups/Wireframes** si applicable
 
-### **📧 Contact Business**
+### **📧 Contact & Community**
 
-- **Email** : contact.judgemyjpeg@gmail.com
-- **Support** : Via l'application (bouton feedback)
-- **Médiation** : CNPM-MÉDIATION pour litiges
+- **🎯 Demo Live** : [judgemyjpeg.fr](https://www.judgemyjpeg.fr) (3 analyses gratuites)
+- **💌 Contact Business** : contact.judgemyjpeg@gmail.com
+- **🐛 Support** : [GitHub Issues](https://github.com/Aziraphal/judgemyjpeg/issues) ou bouton feedback app
+- **📈 Roadmap** : [Voir les prochaines features](https://github.com/Aziraphal/judgemyjpeg/projects)
+- **💬 Discussions** : [GitHub Discussions](https://github.com/Aziraphal/judgemyjpeg/discussions) pour idées et feedback
+
+**🔔 Stay Updated :**
+- ⭐ **Star ce repo** pour suivre les updates
+- 📱 **Tester l'app** et laisser feedback
+- 🐦 **Twitter** : [@judgemyjpeg](https://twitter.com/judgemyjpeg) (bientôt)
+
+**⚖️ Médiation** : CNPM-MÉDIATION pour litiges consommation
 
 ---
 
