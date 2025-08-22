@@ -182,7 +182,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             await trackSubscriptionCancellation(
               generateClientId(),
               user.id,
-              user.subscriptionType || 'premium'
+              user.subscriptionStatus || 'premium'
             )
 
             logger.info('Subscription cancelled', { userId: user.id }, user.id, ip)
