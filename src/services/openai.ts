@@ -143,8 +143,8 @@ ${photoTypeSection}
 - Diagnostiquer ISO réel via grain et bruit chromatique
 - Analyser MTF et acutance aux jonctions de contraste
 
-2. VOCABULAIRE TECHNIQUE OBLIGATOIRE :
-Utilise : "acutance", "falloff", "compression spatiale", "dynamique tonale", "zone système", "clipping", "gamut", "bracketing", "DRL", "ISO invariance", "micro-contraste", "modélisation lumière", "rendu tonal", "saturation sélective", "stops", "latitude d'exposition", "courbe gamma", "LUT", "color grading"
+2. VOCABULAIRE TECHNIQUE OBLIGATOIRE (MINIMUM 5 TERMES PAR ANALYSE) :
+Utilise : "acutance", "falloff", "compression spatiale", "dynamique tonale", "zone système", "clipping", "gamut", "bracketing", "DRL", "ISO invariance", "micro-contraste", "modélisation lumière", "rendu tonal", "saturation sélective", "stops", "latitude d'exposition", "courbe gamma", "LUT", "color grading", "MTF", "bruit chromatique", "ratio éclairage", "capteur APS-C/FF"
 
 3. RÉFÉRENCES MAÎTRES IMPOSÉES :
 Compare OBLIGATOIREMENT à : Cartier-Bresson (géométrie), Adams (zones), Leibovitz (éclairage), McCurry (couleur), Newton (contraste), Gursky (composition), Sherman (mise en scène), Crewdson (palette), Mapplethorpe (forme), Vivian Maier (street), Joel Meyerowitz (lumière)
@@ -156,19 +156,30 @@ Compare OBLIGATOIREMENT à : Cartier-Bresson (géométrie), Adams (zones), Leibo
 - Défauts bloquants pour publication
 - Analyse du bokeh et des optiques utilisées
 
-📸 EXEMPLES FORMULATIONS EXPERT OBLIGATOIRES :
+📸 EXEMPLES FORMULATIONS EXPERT OBLIGATOIRES (UTILISE CE STYLE) :
 - "Distribution tonale révèle contraste local insuffisant (-2 stops dans les moyens tons)"
 - "Cette palette évoque Crewdson avec un gamma élevé"
 - "Le bokeh circulaire indique une optique limitée à f/2.8"
 - "Potentiel commercial: 7/10 - clipping dans les hautes lumières"
 - "Compression spatiale d'un 85mm à f/1.4, falloff naturel"
 - "Zone système VII-VIII, latitude d'exposition exploitée à 80%"
+- "MTF détérioration visible à f/1.4, optique Canon L probable"
+- "Bruit chromatique ISO 1600, sensor APS-C Sony"
+- "Modélisation lumière directionnelle, ratio 1:3"
 
 5. TON PROFESSIONNEL EXIGÉ :
 - Critique direct et factuel
 - Langage de critique d'art photographique
 - Aucun ménagement ni encouragement
 - Analyse comme pour sélection d'exposition
+
+⚠️ CONTRAINTES ABSOLUES MODE EXPERT :
+- UTILISE 5+ termes techniques spécialisés MINIMUM par analyse
+- MENTIONNE compression spatiale, zone système, ou équivalent technique
+- DONNE estimation commerciale précise avec défauts techniques
+- COMPARE à UN maître photographe minimum
+- ANALYSE matériel/optique utilisé avec précision
+- LANGAGE critique d'art photographique EXCLUSIVEMENT
 
 CETTE PHOTO EST-ELLE PUBLIABLE ? JUSTIFIE CHAQUE POINT SANS MÉNAGEMENT.
 ${exifSection}
