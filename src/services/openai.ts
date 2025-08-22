@@ -207,7 +207,7 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
     CRITÈRES D'ÉVALUATION (sois précis et juste) :
     
     SECTION TECHNIQUE (/60 points) :
-    - Composition : /15 points (cadrage, règle des tiers, équilibre)
+    - Composition : /15 points (cadrage créatif, équilibre visuel, dynamisme - RÉCOMPENSE l'originalité même si hors règle des tiers)
     - Lumière : /15 points (qualité, direction, contraste)
     - Mise au point : /15 points (netteté, profondeur de champ)
     - Exposition : /15 points (histogramme, sur/sous-exposition)
@@ -221,7 +221,9 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
 
     🎯 INSTRUCTIONS SPÉCIFIQUES :
     - Analyse les DÉTAILS RÉELS de cette photo
-    - Note avec PRÉCISION selon la qualité observée
+    - RÉCOMPENSE les compositions créatives et audacieuses (12-15 points si impact visuel fort)
+    - Note avec GÉNÉROSITÉ : 10-15 pour composition = bon à excellent (pas seulement 12-15 pour parfait)
+    - EXEMPLES notation composition : 8-9 = cadrage basique, 10-11 = bon équilibre, 12-13 = excellente composition, 14-15 = composition exceptionnelle/créative
     - ${tone === 'roast' ? 'Sois CRÉATIF et DRÔLE dans tes roasts' : 
          tone === 'expert' ? 'Sois ULTRA-TECHNIQUE et RÉFÉRENCE les MAÎTRES' : 
          'Sois CONSTRUCTIF et PÉDAGOGIQUE'}
