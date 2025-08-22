@@ -34,6 +34,7 @@
     "exifreader": "^4.31.1",
     "formidable": "^3.5.4",
     "geoip-lite": "^1.4.10",
+    "gtag": "^1.0.1",
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.1",
     "micro": "^10.0.1",

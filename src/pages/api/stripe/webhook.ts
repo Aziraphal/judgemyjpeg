@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { updateUserSubscription } from '@/services/subscription'
 import { logger, getClientIP } from '@/lib/logger'
 import { buffer } from 'micro'
+import { trackStripeConversion, trackSubscriptionCancellation, generateClientId } from '@/lib/analytics-server'
 
 export const config = {
   api: {
@@ -73,6 +74,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 currentPeriodEnd: new Date(subscription.current_period_end * 1000)
               })
 
+              // 📊 Google Analytics conversion tracking
+              await trackStripeConversion(
+                generateClientId(),
+                userId,
+                {
+                  transactionId: session.id,
+                  plan: 'premium_monthly',
+                  value: (session.amount_total || 0) / 100, // Stripe en centimes → euros
+                  currency: 'EUR',
+                  method: 'stripe'
+                }
+              )
+
               logger.info('Premium subscription activated', { userId }, userId, ip)
             } else {
               // Paiement unique - déterminer le type selon le price_id
@@ -82,12 +96,40 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 // Activer le starter pack
                 const { activateStarterPack } = await import('@/services/subscription')
                 await activateStarterPack(userId)
+                
+                // 📊 GA tracking Starter Pack
+                await trackStripeConversion(
+                  generateClientId(),
+                  userId,
+                  {
+                    transactionId: session.id,
+                    plan: 'starter_pack',
+                    value: (session.amount_total || 0) / 100,
+                    currency: 'EUR',
+                    method: 'stripe'
+                  }
+                )
+                
                 logger.info('Starter Pack activated', { userId, amount: session.amount_total }, userId, ip)
               } else {
                 // Paiement unique (annual)
                 await updateUserSubscription(userId, 'annual', {
                   customerId: session.customer as string
                 })
+                
+                // 📊 GA tracking Annual subscription
+                await trackStripeConversion(
+                  generateClientId(),
+                  userId,
+                  {
+                    transactionId: session.id,
+                    plan: 'premium_annual',
+                    value: (session.amount_total || 0) / 100,
+                    currency: 'EUR',
+                    method: 'stripe'
+                  }
+                )
+                
                 logger.info('Annual subscription activated', { userId }, userId, ip)
               }
             }
@@ -135,6 +177,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             // Rétrograder vers gratuit
             await updateUserSubscription(user.id, 'free')
+
+            // 📊 GA tracking cancellation
+            await trackSubscriptionCancellation(
+              generateClientId(),
+              user.id,
+              user.subscriptionType || 'premium'
+            )
 
             logger.info('Subscription cancelled', { userId: user.id }, user.id, ip)
             break
