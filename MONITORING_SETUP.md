@@ -5,8 +5,14 @@
 ### 1. Créer compte Sentry (GRATUIT)
 ```bash
 # 1. Aller sur https://sentry.io/signup/
-# 2. Créer un nouveau projet "Next.js"
-# 3. Copier le DSN fourni
+# 2. Organisation: codecraft-plus
+# 3. Projet: javascript-nextjs (déjà créé !)
+# 4. Copier le DSN depuis Settings > Projects > javascript-nextjs > Client Keys
+```
+
+**OU utiliser le wizard :**
+```bash
+npx @sentry/wizard@latest -i nextjs --saas --org codecraft-plus --project javascript-nextjs
 ```
 
 ### 2. Variables d'environnement
@@ -94,7 +100,10 @@ https://www.judgemyjpeg.fr/api/health
 
 ### Test Error Tracking Local
 ```javascript
-// Dans la console navigateur pour tester
+// Page de test disponible
+https://www.judgemyjpeg.fr/sentry-example-page
+
+// Ou dans la console navigateur pour tester
 throw new Error('Test Sentry tracking')
 ```
 
