@@ -1,0 +1,134 @@
+name: ⚡ Performance Issue
+description: Signaler un problème de lenteur ou performance
+title: "[PERFORMANCE] "
+labels: ["performance", "needs-investigation"]
+assignees:
+  - Aziraphal
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        🐌 L'app vous semble lente ? Aidez-nous à identifier le problème !
+
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: "🎯 Type de problème"
+      description: "Quel aspect est lent ?"
+      options:
+        - "📸 Analyse photo très lente"
+        - "⏳ Chargement pages lent"
+        - "🖱️ Interface qui rame"
+        - "📱 App mobile lente"
+        - "☁️ Upload images lent"
+        - "💾 Export PDF/JPEG lent"
+        - "🔄 Autre lenteur"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "📝 Description du problème"
+      description: "Décrivez précisément ce qui est lent"
+      placeholder: "Quand je lance une analyse photo, ça prend 30 secondes au lieu de..."
+    validations:
+      required: true
+
+  - type: input
+    id: timing
+    attributes:
+      label: "⏱️ Temps observé"
+      description: "Combien de temps ça prend ?"
+      placeholder: "ex: 15 secondes"
+    validations:
+      required: true
+
+  - type: input
+    id: expected_timing
+    attributes:
+      label: "⚡ Temps attendu"
+      description: "Combien ça devrait prendre selon vous ?"
+      placeholder: "ex: 3-5 secondes"
+
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: "📊 Fréquence"
+      description: "À quelle fréquence ce problème arrive ?"
+      options:
+        - "🔴 Toujours - Chaque utilisation"
+        - "🟠 Souvent - 70-90% du temps"
+        - "🟡 Parfois - 30-70% du temps"
+        - "🟢 Rarement - <30% du temps"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: device_type
+    attributes:
+      label: "💻 Type d'appareil"
+      description: "Sur quel type d'appareil ?"
+      options:
+        - "💻 PC puissant (gaming/workstation)"
+        - "💻 PC standard"
+        - "🍎 Mac récent"
+        - "🍎 Mac ancien (+5 ans)"
+        - "📱 iPhone récent"
+        - "📱 iPhone ancien"
+        - "🤖 Android haut de gamme"
+        - "🤖 Android entrée de gamme"
+        - "📟 Autre"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: connection
+    attributes:
+      label: "🌐 Connexion internet"
+      description: "Quelle est votre vitesse de connexion ?"
+      options:
+        - "🚀 Très rapide (Fibre 500+ Mbps)"
+        - "⚡ Rapide (ADSL/Fibre 50-500 Mbps)"
+        - "🐌 Lente (ADSL <50 Mbps)"
+        - "📱 Mobile 4G/5G"
+        - "📶 Mobile 3G ou pire"
+        - "❓ Je ne sais pas"
+    validations:
+      required: true
+
+  - type: input
+    id: file_size
+    attributes:
+      label: "📁 Taille fichier (si applicable)"
+      description: "Si problème avec upload/analyse, quelle taille de fichier ?"
+      placeholder: "ex: 5 MB, 15 MB..."
+
+  - type: textarea
+    id: browser_info
+    attributes:
+      label: "🌐 Informations navigateur"
+      description: "Navigateur + version (optionnel mais utile)"
+      placeholder: "Chrome 120.0, Firefox 115, Safari 16.1..."
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: "📋 Contexte supplémentaire"
+      description: "Autres détails qui pourraient aider"
+      placeholder: "Le problème arrive seulement le soir, ou après plusieurs analyses, ou..."
+
+  - type: checkboxes
+    id: troubleshooting
+    attributes:
+      label: "🔧 Vérifications faites"
+      options:
+        - label: "J'ai vidé le cache navigateur (Ctrl+F5)"
+          required: false
+        - label: "J'ai testé sur un autre navigateur"
+          required: false
+        - label: "J'ai vérifié ma connexion internet"
+          required: false
+        - label: "Le problème persiste après redémarrage"
+          required: false

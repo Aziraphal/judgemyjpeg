@@ -1,0 +1,77 @@
+name: ❓ Question / Support
+description: Poser une question sur l'utilisation de JudgeMyJPEG
+title: "[QUESTION] "
+labels: ["question", "support"]
+assignees:
+  - Aziraphal
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        👋 Besoin d'aide ? On est là pour vous aider !
+        
+        **⚡ Réponse plus rapide :** Consultez d'abord notre [FAQ](https://www.judgemyjpeg.fr/faq)
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: "📂 Catégorie"
+      description: "Quel type de question ?"
+      options:
+        - "🔧 Comment utiliser une fonctionnalité"
+        - "💰 Questions billing/abonnement"
+        - "🤖 Comprendre les analyses IA"
+        - "📱 Problème technique mineur"
+        - "🔒 Confidentialité/Sécurité"
+        - "📸 Conseils photographie"
+        - "🎯 Autre question"
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: "❓ Votre question"
+      description: "Décrivez clairement votre question"
+      placeholder: "Comment faire pour... ?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: "📝 Contexte (optionnel)"
+      description: "Informations supplémentaires utiles"
+      placeholder: "J'essaie de... pour... mais..."
+
+  - type: textarea
+    id: tried
+    attributes:
+      label: "🔍 Ce que j'ai déjà essayé"
+      description: "Qu'avez-vous tenté pour résoudre votre question ?"
+      placeholder: "J'ai regardé dans..., testé..., cherché..."
+
+  - type: dropdown
+    id: urgency
+    attributes:
+      label: "⏰ Urgence"
+      description: "À quelle vitesse avez-vous besoin d'aide ?"
+      options:
+        - "🔴 Urgent - Je suis bloqué(e)"
+        - "🟡 Normal - Quand vous pouvez"
+        - "🟢 Pas pressé - Juste curieux(se)"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: "✅ Vérifications"
+      options:
+        - label: "J'ai consulté la [FAQ](https://www.judgemyjpeg.fr/faq)"
+          required: false
+        - label: "J'ai cherché dans les Issues existantes"
+          required: true
+        - label: "Ma question est claire et précise"
+          required: true

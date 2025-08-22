@@ -1,0 +1,21 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Discussions Générales
+    url: https://github.com/Aziraphal/judgemyjpeg/discussions
+    about: Questions ouvertes, idées, feedback général
+
+  - name: 📚 Documentation & FAQ
+    url: https://www.judgemyjpeg.fr/faq
+    about: Consulter la FAQ avant de poser une question
+
+  - name: 🎯 Demo Live
+    url: https://www.judgemyjpeg.fr
+    about: Tester l'application directement
+
+  - name: 📧 Contact Direct
+    url: mailto:contact.judgemyjpeg@gmail.com
+    about: Pour questions business, partenariats, ou problèmes urgents
+
+  - name: 🐦 Réseaux Sociaux
+    url: https://twitter.com/judgemyjpeg
+    about: Suivre les actualités JudgeMyJPEG (bientôt)

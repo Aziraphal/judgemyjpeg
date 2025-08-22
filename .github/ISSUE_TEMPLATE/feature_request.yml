@@ -1,0 +1,122 @@
+name: ✨ Feature Request
+description: Proposer une nouvelle fonctionnalité pour JudgeMyJPEG
+title: "[FEATURE] "
+labels: ["enhancement", "needs-discussion"]
+assignees:
+  - Aziraphal
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        💡 Vos idées nous intéressent ! Décrivez votre suggestion en détail.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: "🎯 Problème à résoudre"
+      description: "Quel besoin utilisateur cette feature résoudrait ?"
+      placeholder: "En tant que photographe, j'aimerais... parce que..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: "💡 Solution proposée"
+      description: "Comment imaginez-vous cette fonctionnalité ?"
+      placeholder: "Je propose d'ajouter un bouton qui permettrait de..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: "📈 Priorité utilisateur"
+      description: "À quel point cette feature vous importerait ?"
+      options:
+        - "🔴 Critique - Je changerais d'app sans ça"
+        - "🟠 Importante - J'utiliserais beaucoup cette feature"
+        - "🟡 Utile - Ce serait un plus appréciable"
+        - "🟢 Nice-to-have - Juste une idée"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: user_type
+    attributes:
+      label: "👤 Type d'utilisateur"
+      description: "Qui bénéficierait de cette feature ?"
+      options:
+        - "📸 Photographes amateurs"
+        - "🎨 Photographes professionnels"  
+        - "📱 Utilisateurs mobiles"
+        - "💻 Utilisateurs desktop"
+        - "🆓 Utilisateurs gratuits"
+        - "💎 Utilisateurs premium"
+        - "👥 Tous les utilisateurs"
+    validations:
+      required: true
+
+  - type: textarea
+    id: user_story
+    attributes:
+      label: "📖 User Story"
+      description: "Décrivez le parcours utilisateur"
+      placeholder: |
+        En tant que [type utilisateur]
+        Je veux [action]
+        Pour [bénéfice]
+        
+        Acceptance criteria:
+        - [ ] Critère 1
+        - [ ] Critère 2
+    validations:
+      required: true
+
+  - type: textarea
+    id: mockups
+    attributes:
+      label: "🎨 Mockups/Wireframes"
+      description: "Croquis, captures d'écran, ou description visuelle"
+      placeholder: "Glissez vos images ici ou décrivez l'interface..."
+
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: "⚙️ Complexité estimée"
+      description: "Selon vous, cette feature semble :"
+      options:
+        - "🟢 Simple - Petit ajout/modification"
+        - "🟡 Moyenne - Nouvelle fonctionnalité"
+        - "🟠 Complexe - Gros développement"
+        - "🔴 Majeure - Refonte significative"
+        - "❓ Je ne sais pas"
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: "🔄 Alternatives considérées"
+      description: "Avez-vous pensé à d'autres solutions ?"
+      placeholder: "J'ai aussi pensé à... mais ce serait moins bien parce que..."
+
+  - type: textarea
+    id: examples
+    attributes:
+      label: "🌟 Exemples concurrents"
+      description: "Connaissez-vous des apps qui ont cette feature ?"
+      placeholder: "App X fait ça comme ça : [lien/description]"
+
+  - type: checkboxes
+    id: validation
+    attributes:
+      label: "✅ Validation"
+      options:
+        - label: "Cette feature n'existe pas déjà dans l'app"
+          required: true
+        - label: "J'ai cherché dans les Issues existantes"
+          required: true
+        - label: "Cette feature apporterait de la valeur à d'autres utilisateurs"
+          required: true
+        - label: "Je serais prêt(e) à tester cette feature en beta"
+          required: false

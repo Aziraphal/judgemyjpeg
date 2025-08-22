@@ -1,0 +1,129 @@
+name: 🐛 Bug Report
+description: Signaler un bug ou dysfonctionnement dans JudgeMyJPEG
+title: "[BUG] "
+labels: ["bug", "needs-triage"]
+assignees:
+  - Aziraphal
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci de signaler ce bug ! Plus vous donnez de détails, plus nous pouvons corriger rapidement.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "📝 Description du problème"
+      description: "Décrivez clairement le bug rencontré"
+      placeholder: "L'analyse photo ne se lance pas quand je clique sur..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: "🔄 Étapes pour reproduire"
+      description: "Comment reproduire le bug ?"
+      placeholder: |
+        1. Aller sur...
+        2. Cliquer sur...
+        3. Voir l'erreur...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: "✅ Comportement attendu"
+      description: "Que devrait-il se passer normalement ?"
+      placeholder: "L'analyse devrait se lancer et afficher le résultat"
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: "❌ Comportement actuel"
+      description: "Que se passe-t-il réellement ?"
+      placeholder: "Rien ne se passe, ou erreur affichée"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: "⚡ Sévérité"
+      description: "Impact du bug"
+      options:
+        - "🔴 Critique - App inutilisable"
+        - "🟠 Importante - Fonctionnalité majeure cassée"
+        - "🟡 Moyenne - Gêne utilisateur"
+        - "🟢 Mineure - Problème esthétique"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: "🌐 Navigateur"
+      description: "Sur quel navigateur ?"
+      options:
+        - "Chrome"
+        - "Firefox"
+        - "Safari"
+        - "Edge"
+        - "Mobile Safari (iOS)"
+        - "Mobile Chrome (Android)"
+        - "Autre"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: device
+    attributes:
+      label: "📱 Device"
+      description: "Type d'appareil"
+      options:
+        - "Desktop PC"
+        - "Mac"
+        - "iPhone"
+        - "iPad"
+        - "Android Phone"
+        - "Android Tablet"
+    validations:
+      required: true
+
+  - type: input
+    id: account
+    attributes:
+      label: "👤 Type de compte"
+      description: "Gratuit, Premium, ou invité ?"
+      placeholder: "ex: Compte Premium"
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: "📸 Screenshots/Vidéos"
+      description: "Captures d'écran du problème (drag & drop)"
+      placeholder: "Glissez vos captures ici..."
+
+  - type: textarea
+    id: console
+    attributes:
+      label: "🔧 Erreurs console (optionnel)"
+      description: "Si vous savez ouvrir F12 > Console, copiez les erreurs rouges"
+      placeholder: "TypeError: Cannot read property..."
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: "✅ Vérifications"
+      description: "Avant de soumettre ce bug :"
+      options:
+        - label: "J'ai vérifié que ce bug n'existe pas déjà dans les Issues"
+          required: true
+        - label: "J'ai testé sur la dernière version (https://www.judgemyjpeg.fr)"
+          required: true
+        - label: "J'ai vidé le cache de mon navigateur (Ctrl+F5)"
+          required: false
