@@ -1,6 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 
+declare global {
+  interface Window {
+    refreshAnalysisCounter?: () => void
+  }
+}
+
 interface AnalysisCounterProps {
   onLimitReached?: () => void
   className?: string
@@ -31,14 +37,6 @@ export default function AnalysisCounter({
   const [subscription, setSubscription] = useState<SubscriptionData | null>(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    if (!session?.user?.id) {
-      setLoading(false)
-      return
-    }
-    fetchSubscription()
-  }, [session?.user?.id])
-
   const fetchSubscription = async () => {
     try {
       const response = await fetch('/api/subscription/status')
@@ -57,6 +55,14 @@ export default function AnalysisCounter({
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (!session?.user) {
+      setLoading(false)
+      return
+    }
+    fetchSubscription()
+  }, [session?.user])
 
   // Actualiser après une analyse
   const refreshCounter = () => {
@@ -159,7 +165,7 @@ export default function AnalysisCounter({
         </div>
         {subscription.daysUntilReset && (
           <div className="mt-2 text-xs text-center text-text-muted">
-            Reset dans {subscription.daysUntilReset} jour{subscription.daysUntilReset > 1 ? &apos;s&apos; : &apos;&apos;}
+            Reset dans {subscription.daysUntilReset} jour{subscription.daysUntilReset > 1 ? 's' : ''}
           </div>
         )}
       </div>
@@ -217,7 +223,7 @@ export default function AnalysisCounter({
                 </span>
               ) : (
                 <span>
-                  Plan gratuit • Reset dans {subscription.daysUntilReset} jour{subscription.daysUntilReset && subscription.daysUntilReset > 1 ? &apos;s&apos; : &apos;&apos;}
+                  Plan gratuit • Reset dans {subscription.daysUntilReset} jour{subscription.daysUntilReset && subscription.daysUntilReset > 1 ? 's' : ''}
                 </span>
               )}
             </div>
