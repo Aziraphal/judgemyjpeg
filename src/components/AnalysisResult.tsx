@@ -679,6 +679,23 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
         </div>
       )}
 
+      {/* Disclaimer artistique */}
+      <div className="mt-8 p-4 bg-cosmic-glass/30 rounded-lg border border-neon-cyan/20">
+        <div className="flex items-start space-x-3 text-sm text-text-muted">
+          <span className="text-lg flex-shrink-0 mt-0.5">🎨</span>
+          <div className="flex-1">
+            <p className="leading-relaxed">
+              Cette analyse reflète une vision IA basée sur les règles photographiques classiques et les tendances actuelles. 
+              <span className="text-neon-cyan font-medium"> Votre style personnel et votre créativité artistique restent uniques</span> — 
+              l&apos;art n&apos;a pas de vérité absolue !
+            </p>
+            <p className="text-xs text-text-gray mt-2 opacity-75">
+              💡 Utilisez ces conseils comme inspiration pour développer votre propre vision artistique.
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Modal ajouter à collection */}
       <AddToCollectionModal
         isOpen={isCollectionModalOpen}
