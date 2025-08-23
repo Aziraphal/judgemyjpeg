@@ -2,8 +2,16 @@ import { useState, useRef } from 'react'
 import { PhotoAnalysis, AnalysisTone, AnalysisLanguage, PhotoType } from '@/types/analysis'
 import ContextualTooltip, { RichTooltip } from './ContextualTooltip'
 import PhotoTypeSelector from './PhotoTypeSelector'
+import AnalysisCounter from './AnalysisCounter'
 import { extractExifData } from '@/utils/exifExtractor'
 import { ExifData } from '@/types/exif'
+
+// Type pour la fonction de refresh du compteur
+declare global {
+  interface Window {
+    refreshAnalysisCounter?: () => void
+  }
+}
 
 interface PhotoUploadProps {
   onAnalysisComplete: (result: { photo: any; analysis: PhotoAnalysis }) => void
@@ -208,6 +216,11 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
       const result = await response.json()
       console.log('Analysis completed successfully')
       
+      // Actualiser le compteur d'analyses après succès
+      if (window.refreshAnalysisCounter) {
+        window.refreshAnalysisCounter()
+      }
+      
       onAnalysisComplete(result)
 
     } catch (error) {
@@ -285,6 +298,13 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
 
   return (
     <div className="w-full max-w-lg sm:max-w-2xl mx-auto space-y-6">
+      {/* Compteur d'analyses restantes */}
+      <AnalysisCounter 
+        onLimitReached={onAnalysisLimitReached}
+        showUpgradeButton={true}
+        className="mb-4"
+      />
+      
       {/* Sélecteur de type de photo */}
       {onPhotoTypeChange && (
         <div className="space-y-3">
