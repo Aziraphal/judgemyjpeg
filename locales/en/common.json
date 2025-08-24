@@ -42,7 +42,8 @@
     "choose_plan": "Choose {plan}",
     "current_plan": "Current Plan",
     "popular": "Popular",
-    "best_value": "Best Value"
+    "best_value": "Best Value",
+    "currency_note": "Prices in EUR, automatically converted by your bank"
   },
   "disclaimer": {
     "title": "About this analysis",

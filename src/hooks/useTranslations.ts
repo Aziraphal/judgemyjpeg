@@ -65,14 +65,14 @@ export interface Translations {
   }
 }
 
-// Configuration des devises par locale
+// Configuration des devises - Euro partout pour simplicité
 export const CURRENCY_CONFIG = {
   fr: { symbol: '€', code: 'EUR', position: 'after' },
-  en: { symbol: '$', code: 'USD', position: 'before' },
+  en: { symbol: '€', code: 'EUR', position: 'after' },
   es: { symbol: '€', code: 'EUR', position: 'after' },
   de: { symbol: '€', code: 'EUR', position: 'after' },
   it: { symbol: '€', code: 'EUR', position: 'after' },
-  pt: { symbol: '$', code: 'USD', position: 'before' }, // Brésil principalement
+  pt: { symbol: '€', code: 'EUR', position: 'after' },
 } as const
 
 // Hook principal
@@ -105,18 +105,14 @@ export function useTranslations() {
     }
   }
 
-  // Fonction pour formater les prix selon la locale
+  // Fonction pour formater les prix - Euro partout
   const formatPrice = (price: number, period?: 'month' | 'year') => {
-    const currency = CURRENCY_CONFIG[locale as keyof typeof CURRENCY_CONFIG] || CURRENCY_CONFIG.fr
     const periodText = translations ? 
       (period === 'month' ? translations.pricing.per_month : 
        period === 'year' ? translations.pricing.per_year : '') : ''
 
-    if (currency.position === 'before') {
-      return `${currency.symbol}${price.toFixed(2)}${periodText}`
-    } else {
-      return `${price.toFixed(2).replace('.', ',')}${currency.symbol}${periodText}`
-    }
+    // Format français pour tous (virgule décimale)
+    return `${price.toFixed(2).replace('.', ',')}€${periodText}`
   }
 
   // Fonction pour interpoler les variables dans les traductions

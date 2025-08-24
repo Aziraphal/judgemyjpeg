@@ -42,7 +42,8 @@
     "choose_plan": "Scegli {plan}",
     "current_plan": "Piano Attuale",
     "popular": "Popolare",
-    "best_value": "Miglior Valore"
+    "best_value": "Miglior Valore",
+    "currency_note": ""
   },
   "disclaimer": {
     "title": "Su questa analisi",
