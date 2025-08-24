@@ -1,0 +1,62 @@
+{
+  "nav": {
+    "analyze": "Analyser",
+    "gallery": "Galerie",
+    "dashboard": "Tableau de bord",
+    "pricing": "Tarifs",
+    "faq": "FAQ",
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "signup": "Inscription"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "close": "Fermer",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier"
+  },
+  "analyze": {
+    "title": "Analyser votre photo",
+    "upload_prompt": "Glissez votre photo ici",
+    "upload_click": "cliquez pour sélectionner",
+    "analyzing": "Analyse en cours...",
+    "analyses_remaining": "{count} analyses restantes",
+    "analyses_unlimited": "Analyses illimitées",
+    "limit_reached": "Limite atteinte",
+    "last_analysis": "Dernière analyse gratuite !",
+    "upgrade": "Passer Premium"
+  },
+  "pricing": {
+    "free_plan": "Gratuit",
+    "premium_plan": "Premium", 
+    "annual_plan": "Annuel",
+    "per_month": "/mois",
+    "per_year": "/an",
+    "free_analyses": "{count} analyses/mois",
+    "unlimited_analyses": "Analyses illimitées",
+    "choose_plan": "Choisir {plan}",
+    "current_plan": "Plan actuel",
+    "popular": "Populaire",
+    "best_value": "Meilleure valeur"
+  },
+  "disclaimer": {
+    "title": "À propos de cette analyse",
+    "message": "Cette analyse reflète une vision IA basée sur les règles photographiques classiques et les tendances actuelles.",
+    "creativity": "Votre style personnel et votre créativité artistique restent uniques",
+    "art_truth": "l'art n'a pas de vérité absolue !",
+    "inspiration": "Utilisez ces conseils comme inspiration pour développer votre propre vision artistique."
+  },
+  "footer": {
+    "made_with": "Fait avec",
+    "in_france": "en France",
+    "legal": "Mentions légales", 
+    "privacy": "Confidentialité",
+    "terms": "CGU",
+    "contact": "Contact"
+  }
+}

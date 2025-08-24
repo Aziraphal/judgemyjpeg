@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
+import { useTranslations } from '@/hooks/useTranslations'
 
 declare global {
   interface Window {
@@ -34,6 +35,7 @@ export default function AnalysisCounter({
   showUpgradeButton = false 
 }: AnalysisCounterProps) {
   const { data: session } = useSession()
+  const { t } = useTranslations()
   const [subscription, setSubscription] = useState<SubscriptionData | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -98,10 +100,10 @@ export default function AnalysisCounter({
           <span className="text-2xl">🎯</span>
           <div>
             <p className="text-sm font-semibold text-neon-cyan">
-              Connectez-vous pour analyser
+              {t('nav.login')} {t('analyze.title').toLowerCase()}
             </p>
             <p className="text-xs text-text-muted">
-              3 analyses gratuites par mois
+              {t('analyze.free_analyses', { count: '3' })}/mois
             </p>
           </div>
         </div>
@@ -127,10 +129,10 @@ export default function AnalysisCounter({
           </span>
           <div>
             <p className="text-sm font-semibold text-neon-pink">
-              Analyses illimitées
+              {t('analyze.analyses_unlimited')}
             </p>
             <p className="text-xs text-text-muted">
-              Plan {subscription.subscriptionStatus === 'annual' ? 'Annuel' : 'Premium'}
+              {t('pricing.current_plan')} {subscription.subscriptionStatus === 'annual' ? t('pricing.annual_plan') : t('pricing.premium_plan')}
             </p>
           </div>
         </div>
@@ -147,10 +149,13 @@ export default function AnalysisCounter({
             <span className="text-2xl">⚠️</span>
             <div>
               <p className="text-sm font-semibold text-red-400">
-                Limite atteinte
+                {t('analyze.limit_reached')}
               </p>
               <p className="text-xs text-text-muted">
-                Plus d'analyses jusqu'au reset
+                {subscription.daysUntilReset ? 
+                  `Reset dans ${subscription.daysUntilReset} jour${subscription.daysUntilReset > 1 ? 's' : ''}` :
+                  'Reset bientôt'
+                }
               </p>
             </div>
           </div>
@@ -159,7 +164,7 @@ export default function AnalysisCounter({
               onClick={() => window.location.href = '/pricing'}
               className="text-xs px-2 py-1 bg-neon-pink/20 text-neon-pink rounded-md hover:bg-neon-pink/30 transition-colors"
             >
-              Upgrade
+              {t('analyze.upgrade')}
             </button>
           )}
         </div>
@@ -181,7 +186,7 @@ export default function AnalysisCounter({
             <span className="text-2xl">🔔</span>
             <div>
               <p className="text-sm font-semibold text-yellow-400">
-                Dernière analyse gratuite !
+                {t('analyze.last_analysis')}
               </p>
               <p className="text-xs text-text-muted">
                 {subscription.starterPack.hasStarterPack ? 
@@ -196,7 +201,7 @@ export default function AnalysisCounter({
               onClick={() => window.location.href = '/pricing'}
               className="text-xs px-2 py-1 bg-neon-pink/20 text-neon-pink rounded-md hover:bg-neon-pink/30 transition-colors"
             >
-              Upgrade
+              {t('analyze.upgrade')}
             </button>
           )}
         </div>
@@ -214,7 +219,7 @@ export default function AnalysisCounter({
           <span className="text-2xl">✨</span>
           <div>
             <p className="text-sm font-semibold text-neon-cyan">
-              {totalAvailable} analyses restantes
+              {t('analyze.analyses_remaining', { count: totalAvailable.toString() })}
             </p>
             <div className="text-xs text-text-muted">
               {subscription.starterPack.hasStarterPack ? (

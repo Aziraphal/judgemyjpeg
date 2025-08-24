@@ -1,0 +1,62 @@
+{
+  "nav": {
+    "analyze": "Analizza",
+    "gallery": "Galleria",
+    "dashboard": "Dashboard", 
+    "pricing": "Prezzi",
+    "faq": "FAQ",
+    "login": "Accedi",
+    "logout": "Esci",
+    "signup": "Registrati"
+  },
+  "common": {
+    "loading": "Caricamento...",
+    "error": "Errore",
+    "success": "Successo",
+    "cancel": "Annulla",
+    "confirm": "Conferma",
+    "close": "Chiudi",
+    "save": "Salva",
+    "delete": "Elimina",
+    "edit": "Modifica"
+  },
+  "analyze": {
+    "title": "Analizza la tua foto",
+    "upload_prompt": "Trascina la tua foto qui", 
+    "upload_click": "clicca per selezionare",
+    "analyzing": "Analizzando...",
+    "analyses_remaining": "{count} analisi rimanenti",
+    "analyses_unlimited": "Analisi illimitate",
+    "limit_reached": "Limite raggiunto",
+    "last_analysis": "Ultima analisi gratuita!",
+    "upgrade": "Passa a Premium"
+  },
+  "pricing": {
+    "free_plan": "Gratuito",
+    "premium_plan": "Premium",
+    "annual_plan": "Annuale",
+    "per_month": "/mese",
+    "per_year": "/anno", 
+    "free_analyses": "{count} analisi/mese",
+    "unlimited_analyses": "Analisi illimitate",
+    "choose_plan": "Scegli {plan}",
+    "current_plan": "Piano Attuale",
+    "popular": "Popolare",
+    "best_value": "Miglior Valore"
+  },
+  "disclaimer": {
+    "title": "Su questa analisi",
+    "message": "Questa analisi riflette una visione IA basata su regole fotografiche classiche e tendenze attuali.",
+    "creativity": "Il tuo stile personale e la tua creatività artistica rimangono unici",
+    "art_truth": "l'arte non ha verità assoluta!",
+    "inspiration": "Usa questi consigli come ispirazione per sviluppare la tua visione artistica."
+  },
+  "footer": {
+    "made_with": "Fatto con",
+    "in_france": "in Francia",
+    "legal": "Note Legali",
+    "privacy": "Privacy", 
+    "terms": "Termini",
+    "contact": "Contatto"
+  }
+}

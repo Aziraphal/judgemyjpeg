@@ -1,0 +1,62 @@
+{
+  "nav": {
+    "analyze": "Analysieren",
+    "gallery": "Galerie", 
+    "dashboard": "Dashboard",
+    "pricing": "Preise",
+    "faq": "FAQ",
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "signup": "Registrieren"
+  },
+  "common": {
+    "loading": "Wird geladen...",
+    "error": "Fehler",
+    "success": "Erfolg",
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen",
+    "close": "Schließen",
+    "save": "Speichern", 
+    "delete": "Löschen",
+    "edit": "Bearbeiten"
+  },
+  "analyze": {
+    "title": "Analysiere dein Foto",
+    "upload_prompt": "Ziehe dein Foto hier hin",
+    "upload_click": "klicken zum Auswählen",
+    "analyzing": "Analysiere...",
+    "analyses_remaining": "{count} Analysen verbleibend",
+    "analyses_unlimited": "Unbegrenzte Analysen",
+    "limit_reached": "Limit erreicht",
+    "last_analysis": "Letzte kostenlose Analyse!",
+    "upgrade": "Auf Premium upgraden"
+  },
+  "pricing": {
+    "free_plan": "Kostenlos",
+    "premium_plan": "Premium",
+    "annual_plan": "Jährlich", 
+    "per_month": "/Monat",
+    "per_year": "/Jahr",
+    "free_analyses": "{count} Analysen/Monat",
+    "unlimited_analyses": "Unbegrenzte Analysen",
+    "choose_plan": "{plan} wählen",
+    "current_plan": "Aktueller Plan",
+    "popular": "Beliebt",
+    "best_value": "Bester Wert"
+  },
+  "disclaimer": {
+    "title": "Über diese Analyse",
+    "message": "Diese Analyse spiegelt eine KI-Vision basierend auf klassischen Fotografie-Regeln und aktuellen Trends wider.",
+    "creativity": "Dein persönlicher Stil und deine künstlerische Kreativität bleiben einzigartig",
+    "art_truth": "Kunst hat keine absolute Wahrheit!",
+    "inspiration": "Nutze diese Tipps als Inspiration zur Entwicklung deiner eigenen künstlerischen Vision."
+  },
+  "footer": {
+    "made_with": "Gemacht mit",
+    "in_france": "in Frankreich", 
+    "legal": "Impressum",
+    "privacy": "Datenschutz",
+    "terms": "AGB",
+    "contact": "Kontakt"
+  }
+}

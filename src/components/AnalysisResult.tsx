@@ -9,6 +9,7 @@ import { PDFExporter } from '@/services/pdf-export'
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import SmartGlossaryText from '@/components/SmartGlossaryText'
+import { useTranslations } from '@/hooks/useTranslations'
 
 interface AnalysisResultProps {
   photo: {
@@ -24,6 +25,7 @@ interface AnalysisResultProps {
 
 export default function AnalysisResult({ photo, analysis, tone = 'professional', onNewAnalysis }: AnalysisResultProps) {
   const { data: session } = useSession()
+  const { t } = useTranslations()
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false)
   const [showHelpBanner, setShowHelpBanner] = useState(true)
 
@@ -685,12 +687,12 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
           <span className="text-lg flex-shrink-0 mt-0.5">🎨</span>
           <div className="flex-1">
             <p className="leading-relaxed">
-              Cette analyse reflète une vision IA basée sur les règles photographiques classiques et les tendances actuelles. 
-              <span className="text-neon-cyan font-medium"> Votre style personnel et votre créativité artistique restent uniques</span> — 
-              l&apos;art n&apos;a pas de vérité absolue !
+              {t('disclaimer.message')} 
+              <span className="text-neon-cyan font-medium"> {t('disclaimer.creativity')}</span> — 
+              {t('disclaimer.art_truth')}
             </p>
             <p className="text-xs text-text-gray mt-2 opacity-75">
-              💡 Utilisez ces conseils comme inspiration pour développer votre propre vision artistique.
+              💡 {t('disclaimer.inspiration')}
             </p>
           </div>
         </div>

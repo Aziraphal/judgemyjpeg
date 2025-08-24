@@ -1,0 +1,62 @@
+{
+  "nav": {
+    "analyze": "Analyze",
+    "gallery": "Gallery", 
+    "dashboard": "Dashboard",
+    "pricing": "Pricing",
+    "faq": "FAQ",
+    "login": "Sign In",
+    "logout": "Sign Out",
+    "signup": "Sign Up"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success", 
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit"
+  },
+  "analyze": {
+    "title": "Analyze your photo",
+    "upload_prompt": "Drop your photo here",
+    "upload_click": "click to select",
+    "analyzing": "Analyzing...",
+    "analyses_remaining": "{count} analyses remaining", 
+    "analyses_unlimited": "Unlimited analyses",
+    "limit_reached": "Limit reached",
+    "last_analysis": "Last free analysis!",
+    "upgrade": "Upgrade to Premium"
+  },
+  "pricing": {
+    "free_plan": "Free",
+    "premium_plan": "Premium",
+    "annual_plan": "Annual", 
+    "per_month": "/month",
+    "per_year": "/year",
+    "free_analyses": "{count} analyses/month",
+    "unlimited_analyses": "Unlimited analyses",
+    "choose_plan": "Choose {plan}",
+    "current_plan": "Current Plan",
+    "popular": "Popular",
+    "best_value": "Best Value"
+  },
+  "disclaimer": {
+    "title": "About this analysis",
+    "message": "This analysis reflects an AI vision based on classic photography rules and current trends.",
+    "creativity": "Your personal style and artistic creativity remain unique",
+    "art_truth": "art has no absolute truth!",
+    "inspiration": "Use these tips as inspiration to develop your own artistic vision."
+  },
+  "footer": {
+    "made_with": "Made with",
+    "in_france": "in France",
+    "legal": "Legal Notice",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "contact": "Contact"
+  }
+}

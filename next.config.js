@@ -11,6 +11,13 @@ const nextConfig = {
     // Désactiver ESLint pendant le build pour les tests de performance
     ignoreDuringBuilds: true,
   },
+  
+  // Configuration i18n
+  i18n: {
+    locales: ['fr', 'en', 'es', 'de', 'it', 'pt'],
+    defaultLocale: 'fr',
+    localeDetection: true,
+  },
   images: {
     domains: ['res.cloudinary.com', 'lh3.googleusercontent.com'],
     formats: ['image/webp', 'image/avif'],
