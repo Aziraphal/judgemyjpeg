@@ -16,7 +16,7 @@ const nextConfig = {
   i18n: {
     locales: ['fr', 'en', 'es', 'de', 'it', 'pt'],
     defaultLocale: 'fr',
-    localeDetection: true,
+    localeDetection: false,
   },
   images: {
     domains: ['res.cloudinary.com', 'lh3.googleusercontent.com'],

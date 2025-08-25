@@ -56,7 +56,8 @@ export default async function handler(
       })
     }
 
-    // Rate limiting par IP
+    // Rate limiting par IP (bypass si ADMIN_BYPASS_RATE_LIMIT est défini)
+    const bypassRateLimit = process.env.ADMIN_BYPASS_RATE_LIMIT === 'true'
     const attempts = attemptCache.get(clientIP) || { count: 0, lastAttempt: 0 }
     const now = Date.now()
     
@@ -65,8 +66,8 @@ export default async function handler(
       attempts.count = 0
     }
 
-    // Vérifier si IP bloquée
-    if (attempts.blockedUntil && now < attempts.blockedUntil) {
+    // Vérifier si IP bloquée (sauf si bypass activé)
+    if (!bypassRateLimit && attempts.blockedUntil && now < attempts.blockedUntil) {
       const remainingMinutes = Math.ceil((attempts.blockedUntil - now) / (60 * 1000))
       
       await auditLogger.logSecurity('admin_login_blocked', {
@@ -101,16 +102,18 @@ export default async function handler(
     }
 
     if (adminSecret !== expectedSecret) {
-      // Incrémenter les tentatives échouées
-      attempts.count++
-      attempts.lastAttempt = now
+      // Incrémenter les tentatives échouées (sauf si bypass activé)
+      if (!bypassRateLimit) {
+        attempts.count++
+        attempts.lastAttempt = now
 
-      // Bloquer après 5 tentatives pour 30 minutes
-      if (attempts.count >= 5) {
-        attempts.blockedUntil = now + (30 * 60 * 1000)
+        // Bloquer après 5 tentatives pour 30 minutes
+        if (attempts.count >= 5) {
+          attempts.blockedUntil = now + (30 * 60 * 1000)
+        }
+
+        attemptCache.set(clientIP, attempts)
       }
-
-      attemptCache.set(clientIP, attempts)
 
       await auditLogger.logSecurity('admin_login_failed', {
         description: `Admin login failed with invalid credentials from IP ${clientIP}`,
@@ -195,6 +198,11 @@ export function validateAdminToken(token: string): boolean {
   }
 
   return true
+}
+
+// Fonction utilitaire pour nettoyer le cache de rate limiting
+export function clearRateLimitCache(): void {
+  attemptCache.clear()
 }
 
 // Middleware pour protéger les routes admin
