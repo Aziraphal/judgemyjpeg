@@ -26,6 +26,12 @@ export function middleware(request: NextRequest) {
   
   response.headers.set('Content-Security-Policy', csp)
 
+  // Cache headers for static assets
+  const url = request.nextUrl.pathname
+  if (url === '/favicon.ico') {
+    response.headers.set('Cache-Control', 'public, max-age=86400') // 1 day
+  }
+
   return response
 }
 
