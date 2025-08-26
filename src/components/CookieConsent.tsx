@@ -23,6 +23,31 @@ export default function CookieConsent() {
     social: false
   })
 
+  // Function to open settings from external trigger
+  const openSettings = () => {
+    setShowSettings(true)
+    // If user hasn't seen banner, show current preferences
+    if (!showBanner) {
+      const consent = localStorage.getItem('cookie-consent')
+      if (consent) {
+        try {
+          const saved = JSON.parse(consent)
+          setPreferences(saved)
+        } catch (e) {
+          // Keep default preferences
+        }
+      }
+    }
+  }
+
+  // Expose function globally for footer link
+  useEffect(() => {
+    (window as any).openCookieSettings = openSettings
+    return () => {
+      delete (window as any).openCookieSettings
+    }
+  }, [])
+
   useEffect(() => {
     // Vérifier si le consentement a déjà été donné
     const consent = localStorage.getItem('cookie-consent')
@@ -63,35 +88,39 @@ export default function CookieConsent() {
   }
 
   const applyCookiePreferences = (prefs: CookiePreferences) => {
-    // Analytics (Google Analytics)
-    if (prefs.analytics) {
-      // Activer Google Analytics
-      if (typeof window !== 'undefined' && (window as any).gtag) {
-        (window as any).gtag('consent', 'update', {
-          'analytics_storage': 'granted'
-        })
+    // Update Google Consent Mode v2 with comprehensive consent settings
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      const consentUpdate = {
+        'analytics_storage': prefs.analytics ? 'granted' : 'denied',
+        'ad_storage': 'denied', // Never granted - no advertising
+        'ad_user_data': 'denied', // Never granted - no advertising
+        'ad_personalization': 'denied', // Never granted - no advertising
+        'functionality_storage': prefs.personalization ? 'granted' : 'denied',
+        'personalization_storage': prefs.personalization ? 'granted' : 'denied',
+        'security_storage': 'granted' // Always granted for security
       }
-    } else {
-      // Désactiver Google Analytics
-      if (typeof window !== 'undefined' && (window as any).gtag) {
-        (window as any).gtag('consent', 'update', {
-          'analytics_storage': 'denied'
-        })
+      
+      ;(window as any).gtag('consent', 'update', consentUpdate)
+      
+      // Log for debugging in development
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Cookie preferences applied:', { prefs, consentUpdate })
       }
     }
 
-    // Personnalisation
+    // Personnalisation - Local storage management
     if (prefs.personalization) {
       localStorage.setItem('personalization-enabled', 'true')
     } else {
       localStorage.removeItem('personalization-enabled')
     }
 
-    // Réseaux sociaux
+    // Réseaux sociaux - Cleanup if disabled
     if (!prefs.social) {
-      // Supprimer les cookies de réseaux sociaux
-      const socialCookies = ['_fbp', '_fbc', 'fr', '__ar_v4']
+      // Supprimer les cookies de réseaux sociaux potentiels
+      const socialCookies = ['_fbp', '_fbc', 'fr', '__ar_v4', '_twitter_sess', 'guest_id']
       socialCookies.forEach(cookie => {
+        document.cookie = `${cookie}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${window.location.hostname}`
         document.cookie = `${cookie}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
       })
     }
@@ -144,19 +173,16 @@ export default function CookieConsent() {
                   <span className="text-xl sm:text-2xl flex-shrink-0">🍪</span>
                   <div className="flex-1 min-w-0">
                     <h3 className="text-base sm:text-lg font-semibold text-white mb-1 sm:mb-2">
-                      Gestion des cookies
+                      🍪 Respect de votre vie privée
                     </h3>
                     <p className="text-xs sm:text-sm text-gray-200">
-                      Ce site utilise des cookies pour améliorer votre expérience et analyser le trafic. 
-                      Les cookies essentiels au fonctionnement sont automatiquement acceptés.
+                      JudgeMyJPEG utilise uniquement quelques cookies pour assurer le bon fonctionnement 
+                      et améliorer votre expérience. <strong className="text-white">Nous respectons vos choix.</strong>
                     </p>
                     <p className="text-xs text-gray-300 mt-1 sm:mt-2">
-                      En continuant, vous acceptez l'utilisation des cookies. 
-                      Consultez la{' '}
-                      <Link href="/legal/cookies" className="text-blue-300 hover:underline">
-                        politique de cookies
-                      </Link>{' '}
-                      pour plus d'informations.
+                      ✓ Cookies nécessaires seulement par défaut • 
+                      ✓ Analytics anonymisés (optionnel) • 
+                      ✓ Aucun tracking publicitaire
                     </p>
                   </div>
                 </div>
@@ -168,19 +194,19 @@ export default function CookieConsent() {
                   onClick={() => setShowSettings(true)}
                   className="px-3 sm:px-4 py-2 text-xs sm:text-sm text-white bg-gray-600 hover:bg-gray-500 border border-gray-500 rounded transition-colors whitespace-nowrap"
                 >
-                  Personnaliser
+                  ⚙️ Personnaliser
                 </button>
                 <button
                   onClick={rejectOptional}
-                  className="px-3 sm:px-4 py-2 text-xs sm:text-sm bg-red-600 text-white border border-red-500 rounded hover:bg-red-700 transition-colors whitespace-nowrap"
+                  className="px-3 sm:px-4 py-2 text-xs sm:text-sm bg-gray-600 text-white border border-gray-500 rounded hover:bg-gray-500 transition-colors whitespace-nowrap"
                 >
-                  Refuser optionnels
+                  🛡️ Nécessaires uniquement
                 </button>
                 <button
                   onClick={acceptAll}
-                  className="px-4 sm:px-6 py-2 text-xs sm:text-sm bg-blue-600 text-white border border-blue-500 rounded hover:bg-blue-700 transition-colors font-semibold whitespace-nowrap"
+                  className="px-4 sm:px-6 py-2 text-xs sm:text-sm bg-green-600 text-white border border-green-500 rounded hover:bg-green-700 transition-colors font-semibold whitespace-nowrap"
                 >
-                  Accepter tout
+                  ✅ J'accepte
                 </button>
               </div>
             </div>

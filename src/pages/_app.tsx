@@ -68,7 +68,7 @@ export default function App({
         <meta property="og:image" content="https://judgemyjpeg.com/og-image.png" />
       </Head>
 
-      {/* Google Analytics Scripts */}
+      {/* Google Analytics Scripts - Consent-based loading */}
       {GA_TRACKING_ID && (
         <>
           <Script
@@ -82,12 +82,62 @@ export default function App({
               __html: `
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
+                
+                // Initialize with consent denied by default (Google Consent Mode v2)
+                gtag('consent', 'default', {
+                  'analytics_storage': 'denied',
+                  'ad_storage': 'denied',
+                  'ad_user_data': 'denied',
+                  'ad_personalization': 'denied',
+                  'functionality_storage': 'denied',
+                  'personalization_storage': 'denied',
+                  'security_storage': 'granted', // Always granted for security
+                });
+                
                 gtag('js', new Date());
                 gtag('config', '${GA_TRACKING_ID}', {
                   page_path: window.location.pathname,
                   anonymize_ip: true,
                   cookie_flags: 'SameSite=None;Secure'
                 });
+
+                // Check for existing consent and update Google Consent Mode
+                const checkConsent = () => {
+                  const consent = localStorage.getItem('cookie-consent');
+                  if (consent) {
+                    try {
+                      const prefs = JSON.parse(consent);
+                      
+                      // Update consent based on user preferences
+                      const consentUpdate = {
+                        'analytics_storage': prefs.analytics ? 'granted' : 'denied',
+                        'ad_storage': 'denied', // Never granted - no ads
+                        'ad_user_data': 'denied', // Never granted - no ads
+                        'ad_personalization': 'denied', // Never granted - no ads
+                        'functionality_storage': prefs.personalization ? 'granted' : 'denied',
+                        'personalization_storage': prefs.personalization ? 'granted' : 'denied',
+                        'security_storage': 'granted' // Always granted for security
+                      };
+
+                      gtag('consent', 'update', consentUpdate);
+                      
+                      // Log consent status for debugging (dev only)
+                      if (process.env.NODE_ENV === 'development') {
+                        console.log('Cookie consent updated:', consentUpdate);
+                      }
+                      
+                    } catch (e) {
+                      console.warn('Error parsing cookie consent:', e);
+                    }
+                  }
+                };
+
+                // Check on load
+                if (document.readyState === 'loading') {
+                  document.addEventListener('DOMContentLoaded', checkConsent);
+                } else {
+                  checkConsent();
+                }
               `,
             }}
           />

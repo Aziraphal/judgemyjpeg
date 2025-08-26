@@ -194,15 +194,20 @@ export default function Footer() {
               </Link>
               <button
                 onClick={() => {
-                  // Effacer le consentement pour forcer l'affichage du banner
-                  localStorage.removeItem('cookie-consent')
-                  localStorage.removeItem('cookie-consent-date')
-                  window.location.reload()
+                  // Utilise la fonction globale pour ouvrir les paramètres
+                  if ((window as any).openCookieSettings) {
+                    (window as any).openCookieSettings()
+                  } else {
+                    // Fallback: effacer le consentement pour forcer l'affichage du banner
+                    localStorage.removeItem('cookie-consent')
+                    localStorage.removeItem('cookie-consent-date')
+                    window.location.reload()
+                  }
                 }}
                 className="text-text-muted hover:text-neon-cyan transition-colors"
                 title="Gérer les préférences cookies"
               >
-                🍪 Préférences
+                🍪 Préférences cookies
               </button>
             </div>
 
