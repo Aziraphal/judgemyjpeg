@@ -107,8 +107,13 @@ export default function Footer() {
             <h4 className="text-text-white font-semibold mb-4">Analyse Photo</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/analyser-photo" className="text-text-muted hover:text-neon-cyan transition-colors">
-                  Analyser Photo IA
+                <Link href="/analyser-photo-gratuit" className="text-text-muted hover:text-neon-cyan transition-colors">
+                  Analyser Photo Gratuit
+                </Link>
+              </li>
+              <li>
+                <Link href="/critique-photo-ia" className="text-text-muted hover:text-neon-cyan transition-colors">
+                  Critique Photo IA
                 </Link>
               </li>
               <li>
@@ -124,11 +129,6 @@ export default function Footer() {
               <li>
                 <Link href="/toutes-mes-photos" className="text-text-muted hover:text-neon-cyan transition-colors">
                   Toutes mes Photos
-                </Link>
-              </li>
-              <li>
-                <Link href="/tarifs" className="text-text-muted hover:text-neon-cyan transition-colors">
-                  Tarifs & Plans
                 </Link>
               </li>
             </ul>

@@ -43,13 +43,14 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>JudgeMyJPEG | Analyse photo IA - Note tes photos sur 100</title>
-        <meta name="description" content="Fais analyser tes photos par une IA spécialisée ! Note sur 100, conseils techniques personnalisés. Mode pro ou humoristique. Essai gratuit disponible." />
+        <title>Analyser Photo IA Gratuit | Critique Photo Intelligence Artificielle - JudgeMyJPEG</title>
+        <meta name="description" content="Analysez vos photos gratuitement avec une IA experte ! Critique photo professionnelle, note sur 100, conseils techniques. Analyse photo instantanée en ligne." />
+        <meta name="keywords" content="analyser photo, analyse photo IA, critique photo, intelligence artificielle photo, analyser photo gratuit, critique photo IA, améliorer photo, analyse image IA" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         
         {/* Open Graph */}
-        <meta property="og:title" content="JudgeMyJPEG | Analyse photo IA - Note tes photos sur 100" />
-        <meta property="og:description" content="Fais analyser tes photos par une IA spécialisée ! Note sur 100, conseils techniques personnalisés. Mode pro ou humoristique." />
+        <meta property="og:title" content="Analyser Photo IA Gratuit | Critique Photo Intelligence Artificielle" />
+        <meta property="og:description" content="Analysez vos photos gratuitement avec une IA experte ! Critique photo professionnelle, note sur 100, conseils techniques instantanés." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.judgemyjpeg.fr" />
         <meta property="og:image" content="https://www.judgemyjpeg.fr/favicon.ico" />
@@ -62,24 +63,79 @@ export default function Home() {
         <meta name="twitter:description" content="Fais analyser tes photos par une IA spécialisée ! Note sur 100 + conseils techniques." />
         <meta name="twitter:image" content="https://www.judgemyjpeg.fr/favicon.ico" />
         
-        {/* Schema.org JSON-LD */}
+        {/* Schema.org JSON-LD - Enhanced for SEO */}
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "WebSite",
-            "name": "JudgeMyJPEG",
-            "description": "Service d'analyse de photos par intelligence artificielle",
-            "url": "https://www.judgemyjpeg.fr",
-            "potentialAction": {
-              "@type": "SearchAction",
-              "target": "https://www.judgemyjpeg.fr/analyze",
-              "query-input": "required name=search_term_string"
+            "@type": ["WebSite", "WebApplication"],
+            "name": "JudgeMyJPEG - Analyser Photo IA",
+            "alternateName": ["Critique Photo IA", "Analyse Photo Intelligence Artificielle"],
+            "description": "Service gratuit d'analyse et critique photo par intelligence artificielle. Analysez vos photos avec une IA experte, obtenez une note sur 100 et des conseils personnalisés.",
+            "url": "https://judgemyjpeg.com",
+            "applicationCategory": "PhotographyApplication",
+            "operatingSystem": "Web Browser",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "EUR",
+              "description": "Analyse photo gratuite par IA"
             },
+            "potentialAction": [
+              {
+                "@type": "SearchAction",
+                "target": "https://judgemyjpeg.com/analyze",
+                "query-input": "required name=photo"
+              },
+              {
+                "@type": "UseAction",
+                "name": "Analyser Photo IA",
+                "description": "Analysez gratuitement vos photos avec intelligence artificielle",
+                "target": "https://judgemyjpeg.com/analyze"
+              }
+            ],
             "provider": {
               "@type": "Organization",
-              "name": "CodeCraft Plus",
-              "url": "https://www.judgemyjpeg.fr"
-            }
+              "name": "JudgeMyJPEG",
+              "url": "https://judgemyjpeg.com",
+              "description": "Plateforme d'analyse photo par intelligence artificielle"
+            },
+            "keywords": "analyser photo, critique photo IA, intelligence artificielle photo, analyse photo gratuit, améliorer photo, conseils photo IA",
+            "inLanguage": ["fr", "en", "es", "de", "it", "pt"],
+            "isAccessibleForFree": true
+          })}
+        </script>
+        
+        {/* FAQ Schema for SEO */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Comment analyser une photo avec une IA ?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Uploadez votre photo sur JudgeMyJPEG, notre intelligence artificielle l'analyse en quelques secondes et vous donne une critique détaillée avec note sur 100 et conseils personnalisés."
+                }
+              },
+              {
+                "@type": "Question", 
+                "name": "Est-ce que l'analyse photo IA est gratuite ?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Oui, JudgeMyJPEG propose des analyses photo IA gratuites. Vous pouvez tester notre service sans inscription et obtenir une critique professionnelle de vos photos."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Quels types de photos peut-on analyser ?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Notre IA analyse tous types de photos : portraits, paysages, architecture, culinaire, macro, animalier, street photography. Formats supportés : JPG, PNG, WebP."
+                }
+              }
+            ]
           })}
         </script>
       </Head>
@@ -162,8 +218,11 @@ export default function Home() {
               </span>
             </h1>
             <p className="text-xl text-text-gray mb-8 max-w-2xl mx-auto">
-              <span className="text-neon-cyan">Analyse IA professionnelle</span> de vos photos
+              <span className="text-neon-cyan">Analysez vos photos</span> avec une <span className="text-neon-pink">intelligence artificielle experte</span>
             </p>
+            <div className="text-base text-text-muted mb-6 max-w-3xl mx-auto">
+              <p>✨ <strong className="text-white">Critique photo IA instantanée</strong> • Note sur 100 • Conseils techniques personnalisés</p>
+            </div>
             
             {!session ? (
               <div className="space-y-6">
@@ -227,30 +286,55 @@ export default function Home() {
               </div>
             )}
           </div>
-          {/* Features Grid */}
+          {/* Features Grid - SEO optimized */}
           <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             <div className="glass-card p-6 text-center">
               <div className="text-4xl mb-4">📸</div>
-              <h3 className="text-lg font-bold mb-3 text-neon-cyan">Analyse IA</h3>
+              <h3 className="text-lg font-bold mb-3 text-neon-cyan">Analyse Photo IA</h3>
               <p className="text-text-gray text-sm">
-                Analyse complète par <span className="text-neon-pink">Intelligence Artificielle</span>
+                <strong className="text-white">Analysez vos photos</strong> avec une <span className="text-neon-pink">intelligence artificielle spécialisée</span>
               </p>
             </div>
             
             <div className="glass-card p-6 text-center">
               <div className="text-4xl mb-4">⚡</div>
-              <h3 className="text-lg font-bold mb-3 text-neon-pink">Instantané</h3>
+              <h3 className="text-lg font-bold mb-3 text-neon-pink">Critique Instantanée</h3>
               <p className="text-text-gray text-sm">
-                Résultats en <span className="text-neon-cyan">quelques secondes</span>
+                <strong className="text-white">Critique photo IA</strong> en <span className="text-neon-cyan">quelques secondes</span>
               </p>
             </div>
             
             <div className="glass-card p-6 text-center">
               <div className="text-4xl mb-4">🎯</div>
-              <h3 className="text-lg font-bold mb-3 text-neon-cyan">Précis</h3>
+              <h3 className="text-lg font-bold mb-3 text-neon-cyan">Analyse Précise</h3>
               <p className="text-text-gray text-sm">
-                Analyse <span className="text-neon-pink">professionnelle</span> détaillée
+                <strong className="text-white">Analyse technique</strong> et <span className="text-neon-pink">conseils personnalisés</span>
               </p>
+            </div>
+          </div>
+
+          {/* SEO Content Section */}
+          <div className="max-w-4xl mx-auto mt-16 glass-card p-8">
+            <h2 className="text-2xl font-bold text-center mb-6 text-transparent bg-gradient-to-r from-neon-pink to-neon-cyan bg-clip-text">
+              Pourquoi analyser ses photos avec une IA ?
+            </h2>
+            <div className="grid md:grid-cols-2 gap-6 text-text-gray">
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-3">🎨 Critique photo experte</h3>
+                <p className="text-sm">
+                  Notre <strong className="text-neon-cyan">intelligence artificielle</strong> analyse la composition, 
+                  l'exposition, les couleurs et la netteté de vos photos pour vous donner une 
+                  <strong className="text-white"> critique photo IA</strong> détaillée.
+                </p>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-3">📈 Améliorez vos photos</h3>
+                <p className="text-sm">
+                  Recevez des <strong className="text-neon-pink">conseils personnalisés</strong> pour 
+                  <strong className="text-white"> améliorer vos photos</strong> et développer vos 
+                  compétences en photographie.
+                </p>
+              </div>
             </div>
           </div>
         </div>

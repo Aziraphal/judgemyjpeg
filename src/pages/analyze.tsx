@@ -161,8 +161,10 @@ export default function AnalyzePage() {
   return (
     <>
       <Head>
-        <title>Analyser une photo | IA analyse JPEG - JudgeMyJPEG</title>
-        <meta name="description" content="Faites analyser vos photos par une IA spécialisée. Note sur 100, conseils techniques et améliorations personnalisées. Mode professionnel ou humoristique." />
+        <title>Analyser Photo en Ligne Gratuit | Critique Photo IA Professionnelle</title>
+        <meta name="description" content="Analysez gratuitement vos photos avec notre IA experte ! Critique photo instantanée, note sur 100, conseils techniques détaillés. Analyse image intelligence artificielle." />
+        <meta name="keywords" content="analyser photo en ligne, critique photo IA, analyse photo gratuit, intelligence artificielle photo, analyser image IA, améliorer photo conseils, analyse technique photo" />
+        <link rel="canonical" href="https://judgemyjpeg.com/analyze" />
       </Head>
 
       <main className={`min-h-screen particles-container relative transition-all duration-1000 ${
@@ -194,11 +196,11 @@ export default function AnalyzePage() {
             <div className="text-center flex-1">
               <h1 className="text-3xl md:text-4xl font-bold mb-2">
                 <span className="text-transparent bg-gradient-to-r from-neon-pink to-neon-cyan bg-clip-text">
-                  Analyse Photo IA
+                  Analyser Photo IA Gratuit
                 </span>
               </h1>
               <p className="text-base text-text-gray">
-                <span className="text-neon-cyan">Analyse IA professionnelle</span> de vos photos
+                <span className="text-neon-cyan">Critique photo intelligence artificielle</span> • Conseils experts
               </p>
             </div>
 
