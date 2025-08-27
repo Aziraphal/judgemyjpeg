@@ -289,7 +289,7 @@ docker build -t judgemyjpeg .
 3. Ajouter variables d'env
 4. Deploy automatique !
 
-**Vercel alternative :**
+**Railway alternative :**
 ```bash
 npm install -g vercel
 vercel --prod

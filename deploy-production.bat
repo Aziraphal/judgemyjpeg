@@ -43,7 +43,7 @@ echo.
 echo Prochaines etapes:
 echo   1. git commit -m "🔧 fix: resolve admin dashboard bugs for production"
 echo   2. git push origin main
-echo   3. Verifier le deploiement sur Railway/Vercel
+echo   3. Verifier le deploiement sur Railway
 echo   4. Tester admin dashboard en production
 echo.
 echo 🎯 URL Admin Production: https://votre-site.com/admin/login

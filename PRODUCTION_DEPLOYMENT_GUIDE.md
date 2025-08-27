@@ -31,7 +31,7 @@ npm run build
 npm run dev
 # ➜ Aller sur http://localhost:3008/admin/dashboard
 
-# 5. Déployer en production (Railway/Vercel)
+# 5. Déployer en production (Railway)
 git add .
 git commit -m "🔧 fix: resolve admin dashboard bugs for production"
 git push origin main

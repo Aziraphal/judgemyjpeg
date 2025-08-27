@@ -60,7 +60,7 @@
 
 **Actions majeures:**
 1. **Multi-instance**: 
-   - Load balancer (Railway + Vercel)
+   - Load balancer (Railway + Railway)
    - Session store Redis
    - File uploads distribués
 

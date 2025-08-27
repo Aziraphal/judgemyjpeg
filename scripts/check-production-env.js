@@ -75,9 +75,8 @@ if (allGood) {
   console.log('🚀 Votre application est prête pour la production.');
 } else {
   console.log('❌ CERTAINES VARIABLES MANQUENT !');
-  console.log('🔧 Définissez-les dans votre plateforme de déploiement.');
-  console.log('   Railway: Variables tab');
-  console.log('   Vercel: Settings > Environment Variables');
+  console.log('🔧 Définissez-les sur Railway (plateforme de déploiement):');
+  console.log('   Railway: Variables tab dans votre projet');
 }
 
 console.log('\n🔑 Pour accéder à l\'admin en production:');
