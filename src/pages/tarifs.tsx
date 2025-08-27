@@ -16,7 +16,7 @@ export default function TarifsPage() {
         <title>Tarifs JudgeMyJPEG - Plans Premium pour Analyse Photo IA</title>
         <meta name="description" content="Découvrez nos tarifs pour l'analyse photo par IA. Plan gratuit et premium avec analyse en lot, rapports détaillés et fonctionnalités avancées." />
         <meta name="keywords" content="tarifs analyse photo, prix critique photo IA, abonnement photo, plan premium photographie" />
-        <link rel="canonical" href="https://judgemyjpeg.com/pricing" />
+        <link rel="canonical" href="https://www.judgemyjpeg.fr/pricing" />
         
         {/* Redirection meta refresh en fallback */}
         <meta httpEquiv="refresh" content="0; url=/pricing" />

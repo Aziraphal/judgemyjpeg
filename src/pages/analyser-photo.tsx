@@ -16,7 +16,7 @@ export default function AnalyserPhotoPage() {
         <title>Analyser Photo IA - JudgeMyJPEG</title>
         <meta name="description" content="Analysez vos photos avec l'intelligence artificielle. Obtenez une évaluation détaillée et des conseils d'amélioration pour vos photos." />
         <meta name="keywords" content="analyser photo, intelligence artificielle, critique photo, améliorer photo, analyse IA" />
-        <link rel="canonical" href="https://judgemyjpeg.com/analyze" />
+        <link rel="canonical" href="https://www.judgemyjpeg.fr/analyze" />
         
         {/* Redirection meta refresh en fallback */}
         <meta httpEquiv="refresh" content="0; url=/analyze" />

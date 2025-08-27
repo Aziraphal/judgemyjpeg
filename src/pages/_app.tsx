@@ -54,18 +54,18 @@ export default function App({
         <link rel="shortcut icon" href="/favicon.ico" />
         
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content="https://judgemyjpeg.com" />
+        <meta name="twitter:url" content="https://www.judgemyjpeg.fr" />
         <meta name="twitter:title" content="JudgeMyJPEG - Analyse IA de Photos" />
         <meta name="twitter:description" content="L'IA qui analyse vos photos avec expertise et créativité" />
-        <meta name="twitter:image" content="https://judgemyjpeg.com/twitter-card.svg" />
+        <meta name="twitter:image" content="https://www.judgemyjpeg.fr/twitter-card.svg" />
         <meta name="twitter:creator" content="@judgemyjpeg" />
         
         <meta property="og:type" content="website" />
         <meta property="og:title" content="JudgeMyJPEG - Analyse IA de Photos" />
         <meta property="og:description" content="L'IA qui analyse vos photos avec expertise et créativité" />
         <meta property="og:site_name" content="JudgeMyJPEG" />
-        <meta property="og:url" content="https://judgemyjpeg.com" />
-        <meta property="og:image" content="https://judgemyjpeg.com/og-image.svg" />
+        <meta property="og:url" content="https://www.judgemyjpeg.fr" />
+        <meta property="og:image" content="https://www.judgemyjpeg.fr/og-image.svg" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
       </Head>

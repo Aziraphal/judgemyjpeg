@@ -104,10 +104,10 @@ export default function PartenariatsPage() {
         <meta property="og:title" content="Partenariats JudgeMyJPEG - Collaboration Professionnelle" />
         <meta property="og:description" content="Rejoignez notre réseau de partenaires et bénéficiez d'avantages exclusifs pour promouvoir l'analyse photo par IA." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://judgemyjpeg.com/partenariats" />
+        <meta property="og:url" content="https://www.judgemyjpeg.fr/partenariats" />
         
         {/* Canonical */}
-        <link rel="canonical" href="https://judgemyjpeg.com/partenariats" />
+        <link rel="canonical" href="https://www.judgemyjpeg.fr/partenariats" />
       </Head>
 
       <main className="min-h-screen bg-cosmic-overlay particles-container relative">

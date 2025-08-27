@@ -74,10 +74,10 @@ export default function RessourcesPage() {
         <meta property="og:title" content="Ressources Photo Gratuites - JudgeMyJPEG" />
         <meta property="og:description" content="Guides, templates et outils gratuits pour améliorer vos photos avec l'aide de l'intelligence artificielle." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://judgemyjpeg.com/ressources" />
+        <meta property="og:url" content="https://www.judgemyjpeg.fr/ressources" />
         
         {/* Canonical */}
-        <link rel="canonical" href="https://judgemyjpeg.com/ressources" />
+        <link rel="canonical" href="https://www.judgemyjpeg.fr/ressources" />
       </Head>
 
       <main className="min-h-screen bg-cosmic-overlay particles-container relative">

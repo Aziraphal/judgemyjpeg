@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Pages principales -->
   <url>
-    <loc>https://judgemyjpeg.com/</loc>
+    <loc>https://www.judgemyjpeg.fr/</loc>
     <lastmod>2025-08-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
@@ -10,14 +10,14 @@
   
   <!-- Pages SEO spécialisées -->
   <url>
-    <loc>https://judgemyjpeg.com/analyser-photo-gratuit</loc>
+    <loc>https://www.judgemyjpeg.fr/analyser-photo-gratuit</loc>
     <lastmod>2025-08-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   
   <url>
-    <loc>https://judgemyjpeg.com/critique-photo-ia</loc>
+    <loc>https://www.judgemyjpeg.fr/critique-photo-ia</loc>
     <lastmod>2025-08-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -25,65 +25,79 @@
   
   <!-- Pages fonctionnelles -->
   <url>
-    <loc>https://judgemyjpeg.com/analyze</loc>
+    <loc>https://www.judgemyjpeg.fr/analyze</loc>
     <lastmod>2025-08-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://judgemyjpeg.com/gallery</loc>
+    <loc>https://www.judgemyjpeg.fr/gallery</loc>
     <lastmod>2025-08-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://judgemyjpeg.com/collections</loc>
+    <loc>https://www.judgemyjpeg.fr/collections</loc>
     <lastmod>2025-08-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   
+  <url>
+    <loc>https://www.judgemyjpeg.fr/dashboard</loc>
+    <lastmod>2025-08-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
   <!-- Pages d'information -->
   <url>
-    <loc>https://judgemyjpeg.com/pricing</loc>
+    <loc>https://www.judgemyjpeg.fr/pricing</loc>
     <lastmod>2025-08-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://judgemyjpeg.com/faq</loc>
+    <loc>https://www.judgemyjpeg.fr/faq</loc>
     <lastmod>2025-08-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://judgemyjpeg.com/contact</loc>
+    <loc>https://www.judgemyjpeg.fr/contact</loc>
     <lastmod>2025-08-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://judgemyjpeg.com/glossaire</loc>
+    <loc>https://www.judgemyjpeg.fr/glossaire</loc>
     <lastmod>2025-08-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://judgemyjpeg.com/ressources</loc>
+    <loc>https://www.judgemyjpeg.fr/ressources</loc>
     <lastmod>2025-08-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.judgemyjpeg.fr/partenariats</loc>
+    <lastmod>2025-08-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   
   <!-- Blog -->
   <url>
-    <loc>https://judgemyjpeg.com/blog</loc>
+    <loc>https://www.judgemyjpeg.fr/blog</loc>
     <lastmod>2025-08-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -91,28 +105,28 @@
   
   <!-- Pages légales -->
   <url>
-    <loc>https://judgemyjpeg.com/legal/privacy</loc>
+    <loc>https://www.judgemyjpeg.fr/legal/privacy</loc>
     <lastmod>2025-08-27</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   
   <url>
-    <loc>https://judgemyjpeg.com/legal/terms</loc>
+    <loc>https://www.judgemyjpeg.fr/legal/terms</loc>
     <lastmod>2025-08-27</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   
   <url>
-    <loc>https://judgemyjpeg.com/legal/cookies</loc>
+    <loc>https://www.judgemyjpeg.fr/legal/cookies</loc>
     <lastmod>2025-08-27</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   
   <url>
-    <loc>https://judgemyjpeg.com/legal/mentions</loc>
+    <loc>https://www.judgemyjpeg.fr/legal/mentions</loc>
     <lastmod>2025-08-27</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>

@@ -16,7 +16,7 @@ export default function CollectionsPhotosPage() {
         <title>Collections Photos - Organisez vos Photos Analysées | JudgeMyJPEG</title>
         <meta name="description" content="Organisez vos photos analysées en collections personnalisées. Créez des albums thématiques et retrouvez facilement vos meilleures photos." />
         <meta name="keywords" content="collections photos, albums photos, organiser photos, portfolio photographique, galerie photos" />
-        <link rel="canonical" href="https://judgemyjpeg.com/collections" />
+        <link rel="canonical" href="https://www.judgemyjpeg.fr/collections" />
         
         {/* Redirection meta refresh en fallback */}
         <meta httpEquiv="refresh" content="0; url=/collections" />

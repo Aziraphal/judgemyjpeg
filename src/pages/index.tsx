@@ -52,8 +52,8 @@ export default function Home() {
         <meta property="og:title" content="Analyser Photo IA Gratuit | Critique Photo Intelligence Artificielle" />
         <meta property="og:description" content="Analysez vos photos gratuitement avec une IA experte ! Critique photo professionnelle, note sur 100, conseils techniques instantanés." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://judgemyjpeg.com" />
-        <meta property="og:image" content="https://judgemyjpeg.com/og-image.svg" />
+        <meta property="og:url" content="https://www.judgemyjpeg.fr" />
+        <meta property="og:image" content="https://www.judgemyjpeg.fr/og-image.svg" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:type" content="image/svg+xml" />
@@ -62,10 +62,10 @@ export default function Home() {
         
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content="https://judgemyjpeg.com" />
+        <meta name="twitter:url" content="https://www.judgemyjpeg.fr" />
         <meta name="twitter:title" content="Analyser Photo IA Gratuit | JudgeMyJPEG" />
         <meta name="twitter:description" content="Analysez vos photos avec une IA experte ! Critique professionnelle, note sur 100, conseils personnalisés." />
-        <meta name="twitter:image" content="https://judgemyjpeg.com/twitter-card.svg" />
+        <meta name="twitter:image" content="https://www.judgemyjpeg.fr/twitter-card.svg" />
         <meta name="twitter:image:width" content="1200" />
         <meta name="twitter:image:height" content="600" />
         <meta name="twitter:creator" content="@judgemyjpeg" />
@@ -79,7 +79,7 @@ export default function Home() {
             "name": "JudgeMyJPEG - Analyser Photo IA",
             "alternateName": ["Critique Photo IA", "Analyse Photo Intelligence Artificielle"],
             "description": "Service gratuit d'analyse et critique photo par intelligence artificielle. Analysez vos photos avec une IA experte, obtenez une note sur 100 et des conseils personnalisés.",
-            "url": "https://judgemyjpeg.com",
+            "url": "https://www.judgemyjpeg.fr",
             "applicationCategory": "PhotographyApplication",
             "operatingSystem": "Web Browser",
             "offers": {
@@ -91,20 +91,20 @@ export default function Home() {
             "potentialAction": [
               {
                 "@type": "SearchAction",
-                "target": "https://judgemyjpeg.com/analyze",
+                "target": "https://www.judgemyjpeg.fr/analyze",
                 "query-input": "required name=photo"
               },
               {
                 "@type": "UseAction",
                 "name": "Analyser Photo IA",
                 "description": "Analysez gratuitement vos photos avec intelligence artificielle",
-                "target": "https://judgemyjpeg.com/analyze"
+                "target": "https://www.judgemyjpeg.fr/analyze"
               }
             ],
             "provider": {
               "@type": "Organization",
               "name": "JudgeMyJPEG",
-              "url": "https://judgemyjpeg.com",
+              "url": "https://www.judgemyjpeg.fr",
               "description": "Plateforme d'analyse photo par intelligence artificielle"
             },
             "keywords": "analyser photo, critique photo IA, intelligence artificielle photo, analyse photo gratuit, améliorer photo, conseils photo IA",

@@ -478,7 +478,7 @@ export default function BlogPostPage({ post }: BlogPostPageProps) {
         <meta property="og:title" content={post.title} />
         <meta property="og:description" content={post.excerpt} />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={`https://judgemyjpeg.com/blog/${post.slug}`} />
+        <meta property="og:url" content={`https://www.judgemyjpeg.fr/blog/${post.slug}`} />
         <meta property="article:published_time" content={post.publishedAt} />
         <meta property="article:author" content="JudgeMyJPEG" />
         <meta property="article:section" content={post.category} />
@@ -493,7 +493,7 @@ export default function BlogPostPage({ post }: BlogPostPageProps) {
             "@type": "BlogPosting",
             "headline": post.title,
             "description": post.excerpt,
-            "image": "https://judgemyjpeg.com/favicon.ico",
+            "image": "https://www.judgemyjpeg.fr/favicon.ico",
             "datePublished": post.publishedAt,
             "dateModified": post.publishedAt,
             "author": {
@@ -503,9 +503,9 @@ export default function BlogPostPage({ post }: BlogPostPageProps) {
             "publisher": {
               "@type": "Organization", 
               "name": "JudgeMyJPEG",
-              "logo": "https://judgemyjpeg.com/favicon.ico"
+              "logo": "https://www.judgemyjpeg.fr/favicon.ico"
             },
-            "url": `https://judgemyjpeg.com/blog/${post.slug}`,
+            "url": `https://www.judgemyjpeg.fr/blog/${post.slug}`,
             "keywords": post.tags.join(', '),
             "articleSection": post.category
           })}

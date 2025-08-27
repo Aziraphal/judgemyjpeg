@@ -12,13 +12,13 @@ export default function CritiquePhotoIA() {
         <title>Critique Photo IA Gratuite | Analyse Intelligence Artificielle Photo Expert</title>
         <meta name="description" content="Critique photo IA professionnelle gratuite ! Notre intelligence artificielle analyse vos photos et donne une critique experte avec conseils d'amélioration." />
         <meta name="keywords" content="critique photo IA, critique photo intelligence artificielle, analyse photo IA gratuit, critique photo expert, améliorer photo IA, conseil photo IA" />
-        <link rel="canonical" href="https://judgemyjpeg.com/critique-photo-ia" />
+        <link rel="canonical" href="https://www.judgemyjpeg.fr/critique-photo-ia" />
         
         {/* Open Graph */}
         <meta property="og:title" content="Critique Photo IA Gratuite | Intelligence Artificielle Expert" />
         <meta property="og:description" content="Critique photo IA professionnelle gratuite ! Analyse experte par intelligence artificielle avec conseils personnalisés." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://judgemyjpeg.com/critique-photo-ia" />
+        <meta property="og:url" content="https://www.judgemyjpeg.fr/critique-photo-ia" />
         
         {/* Schema.org pour SEO */}
         <script type="application/ld+json">
@@ -27,7 +27,7 @@ export default function CritiquePhotoIA() {
             "@type": "WebPage",
             "name": "Critique Photo IA",
             "description": "Service de critique photo par intelligence artificielle",
-            "url": "https://judgemyjpeg.com/critique-photo-ia",
+            "url": "https://www.judgemyjpeg.fr/critique-photo-ia",
             "mainEntity": {
               "@type": "Service",
               "name": "Critique Photo IA",
@@ -35,7 +35,7 @@ export default function CritiquePhotoIA() {
               "provider": {
                 "@type": "Organization",
                 "name": "JudgeMyJPEG",
-                "url": "https://judgemyjpeg.com"
+                "url": "https://www.judgemyjpeg.fr"
               }
             }
           })}

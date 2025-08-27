@@ -180,7 +180,7 @@ export default function BlogPage() {
         <meta property="og:title" content="Blog Photo IA | Guides et conseils analyse JPEG" />
         <meta property="og:description" content="Guides photo, conseils techniques et astuces IA pour améliorer vos photos." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://judgemyjpeg.com/blog" />
+        <meta property="og:url" content="https://www.judgemyjpeg.fr/blog" />
         
         {/* Schema.org pour Blog */}
         <script type="application/ld+json">
@@ -189,18 +189,18 @@ export default function BlogPage() {
             "@type": "Blog", 
             "name": "Blog JudgeMyJPEG",
             "description": "Guides et conseils pour améliorer vos photos avec l'IA",
-            "url": "https://judgemyjpeg.com/blog",
+            "url": "https://www.judgemyjpeg.fr/blog",
             "publisher": {
               "@type": "Organization",
               "name": "JudgeMyJPEG",
-              "url": "https://judgemyjpeg.com"
+              "url": "https://www.judgemyjpeg.fr"
             },
             "blogPost": blogPosts.map(post => ({
               "@type": "BlogPosting",
               "headline": post.title,
               "description": post.excerpt,
               "datePublished": post.publishedAt,
-              "url": `https://judgemyjpeg.com/blog/${post.slug}`,
+              "url": `https://www.judgemyjpeg.fr/blog/${post.slug}`,
               "keywords": post.tags.join(', ')
             }))
           })}

@@ -16,7 +16,7 @@ export default function AnalyseLotPage() {
         <title>Analyse en Lot Photos IA - JudgeMyJPEG</title>
         <meta name="description" content="Analysez plusieurs photos simultanément avec l'IA. Rapport comparatif intelligent pour améliorer votre portfolio photographique." />
         <meta name="keywords" content="analyse lot photos, batch photo IA, comparaison photos, rapport photographique, analyse multiple" />
-        <link rel="canonical" href="https://judgemyjpeg.com/batch" />
+        <link rel="canonical" href="https://www.judgemyjpeg.fr/batch" />
         
         {/* Redirection meta refresh en fallback */}
         <meta httpEquiv="refresh" content="0; url=/batch" />

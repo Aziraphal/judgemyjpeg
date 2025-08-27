@@ -164,7 +164,7 @@ export default function AnalyzePage() {
         <title>Analyser Photo en Ligne Gratuit | Critique Photo IA Professionnelle</title>
         <meta name="description" content="Analysez gratuitement vos photos avec notre IA experte ! Critique photo instantanée, note sur 100, conseils techniques détaillés. Analyse image intelligence artificielle." />
         <meta name="keywords" content="analyser photo en ligne, critique photo IA, analyse photo gratuit, intelligence artificielle photo, analyser image IA, améliorer photo conseils, analyse technique photo" />
-        <link rel="canonical" href="https://judgemyjpeg.com/analyze" />
+        <link rel="canonical" href="https://www.judgemyjpeg.fr/analyze" />
       </Head>
 
       <main className={`min-h-screen particles-container relative transition-all duration-1000 ${

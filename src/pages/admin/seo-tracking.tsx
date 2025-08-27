@@ -33,7 +33,7 @@ export default function SEOTrackingPage() {
                 <ol className="list-decimal list-inside space-y-2 text-text-gray">
                   <li>Va sur <a href="https://search.google.com/search-console" target="_blank" className="text-neon-cyan hover:underline">Google Search Console</a></li>
                   <li>Clique "Ajouter une propriété" → "Préfixe d'URL"</li>
-                  <li>Saisis : <code className="bg-cosmic-black px-2 py-1 rounded">https://judgemyjpeg.com</code></li>
+                  <li>Saisis : <code className="bg-cosmic-black px-2 py-1 rounded">https://www.judgemyjpeg.fr</code></li>
                   <li>Choisis méthode "Balise HTML" et copie le code</li>
                   <li>Remplace "REMPLACE_PAR_TON_CODE_GOOGLE" dans _app.tsx</li>
                   <li>Redéploie et clique "Vérifier"</li>
@@ -43,7 +43,7 @@ export default function SEOTrackingPage() {
               <div className="bg-green-900/20 border border-green-500 p-4 rounded-lg">
                 <h4 className="font-semibold text-green-400 mb-2">📤 Après vérification :</h4>
                 <ul className="list-disc list-inside space-y-1 text-green-300">
-                  <li>Soumets le sitemap : <code>https://judgemyjpeg.com/sitemap.xml</code></li>
+                  <li>Soumets le sitemap : <code>https://www.judgemyjpeg.fr/sitemap.xml</code></li>
                   <li>Demande indexation de toutes les pages importantes</li>
                   <li>Configure alertes performance</li>
                 </ul>

@@ -12,13 +12,13 @@ export default function AnalyserPhotoGratuit() {
         <title>Analyser Photo Gratuit en Ligne | IA Analyse Image Intelligence Artificielle</title>
         <meta name="description" content="Analysez vos photos gratuitement avec notre IA ! Analyse photo en ligne instantanée, conseils experts, note sur 100. Intelligence artificielle spécialisée photo." />
         <meta name="keywords" content="analyser photo gratuit, analyse photo en ligne, IA analyse image, intelligence artificielle photo, analyser image gratuit, améliorer photo conseil" />
-        <link rel="canonical" href="https://judgemyjpeg.com/analyser-photo-gratuit" />
+        <link rel="canonical" href="https://www.judgemyjpeg.fr/analyser-photo-gratuit" />
         
         {/* Open Graph */}
         <meta property="og:title" content="Analyser Photo Gratuit | IA Intelligence Artificielle" />
         <meta property="og:description" content="Analysez gratuitement vos photos avec notre IA experte ! Analyse instantanée et conseils personnalisés." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://judgemyjpeg.com/analyser-photo-gratuit" />
+        <meta property="og:url" content="https://www.judgemyjpeg.fr/analyser-photo-gratuit" />
         
         {/* Schema.org */}
         <script type="application/ld+json">
@@ -27,7 +27,7 @@ export default function AnalyserPhotoGratuit() {
             "@type": "WebPage",
             "name": "Analyser Photo Gratuit",
             "description": "Service gratuit d'analyse photo par intelligence artificielle",
-            "url": "https://judgemyjpeg.com/analyser-photo-gratuit",
+            "url": "https://www.judgemyjpeg.fr/analyser-photo-gratuit",
             "offers": {
               "@type": "Offer",
               "price": "0",
