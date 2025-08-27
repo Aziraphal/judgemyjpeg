@@ -3,6 +3,8 @@ import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
 import { validatePassword } from '@/lib/password-validation'
 import { sendVerificationEmail } from '@/lib/email-service'
+import { requireTurnstileVerification } from '@/lib/turnstile-verify'
+import { getClientIP } from '@/lib/logger'
 import crypto from 'crypto'
 import { logger } from '@/lib/logger'
 
@@ -11,12 +13,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
+  const clientIP = getClientIP(req)
+
   try {
-    const { name, nickname, email, password } = req.body
+    const { name, nickname, email, password, turnstileToken } = req.body
 
     // Validation des champs
     if (!name || !email || !password) {
       return res.status(400).json({ error: 'Tous les champs sont requis' })
+    }
+
+    // Vérification anti-bot
+    const turnstileVerification = await requireTurnstileVerification(turnstileToken, clientIP)
+    if (!turnstileVerification.success) {
+      logger.warn('Failed bot verification during signup', { email, ip: clientIP })
+      return res.status(400).json({ error: turnstileVerification.error })
     }
 
     // Validation email format

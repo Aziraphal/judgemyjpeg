@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Link from 'next/link'
 import PasswordStrengthIndicator from '@/components/PasswordStrengthIndicator'
+import TurnstileProtection from '@/components/TurnstileProtection'
 
 export default function SignUpPage() {
   const router = useRouter()
@@ -19,6 +20,7 @@ export default function SignUpPage() {
     password: '',
     confirmPassword: ''
   })
+  const [turnstileToken, setTurnstileToken] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -39,6 +41,13 @@ export default function SignUpPage() {
       return
     }
 
+    // Vérification anti-bot
+    if (!turnstileToken) {
+      setError('Veuillez compléter la vérification anti-bot')
+      setIsLoading(false)
+      return
+    }
+
     try {
       const response = await fetch('/api/auth/register', {
         method: 'POST',
@@ -47,7 +56,8 @@ export default function SignUpPage() {
           name: formData.name,
           nickname: formData.nickname,
           email: formData.email,
-          password: formData.password
+          password: formData.password,
+          turnstileToken
         })
       })
 
@@ -234,9 +244,21 @@ export default function SignUpPage() {
                 />
               </div>
 
+              {/* Protection anti-bot */}
+              <div className="flex justify-center">
+                <TurnstileProtection
+                  onVerify={setTurnstileToken}
+                  onError={() => setError('Erreur de vérification anti-bot')}
+                  theme="auto"
+                  size="compact"
+                  appearance="interaction-only"
+                  className="mb-4"
+                />
+              </div>
+
               <button
                 type="submit"
-                disabled={isLoading || !passwordValidation?.isValid}
+                disabled={isLoading || !passwordValidation?.isValid || !turnstileToken}
                 className={`w-full ${
                   !passwordValidation?.isValid && formData.password
                     ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
