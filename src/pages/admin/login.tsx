@@ -16,9 +16,10 @@ export default function AdminLoginPage() {
   })
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [debugInfo, setDebugInfo] = useState<string>('')
 
-  // Rediriger si déjà authentifié et admin
-  if (status === 'authenticated') {
+  // Vérifier si déjà connecté en tant qu'admin
+  if (typeof window !== 'undefined' && sessionStorage.getItem('admin_token')) {
     router.push('/admin/dashboard')
     return null
   }
@@ -37,20 +38,47 @@ export default function AdminLoginPage() {
         })
       })
 
+      if (!response.ok) {
+        // Debug pour production
+        console.error('Admin auth failed:', response.status, response.statusText)
+        setDebugInfo(`HTTP ${response.status}: ${response.statusText}`)
+      }
+
       const data = await response.json()
 
       if (data.success) {
         // Stocker le token admin en session
         sessionStorage.setItem('admin_token', data.token)
+        
+        // Debug pour vérifier le token
+        console.log('Admin token stored:', !!data.token)
+        setDebugInfo('Token créé avec succès')
+        
         router.push('/admin/dashboard')
       } else {
         setError(data.message || 'Authentification échouée')
+        setDebugInfo(`Erreur API: ${data.message}`)
+        console.error('Admin auth error:', data.message)
       }
     } catch (error) {
-      setError('Erreur de connexion au serveur')
+      console.error('Admin login network error:', error)
+      setError('Erreur de connexion au serveur. Vérifiez votre connexion.')
+      setDebugInfo(`Erreur réseau: ${error}`)
       logger.error('Admin login error:', error)
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  // Ajout d'un bouton de test pour diagnostiquer
+  const handleDebugTest = async () => {
+    try {
+      const response = await fetch('/api/admin/auth', { 
+        method: 'GET' 
+      })
+      setDebugInfo(`Test API: ${response.status} ${response.statusText}`)
+    } catch (error) {
+      setDebugInfo(`Test API échoué: ${error}`)
     }
   }
 
@@ -105,6 +133,12 @@ export default function AdminLoginPage() {
                 </div>
               )}
 
+              {debugInfo && (
+                <div className="bg-blue-900/20 border border-blue-500/30 text-blue-300 p-4 rounded-lg text-sm">
+                  🔍 Debug: {debugInfo}
+                </div>
+              )}
+
               <button
                 type="submit"
                 disabled={isLoading || !credentials.adminSecret.trim()}
@@ -120,6 +154,16 @@ export default function AdminLoginPage() {
                 )}
               </button>
             </form>
+
+            {/* Debug section (temporarily in production) */}
+            <div className="mt-6">
+              <button
+                onClick={handleDebugTest}
+                className="w-full bg-gray-600/20 text-gray-300 px-4 py-2 rounded text-sm hover:bg-gray-600/30 transition-colors"
+              >
+                🔧 Test de connectivité API
+              </button>
+            </div>
 
             {/* Security notice */}
             <div className="mt-8 p-4 bg-yellow-900/20 border border-yellow-500/30 rounded-lg">
