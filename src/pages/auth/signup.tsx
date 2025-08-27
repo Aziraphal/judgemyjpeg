@@ -250,8 +250,8 @@ export default function SignUpPage() {
                   onVerify={setTurnstileToken}
                   onError={() => setError('Erreur de vérification anti-bot')}
                   theme="auto"
-                  size="compact"
-                  appearance="interaction-only"
+                  size="normal"
+                  appearance="always"
                   className="mb-4"
                 />
               </div>
