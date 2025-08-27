@@ -57,7 +57,7 @@ export default function App({
         <meta name="twitter:url" content="https://judgemyjpeg.com" />
         <meta name="twitter:title" content="JudgeMyJPEG - Analyse IA de Photos" />
         <meta name="twitter:description" content="L'IA qui analyse vos photos avec expertise et créativité" />
-        <meta name="twitter:image" content="https://judgemyjpeg.com/twitter-card.png" />
+        <meta name="twitter:image" content="https://judgemyjpeg.com/twitter-card.svg" />
         <meta name="twitter:creator" content="@judgemyjpeg" />
         
         <meta property="og:type" content="website" />
@@ -65,7 +65,9 @@ export default function App({
         <meta property="og:description" content="L'IA qui analyse vos photos avec expertise et créativité" />
         <meta property="og:site_name" content="JudgeMyJPEG" />
         <meta property="og:url" content="https://judgemyjpeg.com" />
-        <meta property="og:image" content="https://judgemyjpeg.com/og-image.png" />
+        <meta property="og:image" content="https://judgemyjpeg.com/og-image.svg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
       </Head>
 
       {/* Google Analytics Scripts - Consent-based loading */}

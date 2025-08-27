@@ -12,14 +12,13 @@
   "scope": "/",
   "icons": [
     {
-      "src": "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3e%3crect width='192' height='192' fill='%23FF006E'/%3e%3ctext x='96' y='120' font-family='Arial' font-size='80' text-anchor='middle' fill='white'%3e📸%3c/text%3e%3c/svg%3e",
-      "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "src": "/favicon.svg",
+      "sizes": "32x32",
+      "type": "image/svg+xml"
     },
     {
-      "src": "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3e%3crect width='512' height='512' fill='%23FF006E'/%3e%3ctext x='256' y='320' font-family='Arial' font-size='200' text-anchor='middle' fill='white'%3e📸%3c/text%3e%3c/svg%3e",
-      "sizes": "512x512",
+      "src": "/logo.svg",
+      "sizes": "192x192",
       "type": "image/svg+xml",
       "purpose": "any maskable"
     }

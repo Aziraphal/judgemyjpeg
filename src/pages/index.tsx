@@ -52,16 +52,24 @@ export default function Home() {
         <meta property="og:title" content="Analyser Photo IA Gratuit | Critique Photo Intelligence Artificielle" />
         <meta property="og:description" content="Analysez vos photos gratuitement avec une IA experte ! Critique photo professionnelle, note sur 100, conseils techniques instantanés." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.judgemyjpeg.fr" />
-        <meta property="og:image" content="https://www.judgemyjpeg.fr/favicon.ico" />
+        <meta property="og:url" content="https://judgemyjpeg.com" />
+        <meta property="og:image" content="https://judgemyjpeg.com/og-image.svg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:type" content="image/svg+xml" />
         <meta property="og:locale" content="fr_FR" />
         <meta property="og:site_name" content="JudgeMyJPEG" />
         
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="JudgeMyJPEG | Analyse photo IA" />
-        <meta name="twitter:description" content="Fais analyser tes photos par une IA spécialisée ! Note sur 100 + conseils techniques." />
-        <meta name="twitter:image" content="https://www.judgemyjpeg.fr/favicon.ico" />
+        <meta name="twitter:url" content="https://judgemyjpeg.com" />
+        <meta name="twitter:title" content="Analyser Photo IA Gratuit | JudgeMyJPEG" />
+        <meta name="twitter:description" content="Analysez vos photos avec une IA experte ! Critique professionnelle, note sur 100, conseils personnalisés." />
+        <meta name="twitter:image" content="https://judgemyjpeg.com/twitter-card.svg" />
+        <meta name="twitter:image:width" content="1200" />
+        <meta name="twitter:image:height" content="600" />
+        <meta name="twitter:creator" content="@judgemyjpeg" />
+        <meta name="twitter:site" content="@judgemyjpeg" />
         
         {/* Schema.org JSON-LD - Enhanced for SEO */}
         <script type="application/ld+json">

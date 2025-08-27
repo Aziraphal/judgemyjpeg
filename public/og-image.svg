@@ -1,0 +1,44 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0F0F23;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#8338EC;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#FF006E;stop-opacity:0.3" />
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#FF006E;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00F5FF;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+  
+  <!-- Logo central -->
+  <g transform="translate(450, 215)">
+    <!-- Camera body -->
+    <rect x="0" y="0" width="150" height="90" rx="12" fill="#00F5FF" opacity="0.9"/>
+    <!-- Lens -->
+    <circle cx="75" cy="45" r="35" fill="#ffffff"/>
+    <circle cx="75" cy="45" r="25" fill="#8338EC"/>
+    <!-- Flash -->
+    <rect x="120" y="15" width="20" height="12" rx="3" fill="#ffffff"/>
+  </g>
+  
+  <!-- Title -->
+  <text x="600" y="380" text-anchor="middle" font-family="Arial, sans-serif" font-size="64" font-weight="bold" fill="url(#textGrad)">JudgeMyJPEG</text>
+  
+  <!-- Subtitle -->
+  <text x="600" y="430" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" fill="#ffffff" opacity="0.9">Analyse IA de Photos • Critique Experte • Note sur 100</text>
+  
+  <!-- Stars decoration -->
+  <g fill="#FFD60A" opacity="0.8">
+    <text x="200" y="150" font-size="40">★</text>
+    <text x="1000" y="180" font-size="30">★</text>
+    <text x="150" y="500" font-size="35">★</text>
+    <text x="950" y="520" font-size="25">★</text>
+  </g>
+  
+  <!-- Bottom text -->
+  <text x="600" y="550" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" fill="#00F5FF" opacity="0.7">Intelligence Artificielle • Conseils Personnalisés</text>
+</svg>
