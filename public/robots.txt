@@ -13,7 +13,7 @@ Disallow: /node_modules/*
 Disallow: *.disabled*
 
 # Host
-Host: https://www.judgemyjpeg.fr
+Host: https://judgemyjpeg.com
 
 # Sitemaps
-Sitemap: https://www.judgemyjpeg.fr/sitemap.xml
+Sitemap: https://judgemyjpeg.com/sitemap.xml

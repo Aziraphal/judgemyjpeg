@@ -16,7 +16,7 @@ export default function ToutesMesPhotosPage() {
         <title>Toutes mes Photos Analysées - Historique Complet | JudgeMyJPEG</title>
         <meta name="description" content="Consultez l'historique complet de vos photos analysées. Filtrez par score, date et retrouvez facilement vos analyses précédentes." />
         <meta name="keywords" content="historique photos, toutes mes photos, analyses précédentes, galerie complète, mes analyses" />
-        <link rel="canonical" href="https://www.judgemyjpeg.fr/all-photos" />
+        <link rel="canonical" href="https://judgemyjpeg.com/all-photos" />
         
         {/* Redirection meta refresh en fallback */}
         <meta httpEquiv="refresh" content="0; url=/all-photos" />

@@ -75,6 +75,55 @@ const nextConfig = {
       },
     ]
   },
+  
+  // Redirections pour éviter les contenus dupliqués
+  async redirects() {
+    return [
+      // Redirections des anciennes URLs vers les nouvelles
+      {
+        source: '/analyser-photo',
+        destination: '/analyze',
+        permanent: true,
+      },
+      {
+        source: '/tableau-bord',
+        destination: '/dashboard',
+        permanent: true,
+      },
+      {
+        source: '/toutes-mes-photos',
+        destination: '/all-photos',
+        permanent: true,
+      },
+      {
+        source: '/collections-photos',
+        destination: '/collections',
+        permanent: true,
+      },
+      {
+        source: '/analyse-lot',
+        destination: '/batch',
+        permanent: true,
+      },
+      {
+        source: '/tarifs',
+        destination: '/pricing',
+        permanent: true,
+      },
+      // Redirect www vers non-www si configuré côté serveur
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'www.judgemyjpeg.com',
+          },
+        ],
+        destination: 'https://judgemyjpeg.com/:path*',
+        permanent: true,
+      },
+    ]
+  },
 }
 
 // Export conditionally - disable Sentry in problematic builds
