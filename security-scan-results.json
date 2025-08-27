@@ -1,0 +1,111 @@
+{
+  "timestamp": "2025-08-27T22:21:51.401Z",
+  "target": "https://judgemyjpeg.fr",
+  "tests": {
+    "SSL/TLS Configuration": {
+      "status": "pass",
+      "details": {
+        "protocol": "TLSv1.3",
+        "cipher": "TLS_AES_256_GCM_SHA384",
+        "validFrom": "Aug 25 19:04:06 2025 GMT",
+        "validTo": "Nov 23 20:01:45 2025 GMT",
+        "issuer": "Google Trust Services",
+        "subject": "judgemyjpeg.fr"
+      }
+    },
+    "Security Headers": {
+      "status": "partial",
+      "details": {
+        "present": [
+          "x-frame-options",
+          "referrer-policy"
+        ],
+        "missing": [
+          "strict-transport-security",
+          "content-security-policy",
+          "x-content-type-options",
+          "x-xss-protection",
+          "permissions-policy"
+        ],
+        "headers": {
+          "x-frame-options": "SAMEORIGIN",
+          "referrer-policy": "same-origin"
+        }
+      }
+    },
+    "DNS Security": {
+      "status": "info",
+      "details": {
+        "aRecords": 2,
+        "mxRecords": 3,
+        "spfRecord": "present",
+        "txtRecordsCount": 3
+      }
+    },
+    "Cookie Security": {
+      "status": "pass",
+      "details": {
+        "totalCookies": 0,
+        "analysis": [],
+        "insecureCount": 0
+      }
+    },
+    "Content Security Policy": {
+      "status": "fail",
+      "details": {
+        "present": false
+      }
+    },
+    "HTTP Methods": {
+      "status": "pass",
+      "details": {
+        "tested": [
+          "OPTIONS",
+          "TRACE",
+          "PUT",
+          "DELETE",
+          "PATCH"
+        ],
+        "results": {
+          "OPTIONS": 521,
+          "TRACE": 405,
+          "PUT": 525,
+          "DELETE": 525,
+          "PATCH": 525
+        },
+        "allowed": []
+      }
+    },
+    "Information Disclosure": {
+      "status": "info",
+      "details": {
+        "disclosed": [
+          {
+            "header": "server",
+            "value": "cloudflare"
+          }
+        ],
+        "headers": {
+          "server": "cloudflare"
+        }
+      }
+    },
+    "HTTPS Redirect": {
+      "status": "pass",
+      "details": {
+        "statusCode": 301,
+        "location": "https://www.judgemyjpeg.fr",
+        "redirectsToHTTPS": true
+      }
+    }
+  },
+  "score": 78,
+  "recommendations": [
+    {
+      "priority": "medium",
+      "category": "Security Headers",
+      "issue": "Missing headers: strict-transport-security, content-security-policy, x-content-type-options, x-xss-protection, permissions-policy",
+      "recommendation": "Implement all security headers for complete protection"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+[deploy]
+healthcheckPath = "/"
+
+[build]
+builder = "heroku/nodejs"
+
+# Variables d'environnement pour Railway
+[environments.production]
+  [environments.production.deploy]
+  startCommand = "npm start"
+
+# Configuration headers sécurité pour Railway
+[http]
+  headers = [
+    { name = "Strict-Transport-Security", value = "max-age=31536000; includeSubDomains; preload" },
+    { name = "X-Content-Type-Options", value = "nosniff" },
+    { name = "X-XSS-Protection", value = "1; mode=block" },
+    { name = "Permissions-Policy", value = "camera=(), microphone=(), geolocation=()" },
+    { name = "Cross-Origin-Opener-Policy", value = "same-origin" },
+    { name = "X-MetaMask-Block", value = "true" },
+    { name = "X-Crypto-Block", value = "true" }
+  ]
