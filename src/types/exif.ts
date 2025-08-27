@@ -23,6 +23,7 @@ export interface ExifData {
   }
   fileSize?: number      // Taille du fichier en octets
   colorSpace?: string    // Espace colorimétrique
+  orientation?: number   // Orientation EXIF (1-8)
   
   // Métadonnées
   dateTime?: string      // Date/heure de prise de vue

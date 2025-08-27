@@ -43,6 +43,7 @@ export async function extractExifData(file: File): Promise<ExifData | null> {
       dimensions: parseDimensions(tags),
       fileSize: file.size,
       colorSpace: parseColorSpace(tags),
+      orientation: parseOrientation(tags),
       
       // Métadonnées
       dateTime: parseDateTime(tags),
@@ -203,6 +204,14 @@ function parseSoftware(tags: RawExifTags): string | undefined {
 }
 
 /**
+ * Parse l'orientation de l'image
+ */
+function parseOrientation(tags: RawExifTags): number | undefined {
+  const orientation = tags.Orientation?.value
+  return typeof orientation === 'number' ? orientation : undefined
+}
+
+/**
  * Parse les données GPS si disponibles
  */
 function parseGPS(tags: RawExifTags): { latitude?: number, longitude?: number, altitude?: number } | undefined {
@@ -297,4 +306,34 @@ export function generateShootingConditionsSummary(exif: ExifData): string {
   }
   
   return conditions.join(' • ')
+}
+
+/**
+ * Convertit la valeur d'orientation EXIF en transformation CSS
+ * @param orientation - Valeur EXIF orientation (1-8)
+ * @returns Transformation CSS ou undefined si orientation normale
+ */
+export function getOrientationTransform(orientation?: number): string | undefined {
+  if (!orientation || orientation === 1) {
+    return undefined // Orientation normale
+  }
+
+  switch (orientation) {
+    case 2:
+      return 'scaleX(-1)' // Miroir horizontal
+    case 3:
+      return 'rotate(180deg)' // Rotation 180°
+    case 4:
+      return 'scaleX(-1) rotate(180deg)' // Miroir horizontal + rotation 180°
+    case 5:
+      return 'scaleX(-1) rotate(90deg)' // Miroir horizontal + rotation 90°
+    case 6:
+      return 'rotate(90deg)' // Rotation 90° horaire
+    case 7:
+      return 'scaleX(-1) rotate(270deg)' // Miroir horizontal + rotation 270°
+    case 8:
+      return 'rotate(270deg)' // Rotation 90° anti-horaire
+    default:
+      return undefined
+  }
 }

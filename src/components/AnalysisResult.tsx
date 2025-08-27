@@ -1,5 +1,5 @@
 import { PhotoAnalysis, AnalysisTone } from '@/types/analysis'
-import Image from 'next/image'
+import OrientedImage from '@/components/OrientedImage'
 import FavoriteButton from '@/components/FavoriteButton'
 import AddToCollectionModal from '@/components/AddToCollectionModal'
 import SocialShare from '@/components/SocialShare'
@@ -10,6 +10,7 @@ import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import SmartGlossaryText from '@/components/SmartGlossaryText'
 import { useTranslations } from '@/hooks/useTranslations'
+import { getOrientationTransform } from '@/utils/exifExtractor'
 
 interface AnalysisResultProps {
   photo: {
@@ -155,13 +156,13 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
         <div className="grid lg:grid-cols-2 gap-6 sm:gap-8">
           <div className="space-y-4">
             <div className="relative group">
-              <Image
+              <OrientedImage
                 src={photo.url}
                 alt={photo.filename}
                 width={500}
                 height={400}
                 className="rounded-xl w-full h-auto object-cover neon-border group-hover:shadow-neon-cyan transition-all duration-300"
-                style={{ imageOrientation: 'from-image' }}
+                orientation={analysis.exifData?.orientation}
               />
             </div>
             
