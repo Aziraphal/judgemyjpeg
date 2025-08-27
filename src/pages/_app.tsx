@@ -4,6 +4,7 @@ import { SessionProvider } from 'next-auth/react'
 import SecurityStatusBar from '@/components/SecurityStatusBar'
 import CookieConsent from '@/components/CookieConsent'
 import FeedbackButton from '@/components/FeedbackButton'
+import SecurityMonitor from '@/components/SecurityMonitor'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
@@ -148,6 +149,9 @@ export default function App({
       )}
       
       <SessionProvider session={session}>
+        {/* Monitoring de sécurité contre les injections */}
+        <SecurityMonitor />
+        
         {/* SecurityStatusBar désactivé par défaut - trop invasif pour l'utilisateur final */}
         {process.env.NODE_ENV === 'development' && !hideSecurityBar && <SecurityStatusBar compact position="top" />}
         <Component {...pageProps} />

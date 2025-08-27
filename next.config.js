@@ -69,7 +69,19 @@ const nextConfig = {
               connect-src 'self' https://api.stripe.com https://generativelanguage.googleapis.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://*.google-analytics.com;
               frame-src https://js.stripe.com;
               font-src 'self' data:;
+              object-src 'none';
+              base-uri 'self';
+              form-action 'self';
+              block-all-mixed-content;
             `.replace(/\s{2,}/g, ' ').trim()
+          },
+          {
+            key: 'X-MetaMask-Block',
+            value: 'true'
+          },
+          {
+            key: 'X-Crypto-Block', 
+            value: 'true'
           }
         ],
       },
