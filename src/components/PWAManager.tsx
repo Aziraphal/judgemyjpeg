@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect } from 'react'
+import { logger } from '@/lib/logger'
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[]
@@ -86,7 +87,7 @@ export default function PWAManager() {
         updateViaCache: 'none'
       })
 
-      console.log('[PWA] Service Worker enregistré:', registration.scope)
+      logger.debug('[PWA] Service Worker enregistré:', registration.scope)
 
       // Écouter les mises à jour
       registration.addEventListener('updatefound', () => {
@@ -106,7 +107,7 @@ export default function PWAManager() {
       }
 
     } catch (error) {
-      console.error('[PWA] Erreur enregistrement SW:', error)
+      logger.error('[PWA] Erreur enregistrement SW:', error)
     }
   }
 
@@ -118,9 +119,9 @@ export default function PWAManager() {
       const { outcome } = await deferredPrompt.userChoice
 
       if (outcome === 'accepted') {
-        console.log('[PWA] Installation acceptée')
+        logger.debug('[PWA] Installation acceptée')
       } else {
-        console.log('[PWA] Installation refusée')
+        logger.debug('[PWA] Installation refusée')
         localStorage.setItem('pwa-install-dismissed', Date.now().toString())
       }
 
@@ -129,7 +130,7 @@ export default function PWAManager() {
       setShowInstallBanner(false)
 
     } catch (error) {
-      console.error('[PWA] Erreur installation:', error)
+      logger.error('[PWA] Erreur installation:', error)
     }
   }
 
@@ -289,7 +290,7 @@ export function usePWA() {
 
       return analysisData.id
     } catch (error) {
-      console.error('[PWA] Erreur queue analysis:', error)
+      logger.error('[PWA] Erreur queue analysis:', error)
       throw error
     }
   }

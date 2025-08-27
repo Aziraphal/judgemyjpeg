@@ -2,10 +2,11 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../auth/[...nextauth]'
 import { prisma } from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  console.log('=== API /user/preferences appelée ===')
-  console.log('Method:', req.method)
+  logger.debug('=== API /user/preferences appelée ===')
+  logger.debug('Method:', req.method)
 
   if (req.method === 'GET') {
     // Récupérer les préférences
@@ -44,7 +45,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       })
 
     } catch (error) {
-      console.error('❌ Erreur lecture préférences:', error)
+      logger.error('❌ Erreur lecture préférences:', error)
       return res.status(500).json({ error: 'Erreur serveur' })
     }
   }
@@ -65,7 +66,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: 'Le nom d\'affichage est requis' })
       }
 
-      console.log('Sauvegarde des préférences utilisateur:', {
+      logger.debug('Sauvegarde des préférences utilisateur:', {
         userId: session.user.id,
         preferences
       })
@@ -100,7 +101,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         data: { nickname: preferences.displayName }
       })
 
-      console.log('✅ Préférences sauvegardées avec succès')
+      logger.debug('✅ Préférences sauvegardées avec succès')
       return res.status(200).json({ 
         success: true, 
         message: 'Préférences sauvegardées avec succès',
@@ -108,7 +109,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       })
 
     } catch (error) {
-      console.error('❌ Erreur sauvegarde préférences:', error)
+      logger.error('❌ Erreur sauvegarde préférences:', error)
       return res.status(500).json({ error: 'Erreur serveur lors de la sauvegarde' })
     }
   }

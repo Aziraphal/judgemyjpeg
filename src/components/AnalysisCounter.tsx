@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useTranslations } from '@/hooks/useTranslations'
+import { logger } from '@/lib/logger'
 
 declare global {
   interface Window {
@@ -52,7 +53,7 @@ export default function AnalysisCounter({
         }
       }
     } catch (error) {
-      console.error('Erreur chargement statut analyses:', error)
+      logger.error('Erreur chargement statut analyses:', error)
     } finally {
       setLoading(false)
     }

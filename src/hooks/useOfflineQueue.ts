@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react'
+import { logger } from '@/lib/logger'
 
 interface QueueItem {
   id: string
@@ -57,10 +58,10 @@ export function useOfflineQueue(): OfflineQueueHook {
         }
 
         request.onerror = (event) => {
-          console.error('[Queue] Erreur ouverture IndexedDB:', event)
+          logger.error('[Queue] Erreur ouverture IndexedDB:', event)
         }
       } catch (error) {
-        console.error('[Queue] Erreur initialisation IndexedDB:', error)
+        logger.error('[Queue] Erreur initialisation IndexedDB:', error)
       }
     }
 
@@ -99,7 +100,7 @@ export function useOfflineQueue(): OfflineQueueHook {
         setQueueSize(countRequest.result)
       }
     } catch (error) {
-      console.error('[Queue] Erreur mise à jour taille queue:', error)
+      logger.error('[Queue] Erreur mise à jour taille queue:', error)
     }
   }
 
@@ -134,7 +135,7 @@ export function useOfflineQueue(): OfflineQueueHook {
 
       return item.id
     } catch (error) {
-      console.error('[Queue] Erreur ajout à la queue:', error)
+      logger.error('[Queue] Erreur ajout à la queue:', error)
       throw error
     }
   }, [db, isOnline])
@@ -154,7 +155,7 @@ export function useOfflineQueue(): OfflineQueueHook {
 
       updateQueueSize(db)
     } catch (error) {
-      console.error('[Queue] Erreur suppression de la queue:', error)
+      logger.error('[Queue] Erreur suppression de la queue:', error)
       throw error
     }
   }, [db])
@@ -173,7 +174,7 @@ export function useOfflineQueue(): OfflineQueueHook {
         request.onerror = () => reject(request.error)
       })
     } catch (error) {
-      console.error('[Queue] Erreur récupération queue:', error)
+      logger.error('[Queue] Erreur récupération queue:', error)
       return []
     }
   }, [db])
@@ -187,7 +188,7 @@ export function useOfflineQueue(): OfflineQueueHook {
         item.status === 'pending' && item.retryCount < 3
       )
 
-      console.log(`[Queue] Traitement de ${pendingItems.length} éléments`)
+      logger.debug(`[Queue] Traitement de ${pendingItems.length} éléments`)
 
       for (const item of pendingItems) {
         try {
@@ -205,7 +206,7 @@ export function useOfflineQueue(): OfflineQueueHook {
               success = await processUserAction(item)
               break
             default:
-              console.warn(`[Queue] Type inconnu: ${item.type}`)
+              logger.warn(`[Queue] Type inconnu: ${item.type}`)
               success = false
           }
 
@@ -218,12 +219,12 @@ export function useOfflineQueue(): OfflineQueueHook {
           }
 
         } catch (error) {
-          console.error(`[Queue] Erreur traitement item ${item.id}:`, error)
+          logger.error(`[Queue] Erreur traitement item ${item.id}:`, error)
           await incrementRetryCount(item.id)
         }
       }
     } catch (error) {
-      console.error('[Queue] Erreur traitement queue:', error)
+      logger.error('[Queue] Erreur traitement queue:', error)
     }
   }, [db, isOnline, getQueueItems, removeFromQueue])
 
@@ -243,7 +244,7 @@ export function useOfflineQueue(): OfflineQueueHook {
         }
       }
     } catch (error) {
-      console.error('[Queue] Erreur mise à jour statut:', error)
+      logger.error('[Queue] Erreur mise à jour statut:', error)
     }
   }
 
@@ -264,7 +265,7 @@ export function useOfflineQueue(): OfflineQueueHook {
         }
       }
     } catch (error) {
-      console.error('[Queue] Erreur incrément retry:', error)
+      logger.error('[Queue] Erreur incrément retry:', error)
     }
   }
 
@@ -300,7 +301,7 @@ export function useOfflineQueue(): OfflineQueueHook {
 
       return false
     } catch (error) {
-      console.error('[Queue] Erreur analyse photo:', error)
+      logger.error('[Queue] Erreur analyse photo:', error)
       return false
     }
   }
@@ -320,7 +321,7 @@ export function useOfflineQueue(): OfflineQueueHook {
 
       return response.ok
     } catch (error) {
-      console.error('[Queue] Erreur action utilisateur:', error)
+      logger.error('[Queue] Erreur action utilisateur:', error)
       return false
     }
   }
@@ -340,7 +341,7 @@ export function useOfflineQueue(): OfflineQueueHook {
 
       setQueueSize(0)
     } catch (error) {
-      console.error('[Queue] Erreur nettoyage queue:', error)
+      logger.error('[Queue] Erreur nettoyage queue:', error)
       throw error
     }
   }, [db])

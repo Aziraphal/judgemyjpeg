@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import { logger } from '@/lib/logger'
 
 // TEMPORAIREMENT DÉSACTIVÉ - API key invalide cause crashes
 // const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
@@ -45,7 +46,7 @@ export async function generateUserInsights(userData: {
   } catch (error) {
     // Note: logger would require user context here
     // Keep console.error for now as this is a service function
-    console.error('Erreur génération insights:', error)
+    logger.error('Erreur génération insights:', error)
     
     // Fallback avec des insights basiques
     return {

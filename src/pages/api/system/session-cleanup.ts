@@ -11,6 +11,7 @@ import {
 } from '@/lib/advanced-session'
 import { sendCriticalSecurityAlert } from '@/lib/email-service'
 import { prisma } from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 interface CleanupResponse {
   success: boolean
@@ -58,11 +59,11 @@ export default async function handler(
   }
 
   try {
-    console.log('🧹 Starting automatic session cleanup...')
+    logger.debug('🧹 Starting automatic session cleanup...')
 
     // 1. Nettoyer les sessions expirées
     const expiredSessionsCleared = await cleanupOldSessions()
-    console.log(`✅ Cleared ${expiredSessionsCleared} expired sessions`)
+    logger.debug(`✅ Cleared ${expiredSessionsCleared} expired sessions`)
 
     // 2. Analyser les sessions suspectes
     const suspiciousResults = await detectAndHandleSuspiciousSessions()
@@ -77,7 +78,7 @@ export default async function handler(
       usersAffected: suspiciousResults.usersAffected + longInactiveSessions.usersAffected
     }
 
-    console.log('📊 Cleanup stats:', stats)
+    logger.debug('📊 Cleanup stats:', stats)
 
     res.status(200).json({
       success: true,
@@ -86,7 +87,7 @@ export default async function handler(
     })
 
   } catch (error) {
-    console.error('❌ Session cleanup failed:', error)
+    logger.error('❌ Session cleanup failed:', error)
     res.status(500).json({
       success: false,
       message: 'Session cleanup failed',
@@ -108,7 +109,7 @@ async function detectAndHandleSuspiciousSessions(): Promise<{
   invalidated: number
   usersAffected: number
 }> {
-  console.log('🔍 Detecting suspicious sessions...')
+  logger.debug('🔍 Detecting suspicious sessions...')
 
   // Récupérer toutes les sessions avec un score de risque élevé
   const suspiciousSessions = await prisma.userSession.findMany({
@@ -126,7 +127,7 @@ async function detectAndHandleSuspiciousSessions(): Promise<{
     }
   })
 
-  console.log(`Found ${suspiciousSessions.length} suspicious sessions`)
+  logger.debug(`Found ${suspiciousSessions.length} suspicious sessions`)
 
   let invalidatedCount = 0
   const affectedUsers = new Set<string>()
@@ -156,11 +157,11 @@ async function detectAndHandleSuspiciousSessions(): Promise<{
           )
         }
 
-        console.log(`🚫 Invalidated suspicious session ${session.id} for user ${session.user.email}`)
+        logger.debug(`🚫 Invalidated suspicious session ${session.id} for user ${session.user.email}`)
       }
 
     } catch (error) {
-      console.error(`Failed to handle suspicious session ${session.id}:`, error)
+      logger.error(`Failed to handle suspicious session ${session.id}:`, error)
     }
   }
 
@@ -235,7 +236,7 @@ async function cleanupLongInactiveSessions(): Promise<{
   cleaned: number
   usersAffected: number
 }> {
-  console.log('🕰️ Cleaning up long inactive sessions...')
+  logger.debug('🕰️ Cleaning up long inactive sessions...')
 
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
   
@@ -260,7 +261,7 @@ async function cleanupLongInactiveSessions(): Promise<{
     }
   })
 
-  console.log(`🧹 Cleaned ${result.count} long inactive sessions`)
+  logger.debug(`🧹 Cleaned ${result.count} long inactive sessions`)
 
   return {
     cleaned: result.count,

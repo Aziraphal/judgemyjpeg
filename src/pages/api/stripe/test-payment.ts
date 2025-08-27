@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/pages/api/auth/[...nextauth]'
 import { prisma } from '@/lib/prisma'
 import { updateUserSubscription } from '@/services/subscription'
+import { logger } from '@/lib/logger'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // N'autoriser qu'en développement
@@ -44,7 +45,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         : undefined
     })
 
-    console.log(`TEST: ${subscriptionType} subscription activated for user ${user.id}`)
+    logger.debug(`TEST: ${subscriptionType} subscription activated for user ${user.id}`)
 
     res.status(200).json({ 
       success: true,
@@ -53,7 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
 
   } catch (error) {
-    console.error('Test payment error:', error)
+    logger.error('Test payment error:', error)
     res.status(500).json({ 
       error: 'Erreur lors du test de paiement',
       details: error instanceof Error ? error.message : 'Erreur inconnue'

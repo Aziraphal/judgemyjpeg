@@ -1,4 +1,5 @@
 import OpenAI from 'openai';
+import { logger } from '@/lib/logger'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -114,7 +115,7 @@ export async function moderateText(text: string): Promise<ModerationResult> {
       }
     };
   } catch (error) {
-    console.error('Erreur modération OpenAI:', error);
+    logger.error('Erreur modération OpenAI:', error);
     
     // Fallback sur mots-clés seulement
     const lowerText = text.toLowerCase();

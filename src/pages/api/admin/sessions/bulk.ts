@@ -8,6 +8,7 @@ import { requireAdminAuth } from '../auth'
 import { prisma } from '@/lib/prisma'
 import { invalidateSession } from '@/lib/advanced-session'
 import { AuditLogger } from '@/lib/audit-trail'
+import { logger } from '@/lib/logger'
 
 interface BulkSessionsResponse {
   success: boolean
@@ -74,7 +75,7 @@ async function handler(
           await invalidateSession(session.id, 'admin_bulk_invalidation')
           affectedCount++
         } catch (error) {
-          console.error(`Failed to invalidate session ${session.id}:`, error)
+          logger.error(`Failed to invalidate session ${session.id}:`, error)
         }
       }
 
@@ -166,7 +167,7 @@ async function handler(
     }
 
   } catch (error) {
-    console.error('Bulk sessions API error:', error)
+    logger.error('Bulk sessions API error:', error)
     
     await auditLogger.logSecurity('admin_bulk_sessions_error', {
       description: 'Admin bulk sessions API error',

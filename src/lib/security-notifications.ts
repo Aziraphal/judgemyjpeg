@@ -5,6 +5,7 @@
 
 import nodemailer from 'nodemailer'
 import type { SuspiciousActivity } from '@/lib/suspicious-login-detector'
+import { logger } from '@/lib/logger'
 
 /**
  * Create email transporter for security notifications
@@ -168,10 +169,10 @@ Questions? Contactez-nous: ${process.env.EMAIL_FROM}
       `
     })
 
-    console.log(`Security notification sent to ${email}`)
+    logger.debug(`Security notification sent to ${email}`)
 
   } catch (error) {
-    console.error('Failed to send suspicious login email:', error)
+    logger.error('Failed to send suspicious login email:', error)
     throw error
   }
 }
@@ -247,9 +248,9 @@ View Admin Dashboard: https://judgemyjpeg.fr/admin
       `
     })
 
-    console.log(`Critical security alert sent to admin: ${eventType}`)
+    logger.debug(`Critical security alert sent to admin: ${eventType}`)
 
   } catch (error) {
-    console.error('Failed to send critical security alert:', error)
+    logger.error('Failed to send critical security alert:', error)
   }
 }

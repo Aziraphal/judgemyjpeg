@@ -7,6 +7,7 @@ import StatCard from '@/components/StatCard'
 import ScoreChart from '@/components/ScoreChart'
 import FavoriteButton from '@/components/FavoriteButton'
 import AddToCollectionModal from '@/components/AddToCollectionModal'
+import { logger } from '@/lib/logger'
 
 interface DashboardStats {
   overview: {
@@ -72,7 +73,7 @@ export default function DashboardPage() {
         setStats(data.stats)
       }
     } catch (error) {
-      console.error('Erreur chargement stats:', error)
+      logger.error('Erreur chargement stats:', error)
     } finally {
       setLoading(false)
     }

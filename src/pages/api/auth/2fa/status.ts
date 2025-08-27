@@ -6,6 +6,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '../[...nextauth]'
 import { get2FAStats } from '@/lib/two-factor'
+import { logger } from '@/lib/logger'
 
 interface Status2FAResponse {
   enabled: boolean
@@ -38,7 +39,7 @@ export default async function handler(
     })
 
   } catch (error) {
-    console.error('2FA Status error:', error)
+    logger.error('2FA Status error:', error)
     res.status(500).json({ error: 'Erreur serveur' } as any)
   }
 }

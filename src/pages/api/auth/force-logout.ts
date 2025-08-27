@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { logger } from '@/lib/logger'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -6,7 +7,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    console.log('FORCE LOGOUT - Nuclear option activated')
+    logger.debug('FORCE LOGOUT - Nuclear option activated')
 
     // Liste exhaustive de tous les cookies NextAuth possibles
     const allPossibleCookies = [
@@ -45,7 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Appliquer TOUTES les instructions de suppression
     res.setHeader('Set-Cookie', clearInstructions)
 
-    console.log(`Applied ${clearInstructions.length} cookie clearing instructions`)
+    logger.debug(`Applied ${clearInstructions.length} cookie clearing instructions`)
 
     res.status(200).json({ 
       success: true, 
@@ -55,7 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
 
   } catch (error) {
-    console.error('Force logout error:', error)
+    logger.error('Force logout error:', error)
     res.status(500).json({ error: 'Force logout failed' })
   }
 }

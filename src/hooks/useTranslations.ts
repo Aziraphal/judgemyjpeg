@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
+import { logger } from '@/lib/logger'
 
 // Types pour les traductions
 export interface Translations {
@@ -92,13 +93,13 @@ export function useTranslations() {
       const translations = await import(`../../locales/${currentLocale}/common.json`)
       setTranslations(translations.default)
     } catch (error) {
-      console.error(`Failed to load translations for ${currentLocale}:`, error)
+      logger.error(`Failed to load translations for ${currentLocale}:`, error)
       // Fallback vers le français
       try {
         const fallbackTranslations = await import('../../locales/fr/common.json')
         setTranslations(fallbackTranslations.default)
       } catch (fallbackError) {
-        console.error('Failed to load fallback translations:', fallbackError)
+        logger.error('Failed to load fallback translations:', fallbackError)
       }
     } finally {
       setLoading(false)
@@ -128,7 +129,7 @@ export function useTranslations() {
     }
 
     if (typeof value !== 'string') {
-      console.warn(`Translation key not found: ${key}`)
+      logger.warn(`Translation key not found: ${key}`)
       return key
     }
 

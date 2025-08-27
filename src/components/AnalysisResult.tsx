@@ -10,7 +10,7 @@ import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import SmartGlossaryText from '@/components/SmartGlossaryText'
 import { useTranslations } from '@/hooks/useTranslations'
-import { getOrientationTransform } from '@/utils/exifExtractor'
+import { logger } from '@/lib/logger'
 
 interface AnalysisResultProps {
   photo: {
@@ -398,7 +398,7 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
                         session?.user?.email || 'client'
                       )
                     } catch (error) {
-                      console.error('Erreur export PDF:', error)
+                      logger.error('PDF export failed', error, session?.user?.id)
                       alert('Erreur lors de l\'export PDF')
                     }
                   }}

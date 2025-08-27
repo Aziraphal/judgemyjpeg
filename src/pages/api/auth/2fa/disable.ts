@@ -8,6 +8,7 @@ import { authOptions } from '../[...nextauth]'
 import { disable2FA, verify2FALogin } from '@/lib/two-factor'
 import { AuditLogger } from '@/lib/audit-trail'
 import { prisma } from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 interface Disable2FARequest {
   currentPassword: string
@@ -111,7 +112,7 @@ export default async function handler(
     })
 
   } catch (error) {
-    console.error('2FA Disable error:', error)
+    logger.error('2FA Disable error:', error)
     res.status(500).json({ 
       success: false, 
       message: 'Erreur serveur lors de la désactivation' 

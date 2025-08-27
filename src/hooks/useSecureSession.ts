@@ -5,6 +5,7 @@
 
 import { useSession } from 'next-auth/react'
 import { useState, useEffect, useCallback } from 'react'
+import { logger } from '@/lib/logger'
 
 interface SecurityStatus {
   isSecure: boolean
@@ -85,7 +86,7 @@ export function useSecureSession(): UseSecureSessionReturn {
         })
       }
     } catch (error) {
-      console.error('Failed to refresh security status:', error)
+      logger.error('Failed to refresh security status:', error)
       setSecurityStatus(prev => ({
         ...prev,
         warnings: ['Erreur lors de la vérification de sécurité'],
@@ -116,7 +117,7 @@ export function useSecureSession(): UseSecureSessionReturn {
       }
       return false
     } catch (error) {
-      console.error('Failed to invalidate other sessions:', error)
+      logger.error('Failed to invalidate other sessions:', error)
       return false
     }
   }, [session?.user?.id, refreshSecurity])
@@ -151,7 +152,7 @@ export function useSecureSession(): UseSecureSessionReturn {
     const handleStorageChange = (e: StorageEvent) => {
       // Détection de modifications localStorage suspectes
       if (e.key && e.key.includes('auth') && e.oldValue !== e.newValue) {
-        console.warn('Suspicious storage change detected')
+        logger.warn('Suspicious storage change detected')
         refreshSecurity()
       }
     }

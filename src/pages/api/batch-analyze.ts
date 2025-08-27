@@ -7,6 +7,7 @@ import { BatchAnalyzer } from '@/services/batch-analyzer'
 import { PrismaClient } from '@prisma/client'
 import { rateLimit } from '@/lib/rate-limit'
 import { moderateText } from '@/lib/moderation'
+import { logger } from '@/lib/logger'
 
 const prisma = new PrismaClient()
 const batchAnalyzer = new BatchAnalyzer()
@@ -129,13 +130,13 @@ export default async function handler(
       try {
         const moderationResult = await moderateText(image.filename)
         if (moderationResult.flagged) {
-          console.warn(`🚨 Contenu bloqué: ${image.filename} - ${moderationResult.reason}`)
+          logger.warn(`🚨 Contenu bloqué: ${image.filename} - ${moderationResult.reason}`)
           return res.status(400).json({ 
             error: `Contenu non autorisé: "${image.filename}" - ${moderationResult.reason}`
           })
         }
       } catch (moderationError) {
-        console.error('Erreur modération:', moderationError)
+        logger.error('Erreur modération:', moderationError)
       }
       
       // Vérifier la taille base64 (approximatif)
@@ -146,7 +147,7 @@ export default async function handler(
       }
     }
 
-    console.log(`🚀 Début analyse batch: ${images.length} photos pour ${session.user.email}`)
+    logger.debug(`🚀 Début analyse batch: ${images.length} photos pour ${session.user.email}`)
 
     // Analyser chaque image avec le nouveau système intelligent
     const analysisResults = []
@@ -156,7 +157,7 @@ export default async function handler(
       const image = images[i]
       
       try {
-        console.log(`📸 Analyse ${i + 1}/${images.length}: ${image.filename}`)
+        logger.debug(`📸 Analyse ${i + 1}/${images.length}: ${image.filename}`)
         
         const analysis = await analyzePhoto(image.data, tone)
         
@@ -180,7 +181,7 @@ export default async function handler(
         })
         
       } catch (error) {
-        console.error(`❌ Erreur analyse ${image.filename}:`, error)
+        logger.error(`❌ Erreur analyse ${image.filename}:`, error)
         analysisResults.push({
           id: image.id,
           error: 'Erreur lors de l\'analyse'
@@ -218,9 +219,9 @@ export default async function handler(
         famousPhotosCount: batchReport.famousPhotosCount
       }
       
-      console.log(`✅ Analyse batch terminée: ${photosForBatch.length}/${images.length} réussies`)
-      console.log(`🏆 Meilleure photo: ${batchReport.bestPhoto.filename} (${batchReport.bestPhoto.score}/100)`)
-      console.log(`🎨 Photos célèbres détectées: ${batchReport.famousPhotosCount}`)
+      logger.debug(`✅ Analyse batch terminée: ${photosForBatch.length}/${images.length} réussies`)
+      logger.debug(`🏆 Meilleure photo: ${batchReport.bestPhoto.filename} (${batchReport.bestPhoto.score}/100)`)
+      logger.debug(`🎨 Photos célèbres détectées: ${batchReport.famousPhotosCount}`)
       
     } else {
       // Ajouter les erreurs d'analyse
@@ -248,7 +249,7 @@ export default async function handler(
     })
 
   } catch (error) {
-    console.error('💥 Erreur batch analysis:', error)
+    logger.error('💥 Erreur batch analysis:', error)
     return res.status(500).json({ error: 'Erreur serveur lors de l\'analyse en lot' })
   } finally {
     await prisma.$disconnect()

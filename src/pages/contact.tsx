@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Head from 'next/head'
+import { logger } from '@/lib/logger'
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -55,7 +56,7 @@ export default function Contact() {
         setSubmitStatus('error')
       }
     } catch (error) {
-      console.error('Erreur envoi formulaire:', error)
+      logger.error('Erreur envoi formulaire:', error)
       setSubmitStatus('error')
     } finally {
       setIsSubmitting(false)

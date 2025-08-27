@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react'
+import { logger } from '@/lib/logger'
 
 interface SessionInfo {
   id: string
@@ -46,7 +47,7 @@ export default function SessionManager({ onUpdate }: SessionManagerProps) {
       }
     } catch (err) {
       setError('Erreur de connexion')
-      console.error('Failed to load sessions:', err)
+      logger.error('Failed to load sessions:', err)
     } finally {
       setLoading(false)
     }
@@ -73,7 +74,7 @@ export default function SessionManager({ onUpdate }: SessionManagerProps) {
       }
     } catch (err) {
       setError('Erreur lors de l\'invalidation de la session')
-      console.error('Failed to invalidate session:', err)
+      logger.error('Failed to invalidate session:', err)
     } finally {
       setActionLoading(null)
     }
@@ -103,7 +104,7 @@ export default function SessionManager({ onUpdate }: SessionManagerProps) {
       }
     } catch (err) {
       setError('Erreur lors de l\'invalidation des sessions')
-      console.error('Failed to invalidate all sessions:', err)
+      logger.error('Failed to invalidate all sessions:', err)
     } finally {
       setActionLoading(null)
     }

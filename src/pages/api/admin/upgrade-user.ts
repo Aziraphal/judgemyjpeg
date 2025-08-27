@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 // Stockage temporaire des tentatives (en production, utiliser Redis)
 const attemptStore = new Map<string, { count: number, lastAttempt: number }>()
@@ -73,7 +74,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
 
   } catch (error) {
-    console.error('Erreur upgrade user:', error)
+    logger.error('Erreur upgrade user:', error)
     res.status(500).json({ 
       error: 'Erreur lors de l\'upgrade',
       details: error instanceof Error ? error.message : 'Erreur inconnue'

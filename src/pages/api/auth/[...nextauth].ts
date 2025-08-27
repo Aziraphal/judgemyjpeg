@@ -13,6 +13,7 @@ import { AuditLogger } from '@/lib/audit-trail'
 import { SuspiciousLoginDetector, notifySuspiciousLogin } from '@/lib/suspicious-login-detector'
 import { is2FAEnabled } from '@/lib/two-factor'
 import { createTempSession, verifyToken } from './verify-2fa-login'
+import { logger } from '@/lib/logger'
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -43,7 +44,7 @@ export const authOptions: NextAuthOptions = {
             }
           })
         } catch (error) {
-          console.error('Failed to log sign in event:', error)
+          logger.error('Failed to log sign in event:', error)
         }
       }
     },
@@ -62,7 +63,7 @@ export const authOptions: NextAuthOptions = {
             }
           })
         } catch (error) {
-          console.error('Failed to log sign out event:', error)
+          logger.error('Failed to log sign out event:', error)
         }
       }
     }
@@ -281,7 +282,7 @@ export const authOptions: NextAuthOptions = {
             session.user.nickname = token.nickname as string
           }
         } catch (error) {
-          console.error('Erreur lors du rechargement des données utilisateur:', error)
+          logger.error('Erreur lors du rechargement des données utilisateur:', error)
           // Fallback au token en cas d'erreur
           session.user.nickname = token.nickname as string
         }

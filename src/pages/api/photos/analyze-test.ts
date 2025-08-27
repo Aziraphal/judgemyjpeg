@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import formidable from 'formidable'
 import { analyzePhoto } from '@/services/openai'
 import cloudinary from 'cloudinary'
+import { logger } from '@/lib/logger'
 
 // Configuration Cloudinary
 cloudinary.v2.config({
@@ -40,24 +41,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'Aucun fichier fourni' })
     }
 
-    console.log(`[TEST API] Fichier reçu: ${photoFile.originalFilename}, Taille: ${Math.round(photoFile.size / 1024 / 1024 * 100) / 100}MB`)
+    logger.debug(`[TEST API] Fichier reçu: ${photoFile.originalFilename}, Taille: ${Math.round(photoFile.size / 1024 / 1024 * 100) / 100}MB`)
 
     // Lire le fichier directement (pas de Cloudinary pour debug)
     const fs = require('fs')
     const imageBuffer = fs.readFileSync(photoFile.filepath)
     const imageBase64 = imageBuffer.toString('base64')
     
-    console.log(`[TEST API] Image convertie en base64, taille: ${Math.round(imageBase64.length / 1024)}KB`)
+    logger.debug(`[TEST API] Image convertie en base64, taille: ${Math.round(imageBase64.length / 1024)}KB`)
 
     // Analyser avec OpenAI - Debug  
-    console.log(`[TEST API] OpenAI API Key: ${process.env.OPENAI_API_KEY ? 'Présente' : 'MANQUANTE'}`)
+    logger.debug(`[TEST API] OpenAI API Key: ${process.env.OPENAI_API_KEY ? 'Présente' : 'MANQUANTE'}`)
     
     let analysis
     try {
       analysis = await analyzePhoto(imageBase64, tone as any, language as any)
-      console.log(`[TEST API] Analyse OpenAI réussie!`)
+      logger.debug(`[TEST API] Analyse OpenAI réussie!`)
     } catch (openaiError) {
-      console.error(`[TEST API] Erreur OpenAI détaillée:`, openaiError)
+      logger.error(`[TEST API] Erreur OpenAI détaillée:`, openaiError)
       
       // Retourner une analyse factice pour prouver que Railway fonctionne
       analysis = {
@@ -82,7 +83,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       compressionRatio: '100%' // Pas de compression!
     }
 
-    console.log(`[TEST API] Analyse terminée. Score: ${analysis.score}/100`)
+    logger.debug(`[TEST API] Analyse terminée. Score: ${analysis.score}/100`)
 
     res.status(200).json({
       photo: photoData,
@@ -97,7 +98,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
 
   } catch (error) {
-    console.error('Erreur API analyze-test:', error)
+    logger.error('Erreur API analyze-test:', error)
     
     if (error instanceof Error) {
       // Erreurs spécifiques

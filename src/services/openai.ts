@@ -1,6 +1,7 @@
 import OpenAI from 'openai'
 import { ExifData } from '@/types/exif'
 import { generateShootingConditionsSummary } from '@/utils/exifExtractor'
+import { logger } from '@/lib/logger'
 import { 
   AnalysisTone, 
   AnalysisLanguage, 
@@ -392,7 +393,7 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
 
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
-      console.error('Erreur analyse OpenAI:', error)
+      logger.error('Erreur analyse OpenAI:', error)
     }
     throw new Error('Impossible d\'analyser la photo')
   }

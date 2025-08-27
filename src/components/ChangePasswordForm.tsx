@@ -5,6 +5,7 @@
 
 import React, { useState } from 'react'
 import { validatePassword, getPasswordSuggestions, type PasswordValidationResult } from '@/lib/password-validation'
+import { logger } from '@/lib/logger'
 
 interface ChangePasswordFormProps {
   onSuccess?: () => void
@@ -78,7 +79,7 @@ export default function ChangePasswordForm({ onSuccess, onError }: ChangePasswor
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue'
       onError?.(errorMessage)
-      console.error('Change password error:', error)
+      logger.error('Change password error:', error)
     } finally {
       setIsLoading(false)
     }

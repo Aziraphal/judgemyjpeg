@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger'
+
 // Utilitaires IndexedDB pour le cache et la queue offline
 interface AnalysisQueueItem {
   id: string
@@ -46,13 +48,13 @@ class IndexedDBManager {
       const request = indexedDB.open(this.dbName, this.version)
 
       request.onerror = () => {
-        console.error('❌ IndexedDB: Erreur ouverture:', request.error)
+        logger.error('❌ IndexedDB: Erreur ouverture:', request.error)
         reject(request.error)
       }
 
       request.onsuccess = () => {
         this.db = request.result
-        console.log('✅ IndexedDB: Base initialisée')
+        logger.debug('✅ IndexedDB: Base initialisée')
         resolve()
       }
 
@@ -77,7 +79,7 @@ class IndexedDBManager {
           db.createObjectStore('userPreferences', { keyPath: 'key' })
         }
 
-        console.log('🔧 IndexedDB: Schema mis à jour vers version', this.version)
+        logger.debug('🔧 IndexedDB: Schema mis à jour vers version', this.version)
       }
     })
   }
@@ -100,12 +102,12 @@ class IndexedDBManager {
       const request = store.add(queueItem)
 
       request.onsuccess = () => {
-        console.log('📝 IndexedDB: Analyse ajoutée à la queue:', id)
+        logger.debug('📝 IndexedDB: Analyse ajoutée à la queue:', id)
         resolve(id)
       }
 
       request.onerror = () => {
-        console.error('❌ IndexedDB: Erreur ajout queue:', request.error)
+        logger.error('❌ IndexedDB: Erreur ajout queue:', request.error)
         reject(request.error)
       }
     })
@@ -124,7 +126,7 @@ class IndexedDBManager {
       }
 
       request.onerror = () => {
-        console.error('❌ IndexedDB: Erreur lecture queue:', request.error)
+        logger.error('❌ IndexedDB: Erreur lecture queue:', request.error)
         reject(request.error)
       }
     })
@@ -139,12 +141,12 @@ class IndexedDBManager {
       const request = store.delete(id)
 
       request.onsuccess = () => {
-        console.log('🗑️ IndexedDB: Analyse supprimée de la queue:', id)
+        logger.debug('🗑️ IndexedDB: Analyse supprimée de la queue:', id)
         resolve()
       }
 
       request.onerror = () => {
-        console.error('❌ IndexedDB: Erreur suppression queue:', request.error)
+        logger.error('❌ IndexedDB: Erreur suppression queue:', request.error)
         reject(request.error)
       }
     })
@@ -167,12 +169,12 @@ class IndexedDBManager {
       const request = store.put(cachedItem)
 
       request.onsuccess = () => {
-        console.log('💾 IndexedDB: Analyse mise en cache:', cachedItem.id)
+        logger.debug('💾 IndexedDB: Analyse mise en cache:', cachedItem.id)
         resolve()
       }
 
       request.onerror = () => {
-        console.error('❌ IndexedDB: Erreur cache analyse:', request.error)
+        logger.error('❌ IndexedDB: Erreur cache analyse:', request.error)
         reject(request.error)
       }
     })
@@ -193,7 +195,7 @@ class IndexedDBManager {
 
         // Vérifier expiration
         if (result && result.expires_at > Date.now()) {
-          console.log('🎯 IndexedDB: Cache hit:', id)
+          logger.debug('🎯 IndexedDB: Cache hit:', id)
           resolve(result)
         } else if (result) {
           // Supprimer si expiré
@@ -205,7 +207,7 @@ class IndexedDBManager {
       }
 
       request.onerror = () => {
-        console.error('❌ IndexedDB: Erreur lecture cache:', request.error)
+        logger.error('❌ IndexedDB: Erreur lecture cache:', request.error)
         reject(request.error)
       }
     })
@@ -220,12 +222,12 @@ class IndexedDBManager {
       const request = store.delete(id)
 
       request.onsuccess = () => {
-        console.log('🗑️ IndexedDB: Cache analyse supprimé:', id)
+        logger.debug('🗑️ IndexedDB: Cache analyse supprimé:', id)
         resolve()
       }
 
       request.onerror = () => {
-        console.error('❌ IndexedDB: Erreur suppression cache:', request.error)
+        logger.error('❌ IndexedDB: Erreur suppression cache:', request.error)
         reject(request.error)
       }
     })
@@ -252,13 +254,13 @@ class IndexedDBManager {
           deletedCount++
           cursor.continue()
         } else {
-          console.log(`🧹 IndexedDB: ${deletedCount} analyses expirées supprimées`)
+          logger.debug(`🧹 IndexedDB: ${deletedCount} analyses expirées supprimées`)
           resolve(deletedCount)
         }
       }
 
       request.onerror = () => {
-        console.error('❌ IndexedDB: Erreur nettoyage cache:', request.error)
+        logger.error('❌ IndexedDB: Erreur nettoyage cache:', request.error)
         reject(request.error)
       }
     })
@@ -279,7 +281,7 @@ class IndexedDBManager {
       }
 
       request.onerror = () => {
-        console.error('❌ IndexedDB: Erreur sauvegarde préférence:', request.error)
+        logger.error('❌ IndexedDB: Erreur sauvegarde préférence:', request.error)
         reject(request.error)
       }
     })
@@ -298,7 +300,7 @@ class IndexedDBManager {
       }
 
       request.onerror = () => {
-        console.error('❌ IndexedDB: Erreur lecture préférence:', request.error)
+        logger.error('❌ IndexedDB: Erreur lecture préférence:', request.error)
         reject(request.error)
       }
     })

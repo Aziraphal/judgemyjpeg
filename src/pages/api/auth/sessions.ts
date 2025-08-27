@@ -12,6 +12,7 @@ import {
   cleanupOldSessions
 } from '@/lib/advanced-session'
 import { AuditLogger } from '@/lib/audit-trail'
+import { logger } from '@/lib/logger'
 
 interface SessionsResponse {
   success: boolean
@@ -115,7 +116,7 @@ export default async function handler(
     }
 
   } catch (error) {
-    console.error('Sessions API error:', error)
+    logger.error('Sessions API error:', error)
     res.status(500).json({
       success: false,
       message: 'Erreur serveur'

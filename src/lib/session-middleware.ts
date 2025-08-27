@@ -7,6 +7,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { getToken } from 'next-auth/jwt'
 import { validateSession, createSecureSession, cleanupOldSessions } from './advanced-session'
 import { AuditLogger } from './audit-trail'
+import { logger } from '@/lib/logger'
 
 export interface SecureSessionContext {
   isValid: boolean
@@ -67,7 +68,7 @@ export async function withSecureSession(
     await handler(req, res, ctx)
 
   } catch (error) {
-    console.error('Session middleware error:', error)
+    logger.error('Session middleware error:', error)
     const ctx: SecureSessionContext = {
       isValid: false,
       risk: 'critical',
@@ -157,11 +158,11 @@ export function getIntelligentSessionDuration(
  */
 export async function runSessionCleanup(): Promise<void> {
   try {
-    console.log('Running session cleanup...')
+    logger.debug('Running session cleanup...')
     const cleaned = await cleanupOldSessions()
-    console.log(`Cleaned up ${cleaned} expired sessions`)
+    logger.debug(`Cleaned up ${cleaned} expired sessions`)
   } catch (error) {
-    console.error('Session cleanup failed:', error)
+    logger.error('Session cleanup failed:', error)
   }
 }
 

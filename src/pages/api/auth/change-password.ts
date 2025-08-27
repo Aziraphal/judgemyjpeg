@@ -11,6 +11,7 @@ import { sendPasswordChangeNotification } from '@/lib/email-service'
 import { AuditLogger } from '@/lib/audit-trail'
 import { getFullDeviceContext } from '@/lib/device-detection'
 import bcrypt from 'bcryptjs'
+import { logger } from '@/lib/logger'
 
 interface ChangePasswordRequest {
   currentPassword: string
@@ -129,7 +130,7 @@ export default async function handler(
         location: deviceContext.location.location
       })
     } catch (emailError) {
-      console.error('Failed to send password change notification:', emailError)
+      logger.error('Failed to send password change notification:', emailError)
       // Ne pas faire échouer la requête si l'email échoue
     }
 
@@ -154,7 +155,7 @@ export default async function handler(
     })
 
   } catch (error) {
-    console.error('Change password error:', error)
+    logger.error('Change password error:', error)
     res.status(500).json({
       success: false,
       message: 'Erreur serveur lors de la modification'

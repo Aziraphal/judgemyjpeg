@@ -6,6 +6,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
+import { logger } from '@/lib/logger'
 
 interface SecurityEvent {
   id: string
@@ -86,7 +87,7 @@ export default function AdminSecurityPage() {
       setSecurityEvents(eventsData.data || [])
       setSecurityAlerts(alertsData.data || [])
     } catch (error) {
-      console.error('Failed to load security data:', error)
+      logger.error('Failed to load security data:', error)
       setError('Erreur lors du chargement des données de sécurité')
     } finally {
       setLoading(false)
@@ -109,7 +110,7 @@ export default function AdminSecurityPage() {
         await loadSecurityData()
       }
     } catch (error) {
-      console.error('Failed to resolve alert:', error)
+      logger.error('Failed to resolve alert:', error)
     }
   }
 

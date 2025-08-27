@@ -6,6 +6,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
+import { logger } from '@/lib/logger'
 
 interface Session {
   id: string
@@ -82,7 +83,7 @@ export default function AdminSessionsPage() {
       const data = await response.json()
       setSessions(data.data || [])
     } catch (error) {
-      console.error('Failed to load sessions:', error)
+      logger.error('Failed to load sessions:', error)
       setError('Erreur lors du chargement des sessions')
     } finally {
       setLoading(false)
@@ -139,7 +140,7 @@ export default function AdminSessionsPage() {
         throw new Error('Erreur lors de l\'invalidation')
       }
     } catch (error) {
-      console.error('Failed to invalidate session:', error)
+      logger.error('Failed to invalidate session:', error)
       setError('Erreur lors de l\'invalidation de la session')
     } finally {
       setActionLoading(null)
@@ -175,7 +176,7 @@ export default function AdminSessionsPage() {
         throw new Error('Erreur lors de l\'invalidation en masse')
       }
     } catch (error) {
-      console.error('Failed to bulk invalidate:', error)
+      logger.error('Failed to bulk invalidate:', error)
       setError('Erreur lors de l\'invalidation en masse')
     } finally {
       setActionLoading(null)

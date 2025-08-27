@@ -3,6 +3,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { trackSubscription } from '@/lib/gtag'
+import { logger } from '@/lib/logger'
 
 export default function SuccessPage() {
   const { data: session, status } = useSession()
@@ -67,7 +68,7 @@ export default function SuccessPage() {
         throw new Error(`API error: ${response.status}`)
       }
     } catch (error) {
-      console.error('Erreur vérification abonnement:', error)
+      logger.error('Erreur vérification abonnement:', error)
       // 🚨 FALLBACK: Assumer que le paiement a marché
       setSubscription({ 
         subscriptionStatus: 'premium',

@@ -4,6 +4,7 @@
 
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
+import { logger } from '@/lib/logger'
 
 interface AnalysisLimitState {
   canAnalyze: boolean
@@ -77,7 +78,7 @@ export function useAnalysisLimit() {
         })
       }
     } catch (error) {
-      console.error('Erreur récupération statut analyses:', error)
+      logger.error('Erreur récupération statut analyses:', error)
     } finally {
       setLoading(false)
     }

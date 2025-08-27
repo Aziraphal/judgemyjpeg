@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useSession } from 'next-auth/react'
+import { logger } from '@/lib/logger'
 
 interface FeedbackModalProps {
   isOpen: boolean
@@ -78,7 +79,7 @@ export default function FeedbackModal({ isOpen, onClose, initialPage }: Feedback
         alert(result.error || 'Erreur lors de l\'envoi')
       }
     } catch (error) {
-      console.error('Feedback error:', error)
+      logger.error('Feedback error:', error)
       alert('Erreur réseau. Réessayez plus tard.')
     } finally {
       setIsSubmitting(false)

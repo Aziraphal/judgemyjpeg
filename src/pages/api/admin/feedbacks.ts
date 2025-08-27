@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { withAdminAuth } from '@/lib/auth-middleware'
 import { prisma } from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
@@ -81,7 +82,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       })
 
     } catch (error) {
-      console.error('Admin feedbacks error:', error)
+      logger.error('Admin feedbacks error:', error)
       res.status(500).json({ error: 'Erreur lors de la récupération des feedbacks' })
     }
   } 
@@ -112,7 +113,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       res.json({ success: true, feedback: updatedFeedback })
 
     } catch (error) {
-      console.error('Update feedback error:', error)
+      logger.error('Update feedback error:', error)
       res.status(500).json({ error: 'Erreur lors de la mise à jour' })
     }
   }

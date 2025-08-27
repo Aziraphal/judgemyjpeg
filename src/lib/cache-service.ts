@@ -1,5 +1,6 @@
 import { PhotoAnalysis } from '@/types/analysis'
 import crypto from 'crypto'
+import { logger } from '@/lib/logger'
 
 // Interface pour le cache
 interface CacheConfig {
@@ -83,7 +84,7 @@ export class CacheService {
   
   private async initializeRedis() {
     if (!this.config.redis?.url) {
-      console.log('📦 Cache: Utilisation mémoire locale (Redis non configuré)')
+      logger.debug('📦 Cache: Utilisation mémoire locale (Redis non configuré)')
       return
     }
     
@@ -100,17 +101,17 @@ export class CacheService {
       })
       
       this.redisClient.on('error', (err: Error) => {
-        console.error('❌ Redis error:', err.message)
+        logger.error('❌ Redis error:', err.message)
         this.redisClient = null
       })
       
       this.redisClient.on('connect', () => {
-        console.log('✅ Cache Redis connecté')
+        logger.debug('✅ Cache Redis connecté')
       })
       
       await this.redisClient.connect()
     } catch (error) {
-      console.warn('⚠️ Redis non disponible, fallback vers cache mémoire:', error)
+      logger.warn('⚠️ Redis non disponible, fallback vers cache mémoire:', error)
       this.redisClient = null
     }
   }
@@ -142,13 +143,13 @@ export class CacheService {
     try {
       if (this.redisClient?.isReady) {
         await this.redisClient.setEx(key, ttlSeconds, JSON.stringify(data))
-        console.log(`📦 Cache Redis: Analyse sauvée (${key})`)
+        logger.debug(`📦 Cache Redis: Analyse sauvée (${key})`)
       } else {
         this.memoryCache.set(key, data, ttlSeconds)
-        console.log(`📦 Cache Mémoire: Analyse sauvée (${key})`)
+        logger.debug(`📦 Cache Mémoire: Analyse sauvée (${key})`)
       }
     } catch (error) {
-      console.error('❌ Erreur cache:', error)
+      logger.error('❌ Erreur cache:', error)
       // Fallback vers mémoire en cas d'erreur Redis
       this.memoryCache.set(key, data, ttlSeconds)
     }
@@ -168,15 +169,15 @@ export class CacheService {
       if (this.redisClient?.isReady) {
         const cached = await this.redisClient.get(key)
         data = cached ? JSON.parse(cached) : null
-        if (data) console.log(`🎯 Cache Redis: Hit (${key})`)
+        if (data) logger.debug(`🎯 Cache Redis: Hit (${key})`)
       } else {
         data = this.memoryCache.get(key)
-        if (data) console.log(`🎯 Cache Mémoire: Hit (${key})`)
+        if (data) logger.debug(`🎯 Cache Mémoire: Hit (${key})`)
       }
       
       return data?.analysis || null
     } catch (error) {
-      console.error('❌ Erreur lecture cache:', error)
+      logger.error('❌ Erreur lecture cache:', error)
       return null
     }
   }
@@ -189,13 +190,13 @@ export class CacheService {
         const userKeys = keys.filter((key: string) => key.includes(userId))
         if (userKeys.length > 0) {
           await this.redisClient.del(userKeys)
-          console.log(`🗑️ Cache invalidé pour user ${userId}: ${userKeys.length} clés`)
+          logger.debug(`🗑️ Cache invalidé pour user ${userId}: ${userKeys.length} clés`)
         }
       }
       // Pour le cache mémoire, on ne peut pas facilement filtrer par user
       // donc on le laisse expirer naturellement
     } catch (error) {
-      console.error('❌ Erreur invalidation cache:', error)
+      logger.error('❌ Erreur invalidation cache:', error)
     }
   }
   
@@ -232,12 +233,12 @@ export class CacheService {
     try {
       if (this.redisClient?.isReady) {
         await this.redisClient.flushAll()
-        console.log('🗑️ Cache Redis vidé')
+        logger.debug('🗑️ Cache Redis vidé')
       }
       this.memoryCache.clear()
-      console.log('🗑️ Cache mémoire vidé')
+      logger.debug('🗑️ Cache mémoire vidé')
     } catch (error) {
-      console.error('❌ Erreur nettoyage cache:', error)
+      logger.error('❌ Erreur nettoyage cache:', error)
     }
   }
 }

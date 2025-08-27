@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { logger } from '@/lib/logger'
 
 interface PasswordValidationResult {
   isValid: boolean
@@ -51,7 +52,7 @@ export default function PasswordStrengthIndicator({
           onValidationChange(result.validation)
         }
       } catch (error) {
-        console.error('Error validating password:', error)
+        logger.error('Error validating password:', error)
       }
     }
 

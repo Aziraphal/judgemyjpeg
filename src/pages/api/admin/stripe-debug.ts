@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { stripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
@@ -109,7 +110,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
 
   } catch (error) {
-    console.error('Stripe debug error:', error)
+    logger.error('Stripe debug error:', error)
     res.status(500).json({ 
       error: 'Erreur lors du diagnostic',
       details: error instanceof Error ? error.message : 'Erreur inconnue'

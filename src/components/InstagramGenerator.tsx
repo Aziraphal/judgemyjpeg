@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { PhotoAnalysis } from '@/types/analysis'
 import { InstagramGenerator, InstagramPost } from '@/services/instagram-generator'
+import { logger } from '@/lib/logger'
 
 interface InstagramGeneratorProps {
   photo: {
@@ -36,7 +37,7 @@ export default function InstagramGeneratorComponent({ photo, analysis }: Instagr
       setGeneratedPost(post)
       setShowPreview(true)
     } catch (error) {
-      console.error('Erreur génération Instagram:', error)
+      logger.error('Erreur génération Instagram:', error)
       alert('Erreur lors de la génération du post')
     } finally {
       setIsGenerating(false)
@@ -48,7 +49,7 @@ export default function InstagramGeneratorComponent({ photo, analysis }: Instagr
       await navigator.clipboard.writeText(text)
       alert(`${type} copié dans le presse-papier !`)
     } catch (error) {
-      console.error('Erreur copie:', error)
+      logger.error('Erreur copie:', error)
       alert('Erreur lors de la copie')
     }
   }
@@ -76,7 +77,7 @@ export default function InstagramGeneratorComponent({ photo, analysis }: Instagr
       URL.revokeObjectURL(url)
       
     } catch (error) {
-      console.error('Erreur génération multi:', error)
+      logger.error('Erreur génération multi:', error)
       alert('Erreur lors de la génération')
     } finally {
       setIsGenerating(false)

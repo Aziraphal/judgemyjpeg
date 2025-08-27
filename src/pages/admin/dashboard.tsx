@@ -5,6 +5,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
+import { logger } from '@/lib/logger'
 
 interface SecurityStats {
   totalUsers: number
@@ -76,7 +77,7 @@ export default function AdminDashboard() {
       setSecurityStats(securityData.data)
       setDashboardStats(statsData.data)
     } catch (error) {
-      console.error('Failed to load dashboard:', error)
+      logger.error('Failed to load dashboard:', error)
       setError('Erreur lors du chargement du dashboard')
     } finally {
       setLoading(false)
@@ -307,11 +308,54 @@ export default function AdminDashboard() {
           {/* Security Tab */}
           {activeTab === 'security' && (
             <div className="space-y-8">
-              <div className="glass-card p-6">
-                <h3 className="text-xl font-semibold text-text-white mb-6">🛡️ Monitoring de sécurité</h3>
-                <div className="text-center text-text-gray">
-                  <p>Interface de sécurité détaillée en cours de développement...</p>
-                  <p className="text-sm mt-2">Sessions suspectes: {securityStats?.suspiciousSessions || 0}</p>
+              {/* Aperçu sécurité */}
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="glass-card p-6">
+                  <h3 className="text-lg font-semibold text-text-white mb-4">🛡️ État de sécurité</h3>
+                  <div className="space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-text-gray">Sessions suspectes</span>
+                      <span className="text-red-400 font-bold">{securityStats?.suspiciousSessions || 0}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-text-gray">Événements récents</span>
+                      <span className="text-yellow-400 font-bold">{securityStats?.recentSecurityEvents?.length || 0}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-text-gray">Alertes critiques</span>
+                      <span className="text-red-400 font-bold">{securityStats?.criticalAlerts?.length || 0}</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => router.push('/admin/security')}
+                    className="w-full mt-4 bg-red-600/20 text-red-300 px-4 py-2 rounded hover:bg-red-600/30 transition-colors"
+                  >
+                    🔍 Voir tous les événements
+                  </button>
+                </div>
+
+                <div className="glass-card p-6">
+                  <h3 className="text-lg font-semibold text-text-white mb-4">📋 Actions rapides</h3>
+                  <div className="space-y-3">
+                    <button
+                      onClick={() => router.push('/admin/security?tab=events')}
+                      className="w-full bg-blue-600/20 text-blue-300 px-4 py-2 rounded hover:bg-blue-600/30 transition-colors text-left"
+                    >
+                      📋 Événements de sécurité
+                    </button>
+                    <button
+                      onClick={() => router.push('/admin/security?tab=alerts')}
+                      className="w-full bg-yellow-600/20 text-yellow-300 px-4 py-2 rounded hover:bg-yellow-600/30 transition-colors text-left"
+                    >
+                      🚨 Alertes en temps réel
+                    </button>
+                    <button
+                      onClick={() => router.push('/admin/security?tab=analytics')}
+                      className="w-full bg-green-600/20 text-green-300 px-4 py-2 rounded hover:bg-green-600/30 transition-colors text-left"
+                    >
+                      📊 Analytics de sécurité
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -320,11 +364,68 @@ export default function AdminDashboard() {
           {/* Users Tab */}
           {activeTab === 'users' && (
             <div className="space-y-8">
-              <div className="glass-card p-6">
-                <h3 className="text-xl font-semibold text-text-white mb-6">👥 Gestion des utilisateurs</h3>
-                <div className="text-center text-text-gray">
-                  <p>Interface de gestion utilisateurs en cours de développement...</p>
-                  <p className="text-sm mt-2">Utilisateurs actifs: {securityStats?.activeUsers || 0}</p>
+              {/* Aperçu utilisateurs */}
+              <div className="grid md:grid-cols-3 gap-6">
+                <div className="glass-card p-6">
+                  <h3 className="text-lg font-semibold text-text-white mb-4">👥 Utilisateurs</h3>
+                  <div className="space-y-3">
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-neon-cyan mb-2">
+                        {(dashboardStats as any)?.totalUsers || 0}
+                      </div>
+                      <div className="text-sm text-text-gray">Total utilisateurs</div>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-text-gray">Actifs</span>
+                      <span className="text-green-400">{securityStats?.activeUsers || 0}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-text-gray">Abonnés</span>
+                      <span className="text-yellow-400">{dashboardStats?.activeSubscriptions || 0}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="glass-card p-6">
+                  <h3 className="text-lg font-semibold text-text-white mb-4">📊 Statistiques</h3>
+                  <div className="space-y-3">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-text-gray">Nouveaux cette semaine</span>
+                      <span className="text-blue-400">{(dashboardStats as any)?.newUsersThisWeek || 0}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-text-gray">Nouveaux aujourd'hui</span>
+                      <span className="text-green-400">{(dashboardStats as any)?.newUsersToday || 0}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-text-gray">Sessions actives</span>
+                      <span className="text-yellow-400">{securityStats?.totalSessions || 0}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="glass-card p-6">
+                  <h3 className="text-lg font-semibold text-text-white mb-4">🔧 Actions</h3>
+                  <div className="space-y-3">
+                    <button
+                      onClick={() => router.push('/admin/users')}
+                      className="w-full bg-blue-600/20 text-blue-300 px-4 py-2 rounded hover:bg-blue-600/30 transition-colors"
+                    >
+                      👥 Gérer les utilisateurs
+                    </button>
+                    <button
+                      onClick={() => router.push('/admin/users?filter=new')}
+                      className="w-full bg-green-600/20 text-green-300 px-4 py-2 rounded hover:bg-green-600/30 transition-colors"
+                    >
+                      ✨ Nouveaux utilisateurs
+                    </button>
+                    <button
+                      onClick={() => router.push('/admin/users?filter=premium')}
+                      className="w-full bg-yellow-600/20 text-yellow-300 px-4 py-2 rounded hover:bg-yellow-600/30 transition-colors"
+                    >
+                      💎 Utilisateurs premium
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

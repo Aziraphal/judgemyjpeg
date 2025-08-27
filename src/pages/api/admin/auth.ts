@@ -6,6 +6,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { AuditLogger } from '@/lib/audit-trail'
 import crypto from 'crypto'
+import { logger } from '@/lib/logger'
 
 interface AdminAuthRequest {
   adminSecret: string
@@ -166,7 +167,7 @@ export default async function handler(
     })
 
   } catch (error) {
-    console.error('Admin auth error:', error)
+    logger.error('Admin auth error:', error)
     
     await auditLogger.logSecurity('admin_auth_error', {
       description: 'Admin authentication system error',

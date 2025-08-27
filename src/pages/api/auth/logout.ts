@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from './[...nextauth]'
+import { logger } from '@/lib/logger'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -11,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const session = await getServerSession(req, res, authOptions)
     
     if (session) {
-      console.log('Force logout for user:', session.user?.email)
+      logger.debug('Force logout for user:', session.user?.email)
     }
 
     // Nettoyer TOUS les cookies possibles plus agressivement
@@ -40,7 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     res.status(200).json({ success: true, message: 'Logged out successfully' })
   } catch (error) {
-    console.error('Logout API error:', error)
+    logger.error('Logout API error:', error)
     res.status(500).json({ error: 'Logout failed' })
   }
 }

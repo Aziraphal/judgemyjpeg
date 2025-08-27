@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
+import { logger } from '@/lib/logger'
 
 const prisma = new PrismaClient()
 
@@ -55,7 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
 
   } catch (error) {
-    console.error('Erreur reset-password:', error)
+    logger.error('Erreur reset-password:', error)
     res.status(500).json({ error: 'Erreur serveur' })
   } finally {
     await prisma.$disconnect()

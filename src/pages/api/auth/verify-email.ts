@@ -5,6 +5,7 @@
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
@@ -19,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const tokenStr = Array.isArray(token) ? token[0] : token
-    console.log('🔍 Email verification attempt:', { email, token: tokenStr?.substring(0, 10) + '...', timestamp: new Date().toISOString() })
+    logger.debug('🔍 Email verification attempt:', { email, token: tokenStr?.substring(0, 10) + '...', timestamp: new Date().toISOString() })
     
     // Vérifier le token de vérification dans la base
     const verificationToken = await prisma.verificationToken.findUnique({
@@ -28,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     })
     
-    console.log('📋 Token lookup result:', { found: !!verificationToken, identifier: verificationToken?.identifier })
+    logger.debug('📋 Token lookup result:', { found: !!verificationToken, identifier: verificationToken?.identifier })
 
     if (!verificationToken) {
       return res.redirect('/auth/signin?error=TokenNotFound')
@@ -63,7 +64,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.redirect('/auth/signin?message=EmailVerified')
 
   } catch (error) {
-    console.error('Email verification error:', error)
+    logger.error('Email verification error:', error)
     return res.redirect('/auth/signin?error=VerificationFailed')
   }
 }

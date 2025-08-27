@@ -2,6 +2,7 @@
  * Server-Side Google Analytics 4 Tracking
  * Utilisé pour tracker les conversions côté serveur (webhooks Stripe)
  */
+import { logger } from '@/lib/logger'
 
 const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_ID
 const GA_MEASUREMENT_ID = GA_TRACKING_ID?.replace('G-', '')
@@ -28,7 +29,7 @@ export async function trackServerEvent(
   userId?: string
 ): Promise<boolean> {
   if (!GA_MEASUREMENT_ID || !GA_API_SECRET) {
-    console.warn('GA server tracking disabled: missing NEXT_PUBLIC_GA_ID or GA_API_SECRET')
+    logger.warn('GA server tracking disabled: missing NEXT_PUBLIC_GA_ID or GA_API_SECRET')
     return false
   }
 
@@ -57,10 +58,10 @@ export async function trackServerEvent(
       throw new Error(`GA API returned ${response.status}`)
     }
 
-    console.log(`✅ GA Server Event tracked: ${event.name}`)
+    logger.debug(`✅ GA Server Event tracked: ${event.name}`)
     return true
   } catch (error) {
-    console.error('❌ Failed to track GA server event:', error)
+    logger.error('❌ Failed to track GA server event:', error)
     return false
   }
 }

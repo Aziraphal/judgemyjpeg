@@ -7,6 +7,7 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '../[...nextauth]'
 import { enable2FA } from '@/lib/two-factor'
 import { AuditLogger } from '@/lib/audit-trail'
+import { logger } from '@/lib/logger'
 
 interface Enable2FARequest {
   verificationCode: string
@@ -80,7 +81,7 @@ export default async function handler(
     }
 
   } catch (error) {
-    console.error('2FA Enable error:', error)
+    logger.error('2FA Enable error:', error)
     res.status(500).json({ 
       success: false, 
       message: 'Erreur serveur lors de l\'activation' 

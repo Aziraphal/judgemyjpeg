@@ -3,6 +3,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { trackSubscription } from '@/lib/gtag'
+import { logger } from '@/lib/logger'
 
 export default function PricingPage() {
   const { data: session, status } = useSession()
@@ -30,7 +31,7 @@ export default function PricingPage() {
         alert(`Erreur: ${error.error}`)
       }
     } catch (error) {
-      console.error('Test error:', error)
+      logger.error('Test error:', error)
       alert('Erreur lors du test')
     } finally {
       setLoading(null)
@@ -72,7 +73,7 @@ export default function PricingPage() {
       window.location.href = url
 
     } catch (error) {
-      console.error('Erreur:', error)
+      logger.error('Erreur:', error)
       alert(error instanceof Error ? error.message : 'Erreur lors du paiement')
     } finally {
       setLoading(null)

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { logger } from '@/lib/logger'
 
 interface ReportModalProps {
   isOpen: boolean
@@ -57,7 +58,7 @@ export default function ReportModal({ isOpen, onClose, photoId, photoUrl }: Repo
         throw new Error('Erreur lors du signalement')
       }
     } catch (error) {
-      console.error('Erreur signalement:', error)
+      logger.error('Erreur signalement:', error)
       alert('Erreur lors du signalement. Veuillez réessayer.')
     } finally {
       setIsSubmitting(false)

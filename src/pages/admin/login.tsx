@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { signIn, useSession } from 'next-auth/react'
 import Head from 'next/head'
+import { logger } from '@/lib/logger'
 
 export default function AdminLoginPage() {
   const router = useRouter()
@@ -47,7 +48,7 @@ export default function AdminLoginPage() {
       }
     } catch (error) {
       setError('Erreur de connexion au serveur')
-      console.error('Admin login error:', error)
+      logger.error('Admin login error:', error)
     } finally {
       setIsLoading(false)
     }

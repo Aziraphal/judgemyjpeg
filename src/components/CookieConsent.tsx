@@ -5,6 +5,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { logger } from '@/lib/logger'
 
 interface CookiePreferences {
   necessary: boolean
@@ -104,7 +105,7 @@ export default function CookieConsent() {
       
       // Log for debugging in development
       if (process.env.NODE_ENV === 'development') {
-        console.log('Cookie preferences applied:', { prefs, consentUpdate })
+        logger.debug('Cookie preferences applied:', { prefs, consentUpdate })
       }
     }
 

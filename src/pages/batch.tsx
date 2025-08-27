@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { PhotoAnalysis } from '@/types/analysis'
 import { PDFExporter } from '@/services/pdf-export'
 import BatchReportIntelligent from '@/components/BatchReportIntelligent'
+import { logger } from '@/lib/logger'
 
 interface BatchPhoto {
   id: string
@@ -70,7 +71,7 @@ export default function BatchAnalysis() {
         setIsPremium(data.isPremium)
       }
     } catch (error) {
-      console.error('Erreur vérification premium:', error)
+      logger.error('Erreur vérification premium:', error)
     }
   }
 
@@ -185,7 +186,7 @@ export default function BatchAnalysis() {
         setPhotos(errorPhotos)
       }
     } catch (error) {
-      console.error('Erreur analyse batch:', error)
+      logger.error('Erreur analyse batch:', error)
       alert('Erreur de réseau ou images trop volumineuses. Essayez avec moins de photos ou des images plus petites.')
       const errorPhotos = photos.map(p => ({ ...p, status: 'error' as const }))
       setPhotos(errorPhotos)
@@ -421,7 +422,7 @@ export default function BatchAnalysis() {
                         session?.user?.email || 'client'
                       )
                     } catch (error) {
-                      console.error('Erreur export PDF:', error)
+                      logger.error('Erreur export PDF:', error)
                       alert('Erreur lors de l\'export PDF')
                     }
                   }}

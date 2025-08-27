@@ -8,6 +8,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { GA_TRACKING_ID, pageview } from '@/lib/gtag'
+import { logger } from '@/lib/logger'
 import Script from 'next/script'
 
 export default function App({
@@ -124,7 +125,7 @@ export default function App({
                       gtag('consent', 'update', consentUpdate);
                       
                       // Log consent status for debugging (dev only)
-                      if (process.env.NODE_ENV === 'development') {
+                      if ('${process.env.NODE_ENV}' === 'development') {
                         console.log('Cookie consent updated:', consentUpdate);
                       }
                       

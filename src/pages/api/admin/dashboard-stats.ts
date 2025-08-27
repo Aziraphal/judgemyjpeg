@@ -6,6 +6,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { requireAdminAuth } from './auth'
 import { prisma } from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 interface DashboardStatsResponse {
   success: boolean
@@ -74,7 +75,7 @@ async function handler(
     })
 
   } catch (error) {
-    console.error('Dashboard stats error:', error)
+    logger.error('Dashboard stats error:', error)
     res.status(500).json({
       success: false,
       message: 'Erreur lors de la récupération des statistiques du dashboard'

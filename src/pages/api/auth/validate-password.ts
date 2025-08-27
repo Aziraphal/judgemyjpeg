@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { validatePassword, getPasswordSuggestions } from '@/lib/password-validation'
+import { logger } from '@/lib/logger'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -23,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
 
   } catch (error) {
-    console.error('Error validating password:', error)
+    logger.error('Error validating password:', error)
     res.status(500).json({ error: 'Internal server error' })
   }
 }

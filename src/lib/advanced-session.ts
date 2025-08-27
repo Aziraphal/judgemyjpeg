@@ -9,6 +9,7 @@ import { sendCriticalSecurityAlert } from './email-service'
 import { AuditLogger } from './audit-trail'
 import type { NextApiRequest } from 'next'
 import crypto from 'crypto'
+import { logger } from '@/lib/logger'
 
 export interface SessionInfo {
   id: string
@@ -406,7 +407,7 @@ async function sendSessionSecurityAlert(
       )
     }
   } catch (error) {
-    console.error('Failed to send session security alert:', error)
+    logger.error('Failed to send session security alert:', error)
   }
 }
 

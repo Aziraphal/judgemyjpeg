@@ -8,6 +8,7 @@ import { authOptions } from '../[...nextauth]'
 import { regenerateBackupCodes, verify2FALogin } from '@/lib/two-factor'
 import { AuditLogger } from '@/lib/audit-trail'
 import { prisma } from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 interface RegenerateCodesRequest {
   verificationCode: string // Code 2FA pour confirmer
@@ -92,7 +93,7 @@ export default async function handler(
     })
 
   } catch (error) {
-    console.error('2FA Regenerate Codes error:', error)
+    logger.error('2FA Regenerate Codes error:', error)
     res.status(500).json({ 
       success: false, 
       message: 'Erreur serveur lors de la régénération' 

@@ -4,6 +4,7 @@ import { authOptions } from '@/pages/api/auth/[...nextauth]'
 import { prisma } from '@/lib/prisma'
 import { createCheckoutSession, createStripeCustomer, STRIPE_CONFIG } from '@/lib/stripe'
 import { canPurchaseStarterPack } from '@/services/subscription'
+import { logger } from '@/lib/logger'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -106,7 +107,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
 
   } catch (error) {
-    console.error('Erreur création checkout:', error)
+    logger.error('Erreur création checkout:', error)
     res.status(500).json({ 
       error: 'Erreur lors de la création de la session de paiement',
       details: error instanceof Error ? error.message : 'Erreur inconnue'

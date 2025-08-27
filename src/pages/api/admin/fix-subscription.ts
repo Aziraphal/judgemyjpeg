@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/lib/prisma'
 import { updateUserSubscription } from '@/services/subscription'
+import { logger } from '@/lib/logger'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -29,8 +30,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(404).json({ error: 'Utilisateur non trouvé' })
     }
 
-    console.log('=== DIAGNOSTIC SUBSCRIPTION ===')
-    console.log('User found:', {
+    logger.debug('=== DIAGNOSTIC SUBSCRIPTION ===')
+    logger.debug('User found:', {
       id: user.id,
       email: user.email,
       subscriptionStatus: user.subscriptionStatus,
@@ -49,7 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           : undefined
       })
 
-      console.log(`MANUAL ACTIVATION: ${subscriptionType} for user ${user.id}`)
+      logger.debug(`MANUAL ACTIVATION: ${subscriptionType} for user ${user.id}`)
     }
 
     // Re-récupérer l'utilisateur après update
@@ -71,7 +72,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
 
   } catch (error) {
-    console.error('Fix subscription error:', error)
+    logger.error('Fix subscription error:', error)
     res.status(500).json({ 
       error: 'Erreur lors de la correction',
       details: error instanceof Error ? error.message : 'Erreur inconnue'

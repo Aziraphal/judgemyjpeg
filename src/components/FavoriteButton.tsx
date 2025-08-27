@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { logger } from '@/lib/logger'
 
 interface FavoriteButtonProps {
   photoId: string
@@ -40,7 +41,7 @@ export default function FavoriteButton({
         onToggle?.(newIsFavorite)
       }
     } catch (error) {
-      console.error('Erreur toggle favori:', error)
+      logger.error('Erreur toggle favori:', error)
     } finally {
       setIsLoading(false)
     }

@@ -1,5 +1,6 @@
 import ExifReader from 'exifreader'
 import { ExifData, RawExifTags, EXIF_CONFIG } from '@/types/exif'
+import { logger } from '@/lib/logger'
 
 /**
  * Extrait les données EXIF d'un fichier image
@@ -57,7 +58,7 @@ export async function extractExifData(file: File): Promise<ExifData | null> {
     return cleanExifData(exifData)
     
   } catch (error) {
-    console.error('❌ Erreur extraction EXIF:', error)
+    logger.error('❌ Erreur extraction EXIF:', error)
     return null
   }
 }

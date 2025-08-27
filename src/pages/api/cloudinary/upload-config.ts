@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { v2 as cloudinary } from 'cloudinary'
 import { withAuth, AuthenticatedRequest } from '@/lib/auth-middleware'
+import { logger } from '@/lib/logger'
 
 export default withAuth(async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -25,7 +26,7 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
       process.env.CLOUDINARY_API_SECRET!
     )
 
-    console.log('Cloudinary signed config generated', {
+    logger.debug('Cloudinary signed config generated', {
       timestamp,
       folder,
       userId: req.user.id
@@ -41,7 +42,7 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     })
 
   } catch (error) {
-    console.error('Erreur config Cloudinary signed:', error)
+    logger.error('Erreur config Cloudinary signed:', error)
     res.status(500).json({ 
       error: 'Erreur génération signature Cloudinary',
       details: error instanceof Error ? error.message : 'Erreur inconnue'

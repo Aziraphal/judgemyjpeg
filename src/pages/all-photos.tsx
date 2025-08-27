@@ -5,6 +5,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import FavoriteButton from '@/components/FavoriteButton'
 import AddToCollectionModal from '@/components/AddToCollectionModal'
+import { logger } from '@/lib/logger'
 
 interface Photo {
   id: string
@@ -68,7 +69,7 @@ export default function AllPhotosPage() {
         setPhotos(filteredPhotos)
       }
     } catch (error) {
-      console.error('Erreur chargement photos:', error)
+      logger.error('Erreur chargement photos:', error)
     } finally {
       setLoading(false)
     }

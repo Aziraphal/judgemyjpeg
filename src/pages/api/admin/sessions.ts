@@ -8,6 +8,7 @@ import { requireAdminAuth } from './auth'
 import { prisma } from '@/lib/prisma'
 import { invalidateSession } from '@/lib/advanced-session'
 import { AuditLogger } from '@/lib/audit-trail'
+import { logger } from '@/lib/logger'
 
 interface SessionsResponse {
   success: boolean
@@ -127,7 +128,7 @@ async function handler(
     }
 
   } catch (error) {
-    console.error('Admin sessions API error:', error)
+    logger.error('Admin sessions API error:', error)
     
     await auditLogger.logSecurity('admin_sessions_error', {
       description: 'Admin sessions API error',

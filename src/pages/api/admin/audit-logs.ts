@@ -6,6 +6,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/lib/prisma'
 import { getSecuritySummary } from '@/lib/audit-trail'
+import { logger } from '@/lib/logger'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Simple admin authentication (improve in production)
@@ -94,7 +95,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       })
 
     } catch (error) {
-      console.error('Error fetching audit logs:', error)
+      logger.error('Error fetching audit logs:', error)
       res.status(500).json({ error: 'Internal server error' })
     }
   } else {

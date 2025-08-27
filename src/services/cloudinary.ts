@@ -1,4 +1,5 @@
 import { v2 as cloudinary } from 'cloudinary'
+import { logger } from '@/lib/logger'
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -41,7 +42,7 @@ export async function uploadPhoto(file: Buffer, filename: string): Promise<Uploa
       height: result.height,
     }
   } catch (error) {
-    console.error('Erreur upload Cloudinary:', error)
+    logger.error('Erreur upload Cloudinary:', error)
     throw new Error('Impossible d\'uploader la photo')
   }
 }
@@ -50,7 +51,7 @@ export async function deletePhoto(publicId: string): Promise<void> {
   try {
     await cloudinary.uploader.destroy(publicId)
   } catch (error) {
-    console.error('Erreur suppression Cloudinary:', error)
+    logger.error('Erreur suppression Cloudinary:', error)
     throw new Error('Impossible de supprimer la photo')
   }
 }

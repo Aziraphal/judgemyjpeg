@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
+import { logger } from '@/lib/logger'
 
 interface ServiceStatus {
   name: string
@@ -31,7 +32,7 @@ export default function StatusPage() {
       const data = await response.json()
       setStatusData(data)
     } catch (error) {
-      console.error('Failed to fetch status:', error)
+      logger.error('Failed to fetch status:', error)
     } finally {
       setLoading(false)
     }

@@ -3,6 +3,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { UserInsights } from '@/services/insights'
+import { logger } from '@/lib/logger'
 
 export default function InsightsPage() {
   const { data: session, status } = useSession()
@@ -35,7 +36,7 @@ export default function InsightsPage() {
       const data = await response.json()
       setInsights(data.insights)
     } catch (error) {
-      console.error('Erreur insights:', error)
+      logger.error('Erreur insights:', error)
       setError(error instanceof Error ? error.message : 'Erreur inconnue')
     } finally {
       setLoading(false)

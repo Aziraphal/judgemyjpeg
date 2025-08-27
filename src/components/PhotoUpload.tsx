@@ -5,6 +5,7 @@ import PhotoTypeSelector from './PhotoTypeSelector'
 import AnalysisCounter from './AnalysisCounter'
 import { extractExifData } from '@/utils/exifExtractor'
 import { ExifData } from '@/types/exif'
+import { logger } from '@/lib/logger'
 
 // Type pour la fonction de refresh du compteur
 declare global {
@@ -47,22 +48,22 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
     setErrorMessage(null)
     
     const originalSizeMB = Math.round(file.size / 1024 / 1024 * 100) / 100
-    console.log(`PhotoUpload: Original file size ${originalSizeMB}MB, type: ${file.type}`)
+    logger.debug(`PhotoUpload: Original file size ${originalSizeMB}MB, type: ${file.type}`)
     
     // Logs internes uniquement (non visibles)
-    console.log(`Analysis mode: ${tone}, file size: ${originalSizeMB}MB`)
+    logger.debug(`Analysis mode: ${tone}, file size: ${originalSizeMB}MB`)
     
     // ✅ RAILWAY: Pas de limite cachée ! Upload direct possible
     let processedFile = file
     
     // Compression uniquement pour fichiers TRÈS volumineux (>20MB) pour optimiser les performances
     if (file.size > 20 * 1024 * 1024) { // 20MB seuil - optimisation performance seulement
-      console.log(`Performance optimization: ${originalSizeMB}MB > 20MB`)
+      logger.debug(`Performance optimization: ${originalSizeMB}MB > 20MB`)
       
       try {
         setIsUploading(true)
     onUploadStateChange?.(true)
-        console.log('Quality optimization starting...')
+        logger.debug('Quality optimization starting...')
         
         // Compression SIMPLE et BRUTALE - pas d'alternatives
         const canvas = document.createElement('canvas')
@@ -86,7 +87,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
                 const ratio = Math.sqrt(4000000 / (width * height))
                 width = Math.round(width * ratio)
                 height = Math.round(height * ratio)
-                console.log(`Resized: ${img.width}x${img.height} → ${width}x${height}`)
+                logger.debug(`Resized: ${img.width}x${img.height} → ${width}x${height}`)
               }
               
               canvas.width = width
@@ -98,13 +99,13 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
                 canvas.toBlob((blob) => {
                   if (blob) {
                     const sizeMB = blob.size / 1024 / 1024
-                    console.log(`Quality test ${Math.round(q*100)}%: ${Math.round(sizeMB*100)/100}MB`)
+                    logger.debug(`Quality test ${Math.round(q*100)}%: ${Math.round(sizeMB*100)/100}MB`)
                     
                     if (blob.size <= targetSize || q <= 0.1) {
                       // Taille acceptable ou qualité minimum atteinte
                       const compressed = new File([blob], file.name, { type: 'image/jpeg' })
                       const finalSizeMB = Math.round(sizeMB * 100) / 100
-                      console.log(`Optimized: ${originalSizeMB}MB → ${finalSizeMB}MB (quality ${Math.round(q*100)}%)`)
+                      logger.debug(`Optimized: ${originalSizeMB}MB → ${finalSizeMB}MB (quality ${Math.round(q*100)}%)`)
                       resolve(compressed)
                     } else {
                       // Trop gros, réduire qualité
@@ -147,14 +148,14 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
         processedFile = await compressionPromise
         
       } catch (error) {
-        console.error('Optimization failed:', error instanceof Error ? error.message : 'Error')
+        logger.error('Optimization failed:', error instanceof Error ? error.message : 'Error')
         setErrorMessage(`Impossible d'optimiser cette photo (${originalSizeMB}MB). Essayez de la redimensionner à moins de 20MB.`)
         setIsUploading(false)
     onUploadStateChange?.(false)
         return
       }
     } else {
-      console.log(`Upload mode: direct, size: ${originalSizeMB}MB`)
+      logger.debug(`Upload mode: direct, size: ${originalSizeMB}MB`)
     }
 
 
@@ -165,7 +166,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
     try {
       // Upload standard avec fichier compressé si nécessaire
       const finalSizeMB = Math.round(processedFile.size / 1024 / 1024 * 100) / 100
-      console.log(`Processing file for ${tone} analysis...`)
+      logger.debug(`Processing file for ${tone} analysis...`)
       
       // Extraire les données EXIF pour le mode Expert
       let exifData: ExifData | null = null
@@ -173,7 +174,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
         try {
           exifData = await extractExifData(processedFile)
         } catch (exifError) {
-          console.warn('⚠️ EXIF extraction failed:', exifError)
+          logger.warn('⚠️ EXIF extraction failed:', exifError)
         }
       }
       
@@ -190,10 +191,10 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
 
       // Utiliser l'API de test si en mode test
       const apiUrl = testMode ? '/api/photos/analyze-test' : '/api/photos/analyze'
-      console.log(`Sending to API: ${apiUrl}`)
+      logger.debug(`Sending to API: ${apiUrl}`)
       
       // Les messages progressifs sont maintenant intégrés dans l'interface
-      console.log(`Starting ${tone} analysis...`)
+      logger.debug(`Starting ${tone} analysis...`)
 
       const response = await fetch(apiUrl, {
         method: 'POST',
@@ -203,7 +204,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
-        console.error(`Server error ${response.status}:`, errorData.error || 'Unknown')
+        logger.error(`Server error ${response.status}:`, errorData.error || 'Unknown')
         
         // Si erreur de limite atteinte, déclencher le modal starter pack
         if (errorData.error?.includes('limite') || errorData.error?.includes('atteinte')) {
@@ -214,7 +215,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
       }
 
       const result = await response.json()
-      console.log('Analysis completed successfully')
+      logger.debug('Analysis completed successfully')
       
       // Actualiser le compteur d'analyses après succès
       if (window.refreshAnalysisCounter) {
@@ -226,7 +227,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
     } catch (error) {
       // Log pour debug uniquement
       if (process.env.NODE_ENV === 'development') {
-        console.error('Erreur:', error)
+        logger.error('Erreur:', error)
       }
       
       // Message d'erreur plus précis
@@ -244,7 +245,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
         }
       }
       
-      console.error('Final error:', errorMessage)
+      logger.error('Final error:', errorMessage)
       setErrorMessage(errorMessage)
     } finally {
       setIsUploading(false)

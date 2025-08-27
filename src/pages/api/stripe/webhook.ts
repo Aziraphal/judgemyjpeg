@@ -36,11 +36,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     )
 
     // 🚨 LOGGING CRITIQUE pour debugging
-    console.log('=== WEBHOOK STRIPE REÇU ===')
-    console.log('Event ID:', event.id)
-    console.log('Event Type:', event.type)
-    console.log('Event Created:', new Date(event.created * 1000).toISOString())
-    console.log('Data Object:', JSON.stringify(event.data.object, null, 2))
+    logger.debug('=== WEBHOOK STRIPE REÇU ===')
+    logger.debug('Event ID:', event.id)
+    logger.debug('Event Type:', event.type)
+    logger.debug('Event Created:', new Date(event.created * 1000).toISOString())
+    logger.debug('Data Object:', JSON.stringify(event.data.object, null, 2))
     
     logger.info('Stripe webhook received', { 
       eventId: event.id,
@@ -202,10 +202,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             logger.warn('Unhandled webhook event', { eventType: event.type }, undefined, ip)
         }
       } catch (asyncError) {
-        console.error('=== ERREUR TRAITEMENT WEBHOOK ASYNC ===')
-        console.error('Event ID:', event.id)
-        console.error('Event Type:', event.type)
-        console.error('Error:', asyncError)
+        logger.error('=== ERREUR TRAITEMENT WEBHOOK ASYNC ===')
+        logger.error('Event ID:', event.id)
+        logger.error('Event Type:', event.type)
+        logger.error('Error:', asyncError)
         logger.error('Async webhook processing error', { 
           eventId: event.id, 
           eventType: event.type, 

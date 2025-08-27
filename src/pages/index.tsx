@@ -2,6 +2,7 @@ import Head from 'next/head'
 import { useSession, signIn, signOut } from 'next-auth/react'
 import { useState, useEffect } from 'react'
 import Footer from '@/components/Footer'
+import { logger } from '@/lib/logger'
 
 export default function Home() {
   const { data: session, status } = useSession()
@@ -13,10 +14,10 @@ export default function Home() {
       fetch('/api/subscription/status')
         .then(res => res.json())
         .then(data => {
-          console.log('Données subscription récupérées:', data)
+          logger.debug('Données subscription récupérées:', data)
           setUserSubscription(data.subscription)
         })
-        .catch(err => console.error('Error fetching subscription:', err))
+        .catch(err => logger.error('Error fetching subscription:', err))
     }
     
     // Charger les préférences locales
@@ -26,7 +27,7 @@ export default function Home() {
         try {
           setUserPreferences(JSON.parse(savedPrefs))
         } catch (error) {
-          console.error('Erreur lecture préférences:', error)
+          logger.error('Erreur lecture préférences:', error)
         }
       }
     }
@@ -181,12 +182,12 @@ export default function Home() {
                 <button
                   onClick={async () => {
                     try {
-                      console.log('NUCLEAR LOGOUT - Server-side cookie destruction')
+                      logger.debug('NUCLEAR LOGOUT - Server-side cookie destruction')
                       
                       // Appeler l'endpoint de déconnexion forcée côté serveur
                       const response = await fetch('/api/auth/force-logout', { method: 'POST' })
                       const result = await response.json()
-                      console.log('Force logout result:', result)
+                      logger.debug('Force logout result:', result)
                       
                       // Vider TOUT côté client aussi
                       document.cookie.split(";").forEach(c => {
@@ -205,7 +206,7 @@ export default function Home() {
                       }, 500)
                       
                     } catch (error) {
-                      console.error('Nuclear logout failed:', error)
+                      logger.error('Nuclear logout failed:', error)
                       // Plan B : redirection brutale
                       window.location.replace('/?fallback_logout=' + Date.now())
                     }

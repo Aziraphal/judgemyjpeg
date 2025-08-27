@@ -5,6 +5,7 @@
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { clearRateLimitCache } from './auth'
+import { logger } from '@/lib/logger'
 
 interface ClearCacheResponse {
   success: boolean
@@ -43,7 +44,7 @@ export default async function handler(
     })
 
   } catch (error) {
-    console.error('Clear cache error:', error)
+    logger.error('Clear cache error:', error)
     res.status(500).json({
       success: false,
       message: 'Erreur lors du nettoyage du cache'

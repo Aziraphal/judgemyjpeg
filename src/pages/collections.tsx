@@ -5,6 +5,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import CreateCollectionModal from '@/components/CreateCollectionModal'
 import FavoriteButton from '@/components/FavoriteButton'
+import { logger } from '@/lib/logger'
 
 interface Photo {
   id: string
@@ -60,7 +61,7 @@ export default function CollectionsPage() {
         setCollections(data.collections)
       }
     } catch (error) {
-      console.error('Erreur chargement collections:', error)
+      logger.error('Erreur chargement collections:', error)
     } finally {
       setLoading(false)
     }
@@ -102,7 +103,7 @@ export default function CollectionsPage() {
         )
       }
     } catch (error) {
-      console.error('Erreur suppression photo:', error)
+      logger.error('Erreur suppression photo:', error)
     }
   }
 

@@ -7,6 +7,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { requireAdminAuth } from './auth'
 import { getSecuritySummary } from '@/lib/audit-trail'
 import { prisma } from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 interface SecurityStatsResponse {
   success: boolean
@@ -71,7 +72,7 @@ async function handler(
     })
 
   } catch (error) {
-    console.error('Security stats error:', error)
+    logger.error('Security stats error:', error)
     res.status(500).json({
       success: false,
       message: 'Erreur lors de la récupération des statistiques de sécurité'

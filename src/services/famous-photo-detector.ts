@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger'
+
 // Service de détection de photos célèbres
 // Pour éviter l'usage abusif tout en gardant l'aspect éducatif
 
@@ -62,7 +64,7 @@ export async function detectFamousPhoto(
     return null
 
   } catch (error) {
-    console.error('Erreur détection photo célèbre:', error)
+    logger.error('Erreur détection photo célèbre:', error)
     return null
   }
 }

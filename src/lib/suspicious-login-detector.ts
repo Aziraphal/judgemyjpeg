@@ -369,5 +369,5 @@ async function sendSuspiciousLoginEmail(
 ): Promise<void> {
   // Implementation would go here
   // Use same email system as verification emails
-  console.log('TODO: Send suspicious login email to', email)
+  logger.debug('TODO: Send suspicious login email to', email)
 }

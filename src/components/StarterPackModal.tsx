@@ -4,6 +4,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/router'
+import { logger } from '@/lib/logger'
 
 interface StarterPackModalProps {
   isOpen: boolean
@@ -38,7 +39,7 @@ export default function StarterPackModal({ isOpen, onClose, remainingDays }: Sta
       window.location.href = url
 
     } catch (error) {
-      console.error('Erreur:', error)
+      logger.error('Erreur:', error)
       alert(error instanceof Error ? error.message : 'Erreur lors du paiement')
       setLoading(false)
     }

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { logger } from '@/lib/logger'
 
 export default function Custom500() {
   const router = useRouter()
@@ -26,7 +27,7 @@ export default function Custom500() {
         throw new Error('Server still unavailable')
       }
     } catch (error) {
-      console.error('Retry failed:', error)
+      logger.error('Retry failed:', error)
       setTimeout(() => setIsRetrying(false), 2000)
     }
   }

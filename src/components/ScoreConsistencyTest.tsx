@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { PhotoAnalysis } from '@/types/analysis'
+import { logger } from '@/lib/logger'
 
 interface ScoreTestProps {
   imageBase64: string
@@ -49,7 +50,7 @@ export default function ScoreConsistencyTest({ imageBase64 }: ScoreTestProps) {
         testing: false
       })
     } catch (error) {
-      console.error('Erreur test:', error)
+      logger.error('Erreur test:', error)
       setResults({ testing: false })
     }
   }

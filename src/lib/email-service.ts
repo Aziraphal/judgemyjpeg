@@ -4,6 +4,7 @@
  */
 
 import { Resend } from 'resend'
+import { logger } from '@/lib/logger'
 
 let resend: Resend | null = null
 
@@ -37,7 +38,7 @@ export async function sendVerificationEmail(email: string, verificationUrl: stri
       text: createVerificationEmailText(email, verificationUrl)
     })
   } catch (error) {
-    console.error('Failed to send verification email:', error)
+    logger.error('Failed to send verification email:', error)
     throw new Error('Email sending failed')
   }
 }
@@ -72,7 +73,7 @@ export async function sendSuspiciousLoginEmail(
       text: createSuspiciousLoginText(email, activities, ipAddress, locationStr)
     })
   } catch (error) {
-    console.error('Failed to send suspicious login email:', error)
+    logger.error('Failed to send suspicious login email:', error)
     throw new Error('Security email sending failed')
   }
 }
@@ -98,7 +99,7 @@ export async function sendPasswordChangeNotification(
       text: createPasswordChangeText(email, deviceInfo)
     })
   } catch (error) {
-    console.error('Failed to send password change notification:', error)
+    logger.error('Failed to send password change notification:', error)
     throw new Error('Failed to send password change notification')
   }
 }
@@ -125,7 +126,7 @@ export async function sendAccountLockoutNotification(
       text: createAccountLockoutText(email, lockoutInfo)
     })
   } catch (error) {
-    console.error('Failed to send account lockout notification:', error)
+    logger.error('Failed to send account lockout notification:', error)
     throw new Error('Failed to send account lockout notification')
   }
 }
@@ -156,7 +157,7 @@ export async function sendNewDeviceLoginNotification(
       text: createNewDeviceLoginText(email, loginInfo)
     })
   } catch (error) {
-    console.error('Failed to send new device login notification:', error)
+    logger.error('Failed to send new device login notification:', error)
     throw new Error('Failed to send new device login notification')
   }
 }
@@ -180,7 +181,7 @@ export async function sendCriticalSecurityAlert(
       text: createCriticalAlertText(eventType, description, metadata)
     })
   } catch (error) {
-    console.error('Failed to send critical security alert:', error)
+    logger.error('Failed to send critical security alert:', error)
   }
 }
 

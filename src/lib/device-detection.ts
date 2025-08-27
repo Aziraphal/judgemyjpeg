@@ -4,6 +4,7 @@
  */
 
 import type { NextApiRequest } from 'next'
+import { logger } from '@/lib/logger'
 
 export interface DeviceInfo {
   deviceName: string
@@ -156,7 +157,7 @@ export async function getLocationFromIP(ip: string): Promise<LocationInfo> {
       }
     }
   } catch (error) {
-    console.warn('Geolocation API failed:', error)
+    logger.warn('Geolocation API failed:', error)
     clearTimeout(timeoutId)
   }
 
@@ -225,7 +226,7 @@ export async function isNewDevice(
     // Pour maintenant, simuler la détection (toujours nouvel appareil en dev)
     return true
   } catch (error) {
-    console.error('Device check failed:', error)
+    logger.error('Device check failed:', error)
     return true // En cas d'erreur, traiter comme nouvel appareil par sécurité
   }
 }
@@ -255,12 +256,12 @@ export async function registerNewDevice(
     //   }
     // })
     
-    console.log(`New device registered for user ${userId}:`, {
+    logger.debug(`New device registered for user ${userId}:`, {
       fingerprint,
       device: deviceInfo.deviceName,
       location: locationInfo.location
     })
   } catch (error) {
-    console.error('Failed to register device:', error)
+    logger.error('Failed to register device:', error)
   }
 }

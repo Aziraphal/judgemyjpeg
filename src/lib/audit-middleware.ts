@@ -6,7 +6,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { AuditLogger } from '@/lib/audit-trail'
 import { SuspiciousLoginDetector, notifySuspiciousLogin } from '@/lib/suspicious-login-detector'
-import { getClientIP } from '@/lib/logger'
+import { getClientIP, logger } from '@/lib/logger'
 
 export type AuditableEndpoint = {
   path: string
@@ -202,12 +202,12 @@ export function Audit(eventType: string, riskLevel: 'low' | 'medium' | 'high' = 
         
         // Log successful operation
         // This would need access to the request context
-        console.log(`[AUDIT] ${eventType}: Success in ${Date.now() - startTime}ms`)
+        logger.debug(`[AUDIT] ${eventType}: Success in ${Date.now() - startTime}ms`)
         
         return result
       } catch (error) {
         // Log failed operation
-        console.log(`[AUDIT] ${eventType}: Failed - ${error}`)
+        logger.debug(`[AUDIT] ${eventType}: Failed - ${error}`)
         throw error
       }
     }

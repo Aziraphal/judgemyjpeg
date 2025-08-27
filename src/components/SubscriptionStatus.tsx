@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { UserSubscription } from '@/services/subscription'
+import { logger } from '@/lib/logger'
 
 interface SubscriptionStatusProps {
   compact?: boolean
@@ -23,7 +24,7 @@ export default function SubscriptionStatus({ compact = false }: SubscriptionStat
         setSubscription(data.subscription)
       }
     } catch (error) {
-      console.error('Erreur chargement abonnement:', error)
+      logger.error('Erreur chargement abonnement:', error)
     } finally {
       setLoading(false)
     }

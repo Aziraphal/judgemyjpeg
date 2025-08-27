@@ -5,6 +5,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import FavoriteButton from '@/components/FavoriteButton'
 import AddToCollectionModal from '@/components/AddToCollectionModal'
+import { logger } from '@/lib/logger'
 
 interface Photo {
   id: string
@@ -42,11 +43,11 @@ export default function GalleryPage() {
         const data = await response.json()
         setAllPhotos(data.topPhotos || [])
       } else {
-        console.error('Erreur API:', response.status)
+        logger.error('Erreur API:', response.status)
         setAllPhotos([])
       }
     } catch (error) {
-      console.error('Erreur chargement photos:', error)
+      logger.error('Erreur chargement photos:', error)
       setAllPhotos([])
     } finally {
       setLoading(false)
@@ -84,7 +85,7 @@ export default function GalleryPage() {
         alert('Erreur lors de la suppression')
       }
     } catch (error) {
-      console.error('Erreur:', error)
+      logger.error('Erreur:', error)
       alert('Erreur lors de la suppression')
     }
   }

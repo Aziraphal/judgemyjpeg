@@ -8,6 +8,7 @@ import { authOptions } from '../[...nextauth]'
 import { setup2FA } from '@/lib/two-factor'
 import { AuditLogger } from '@/lib/audit-trail'
 import { prisma } from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 interface Setup2FAResponse {
   qrCodeUrl: string
@@ -60,7 +61,7 @@ export default async function handler(
     })
 
   } catch (error) {
-    console.error('2FA Setup error:', error)
+    logger.error('2FA Setup error:', error)
     res.status(500).json({ error: 'Erreur serveur' } as any)
   }
 }

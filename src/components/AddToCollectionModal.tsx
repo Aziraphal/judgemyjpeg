@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import CreateCollectionModal from './CreateCollectionModal'
+import { logger } from '@/lib/logger'
 
 interface Collection {
   id: string
@@ -36,7 +37,7 @@ export default function AddToCollectionModal({ isOpen, onClose, photoId, photoNa
         setCollections(data.collections)
       }
     } catch (error) {
-      console.error('Erreur chargement collections:', error)
+      logger.error('Erreur chargement collections:', error)
     } finally {
       setLoading(false)
     }
@@ -82,7 +83,7 @@ export default function AddToCollectionModal({ isOpen, onClose, photoId, photoNa
       setCollections(prev => [newCollection, ...prev])
       setIsCreateModalOpen(false)
     } catch (error) {
-      console.error('Erreur mise à jour collections:', error)
+      logger.error('Erreur mise à jour collections:', error)
       // Fallback: rechargement complet des collections
       fetchCollections()
       setIsCreateModalOpen(false)

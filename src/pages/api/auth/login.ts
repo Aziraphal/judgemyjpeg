@@ -11,6 +11,7 @@ import { sendNewDeviceLoginNotification } from '@/lib/email-service'
 import { getFullDeviceContext, generateDeviceFingerprint, isNewDevice, registerNewDevice } from '@/lib/device-detection'
 import { AuditLogger } from '@/lib/audit-trail'
 import { createTempSession } from './verify-2fa-login'
+import { logger } from '@/lib/logger'
 
 interface LoginRequest {
   email: string
@@ -158,7 +159,7 @@ export default async function handler(
         isFirstTime: isNewDeviceLogin
       })
     } catch (emailError) {
-      console.error('Failed to send new device login notification:', emailError)
+      logger.error('Failed to send new device login notification:', emailError)
       // Ne pas faire échouer la connexion si l'email échoue
     }
 
@@ -175,7 +176,7 @@ export default async function handler(
     })
 
   } catch (error) {
-    console.error('Login error:', error)
+    logger.error('Login error:', error)
     res.status(500).json({
       success: false,
       message: 'Erreur serveur lors de la connexion'

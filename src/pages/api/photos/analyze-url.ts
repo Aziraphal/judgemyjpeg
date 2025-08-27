@@ -137,7 +137,7 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
           })
         }
       } catch (error) {
-        console.error('Erreur ajout Top Photos collection:', error)
+        logger.error('Erreur ajout Top Photos collection:', error)
         // Ne pas faire échouer l'analyse si problème collection
       }
     }

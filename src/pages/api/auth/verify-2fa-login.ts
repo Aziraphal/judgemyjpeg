@@ -7,6 +7,7 @@ import { verify2FALogin } from '@/lib/two-factor'
 import { AuditLogger } from '@/lib/audit-trail'
 import { prisma } from '@/lib/prisma'
 import crypto from 'crypto'
+import { logger } from '@/lib/logger'
 
 interface Verify2FALoginRequest {
   email: string
@@ -164,7 +165,7 @@ export default async function handler(
     }
 
   } catch (error) {
-    console.error('2FA Login Verification error:', error)
+    logger.error('2FA Login Verification error:', error)
     res.status(500).json({
       success: false,
       message: 'Erreur serveur'

@@ -35,45 +35,43 @@ model Session {
 }
 
 model User {
-  id                   String        @id @default(cuid())
+  id                   String           @id @default(cuid())
   name                 String?
-  nickname             String?
-  email                String?       @unique
+  email                String?          @unique
   emailVerified        DateTime?
   image                String?
-  createdAt            DateTime      @default(now())
-  updatedAt            DateTime      @updatedAt
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
   currentPeriodEnd     DateTime?
-  lastAnalysisReset    DateTime      @default(now())
-  monthlyAnalysisCount Int           @default(0)
-  stripeCustomerId     String?       @unique
-  stripeSubscriptionId String?       @unique
-  subscriptionStatus   String        @default("free")
+  lastAnalysisReset    DateTime         @default(now())
+  monthlyAnalysisCount Int              @default(0)
+  stripeCustomerId     String?          @unique
+  stripeSubscriptionId String?          @unique
+  subscriptionStatus   String           @default("free")
   password             String?
+  backupCodes          String[]         @default([])
+  twoFactorEnabled     Boolean          @default(false)
+  twoFactorSecret      String?
+  twoFactorVerified    DateTime?
   hashedPassword       String?
   resetToken           String?
   resetTokenExpiry     DateTime?
-  backupCodes          String[]      @default([])
-  twoFactorEnabled     Boolean       @default(false)
-  twoFactorSecret      String?
-  twoFactorVerified    DateTime?
-  
-  // Starter Pack (one-shot payant €4.99)
-  starterPackPurchased Boolean       @default(false) // A acheté le starter pack
-  starterPackUsed      Boolean       @default(false) // A épuisé le starter pack
-  starterAnalysisCount Int           @default(0)     // Analyses restantes (10 après achat)
-  starterSharesCount   Int           @default(0)     // Partages restants (3 après achat)
-  starterExportsCount  Int           @default(0)     // Exports restants (3 après achat)
-  starterPackActivated DateTime?                     // Date d'activation/achat
+  nickname             String?
+  starterAnalysisCount Int              @default(0)
+  starterExportsCount  Int              @default(0)
+  starterPackActivated DateTime?
+  starterPackUsed      Boolean          @default(false)
+  starterSharesCount   Int              @default(0)
+  starterPackPurchased Boolean          @default(false)
   accounts             Account[]
   collections          Collection[]
   favorites            Favorite[]
-  photos               Photo[]
-  sessions             Session[]
-  userSessions         UserSession[]
-  userPreferences      UserPreferences?
-  reports              Report[]
   feedbacks            Feedback[]
+  photos               Photo[]
+  reports              Report[]
+  sessions             Session[]
+  userPreferences      UserPreferences?
+  userSessions         UserSession[]
 
   @@index([subscriptionStatus])
   @@index([createdAt])
@@ -88,49 +86,47 @@ model VerificationToken {
 }
 
 model UserPreferences {
-  id                    String  @id @default(cuid())
-  userId                String  @unique
+  id                    String   @id @default(cuid())
+  userId                String   @unique
   displayName           String?
-  preferredAnalysisMode String  @default("professional")
-  defaultExportFormat   String  @default("pdf")
-  theme                 String  @default("cosmic")
-  language              String  @default("fr")
-  shareAnalytics        Boolean @default(true)
-  publicProfile         Boolean @default(false)
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
-  
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  preferredAnalysisMode String   @default("professional")
+  defaultExportFormat   String   @default("pdf")
+  theme                 String   @default("cosmic")
+  language              String   @default("fr")
+  shareAnalytics        Boolean  @default(true)
+  publicProfile         Boolean  @default(false)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
 
 model Photo {
-  id              String           @id @default(cuid())
-  userId          String
-  url             String
-  filename        String
-  analysis        String?
-  score           Float?
-  suggestions     String?
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  isTopPhoto      Boolean          @default(false)
-  improvements    String?
-  potentialScore  Float?
-  // NOUVEAUX CHAMPS TRACKING ET TYPES
-  photoType       String           @default("other") // portrait, landscape, street, macro, etc.
-  analysisTone    String           @default("professional") // professional, roast, expert
-  analysisLanguage String          @default("fr") // fr, en, es, de, it, pt
-  hasExifData     Boolean          @default(false)
-  exifData        String?          // JSON des données EXIF
-  sessionId       String?          // ID de session pour tracking
-  analysisMetadata String?         // JSON métadonnées d'analyse
-  partialScores   String?          // JSON scores détaillés (composition, lighting, etc.)
-  collectionItems CollectionItem[]
-  favorites       Favorite[]
-  reports         Report[]
-  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id               String           @id @default(cuid())
+  userId           String
+  url              String
+  filename         String
+  analysis         String?
+  score            Float?
+  suggestions      String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  isTopPhoto       Boolean          @default(false)
+  improvements     String?
+  potentialScore   Float?
+  analysisLanguage String           @default("fr")
+  analysisMetadata String?
+  analysisTone     String           @default("professional")
+  exifData         String?
+  hasExifData      Boolean          @default(false)
+  partialScores    String?
+  photoType        String           @default("other")
+  sessionId        String?
+  collectionItems  CollectionItem[]
+  favorites        Favorite[]
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reports          Report[]
 
   @@index([userId, createdAt])
   @@index([score])
@@ -224,22 +220,21 @@ model UserSession {
 }
 
 model Report {
-  id          String   @id @default(cuid())
-  reporterId  String
-  photoId     String?
-  photoUrl    String?
-  reason      String   // nudity, violence, hate, illegal, harassment, privacy, spam, other
-  details     String?
-  status      String   @default("pending") // pending, reviewed, resolved, dismissed
-  reporterIp  String?
-  reviewedBy  String?
-  reviewedAt  DateTime?
-  resolution  String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  reporter    User     @relation(fields: [reporterId], references: [id], onDelete: Cascade)
-  photo       Photo?   @relation(fields: [photoId], references: [id], onDelete: Cascade)
+  id         String    @id @default(cuid())
+  reporterId String
+  photoId    String?
+  photoUrl   String?
+  reason     String
+  details    String?
+  status     String    @default("pending")
+  reporterIp String?
+  reviewedBy String?
+  reviewedAt DateTime?
+  resolution String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  photo      Photo?    @relation(fields: [photoId], references: [id], onDelete: Cascade)
+  reporter   User      @relation(fields: [reporterId], references: [id], onDelete: Cascade)
 
   @@index([reporterId, createdAt])
   @@index([status, createdAt])
@@ -248,22 +243,22 @@ model Report {
 }
 
 model Feedback {
-  id          String   @id @default(cuid())
-  userId      String?
-  email       String?
-  type        String   // 'bug', 'feature', 'general', 'love', 'confusion'
-  category    String?  // 'interface', 'ai_analysis', 'performance', 'pricing'
-  rating      Int?     // 1-5 étoiles
-  title       String?  // Titre court du feedback
-  message     String   // Message principal
-  page        String?  // Page où le feedback a été donné
-  userAgent   String?
-  metadata    String?  // JSON avec contexte technique
-  status      String   @default("new") // 'new', 'read', 'implemented', 'ignored'
-  adminNotes  String?  // Notes internes pour admin
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  id         String   @id @default(cuid())
+  userId     String?
+  email      String?
+  type       String
+  category   String?
+  rating     Int?
+  title      String?
+  message    String
+  page       String?
+  userAgent  String?
+  metadata   String?
+  status     String   @default("new")
+  adminNotes String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User?    @relation(fields: [userId], references: [id])
 
   @@index([type, createdAt])
   @@index([status, createdAt])

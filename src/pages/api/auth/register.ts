@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { validatePassword } from '@/lib/password-validation'
 import { sendVerificationEmail } from '@/lib/email-service'
 import crypto from 'crypto'
+import { logger } from '@/lib/logger'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -96,11 +97,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const baseUrl = process.env.NEXTAUTH_URL || `https://${req.headers.host}`
       const verificationUrl = `${baseUrl}/api/auth/verify-email?token=${verificationToken}&email=${encodeURIComponent(email)}`
       
-      console.log('🔗 URL de vérification générée:', verificationUrl)
+      logger.debug('🔗 URL de vérification générée:', verificationUrl)
       await sendVerificationEmail(email, verificationUrl)
-      console.log('📧 Email de vérification envoyé à:', email)
+      logger.debug('📧 Email de vérification envoyé à:', email)
     } catch (emailError) {
-      console.error('❌ Erreur envoi email:', emailError)
+      logger.error('❌ Erreur envoi email:', emailError)
       // Ne pas faire échouer l'inscription si l'email échoue
     }
 
@@ -115,7 +116,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
 
   } catch (error) {
-    console.error('Erreur lors de l\'inscription:', error)
+    logger.error('Erreur lors de l\'inscription:', error)
     res.status(500).json({ error: 'Erreur interne du serveur' })
   }
 }

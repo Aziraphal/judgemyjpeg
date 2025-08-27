@@ -10,6 +10,7 @@ import TwoFactorManager from '@/components/TwoFactorManager'
 import ChangePasswordForm from '@/components/ChangePasswordForm'
 import SessionManager from '@/components/SessionManager'
 import { getUserDisplayName, getUserInitial } from '@/lib/user-display'
+import { logger } from '@/lib/logger'
 
 export default function SettingsPage() {
   const { data: session, status } = useSession()
@@ -61,7 +62,7 @@ export default function SettingsPage() {
         })
       }
     } catch (error) {
-      console.error('Erreur chargement préférences:', error)
+      logger.error('Erreur chargement préférences:', error)
       // Fallback vers localStorage
       const savedPrefs = localStorage.getItem(`userPrefs_${session?.user?.email}`)
       if (savedPrefs) {
@@ -73,7 +74,7 @@ export default function SettingsPage() {
             displayName: parsedPrefs.displayName || session?.user?.nickname || session?.user?.name || '',
           })
         } catch (error) {
-          console.error('Erreur lecture préférences localStorage:', error)
+          logger.error('Erreur lecture préférences localStorage:', error)
         }
       }
     }
@@ -81,8 +82,8 @@ export default function SettingsPage() {
 
   const handleSaveProfile = async () => {
     setIsSaving(true)
-    console.log('=== Tentative de sauvegarde ===')
-    console.log('User preferences:', userPreferences)
+    logger.debug('=== Tentative de sauvegarde ===')
+    logger.debug('User preferences:', userPreferences)
     
     try {
       const response = await fetch('/api/user/preferences', {
@@ -91,9 +92,9 @@ export default function SettingsPage() {
         body: JSON.stringify(userPreferences)
       })
       
-      console.log('Response status:', response.status)
+      logger.debug('Response status:', response.status)
       const data = await response.json()
-      console.log('Response data:', data)
+      logger.debug('Response data:', data)
       
       if (response.ok) {
         // Sauvegarder localement les préférences pour backup
@@ -113,7 +114,7 @@ export default function SettingsPage() {
         setMessage({ type: 'error', text: `❌ ${data.error || 'Erreur lors de la sauvegarde'}` })
       }
     } catch (error) {
-      console.error('Client error:', error)
+      logger.error('Client error:', error)
       setMessage({ type: 'error', text: '❌ Erreur de connexion. Veuillez réessayer.' })
     } finally {
       setIsSaving(false)
@@ -151,7 +152,7 @@ export default function SettingsPage() {
         setMessage({ type: 'error', text: `❌ ${errorData.error || 'Erreur lors de l\'export'}` })
       }
     } catch (error) {
-      console.error('Export error:', error)
+      logger.error('Export error:', error)
       setMessage({ type: 'error', text: '❌ Erreur de connexion. Réessayez plus tard.' })
     } finally {
       setIsExporting(false)
@@ -333,7 +334,7 @@ export default function SettingsPage() {
                       </p>
                       <SessionManager onUpdate={() => {
                         // Rafraîchir les données si nécessaire
-                        console.log('Sessions updated')
+                        logger.debug('Sessions updated')
                       }} />
                     </div>
                   </div>

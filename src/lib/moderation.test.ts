@@ -1,37 +1,38 @@
 // Tests basiques pour le système de modération
 import { moderateText, validateImageDimensions } from './moderation'
+import { logger } from '@/lib/logger'
 
 async function runTests() {
-  console.log('🧪 Tests système de modération\n')
+  logger.debug('🧪 Tests système de modération\n')
 
   // Test 1: Contenu safe
-  console.log('Test 1: Contenu safe')
+  logger.debug('Test 1: Contenu safe')
   const safeResult = await moderateText('vacances-plage-2024.jpg')
-  console.log('✓ Résultat:', safeResult.flagged ? '🚨 BLOQUÉ' : '✅ AUTORISÉ')
+  logger.debug('✓ Résultat:', safeResult.flagged ? '🚨 BLOQUÉ' : '✅ AUTORISÉ')
   
   // Test 2: Mot-clé interdit
-  console.log('\nTest 2: Mot-clé suspect')
+  logger.debug('\nTest 2: Mot-clé suspect')
   const suspectResult = await moderateText('photo-nue-plage.jpg')
-  console.log('✓ Résultat:', suspectResult.flagged ? '🚨 BLOQUÉ' : '✅ AUTORISÉ')
+  logger.debug('✓ Résultat:', suspectResult.flagged ? '🚨 BLOQUÉ' : '✅ AUTORISÉ')
   if (suspectResult.flagged) {
-    console.log('  Raison:', suspectResult.reason)
+    logger.debug('  Raison:', suspectResult.reason)
   }
 
   // Test 3: Violence
-  console.log('\nTest 3: Contenu violent')
+  logger.debug('\nTest 3: Contenu violent')
   const violentResult = await moderateText('scene-torture-guerre.jpg')
-  console.log('✓ Résultat:', violentResult.flagged ? '🚨 BLOQUÉ' : '✅ AUTORISÉ')
+  logger.debug('✓ Résultat:', violentResult.flagged ? '🚨 BLOQUÉ' : '✅ AUTORISÉ')
   if (violentResult.flagged) {
-    console.log('  Raison:', violentResult.reason)
+    logger.debug('  Raison:', violentResult.reason)
   }
 
   // Test 4: Dimensions valides
-  console.log('\nTest 4: Dimensions image')
-  console.log('✓ 1920x1080:', validateImageDimensions(1920, 1080) ? '✅ VALIDE' : '❌ INVALIDE')
-  console.log('✓ 50x50:', validateImageDimensions(50, 50) ? '✅ VALIDE' : '❌ INVALIDE')
-  console.log('✓ 3000x100:', validateImageDimensions(3000, 100) ? '✅ VALIDE' : '❌ INVALIDE')
+  logger.debug('\nTest 4: Dimensions image')
+  logger.debug('✓ 1920x1080:', validateImageDimensions(1920, 1080) ? '✅ VALIDE' : '❌ INVALIDE')
+  logger.debug('✓ 50x50:', validateImageDimensions(50, 50) ? '✅ VALIDE' : '❌ INVALIDE')
+  logger.debug('✓ 3000x100:', validateImageDimensions(3000, 100) ? '✅ VALIDE' : '❌ INVALIDE')
 
-  console.log('\n✅ Tests terminés')
+  logger.debug('\n✅ Tests terminés')
 }
 
 // Exporter pour usage en développement

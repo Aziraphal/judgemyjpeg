@@ -6,6 +6,7 @@
 import { sendAccountLockoutNotification } from './email-service'
 import { getFullDeviceContext } from './device-detection'
 import type { NextApiRequest } from 'next'
+import { logger } from '@/lib/logger'
 
 export interface PasswordValidationResult {
   isValid: boolean
@@ -200,7 +201,7 @@ export async function recordFailedLogin(identifier: string, req?: NextApiRequest
         unlockTime: new Date(attempt.lockedUntil)
       })
     } catch (error) {
-      console.error('Failed to send account lockout notification:', error)
+      logger.error('Failed to send account lockout notification:', error)
       // Ne pas faire échouer la fonction si l'email échoue
     }
   }

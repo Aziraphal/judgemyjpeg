@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client'
 import crypto from 'crypto'
 import { Resend } from 'resend'
+import { logger } from '@/lib/logger'
 
 const prisma = new PrismaClient()
 const resend = new Resend(process.env.RESEND_API_KEY)
@@ -93,7 +94,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
 
   } catch (error) {
-    console.error('Erreur forgot-password:', error)
+    logger.error('Erreur forgot-password:', error)
     res.status(500).json({ error: 'Erreur serveur' })
   } finally {
     await prisma.$disconnect()

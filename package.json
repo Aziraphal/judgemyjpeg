@@ -14,13 +14,16 @@
     "lighthouse": "lhci autorun",
     "lighthouse:local": "lhci collect --url=http://localhost:3005 && lhci assert",
     "load-test": "node scripts/load-test.js",
-    "load-test:prod": "TEST_URL=https://www.judgemyjpeg.fr node scripts/load-test.js"
+    "load-test:prod": "TEST_URL=https://www.judgemyjpeg.fr node scripts/load-test.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "@google/generative-ai": "^0.1.3",
     "@next-auth/prisma-adapter": "^1.0.7",
     "@otplib/preset-default": "^12.0.1",
-    "@prisma/client": "^5.6.0",
+    "@prisma/client": "^6.15.0",
     "@radix-ui/react-popover": "^1.1.15",
     "@sentry/nextjs": "^10.5.0",
     "@types/archiver": "^6.0.3",
@@ -57,6 +60,8 @@
   "devDependencies": {
     "@lhci/cli": "^0.10.0",
     "@next/bundle-analyzer": "^15.4.6",
+    "@testing-library/jest-dom": "^6.8.0",
+    "@testing-library/react": "^16.3.0",
     "@types/formidable": "^3.4.5",
     "@types/node": "^20",
     "@types/react": "^18",
@@ -65,7 +70,9 @@
     "autoprefixer": "^10",
     "eslint": "^8",
     "eslint-config-next": "14.0.0",
+    "jest": "^30.1.1",
+    "jest-environment-jsdom": "^30.1.1",
     "postcss": "^8",
-    "prisma": "^5.6.0"
+    "prisma": "^6.15.0"
   }
 }
