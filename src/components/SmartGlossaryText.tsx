@@ -62,11 +62,16 @@ export default function SmartGlossaryText({ text, className = '' }: SmartGlossar
               replacement: (
                 <GlossaryTooltip key={uniqueKey} term={term}>
                   <button
-                    className="inline-flex items-center space-x-1 text-neon-cyan hover:text-neon-pink transition-colors border-b border-dotted border-neon-cyan/50 hover:border-neon-pink/50 cursor-pointer"
+                    className="inline-flex items-center space-x-1 text-neon-cyan hover:text-neon-pink transition-colors border-b border-dotted border-neon-cyan/50 hover:border-neon-pink/50 cursor-pointer touch-manipulation"
                     title={`Voir la définition de "${term}"`}
+                    onClick={(e) => {
+                      // Prévenir la propagation sur mobile pour éviter les conflits
+                      e.preventDefault()
+                      e.stopPropagation()
+                    }}
                   >
-                    <span>{match}</span>
-                    <span className="text-xs opacity-75">🔍</span>
+                    <span className="break-words">{match}</span>
+                    <span className="text-xs opacity-75 hidden sm:inline">🔍</span>
                   </button>
                 </GlossaryTooltip>
               )
@@ -127,14 +132,15 @@ export default function SmartGlossaryText({ text, className = '' }: SmartGlossar
       {termsToDetect.some(({ variants }) => 
         variants.some(variant => text.toLowerCase().includes(variant.toLowerCase()))
       ) && (
-        <div className="mt-2 flex items-center justify-between text-xs">
-          <span className="text-text-muted flex items-center space-x-1">
+        <div className="mt-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs">
+          <span className="text-text-muted flex items-center space-x-1 flex-1">
             <span>💡</span>
-            <span>Cliquez sur les termes surlignés pour voir leur définition</span>
+            <span className="hidden sm:inline">Cliquez sur les termes surlignés pour voir leur définition</span>
+            <span className="sm:hidden">Touchez les mots bleus pour les définitions</span>
           </span>
           <button 
             onClick={() => setModalOpen(true)}
-            className="text-neon-cyan hover:text-neon-pink transition-colors flex items-center space-x-1"
+            className="text-neon-cyan hover:text-neon-pink transition-colors flex items-center space-x-1 self-start sm:self-auto touch-manipulation"
           >
             <span>📚</span>
             <span>Glossaire</span>

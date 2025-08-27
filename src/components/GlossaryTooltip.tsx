@@ -34,10 +34,12 @@ export default function GlossaryTooltip({ term, children }: GlossaryTooltipProps
       
       <Popover.Portal>
         <Popover.Content
-          className="z-50 max-w-sm p-4 bg-cosmic-dark border border-cosmic-glassborder rounded-lg shadow-xl backdrop-blur-lg"
+          className="z-50 w-80 max-w-[calc(100vw-2rem)] p-4 bg-cosmic-dark border border-cosmic-glassborder rounded-lg shadow-xl backdrop-blur-lg"
           sideOffset={8}
-          align="start"
+          align="center"
+          alignOffset={0}
           collisionPadding={16}
+          avoidCollisions={true}
         >
           {/* Header avec terme et niveau */}
           <div className="flex items-center justify-between mb-3">
