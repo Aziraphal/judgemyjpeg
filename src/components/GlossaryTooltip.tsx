@@ -34,16 +34,16 @@ export default function GlossaryTooltip({ term, children }: GlossaryTooltipProps
       
       <Popover.Portal>
         <Popover.Content
-          className="z-50 w-80 max-w-[calc(100vw-2rem)] p-4 bg-cosmic-dark border border-cosmic-glassborder rounded-lg shadow-xl backdrop-blur-lg"
+          className="z-50 w-72 max-w-[calc(100vw-1rem)] p-3 bg-cosmic-dark border border-cosmic-glassborder rounded-lg shadow-xl backdrop-blur-lg text-sm"
           sideOffset={8}
-          align="center"
+          align="start"
           alignOffset={0}
-          collisionPadding={16}
+          collisionPadding={8}
           avoidCollisions={true}
         >
           {/* Header avec terme et niveau */}
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-bold text-text-white text-lg">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="font-bold text-text-white text-base">
               {glossaryTerm.term}
             </h3>
             <span className={`text-xs px-2 py-1 rounded border ${getLevelColor(glossaryTerm.level)}`}>
@@ -52,18 +52,18 @@ export default function GlossaryTooltip({ term, children }: GlossaryTooltipProps
           </div>
 
           {/* Définition principale */}
-          <p className="text-text-gray text-sm leading-relaxed mb-3">
+          <p className="text-text-gray text-xs leading-relaxed mb-2">
             {glossaryTerm.definition}
           </p>
 
           {/* Exemple si disponible */}
           {glossaryTerm.example && (
-            <div className="bg-cosmic-glass p-3 rounded-lg mb-3">
+            <div className="bg-cosmic-glass p-2 rounded-lg mb-2">
               <div className="text-xs text-text-muted mb-1 flex items-center">
                 <span className="mr-1">💡</span>
                 Exemple :
               </div>
-              <div className="text-text-white text-sm italic">
+              <div className="text-text-white text-xs italic">
                 "{glossaryTerm.example}"
               </div>
             </div>
@@ -80,7 +80,7 @@ export default function GlossaryTooltip({ term, children }: GlossaryTooltipProps
               className="text-xs text-neon-cyan hover:text-neon-pink transition-colors flex items-center space-x-1"
             >
               <span>📚</span>
-              <span>Voir plus</span>
+              <span className="hidden sm:inline">Voir plus</span>
             </a>
           </div>
 
