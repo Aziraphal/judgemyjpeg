@@ -1,6 +1,6 @@
 {
-  "timestamp": "2025-08-28T08:10:54.397Z",
-  "target": "https://judgemyjpeg.fr",
+  "timestamp": "2025-08-28T08:58:45.469Z",
+  "target": "https://www.judgemyjpeg.fr",
   "tests": {
     "SSL/TLS Configuration": {
       "status": "pass",
@@ -14,22 +14,26 @@
       }
     },
     "Security Headers": {
-      "status": "partial",
+      "status": "pass",
       "details": {
         "present": [
-          "x-frame-options",
-          "referrer-policy"
-        ],
-        "missing": [
           "strict-transport-security",
           "content-security-policy",
+          "x-frame-options",
           "x-content-type-options",
+          "referrer-policy",
           "x-xss-protection",
           "permissions-policy"
         ],
+        "missing": [],
         "headers": {
-          "x-frame-options": "SAMEORIGIN",
-          "referrer-policy": "same-origin"
+          "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+          "content-security-policy": "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://www.googletagmanager.com; style-src 'self'    'unsafe-inline'; img-src 'self' data: blob: https://res.cloudinary.com https://lh3.googleusercontent.com; connect-src 'self' https://api.stripe.com   https://generativelanguage.googleapis.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com   https://*.google-analytics.com; frame-src https://js.stripe.com; font-src 'self' data:",
+          "x-frame-options": "DENY",
+          "x-content-type-options": "nosniff",
+          "referrer-policy": "strict-origin-when-cross-origin",
+          "x-xss-protection": "1; mode=block",
+          "permissions-policy": "camera=(), microphone=(), geolocation=()"
         }
       }
     },
@@ -37,9 +41,9 @@
       "status": "info",
       "details": {
         "aRecords": 2,
-        "mxRecords": 3,
-        "spfRecord": "present",
-        "txtRecordsCount": 3
+        "mxRecords": 0,
+        "spfRecord": "missing",
+        "txtRecordsCount": 0
       }
     },
     "Cookie Security": {
@@ -51,9 +55,24 @@
       }
     },
     "Content Security Policy": {
-      "status": "fail",
+      "status": "warning",
       "details": {
-        "present": false
+        "present": true,
+        "directives": [
+          "default-src",
+          "script-src",
+          "style-src",
+          "img-src",
+          "connect-src",
+          "frame-src",
+          "font-src"
+        ],
+        "dangerous": [
+          "unsafe-inline",
+          "unsafe-eval",
+          "wildcard (*)"
+        ],
+        "policy": "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://www.googletagmanager.com; style-src 'self'    'unsafe-inline'; img-src 'self' data: blob: https://res.cloudinary.com https://lh3.googleusercontent.com; connect-src 'self' https://api.stripe.com   https://generativelanguage.googleapis.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com   https://*.google-analytics.com; frame-src https://js.stripe.com; font-src 'self' data:"
       }
     },
     "HTTP Methods": {
@@ -67,11 +86,11 @@
           "PATCH"
         ],
         "results": {
-          "OPTIONS": 521,
+          "OPTIONS": 405,
           "TRACE": 405,
-          "PUT": 521,
-          "DELETE": 521,
-          "PATCH": 525
+          "PUT": 405,
+          "DELETE": 405,
+          "PATCH": 405
         },
         "allowed": []
       }
@@ -83,10 +102,15 @@
           {
             "header": "server",
             "value": "cloudflare"
+          },
+          {
+            "header": "x-powered-by",
+            "value": "Next.js"
           }
         ],
         "headers": {
-          "server": "cloudflare"
+          "server": "cloudflare",
+          "x-powered-by": "Next.js"
         }
       }
     },
@@ -94,18 +118,18 @@
       "status": "pass",
       "details": {
         "statusCode": 301,
-        "location": "https://www.judgemyjpeg.fr",
+        "location": "https://www.judgemyjpeg.fr/",
         "redirectsToHTTPS": true
       }
     }
   },
-  "score": 78,
+  "score": 90,
   "recommendations": [
     {
       "priority": "medium",
-      "category": "Security Headers",
-      "issue": "Missing headers: strict-transport-security, content-security-policy, x-content-type-options, x-xss-protection, permissions-policy",
-      "recommendation": "Implement all security headers for complete protection"
+      "category": "CSP",
+      "issue": "Dangerous CSP directives: unsafe-inline, unsafe-eval, wildcard (*)",
+      "recommendation": "Remove unsafe-inline and unsafe-eval if possible"
     }
   ]
 }

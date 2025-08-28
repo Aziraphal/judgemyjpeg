@@ -7,20 +7,33 @@
   "background_color": "#000000",
   "theme_color": "#FF006E",
   "orientation": "portrait-primary",
-  "categories": ["photography", "entertainment", "productivity"],
+  "categories": [
+    "photography",
+    "entertainment",
+    "productivity"
+  ],
   "lang": "fr-FR",
   "scope": "/",
   "icons": [
     {
-      "src": "/favicon.svg",
-      "sizes": "32x32",
-      "type": "image/svg+xml"
+      "src": "/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
     },
     {
-      "src": "/logo.svg",
-      "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
     }
   ],
   "shortcuts": [
@@ -32,14 +45,14 @@
     },
     {
       "name": "Dashboard",
-      "short_name": "Dashboard", 
+      "short_name": "Dashboard",
       "description": "Voir vos analyses et statistiques",
       "url": "/dashboard"
     },
     {
       "name": "Top Photos",
       "short_name": "Top",
-      "description": "Explorer les meilleures photos de la communauté", 
+      "description": "Explorer les meilleures photos de la communauté",
       "url": "/gallery"
     }
   ],

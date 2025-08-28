@@ -8,8 +8,8 @@ const http = require('http')
 const dns = require('dns').promises
 const crypto = require('crypto')
 
-const TARGET_URL = 'https://judgemyjpeg.fr'
-const TARGET_DOMAIN = 'judgemyjpeg.fr'
+const TARGET_URL = 'https://www.judgemyjpeg.fr'
+const TARGET_DOMAIN = 'www.judgemyjpeg.fr'
 
 class SecurityScanner {
     constructor() {

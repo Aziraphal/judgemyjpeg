@@ -1,4 +1,7 @@
-<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+<!-- PNG 32x32 généré depuis favicon.svg -->
+            <!-- Utilise un service comme https://realfavicongenerator.net pour les vrais PNG -->
+            <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+              <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
   <!-- Background rose magenta -->
   <rect width="32" height="32" rx="6" fill="#FF006E"/>
   
@@ -21,3 +24,4 @@
     <circle cx="22" cy="8" r="0.8"/>
   </g>
 </svg>
+            </svg>
