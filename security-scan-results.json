@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-08-27T22:21:51.401Z",
+  "timestamp": "2025-08-28T08:10:54.397Z",
   "target": "https://judgemyjpeg.fr",
   "tests": {
     "SSL/TLS Configuration": {
@@ -69,8 +69,8 @@
         "results": {
           "OPTIONS": 521,
           "TRACE": 405,
-          "PUT": 525,
-          "DELETE": 525,
+          "PUT": 521,
+          "DELETE": 521,
           "PATCH": 525
         },
         "allowed": []
