@@ -1,23 +1,25 @@
-<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="32" height="32"><svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
   <!-- Background rose magenta -->
-  <rect width="32" height="32" rx="6" fill="#FF006E"/>
+  <rect width="32" height="32" rx="6" fill="#FF006E"></rect>
   
   <!-- Camera icon blanc -->
   <g fill="#ffffff">
     <!-- Camera body -->
-    <rect x="6" y="12" width="20" height="12" rx="2"/>
+    <rect x="6" y="12" width="20" height="12" rx="2"></rect>
     <!-- Lens outer -->
-    <circle cx="16" cy="18" r="4"/>
+    <circle cx="16" cy="18" r="4"></circle>
     <!-- Lens inner -->
-    <circle cx="16" cy="18" r="2.5" fill="#FF006E"/>
+    <circle cx="16" cy="18" r="2.5" fill="#FF006E"></circle>
     <!-- Flash -->
-    <rect x="22" y="14" width="2" height="2" rx="1"/>
+    <rect x="22" y="14" width="2" height="2" rx="1"></rect>
   </g>
   
   <!-- AI indicator dots -->
   <g fill="#00F5FF" opacity="0.9">
-    <circle cx="10" cy="8" r="0.8"/>
-    <circle cx="16" cy="8" r="0.8"/>
-    <circle cx="22" cy="8" r="0.8"/>
+    <circle cx="10" cy="8" r="0.8"></circle>
+    <circle cx="16" cy="8" r="0.8"></circle>
+    <circle cx="22" cy="8" r="0.8"></circle>
   </g>
-</svg>
+</svg><style>@media (prefers-color-scheme: light) { :root { filter: none; } }
+@media (prefers-color-scheme: dark) { :root { filter: none; } }
+</style></svg>
