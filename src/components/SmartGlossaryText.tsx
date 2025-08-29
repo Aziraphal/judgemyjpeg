@@ -6,9 +6,10 @@ import GlossaryTooltip from './GlossaryTooltip'
 interface SmartGlossaryTextProps {
   text: string
   className?: string
+  mode?: 'professional' | 'expert' | 'roast'
 }
 
-export default function SmartGlossaryText({ text, className = '' }: SmartGlossaryTextProps) {
+export default function SmartGlossaryText({ text, className = '', mode = 'professional' }: SmartGlossaryTextProps) {
   const [highlightedTerms, setHighlightedTerms] = useState<Set<string>>(new Set())
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedTerm, setSelectedTerm] = useState<string | null>(null)
@@ -24,7 +25,7 @@ export default function SmartGlossaryText({ text, className = '' }: SmartGlossar
         // Variantes communes
         t.term === 'Règle des tiers' ? ['règle des tiers', 'tiers'] : [],
         t.term === 'Bokeh' ? ['bokeh'] : [],
-        t.term === 'Stop (exposition)' ? ['stops', '+1 stop', '-1 stop', '+2 stops', '-2 stops', '+3 stops', '-3 stops'] : [],
+        t.term === 'Stop (exposition)' && mode === 'expert' ? ['stops', '+1 stop', '-1 stop', '+2 stops', '-2 stops', '+3 stops', '-3 stops'] : [],
         t.term === 'Profondeur de champ' ? ['profondeur de champ', 'pdc'] : [],
         t.term === 'Balance des blancs' ? ['balance des blancs', 'balance blancs'] : [],
         t.term === 'ISO' ? ['ISO', 'iso'] : [],
@@ -157,7 +158,7 @@ export default function SmartGlossaryText({ text, className = '' }: SmartGlossar
 }
 
 // Version simplifiée pour les titres et textes courts
-export function SmartGlossaryInline({ text, className = '' }: SmartGlossaryTextProps) {
+export function SmartGlossaryInline({ text, className = '', mode = 'professional' }: SmartGlossaryTextProps) {
   const termsToDetect = ['règle des tiers', 'bokeh', 'stops', 'profondeur de champ', 'ISO', 'ouverture']
   
   const hasGlossaryTerms = termsToDetect.some(term => 
@@ -168,5 +169,5 @@ export function SmartGlossaryInline({ text, className = '' }: SmartGlossaryTextP
     return <span className={className}>{text}</span>
   }
 
-  return <SmartGlossaryText text={text} className={className} />
+  return <SmartGlossaryText text={text} className={className} mode={mode} />
 }

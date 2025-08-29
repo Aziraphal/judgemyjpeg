@@ -469,6 +469,7 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
                 <SmartGlossaryText 
                   text={suggestion} 
                   className="text-text-white leading-relaxed text-sm sm:text-base break-words" 
+                  mode={tone}
                 />
               </div>
             </li>
@@ -515,6 +516,7 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
                     <SmartGlossaryText 
                       text={tip.tip} 
                       className="text-text-gray leading-relaxed text-xs sm:text-sm break-words" 
+                      mode={tone}
                     />
                   </div>
                 </div>
@@ -563,6 +565,7 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
                     <SmartGlossaryText 
                       text={rec.suggestion} 
                       className="text-text-gray leading-relaxed text-xs sm:text-sm mb-3 break-words" 
+                      mode={tone}
                     />
                     <div className="text-xs text-neon-pink font-semibold break-words">
                       ✨ {rec.expectedImprovement}
