@@ -25,7 +25,7 @@ export default function SmartGlossaryText({ text, className = '', mode = 'profes
         // Variantes communes
         t.term === 'Règle des tiers' ? ['règle des tiers', 'tiers'] : [],
         t.term === 'Bokeh' ? ['bokeh'] : [],
-        t.term === 'Stop (exposition)' && mode === 'expert' ? ['stops', '+1 stop', '-1 stop', '+2 stops', '-2 stops', '+3 stops', '-3 stops'] : [],
+        // t.term === 'Stop (exposition)' ? ['stops', '+1 stop', '-1 stop', '+2 stops', '-2 stops', '+3 stops', '-3 stops'] : [], // Désactivé
         t.term === 'Profondeur de champ' ? ['profondeur de champ', 'pdc'] : [],
         t.term === 'Balance des blancs' ? ['balance des blancs', 'balance blancs'] : [],
         t.term === 'ISO' ? ['ISO', 'iso'] : [],
