@@ -8,7 +8,7 @@ import ExifDisplay from '@/components/ExifDisplay'
 import { PDFExporter } from '@/services/pdf-export'
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
-// import SmartGlossaryText from '@/components/SmartGlossaryText' // Désactivé - tooltips gênants pour UX
+import SmartGlossaryText from '@/components/SmartGlossaryText'
 import { useTranslations } from '@/hooks/useTranslations'
 import { logger } from '@/lib/logger'
 
@@ -466,9 +466,10 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
             <li key={index} className="flex items-start glass-card p-3 sm:p-4 hover:bg-cosmic-glassborder transition-all duration-300">
               <span className="text-neon-pink mr-2 sm:mr-3 text-lg sm:text-xl flex-shrink-0 mt-0.5">✨</span>
               <div className="flex-1 min-w-0">
-                <span className="text-text-white leading-relaxed text-sm sm:text-base break-words">
-                  {suggestion}
-                </span>
+                <SmartGlossaryText 
+                  text={suggestion} 
+                  className="text-text-white leading-relaxed text-sm sm:text-base break-words" 
+                />
               </div>
             </li>
           ))}
@@ -511,9 +512,10 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
                     </span>
                   </div>
                   <div className="min-w-0">
-                    <span className="text-text-gray leading-relaxed text-xs sm:text-sm break-words">
-                      {tip.tip}
-                    </span>
+                    <SmartGlossaryText 
+                      text={tip.tip} 
+                      className="text-text-gray leading-relaxed text-xs sm:text-sm break-words" 
+                    />
                   </div>
                 </div>
               )
@@ -558,9 +560,10 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
                     </span>
                   </div>
                   <div className="min-w-0">
-                    <span className="text-text-gray leading-relaxed text-xs sm:text-sm mb-3 break-words">
-                      {rec.suggestion}
-                    </span>
+                    <SmartGlossaryText 
+                      text={rec.suggestion} 
+                      className="text-text-gray leading-relaxed text-xs sm:text-sm mb-3 break-words" 
+                    />
                     <div className="text-xs text-neon-pink font-semibold break-words">
                       ✨ {rec.expectedImprovement}
                     </div>
