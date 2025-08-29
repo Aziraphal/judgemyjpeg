@@ -217,33 +217,27 @@ export default function AnalyzePage() {
               {/* Options toujours visibles sur desktop */}
               <div className="hidden md:flex items-center space-x-2">
                 {/* Sélecteur de langue */}
-                <RichTooltip 
-                  title="Langue d'analyse"
-                  description="Choisissez la langue dans laquelle vous souhaitez recevoir votre analyse détaillée"
-                  icon="🌍"
-                >
-                  <div className="relative" data-tutorial="language-selector">
-                    <select
-                      value={selectedLanguage}
-                      onChange={(e) => setSelectedLanguage(e.target.value as AnalysisLanguage)}
-                      className="btn-neon-secondary text-sm appearance-none pr-8 cursor-pointer"
-                      style={{
-                        color: 'white',
-                        backgroundColor: 'rgba(15, 23, 42, 0.9)'
-                      }}
-                    >
-                      <option value="fr" style={{ backgroundColor: '#1e293b', color: 'white' }}>🇫🇷 Français</option>
-                      <option value="en" style={{ backgroundColor: '#1e293b', color: 'white' }}>🇬🇧 English</option>
-                      <option value="es" style={{ backgroundColor: '#1e293b', color: 'white' }}>🇪🇸 Español</option>
-                      <option value="de" style={{ backgroundColor: '#1e293b', color: 'white' }}>🇩🇪 Deutsch</option>
-                      <option value="it" style={{ backgroundColor: '#1e293b', color: 'white' }}>🇮🇹 Italiano</option>
-                      <option value="pt" style={{ backgroundColor: '#1e293b', color: 'white' }}>🇵🇹 Português</option>
-                    </select>
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                      <span className="text-text-gray">▼</span>
-                    </div>
+                <div className="relative" data-tutorial="language-selector">
+                  <select
+                    value={selectedLanguage}
+                    onChange={(e) => setSelectedLanguage(e.target.value as AnalysisLanguage)}
+                    className="btn-neon-secondary text-sm appearance-none pr-8 cursor-pointer"
+                    style={{
+                      color: 'white',
+                      backgroundColor: 'rgba(15, 23, 42, 0.9)'
+                    }}
+                  >
+                    <option value="fr" style={{ backgroundColor: '#1e293b', color: 'white' }}>🇫🇷 Français</option>
+                    <option value="en" style={{ backgroundColor: '#1e293b', color: 'white' }}>🇬🇧 English</option>
+                    <option value="es" style={{ backgroundColor: '#1e293b', color: 'white' }}>🇪🇸 Español</option>
+                    <option value="de" style={{ backgroundColor: '#1e293b', color: 'white' }}>🇩🇪 Deutsch</option>
+                    <option value="it" style={{ backgroundColor: '#1e293b', color: 'white' }}>🇮🇹 Italiano</option>
+                    <option value="pt" style={{ backgroundColor: '#1e293b', color: 'white' }}>🇵🇹 Português</option>
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                    <span className="text-text-gray">▼</span>
                   </div>
-                </RichTooltip>
+                </div>
 
                 {/* Bouton tutorial */}
                 <ContextualTooltip content={tutorialCompleted ? "Relancer le tutoriel" : "Démarrer le tutoriel"}>
@@ -318,16 +312,10 @@ export default function AnalyzePage() {
                 {/* Colonne gauche : Modes d'analyse */}
                 <div>
                   <div className="glass-card p-6" data-tutorial="tone-selector">
-                    <RichTooltip 
-                      title="Modes d'analyse"
-                      description="Chaque mode offre une perspective différente sur votre photo. Choisissez selon votre humeur !"
-                      icon="🎭"
-                    >
-                      <h2 className="text-xl font-bold text-text-white mb-6 flex items-center cursor-help">
-                        <span className="text-neon-pink mr-3">🎭</span>
-                        Mode d'analyse
-                      </h2>
-                    </RichTooltip>
+                    <h2 className="text-xl font-bold text-text-white mb-6 flex items-center">
+                      <span className="text-neon-pink mr-3">🎭</span>
+                      Mode d'analyse
+                    </h2>
                     
                     <ToneSelector 
                       selectedTone={selectedTone}
@@ -341,16 +329,10 @@ export default function AnalyzePage() {
                 {/* Colonne droite : Upload photo */}
                 <div>
                   <div className="glass-card p-6 h-full" data-tutorial="photo-upload">
-                    <RichTooltip 
-                      title="Upload de photo"
-                      description="Supports JPG, PNG, WebP jusqu'à 10MB. Glissez-déposez ou cliquez pour sélectionner."
-                      icon="📸"
-                    >
-                      <h2 className="text-xl font-bold text-text-white mb-6 flex items-center cursor-help">
-                        <span className="text-neon-cyan mr-3">📸</span>
-                        Votre photo
-                      </h2>
-                    </RichTooltip>
+                    <h2 className="text-xl font-bold text-text-white mb-6 flex items-center">
+                      <span className="text-neon-cyan mr-3">📸</span>
+                      Votre photo
+                    </h2>
                     
                     <PhotoUpload 
                       onAnalysisComplete={handleAnalysisComplete} 
