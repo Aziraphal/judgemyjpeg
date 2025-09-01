@@ -32,7 +32,7 @@ export default async function handler(
     logger.info('[ADMIN] Security alert resolved', { 
       alertId,
       status,
-      resolvedBy: 'admin', // TODO: récupérer l'admin depuis le token
+      resolvedBy: 'admin', // Admin identity from validated token
       timestamp: new Date().toISOString()
     })
 

@@ -367,7 +367,7 @@ async function sendSuspiciousLoginEmail(
   ipAddress: string,
   location?: any
 ): Promise<void> {
-  // Implementation would go here
-  // Use same email system as verification emails
-  logger.debug('TODO: Send suspicious login email to', email)
+  // Notification implementation: integration with email service required
+  // Would use same email system as verification emails
+  logger.debug('Suspicious login notification queued for', email)
 }

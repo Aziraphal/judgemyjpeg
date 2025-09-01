@@ -57,7 +57,8 @@ export async function withSecureSession(
       }
     }
 
-    // TODO: Intégrer validateSession() si on veut une double validation
+    // Session validation: using NextAuth's built-in validation for now
+    // Additional custom validation can be added here if needed
     // const sessionValidation = await validateSession(sessionId, req)
     // if (!sessionValidation.isValid) {
     //   ctx.isValid = false

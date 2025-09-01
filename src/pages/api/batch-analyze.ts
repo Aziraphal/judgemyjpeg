@@ -173,7 +173,7 @@ export default async function handler(
         await prisma.photo.create({
           data: {
             filename: image.filename,
-            url: `data:image/jpeg;base64,${image.data}`, // Temporaire pour la démo
+            url: `data:image/jpeg;base64,${image.data}`, // Base64 inline pour analyse batch
             score: analysis.score,
             analysis: analysis as any,
             userId: user.id

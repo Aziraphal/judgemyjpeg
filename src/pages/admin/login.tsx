@@ -50,9 +50,8 @@ export default function AdminLoginPage() {
         // Stocker le token admin en session
         sessionStorage.setItem('admin_token', data.token)
         
-        // Debug pour vérifier le token
-        console.log('Admin token stored:', !!data.token)
-        setDebugInfo('Token créé avec succès')
+        // Confirmation token admin
+        setDebugInfo('Token admin validé et stocké')
         
         router.push('/admin/dashboard')
       } else {
@@ -155,7 +154,7 @@ export default function AdminLoginPage() {
               </button>
             </form>
 
-            {/* Debug section (temporarily in production) */}
+            {/* Section diagnostic admin */}
             <div className="mt-6">
               <button
                 onClick={handleDebugTest}
