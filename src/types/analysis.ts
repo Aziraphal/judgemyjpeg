@@ -245,6 +245,11 @@ export interface PhotoAnalysis {
     difficulty: 'facile' | 'moyen' | 'difficile'
     scoreGain: number
   }[]
+  retouchPotential: {
+    level: 'high' | 'medium' | 'low'
+    score: number
+    reason: string
+  }
   toolRecommendations: {
     lightroom?: string[]
     photoshop?: string[]

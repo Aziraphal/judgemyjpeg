@@ -277,6 +277,11 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
           "scoreGain": [TOUJOURS UN GAIN POSITIF entre 1 et 25 points - JAMAIS négatif]
         }
       ],
+      "retouchPotential": {
+        "level": "high|medium|low",
+        "score": [Score de 1 à 100 indiquant le potentiel d'amélioration par retouche],
+        "reason": "Explication courte du potentiel de retouche"
+      },
       "toolRecommendations": {
         "lightroom": [
           "Ombres : +30",
@@ -333,12 +338,22 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
     📸 SECTION "nextShotTips" : Conseils pour améliorer la PROCHAINE PRISE de vue
     🎨 SECTION "editingRecommendations" : Suggestions pour retoucher CETTE PHOTO ACTUELLE
 
-    ⚡ OBLIGATIONS POUR "toolRecommendations" :
-    • Lightroom : DONNE DES VALEURS PRÉCISES (exemple: "Ombres : +30", "Contraste : +15", "Clarté : +10")
-    • Snapseed : DONNE DES ACTIONS PRÉCISES (exemple: "Détails → Netteté : +20", "HDR → Intensité : +15")
-    • ADAPTE les valeurs selon cette photo spécifique (pas de valeurs génériques)
-    • Utilise des réglages réalistes entre -50 et +50
-    • Mentionne les outils spécifiques de chaque logiciel (filtres, masques, etc.)
+    ⚡ OBLIGATIONS POUR "retouchPotential" :
+    • ANALYSE le potentiel d'amélioration réel de cette photo par retouche
+    • HIGH (score 70-100) : Photo avec défauts marqués, forte marge d'amélioration
+    • MEDIUM (score 30-70) : Photo correcte avec améliorations possibles
+    • LOW (score 0-30) : Photo déjà excellente, risque de sur-traitement
+    • SOIS HONNÊTE : si la photo est déjà parfaite, dis-le !
+
+    ⚡ OBLIGATIONS POUR "toolRecommendations" SÉCURISÉS :
+    • ADAPTE l'intensité des conseils selon le potentiel de retouche :
+      - Potentiel HIGH : valeurs marquées (+20 à +50)
+      - Potentiel MEDIUM : valeurs modérées (+10 à +30) 
+      - Potentiel LOW : valeurs subtiles (+2 à +15)
+    • Lightroom : VALEURS PRÉCISES adaptées au potentiel ("Ombres : +5" si photo déjà bonne)
+    • Snapseed : ACTIONS PRÉCISES adaptées ("Détails → Netteté : +8" si déjà nette)
+    • JAMAIS de conseils qui risquent de dégrader (sur-exposition, sur-saturation)
+    • Utilise des réglages réalistes et SÉCURISÉS
     `
 
     const response = await openai.chat.completions.create({

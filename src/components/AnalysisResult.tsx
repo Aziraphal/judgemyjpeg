@@ -541,6 +541,45 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
             <span className="text-2xl sm:text-3xl mr-2 sm:mr-3">🎨</span>
             <span className="text-neon-pink">Conseils de retouche</span>
           </h3>
+
+          {/* Indicateur de potentiel de retouche */}
+          {analysis.retouchPotential && (
+            <div className="mb-6">
+              <div className={`p-4 rounded-lg border ${
+                analysis.retouchPotential.level === 'high' 
+                  ? 'bg-green-500/10 border-green-500/30' 
+                  : analysis.retouchPotential.level === 'medium'
+                  ? 'bg-yellow-500/10 border-yellow-500/30'
+                  : 'bg-orange-500/10 border-orange-500/30'
+              }`}>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-semibold text-white">
+                    🎨 Potentiel de retouche
+                  </span>
+                  <span className={`font-bold ${
+                    analysis.retouchPotential.level === 'high' 
+                      ? 'text-green-400' 
+                      : analysis.retouchPotential.level === 'medium'
+                      ? 'text-yellow-400'
+                      : 'text-orange-400'
+                  }`}>
+                    {analysis.retouchPotential.level === 'high' && '⭐⭐⭐ Élevé'}
+                    {analysis.retouchPotential.level === 'medium' && '⭐⭐ Moyen'}
+                    {analysis.retouchPotential.level === 'low' && '⭐ Limité'}
+                  </span>
+                </div>
+                <p className={`text-sm ${
+                  analysis.retouchPotential.level === 'high' 
+                    ? 'text-green-300' 
+                    : analysis.retouchPotential.level === 'medium'
+                    ? 'text-yellow-300'
+                    : 'text-orange-300'
+                }`}>
+                  {analysis.retouchPotential.reason}
+                </p>
+              </div>
+            </div>
+          )}
           
           <div className="grid md:grid-cols-2 gap-6">
             {/* Adobe Lightroom - PC/Mac */}
@@ -555,6 +594,40 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
                     PC/Mac
                   </span>
                 </div>
+                
+                {/* Avertissement conditionnel selon le potentiel */}
+                {analysis.retouchPotential?.level === 'low' && (
+                  <div className="mb-4 p-3 bg-orange-500/10 border border-orange-500/30 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-orange-400">⚠️</span>
+                      <span className="text-xs text-orange-300 font-semibold">
+                        AJUSTEMENTS SUBTILS : Photo déjà très bien équilibrée
+                      </span>
+                    </div>
+                  </div>
+                )}
+                
+                {analysis.retouchPotential?.level === 'medium' && (
+                  <div className="mb-4 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-yellow-400">💡</span>
+                      <span className="text-xs text-yellow-300 font-semibold">
+                        AJUSTEMENTS MODÉRÉS : Améliorations possibles
+                      </span>
+                    </div>
+                  </div>
+                )}
+                
+                {analysis.retouchPotential?.level === 'high' && (
+                  <div className="mb-4 p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-green-400">🚀</span>
+                      <span className="text-xs text-green-300 font-semibold">
+                        FORTE MARGE D'AMÉLIORATION : Retouches recommandées
+                      </span>
+                    </div>
+                  </div>
+                )}
                 
                 <ul className="space-y-2 mb-4">
                   {analysis.toolRecommendations.lightroom.slice(0, 4).map((rec, index) => (
@@ -594,6 +667,39 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
                     Gratuit
                   </span>
                 </div>
+                
+                {analysis.retouchPotential?.level === 'low' && (
+                  <div className="mb-4 p-3 bg-orange-500/10 border border-orange-500/30 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-orange-400">⚠️</span>
+                      <span className="text-xs text-orange-300 font-semibold">
+                        AJUSTEMENTS SUBTILS : Photo déjà très bien équilibrée
+                      </span>
+                    </div>
+                  </div>
+                )}
+                
+                {analysis.retouchPotential?.level === 'medium' && (
+                  <div className="mb-4 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-blue-400">💡</span>
+                      <span className="text-xs text-blue-300 font-semibold">
+                        AJUSTEMENTS MODÉRÉS : Améliorations possibles
+                      </span>
+                    </div>
+                  </div>
+                )}
+                
+                {analysis.retouchPotential?.level === 'high' && (
+                  <div className="mb-4 p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-green-400">🚀</span>
+                      <span className="text-xs text-green-300 font-semibold">
+                        FORTE MARGE D'AMÉLIORATION : Retouches recommandées
+                      </span>
+                    </div>
+                  </div>
+                )}
                 
                 <ul className="space-y-2 mb-4">
                   {analysis.toolRecommendations.snapseed.slice(0, 4).map((rec, index) => (
