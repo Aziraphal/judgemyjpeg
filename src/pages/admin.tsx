@@ -14,6 +14,15 @@ export default function AdminPage() {
   const [attempts, setAttempts] = useState(0)
   const [blocked, setBlocked] = useState(false)
 
+  // États pour la suppression d'utilisateur
+  const [deleteEmail, setDeleteEmail] = useState('')
+  const [deleteSecret, setDeleteSecret] = useState('')
+  const [deleteLoading, setDeleteLoading] = useState(false)
+  const [deleteResult, setDeleteResult] = useState<string | null>(null)
+  const [deleteAttempts, setDeleteAttempts] = useState(0)
+  const [deleteBlocked, setDeleteBlocked] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState('')
+
   const handleUpgrade = async (e: React.FormEvent) => {
     e.preventDefault()
     
@@ -72,6 +81,75 @@ export default function AdminPage() {
     }
   }
 
+  const handleDeleteUser = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (deleteBlocked) {
+      setDeleteResult('❌ Trop de tentatives échouées. Rechargez la page.')
+      return
+    }
+
+    // Vérification de confirmation
+    if (confirmDelete !== 'SUPPRIMER DÉFINITIVEMENT') {
+      setDeleteResult('❌ Vous devez taper "SUPPRIMER DÉFINITIVEMENT" pour confirmer')
+      return
+    }
+
+    setDeleteLoading(true)
+    setDeleteResult(null)
+
+    try {
+      const response = await fetch('/api/admin/users', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.ADMIN_SECRET || 'dev-token'}`
+        },
+        body: JSON.stringify({ email: deleteEmail, secret: deleteSecret }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        setDeleteResult(`✅ ${data.message}`)
+        if (data.deletedData) {
+          setDeleteResult(prev => prev + `\n📊 Données supprimées: ${data.deletedData.photosDeleted} photos, ${data.deletedData.collectionsDeleted} collections, ${data.deletedData.favoritesDeleted} favoris`)
+        }
+        setDeleteEmail('')
+        setConfirmDelete('')
+        setDeleteAttempts(0) // Reset après succès
+      } else {
+        const newAttempts = deleteAttempts + 1
+        setDeleteAttempts(newAttempts)
+        setDeleteResult(`❌ ${data.message || 'Erreur inconnue'} (Tentative ${newAttempts}/3)`)
+        
+        // Blocage après 3 tentatives
+        if (newAttempts >= 3) {
+          setDeleteBlocked(true)
+          setDeleteResult('❌ Trop de tentatives échouées. Accès bloqué.')
+          setTimeout(() => {
+            router.push('/')
+          }, 2000)
+        }
+      }
+
+    } catch (error) {
+      const newAttempts = deleteAttempts + 1
+      setDeleteAttempts(newAttempts)
+      setDeleteResult(`❌ Erreur: ${error} (Tentative ${newAttempts}/3)`)
+      
+      if (newAttempts >= 3) {
+        setDeleteBlocked(true)
+        setDeleteResult('❌ Trop de tentatives échouées. Accès bloqué.')
+        setTimeout(() => {
+          router.push('/')
+        }, 2000)
+      }
+    } finally {
+      setDeleteLoading(false)
+    }
+  }
+
   if (status === 'loading') {
     return (
       <div className="flex justify-center items-center min-h-screen particles-container">
@@ -105,8 +183,10 @@ export default function AdminPage() {
             </button>
           </div>
 
-          {/* Formulaire upgrade user */}
-          <div className="max-w-2xl mx-auto">
+          {/* Formulaires Admin */}
+          <div className="max-w-2xl mx-auto space-y-8">
+            
+            {/* Formulaire upgrade user */}
             <div className="glass-card p-8">
               <h2 className="text-2xl font-bold text-text-white mb-6">
                 🔧 Upgrade Utilisateur
@@ -173,15 +253,93 @@ export default function AdminPage() {
               )}
             </div>
 
+            {/* Formulaire suppression utilisateur */}
+            <div className="glass-card p-8 border border-red-500/30">
+              <h2 className="text-2xl font-bold text-red-400 mb-6">
+                🗑️ Suppression Définitive d'Utilisateur
+              </h2>
+              <div className="bg-red-950/50 border border-red-500/50 rounded-lg p-4 mb-6">
+                <p className="text-red-300 font-semibold">⚠️ ATTENTION : ACTION IRRÉVERSIBLE</p>
+                <p className="text-red-200 text-sm mt-2">Cette action supprimera DÉFINITIVEMENT l'utilisateur et TOUTES ses données (photos, collections, favoris, sessions, etc.)</p>
+              </div>
+
+              <form onSubmit={handleDeleteUser} className="space-y-6">
+                <div>
+                  <label className="block text-text-white mb-2">Email utilisateur à supprimer :</label>
+                  <input
+                    type="email"
+                    value={deleteEmail}
+                    onChange={(e) => setDeleteEmail(e.target.value)}
+                    className="w-full p-3 bg-cosmic-glass border border-red-500/30 rounded-lg text-text-white"
+                    placeholder="user@example.com"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-text-white mb-2">Confirmation (tapez "SUPPRIMER DÉFINITIVEMENT") :</label>
+                  <input
+                    type="text"
+                    value={confirmDelete}
+                    onChange={(e) => setConfirmDelete(e.target.value)}
+                    className="w-full p-3 bg-cosmic-glass border border-red-500/30 rounded-lg text-text-white"
+                    placeholder="SUPPRIMER DÉFINITIVEMENT"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-text-white mb-2">Secret Admin :</label>
+                  <input
+                    type="password"
+                    value={deleteSecret}
+                    onChange={(e) => setDeleteSecret(e.target.value)}
+                    className="w-full p-3 bg-cosmic-glass border border-red-500/30 rounded-lg text-text-white"
+                    placeholder="Mot de passe admin"
+                    required
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={deleteLoading || deleteBlocked || confirmDelete !== 'SUPPRIMER DÉFINITIVEMENT'}
+                  className="w-full bg-red-600 hover:bg-red-700 disabled:bg-red-900/50 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200"
+                >
+                  {deleteLoading ? (
+                    <span className="flex items-center justify-center space-x-2">
+                      <div className="spinner-neon w-4 h-4"></div>
+                      <span>Suppression...</span>
+                    </span>
+                  ) : (
+                    '🗑️ SUPPRIMER DÉFINITIVEMENT'
+                  )}
+                </button>
+              </form>
+
+              {deleteResult && (
+                <div className="mt-6 p-4 bg-cosmic-glass border border-cosmic-glassborder rounded-lg">
+                  <pre className="text-text-white whitespace-pre-wrap text-sm">{deleteResult}</pre>
+                </div>
+              )}
+            </div>
+
             {/* Instructions */}
-            <div className="glass-card p-6 mt-8">
+            <div className="glass-card p-6">
               <h3 className="text-lg font-bold text-neon-cyan mb-4">📋 Instructions :</h3>
               <div className="space-y-2 text-sm text-text-gray">
+                <p className="font-semibold text-neon-pink">Configuration :</p>
                 <p>1. Ajoute <code className="text-neon-pink">ADMIN_SECRET="ton-mot-de-passe"</code> dans ton .env</p>
-                <p>2. Entre ton email (ou celui d'un autre user)</p>
+                
+                <p className="font-semibold text-neon-cyan mt-4">Upgrade utilisateur :</p>
+                <p>2. Entre l'email de l'utilisateur</p>
                 <p>3. Choisis le plan à attribuer</p>
                 <p>4. Entre le secret admin</p>
-                <p>5. Clique "Upgrade Utilisateur"</p>
+                
+                <p className="font-semibold text-red-400 mt-4">Suppression utilisateur :</p>
+                <p>5. ⚠️ TRÈS DANGEREUX - Supprime DÉFINITIVEMENT toutes les données</p>
+                <p>6. Entre l'email de l'utilisateur</p>
+                <p>7. Tape exactement "SUPPRIMER DÉFINITIVEMENT"</p>
+                <p>8. Entre le secret admin</p>
               </div>
             </div>
           </div>

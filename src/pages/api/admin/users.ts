@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/lib/prisma'
-import { logger } from '@/lib/logger'
+import { logger, getClientIP } from '@/lib/logger'
+import { rateLimit } from '@/lib/rate-limit'
 
 export default async function handler(
   req: NextApiRequest,
@@ -199,24 +200,218 @@ async function handleUpdateUser(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function handleDeleteUser(req: NextApiRequest, res: NextApiResponse) {
-  const { userId } = req.query
+  // Rate limiting strict pour suppression utilisateur (1 par minute)
+  const rateLimitResult = await rateLimit(req, res, {
+    interval: 60 * 1000, // 1 minute
+    uniqueTokenPerInterval: 100,
+    maxRequests: 1
+  })
 
-  if (!userId) {
-    return res.status(400).json({ 
+  if (!rateLimitResult.success) {
+    const clientIP = getClientIP(req)
+    
+    logger.logSecurity({
+      eventType: 'ADMIN_DELETE_RATE_LIMITED',
+      description: 'Tentative de suppression utilisateur - rate limit dépassé',
+      userId: null,
+      email: 'unknown',
+      ipAddress: clientIP,
+      userAgent: req.headers['user-agent'] || 'unknown',
+      riskLevel: 'HIGH',
+      success: false,
+      metadata: JSON.stringify({ 
+        resetTime: rateLimitResult.resetTime,
+        timestamp: new Date().toISOString()
+      })
+    })
+
+    return res.status(429).json({ 
       success: false, 
-      message: 'userId is required' 
+      message: 'Trop de tentatives. Attendez 1 minute.',
+      resetTime: rateLimitResult.resetTime
     })
   }
 
-  // Supprimer définitivement (attention: irréversible)
-  await prisma.user.delete({
-    where: { id: userId as string }
-  })
+  const { email, secret } = req.body
+  const clientIP = getClientIP(req)
 
-  logger.warn('[ADMIN] User permanently deleted', { userId })
+  // Validation des champs requis
+  if (!email || !secret) {
+    logger.logSecurity({
+      eventType: 'ADMIN_DELETE_INVALID_REQUEST',
+      description: 'Tentative suppression utilisateur - données manquantes',
+      userId: null,
+      email: email || 'unknown',
+      ipAddress: clientIP,
+      userAgent: req.headers['user-agent'] || 'unknown',
+      riskLevel: 'HIGH',
+      success: false,
+      metadata: JSON.stringify({ 
+        missingFields: { email: !email, secret: !secret },
+        timestamp: new Date().toISOString()
+      })
+    })
 
-  res.status(200).json({
-    success: true,
-    message: 'Utilisateur supprimé définitivement'
-  })
+    return res.status(400).json({ 
+      success: false, 
+      message: 'Email et secret admin requis' 
+    })
+  }
+
+  // Validation du secret admin
+  if (secret !== process.env.ADMIN_SECRET) {
+    logger.logSecurity({
+      eventType: 'ADMIN_DELETE_UNAUTHORIZED',
+      description: 'Tentative suppression utilisateur - secret admin invalide',
+      userId: null,
+      email,
+      ipAddress: clientIP,
+      userAgent: req.headers['user-agent'] || 'unknown',
+      riskLevel: 'CRITICAL',
+      success: false,
+      metadata: JSON.stringify({ 
+        targetEmail: email,
+        timestamp: new Date().toISOString()
+      })
+    })
+
+    return res.status(401).json({ 
+      success: false, 
+      message: 'Secret admin invalide' 
+    })
+  }
+
+  try {
+    // Vérifier que l'utilisateur existe et récupérer ses données pour audit
+    const targetUser = await prisma.user.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        subscriptionStatus: true,
+        createdAt: true,
+        _count: {
+          select: {
+            photos: true,
+            collections: true,
+            favorites: true,
+            sessions: true,
+            accounts: true
+          }
+        }
+      }
+    })
+
+    if (!targetUser) {
+      logger.logSecurity({
+        eventType: 'ADMIN_DELETE_USER_NOT_FOUND',
+        description: 'Tentative suppression utilisateur inexistant',
+        userId: null,
+        email,
+        ipAddress: clientIP,
+        userAgent: req.headers['user-agent'] || 'unknown',
+        riskLevel: 'MEDIUM',
+        success: false,
+        metadata: JSON.stringify({ 
+          targetEmail: email,
+          timestamp: new Date().toISOString()
+        })
+      })
+
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Utilisateur non trouvé' 
+      })
+    }
+
+    // Log de l'état avant suppression pour audit
+    logger.logSecurity({
+      eventType: 'ADMIN_DELETE_USER_ATTEMPT',
+      description: 'Début de suppression définitive utilisateur',
+      userId: targetUser.id,
+      email: targetUser.email!,
+      ipAddress: clientIP,
+      userAgent: req.headers['user-agent'] || 'unknown',
+      riskLevel: 'CRITICAL',
+      success: true,
+      metadata: JSON.stringify({ 
+        targetUserId: targetUser.id,
+        targetUserName: targetUser.name,
+        targetUserEmail: targetUser.email,
+        subscriptionStatus: targetUser.subscriptionStatus,
+        userCreatedAt: targetUser.createdAt,
+        dataToDelete: targetUser._count,
+        timestamp: new Date().toISOString()
+      })
+    })
+
+    // Suppression définitive de l'utilisateur
+    // Grâce aux relations onDelete: Cascade dans le schema Prisma,
+    // toutes les données liées seront automatiquement supprimées
+    const deletedUser = await prisma.user.delete({
+      where: { id: targetUser.id }
+    })
+
+    // Log de confirmation de suppression
+    logger.logSecurity({
+      eventType: 'ADMIN_DELETE_USER_SUCCESS',
+      description: 'Suppression définitive utilisateur réussie',
+      userId: null, // User supprimé
+      email: deletedUser.email!,
+      ipAddress: clientIP,
+      userAgent: req.headers['user-agent'] || 'unknown',
+      riskLevel: 'CRITICAL',
+      success: true,
+      metadata: JSON.stringify({ 
+        deletedUserId: deletedUser.id,
+        deletedUserEmail: deletedUser.email,
+        dataDeletedCounts: targetUser._count,
+        timestamp: new Date().toISOString()
+      })
+    })
+
+    logger.warn('[ADMIN] User permanently deleted with full audit trail', { 
+      userId: targetUser.id,
+      email: targetUser.email,
+      dataDeleted: targetUser._count
+    })
+
+    return res.status(200).json({
+      success: true,
+      message: `✅ Utilisateur ${email} supprimé définitivement`,
+      deletedData: {
+        user: deletedUser.email,
+        photosDeleted: targetUser._count.photos,
+        collectionsDeleted: targetUser._count.collections,
+        favoritesDeleted: targetUser._count.favorites,
+        sessionsDeleted: targetUser._count.sessions,
+        accountsDeleted: targetUser._count.accounts
+      }
+    })
+
+  } catch (error) {
+    logger.error('[ADMIN] Error deleting user:', error)
+    
+    logger.logSecurity({
+      eventType: 'ADMIN_DELETE_USER_ERROR',
+      description: 'Erreur lors de la suppression utilisateur',
+      userId: null,
+      email,
+      ipAddress: clientIP,
+      userAgent: req.headers['user-agent'] || 'unknown',
+      riskLevel: 'HIGH',
+      success: false,
+      metadata: JSON.stringify({ 
+        error: error instanceof Error ? error.message : String(error),
+        targetEmail: email,
+        timestamp: new Date().toISOString()
+      })
+    })
+
+    return res.status(500).json({ 
+      success: false,
+      message: 'Erreur lors de la suppression de l\'utilisateur' 
+    })
+  }
 }
