@@ -2,6 +2,9 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/lib/prisma'
 import { logger, getClientIP } from '@/lib/logger'
 import { rateLimit } from '@/lib/rate-limit'
+import { AuditLogger } from '@/lib/audit-trail'
+
+const auditLogger = new AuditLogger()
 
 export default async function handler(
   req: NextApiRequest,
@@ -210,19 +213,20 @@ async function handleDeleteUser(req: NextApiRequest, res: NextApiResponse) {
   if (!rateLimitResult.success) {
     const clientIP = getClientIP(req)
     
-    logger.logSecurity({
-      eventType: 'ADMIN_DELETE_RATE_LIMITED',
-      description: 'Tentative de suppression utilisateur - rate limit dépassé',
-      userId: null,
+    await auditLogger.logSecurity('rate_limit_exceeded', {
+      userId: undefined,
       email: 'unknown',
       ipAddress: clientIP,
       userAgent: req.headers['user-agent'] || 'unknown',
-      riskLevel: 'HIGH',
+      eventType: 'rate_limit_exceeded',
+      description: 'Tentative de suppression utilisateur - rate limit dépassé',
+      riskLevel: 'high',
       success: false,
-      metadata: JSON.stringify({ 
+      metadata: { 
         resetTime: rateLimitResult.resetTime,
-        timestamp: new Date().toISOString()
-      })
+        timestamp: new Date().toISOString(),
+        action: 'user_deletion'
+      }
     })
 
     return res.status(429).json({ 
@@ -237,19 +241,20 @@ async function handleDeleteUser(req: NextApiRequest, res: NextApiResponse) {
 
   // Validation des champs requis
   if (!email || !secret) {
-    logger.logSecurity({
-      eventType: 'ADMIN_DELETE_INVALID_REQUEST',
-      description: 'Tentative suppression utilisateur - données manquantes',
-      userId: null,
+    await auditLogger.logSecurity('admin_action', {
+      userId: undefined,
       email: email || 'unknown',
       ipAddress: clientIP,
       userAgent: req.headers['user-agent'] || 'unknown',
-      riskLevel: 'HIGH',
+      eventType: 'admin_action',
+      description: 'Tentative suppression utilisateur - données manquantes',
+      riskLevel: 'high',
       success: false,
-      metadata: JSON.stringify({ 
+      metadata: { 
         missingFields: { email: !email, secret: !secret },
-        timestamp: new Date().toISOString()
-      })
+        timestamp: new Date().toISOString(),
+        action: 'user_deletion_invalid_request'
+      }
     })
 
     return res.status(400).json({ 
@@ -260,19 +265,20 @@ async function handleDeleteUser(req: NextApiRequest, res: NextApiResponse) {
 
   // Validation du secret admin
   if (secret !== process.env.ADMIN_SECRET) {
-    logger.logSecurity({
-      eventType: 'ADMIN_DELETE_UNAUTHORIZED',
-      description: 'Tentative suppression utilisateur - secret admin invalide',
-      userId: null,
+    await auditLogger.logSecurity('admin_action', {
+      userId: undefined,
       email,
       ipAddress: clientIP,
       userAgent: req.headers['user-agent'] || 'unknown',
-      riskLevel: 'CRITICAL',
+      eventType: 'admin_action',
+      description: 'Tentative suppression utilisateur - secret admin invalide',
+      riskLevel: 'critical',
       success: false,
-      metadata: JSON.stringify({ 
+      metadata: { 
         targetEmail: email,
-        timestamp: new Date().toISOString()
-      })
+        timestamp: new Date().toISOString(),
+        action: 'user_deletion_unauthorized'
+      }
     })
 
     return res.status(401).json({ 
@@ -304,19 +310,20 @@ async function handleDeleteUser(req: NextApiRequest, res: NextApiResponse) {
     })
 
     if (!targetUser) {
-      logger.logSecurity({
-        eventType: 'ADMIN_DELETE_USER_NOT_FOUND',
-        description: 'Tentative suppression utilisateur inexistant',
-        userId: null,
+      await auditLogger.logSecurity('admin_action', {
+        userId: undefined,
         email,
         ipAddress: clientIP,
         userAgent: req.headers['user-agent'] || 'unknown',
-        riskLevel: 'MEDIUM',
+        eventType: 'admin_action',
+        description: 'Tentative suppression utilisateur inexistant',
+        riskLevel: 'medium',
         success: false,
-        metadata: JSON.stringify({ 
+        metadata: { 
           targetEmail: email,
-          timestamp: new Date().toISOString()
-        })
+          timestamp: new Date().toISOString(),
+          action: 'user_deletion_not_found'
+        }
       })
 
       return res.status(404).json({ 
@@ -326,24 +333,25 @@ async function handleDeleteUser(req: NextApiRequest, res: NextApiResponse) {
     }
 
     // Log de l'état avant suppression pour audit
-    logger.logSecurity({
-      eventType: 'ADMIN_DELETE_USER_ATTEMPT',
-      description: 'Début de suppression définitive utilisateur',
+    await auditLogger.logSecurity('admin_action', {
       userId: targetUser.id,
       email: targetUser.email!,
       ipAddress: clientIP,
       userAgent: req.headers['user-agent'] || 'unknown',
-      riskLevel: 'CRITICAL',
+      eventType: 'admin_action',
+      description: 'Début de suppression définitive utilisateur',
+      riskLevel: 'critical',
       success: true,
-      metadata: JSON.stringify({ 
+      metadata: { 
         targetUserId: targetUser.id,
         targetUserName: targetUser.name,
         targetUserEmail: targetUser.email,
         subscriptionStatus: targetUser.subscriptionStatus,
         userCreatedAt: targetUser.createdAt,
         dataToDelete: targetUser._count,
-        timestamp: new Date().toISOString()
-      })
+        timestamp: new Date().toISOString(),
+        action: 'user_deletion_attempt'
+      }
     })
 
     // Suppression définitive de l'utilisateur
@@ -354,21 +362,22 @@ async function handleDeleteUser(req: NextApiRequest, res: NextApiResponse) {
     })
 
     // Log de confirmation de suppression
-    logger.logSecurity({
-      eventType: 'ADMIN_DELETE_USER_SUCCESS',
-      description: 'Suppression définitive utilisateur réussie',
-      userId: null, // User supprimé
+    await auditLogger.logSecurity('admin_action', {
+      userId: undefined, // User supprimé
       email: deletedUser.email!,
       ipAddress: clientIP,
       userAgent: req.headers['user-agent'] || 'unknown',
-      riskLevel: 'CRITICAL',
+      eventType: 'admin_action',
+      description: 'Suppression définitive utilisateur réussie',
+      riskLevel: 'critical',
       success: true,
-      metadata: JSON.stringify({ 
+      metadata: { 
         deletedUserId: deletedUser.id,
         deletedUserEmail: deletedUser.email,
         dataDeletedCounts: targetUser._count,
-        timestamp: new Date().toISOString()
-      })
+        timestamp: new Date().toISOString(),
+        action: 'user_deletion_success'
+      }
     })
 
     logger.warn('[ADMIN] User permanently deleted with full audit trail', { 
@@ -393,20 +402,21 @@ async function handleDeleteUser(req: NextApiRequest, res: NextApiResponse) {
   } catch (error) {
     logger.error('[ADMIN] Error deleting user:', error)
     
-    logger.logSecurity({
-      eventType: 'ADMIN_DELETE_USER_ERROR',
-      description: 'Erreur lors de la suppression utilisateur',
-      userId: null,
+    await auditLogger.logSecurity('admin_action', {
+      userId: undefined,
       email,
       ipAddress: clientIP,
       userAgent: req.headers['user-agent'] || 'unknown',
-      riskLevel: 'HIGH',
+      eventType: 'admin_action',
+      description: 'Erreur lors de la suppression utilisateur',
+      riskLevel: 'high',
       success: false,
-      metadata: JSON.stringify({ 
+      metadata: { 
         error: error instanceof Error ? error.message : String(error),
         targetEmail: email,
-        timestamp: new Date().toISOString()
-      })
+        timestamp: new Date().toISOString(),
+        action: 'user_deletion_error'
+      }
     })
 
     return res.status(500).json({ 
