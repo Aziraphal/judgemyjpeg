@@ -526,142 +526,95 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
         </div>
       )}
 
-      {/* Suggestions de retouche */}
-      {analysis.editingRecommendations && analysis.editingRecommendations.length > 0 && (
+      {/* Conseils de retouche précis */}
+      {analysis.toolRecommendations && (
         <div className="glass-card p-4 sm:p-8 hover-glow">
           <h3 className="text-xl sm:text-2xl font-bold text-text-white mb-4 sm:mb-6 flex items-center">
             <span className="text-2xl sm:text-3xl mr-2 sm:mr-3">🎨</span>
-            <span className="text-neon-pink">Suggestions de retouche</span>
+            <span className="text-neon-pink">Conseils de retouche précis</span>
           </h3>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {analysis.editingRecommendations.map((rec, index) => {
-              const toolIcons = {
-                Lightroom: '📷',
-                Photoshop: '🖌️',
-                Snapseed: '📱',
-                GIMP: '🆓'
-              }
-              
-              const difficultyColors = {
-                facile: 'bg-green-500/20 text-green-400',
-                moyen: 'bg-yellow-500/20 text-yellow-400',
-                difficile: 'bg-red-500/20 text-red-400'
-              }
-              
-              return (
-                <div key={index} className="glass-card p-4 sm:p-6 hover:bg-cosmic-glassborder transition-all duration-300">
-                  <div className="flex items-center justify-between mb-3 sm:mb-4">
-                    <div className="flex items-center space-x-2 min-w-0">
-                      <span className="text-lg sm:text-xl flex-shrink-0">{toolIcons[rec.tool]}</span>
-                      <span className="text-xs sm:text-sm font-semibold text-neon-cyan truncate">
-                        {rec.tool}
-                      </span>
-                    </div>
-                    <span className={`text-xs px-2 py-1 rounded-full flex-shrink-0 ${difficultyColors[rec.difficulty]}`}>
-                      {rec.difficulty}
-                    </span>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Adobe Lightroom - PC/Mac */}
+            {analysis.toolRecommendations.lightroom && (
+              <div className="glass-card p-6 hover:bg-cosmic-glassborder transition-all duration-300">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <span className="text-2xl">💻</span>
+                    <h4 className="font-bold text-white text-lg">Adobe Lightroom</h4>
                   </div>
-                  <div className="min-w-0">
-                    <SmartGlossaryText 
-                      text={rec.suggestion} 
-                      className="text-text-gray leading-relaxed text-xs sm:text-sm mb-3 break-words" 
-                      mode={tone}
-                    />
-                    <div className="text-xs text-neon-pink font-semibold break-words">
-                      ✨ {rec.expectedImprovement}
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* Outils recommandés */}
-      <div className="glass-card p-8 hover-glow">
-        <h3 className="text-2xl font-bold text-text-white mb-6 flex items-center">
-          <span className="text-3xl mr-3">🛠️</span>
-          <span className="text-neon-pink">Outils recommandés</span>
-        </h3>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {Object.entries(analysis.toolRecommendations).map(([tool, recommendations]) => {
-            const toolInfo = {
-              lightroom: { 
-                name: 'Adobe Lightroom', 
-                badge: 'Professionnel', 
-                color: 'bg-blue-500/20 text-blue-400',
-                icon: '📸'
-              },
-              photoshop: { 
-                name: 'Adobe Photoshop', 
-                badge: 'Avancé', 
-                color: 'bg-purple-500/20 text-purple-400',
-                icon: '🎨'
-              },
-              snapseed: { 
-                name: 'Snapseed', 
-                badge: 'Gratuit', 
-                color: 'bg-green-500/20 text-green-400',
-                icon: '📱'
-              },
-              canva: { 
-                name: 'Canva Pro', 
-                badge: 'Facile', 
-                color: 'bg-pink-500/20 text-pink-400',
-                icon: '✨'
-              },
-              luminar: { 
-                name: 'Luminar Neo', 
-                badge: 'IA', 
-                color: 'bg-cyan-500/20 text-cyan-400',
-                icon: '🤖'
-              }
-            }
-            
-            const info = toolInfo[tool as keyof typeof toolInfo] || { 
-              name: tool, 
-              badge: 'Outil', 
-              color: 'bg-gray-500/20 text-gray-400',
-              icon: '🛠️'
-            }
-            
-            return (
-              <a
-                key={tool}
-                href={toolLinks[tool as keyof typeof toolLinks]}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="glass-card p-4 hover-glow group cursor-pointer transition-all duration-300 hover:scale-105"
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-xl">{info.icon}</span>
-                    <h4 className="font-bold text-text-white text-sm">{info.name}</h4>
-                  </div>
-                  <span className={`text-xs px-2 py-1 rounded-full ${info.color}`}>
-                    {info.badge}
+                  <span className="text-xs px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 font-semibold">
+                    PC/Mac
                   </span>
                 </div>
                 
-                <ul className="space-y-1 mb-3">
-                  {recommendations?.map((rec, index) => (
-                    <li key={index} className="text-text-gray flex items-start text-xs">
-                      <span className="text-neon-cyan mr-1 flex-shrink-0 text-xs">▶</span>
-                      <span>{rec}</span>
+                <ul className="space-y-2 mb-4">
+                  {analysis.toolRecommendations.lightroom.slice(0, 4).map((rec, index) => (
+                    <li key={index} className="text-text-gray flex items-start text-sm">
+                      <span className="text-neon-cyan mr-2 flex-shrink-0">▶</span>
+                      <span className="font-mono text-neon-pink">{rec}</span>
                     </li>
                   ))}
                 </ul>
                 
-                <div className="text-xs text-neon-pink group-hover:text-neon-cyan transition-colors duration-300 flex items-center justify-center">
-                  <span>{tool === 'snapseed' ? '📱 Télécharger' : '🚀 Découvrir'}</span>
-                  <span className="ml-1">→</span>
+                <div className="text-xs text-green-400 bg-green-500/10 p-3 rounded-lg mb-4">
+                  ✨ <strong>Résultat :</strong> Photo plus détaillée avec un rendu professionnel
                 </div>
-              </a>
-            )
-          })}
+                
+                <a
+                  href={getToolLinks().lightroom}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full inline-flex items-center justify-center space-x-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors duration-300"
+                >
+                  <span>🚀</span>
+                  <span>Découvrir Lightroom</span>
+                  <span>→</span>
+                </a>
+              </div>
+            )}
+
+            {/* Snapseed - Mobile */}
+            {analysis.toolRecommendations.snapseed && (
+              <div className="glass-card p-6 hover:bg-cosmic-glassborder transition-all duration-300">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <span className="text-2xl">📱</span>
+                    <h4 className="font-bold text-white text-lg">Snapseed</h4>
+                  </div>
+                  <span className="text-xs px-3 py-1 rounded-full bg-green-500/20 text-green-400 font-semibold">
+                    Gratuit
+                  </span>
+                </div>
+                
+                <ul className="space-y-2 mb-4">
+                  {analysis.toolRecommendations.snapseed.slice(0, 4).map((rec, index) => (
+                    <li key={index} className="text-text-gray flex items-start text-sm">
+                      <span className="text-neon-cyan mr-2 flex-shrink-0">▶</span>
+                      <span className="font-mono text-neon-pink">{rec}</span>
+                    </li>
+                  ))}
+                </ul>
+                
+                <div className="text-xs text-green-400 bg-green-500/10 p-3 rounded-lg mb-4">
+                  ✨ <strong>Résultat :</strong> Photo plus impactante et équilibrée
+                </div>
+                
+                <a
+                  href={getToolLinks().snapseed}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full inline-flex items-center justify-center space-x-2 px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition-colors duration-300"
+                >
+                  <span>📱</span>
+                  <span>Télécharger Snapseed</span>
+                  <span>→</span>
+                </a>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Générateur Instagram */}
       <InstagramGenerator 

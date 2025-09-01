@@ -23,14 +23,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(404).json({ error: 'Utilisateur non trouvé' })
     }
 
-    // Récupérer les top photos (score >= 85) de l'utilisateur
+    const { limit = '10', minScore } = req.query
+    const limitNum = Math.min(parseInt(limit as string), 50) // Max 50 photos
+    const minScoreNum = minScore ? parseFloat(minScore as string) : null
+
+    // Construire les conditions de filtrage
+    const whereConditions: any = {
+      userId: user.id,
+      score: {
+        not: null
+      }
+    }
+
+    // Si minScore fourni (pour compatibilité avec la page gallery), l'utiliser
+    if (minScoreNum !== null) {
+      whereConditions.score.gte = minScoreNum
+    }
+
+    // Récupérer les meilleures photos de l'utilisateur
     const topPhotos = await prisma.photo.findMany({
-      where: {
-        userId: user.id,
-        score: {
-          gte: 85
-        }
-      },
+      where: whereConditions,
       include: {
         favorites: {
           where: { userId: user.id }
@@ -42,11 +54,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       orderBy: [
         { score: 'desc' },
         { createdAt: 'desc' }
-      ]
+      ],
+      take: limitNum
     })
 
-    // Marquer les photos comme "top photos" si pas déjà fait
-    if (topPhotos.length > 0) {
+    // Marquer les photos comme "top photos" si pas déjà fait (seulement pour les vraies top photos avec score >= 85)
+    if (topPhotos.length > 0 && minScoreNum && minScoreNum >= 85) {
       await prisma.photo.updateMany({
         where: {
           id: { in: topPhotos.map(p => p.id) },
@@ -63,7 +76,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       favoriteCount: photo._count.favorites
     }))
 
-    res.status(200).json({ topPhotos: formattedPhotos })
+    // Compatible avec les deux formats de réponse
+    res.status(200).json({ 
+      success: true,
+      photos: formattedPhotos,
+      topPhotos: formattedPhotos, // Pour compatibilité avec gallery
+      count: formattedPhotos.length
+    })
   } catch (error) {
     logger.error('Erreur top photos:', error)
     res.status(500).json({ error: 'Erreur serveur' })

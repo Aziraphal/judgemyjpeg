@@ -278,9 +278,18 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
         }
       ],
       "toolRecommendations": {
-        "lightroom": ["retouches Lightroom spécifiques"],
-        "photoshop": ["retouches Photoshop spécifiques"],
-        "snapseed": ["ajustements mobile spécifiques"]
+        "lightroom": [
+          "Ombres : +30",
+          "Contraste : +15", 
+          "Clarté : +10",
+          "Ajouter un filtre dégradé sur le ciel (exposition -0.5)"
+        ],
+        "snapseed": [
+          "Détails → Netteté : +20",
+          "HDR → Intensité : +15", 
+          "Recadrage → Règle des tiers pour centrer le sujet",
+          "Saturation → +10 pour renforcer les couleurs"
+        ]
       },
       "nextShotTips": [
         {
@@ -323,6 +332,13 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
     
     📸 SECTION "nextShotTips" : Conseils pour améliorer la PROCHAINE PRISE de vue
     🎨 SECTION "editingRecommendations" : Suggestions pour retoucher CETTE PHOTO ACTUELLE
+
+    ⚡ OBLIGATIONS POUR "toolRecommendations" :
+    • Lightroom : DONNE DES VALEURS PRÉCISES (exemple: "Ombres : +30", "Contraste : +15", "Clarté : +10")
+    • Snapseed : DONNE DES ACTIONS PRÉCISES (exemple: "Détails → Netteté : +20", "HDR → Intensité : +15")
+    • ADAPTE les valeurs selon cette photo spécifique (pas de valeurs génériques)
+    • Utilise des réglages réalistes entre -50 et +50
+    • Mentionne les outils spécifiques de chaque logiciel (filtres, masques, etc.)
     `
 
     const response = await openai.chat.completions.create({

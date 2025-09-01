@@ -8,9 +8,12 @@ export default function Home() {
   const { data: session, status } = useSession()
   const [userSubscription, setUserSubscription] = useState<any>(null)
   const [userPreferences, setUserPreferences] = useState<any>(null)
+  const [topPhotos, setTopPhotos] = useState<any[]>([])
+  const [loadingTopPhotos, setLoadingTopPhotos] = useState(false)
 
   useEffect(() => {
     if (session?.user?.id) {
+      // Récupérer le statut subscription
       fetch('/api/subscription/status')
         .then(res => res.json())
         .then(data => {
@@ -18,6 +21,18 @@ export default function Home() {
           setUserSubscription(data.subscription)
         })
         .catch(err => logger.error('Error fetching subscription:', err))
+      
+      // Récupérer le Top 3 des photos de l'utilisateur
+      setLoadingTopPhotos(true)
+      fetch('/api/photos/top?limit=3')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.photos) {
+            setTopPhotos(data.photos)
+          }
+        })
+        .catch(err => logger.error('Error fetching top photos:', err))
+        .finally(() => setLoadingTopPhotos(false))
     }
     
     // Charger les préférences locales
@@ -295,6 +310,99 @@ export default function Home() {
               </div>
             )}
           </div>
+
+          {/* Top 3 Photos Section - Only for logged in users */}
+          {session && topPhotos.length > 0 && (
+            <div className="max-w-4xl mx-auto mb-16">
+              <div className="text-center mb-8">
+                <h2 className="text-2xl font-bold mb-3 text-transparent bg-gradient-to-r from-neon-pink to-neon-cyan bg-clip-text">
+                  🏆 Vos Meilleures Photos
+                </h2>
+                <p className="text-text-gray">
+                  Vos 3 photos les mieux notées par l'IA
+                </p>
+              </div>
+              
+              <div className="grid md:grid-cols-3 gap-6">
+                {topPhotos.map((photo, index) => (
+                  <div key={photo.id} className="glass-card p-4 group hover:scale-105 transition-transform duration-300">
+                    <div className="relative mb-4">
+                      {/* Badge de position */}
+                      <div className="absolute -top-2 -left-2 z-10">
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                          index === 0 ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-yellow-900' :
+                          index === 1 ? 'bg-gradient-to-r from-gray-300 to-gray-500 text-gray-900' :
+                          'bg-gradient-to-r from-orange-400 to-orange-600 text-orange-900'
+                        }`}>
+                          {index + 1}
+                        </div>
+                      </div>
+                      
+                      {/* Image */}
+                      <div className="aspect-square bg-cosmic-glass rounded-lg overflow-hidden border border-cosmic-glassborder">
+                        <img
+                          src={photo.url}
+                          alt={`Photo ${index + 1}`}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          loading="lazy"
+                        />
+                      </div>
+                    </div>
+                    
+                    {/* Score */}
+                    <div className="text-center">
+                      <div className={`text-2xl font-bold mb-1 ${
+                        photo.score >= 90 ? 'text-green-400' :
+                        photo.score >= 80 ? 'text-yellow-400' :
+                        photo.score >= 70 ? 'text-orange-400' :
+                        'text-red-400'
+                      }`}>
+                        {Math.round(photo.score)}/100
+                      </div>
+                      <div className="text-xs text-text-gray">
+                        {new Date(photo.createdAt).toLocaleDateString('fr-FR', { 
+                          day: 'numeric', 
+                          month: 'short' 
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              {/* Call to action */}
+              <div className="text-center mt-6">
+                <button 
+                  onClick={() => window.location.href = '/gallery'}
+                  className="btn-neon-secondary text-sm px-6 py-2"
+                >
+                  🏆 Voir toutes vos photos
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Message d'encouragement si pas encore de photos */}
+          {session && topPhotos.length === 0 && !loadingTopPhotos && (
+            <div className="max-w-2xl mx-auto mb-16 text-center">
+              <div className="glass-card p-8">
+                <div className="text-4xl mb-4">📸</div>
+                <h3 className="text-lg font-bold mb-3 text-neon-cyan">
+                  Commencez votre collection
+                </h3>
+                <p className="text-text-gray mb-6">
+                  Analysez vos premières photos pour créer votre galerie personnelle !
+                </p>
+                <button 
+                  onClick={() => window.location.href = '/analyze'}
+                  className="btn-neon-pink px-6 py-3"
+                >
+                  📸 Analyser ma première photo
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Features Grid - SEO optimized */}
           <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             <div className="glass-card p-6 text-center">
