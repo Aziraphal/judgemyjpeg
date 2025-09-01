@@ -455,83 +455,91 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
       </div>
 
 
-      {/* Suggestions */}
+      {/* Conseils d'amélioration */}
       <div className="glass-card p-4 sm:p-8 hover-glow">
         <h3 className="text-xl sm:text-2xl font-bold text-text-white mb-4 sm:mb-6 flex items-center">
           <span className="text-2xl sm:text-3xl mr-2 sm:mr-3">💡</span>
           <span className="text-neon-cyan">Conseils d'amélioration</span>
         </h3>
-        <ul className="space-y-3 sm:space-y-4">
-          {analysis.suggestions.map((suggestion, index) => (
-            <li key={index} className="flex items-start glass-card p-3 sm:p-4 hover:bg-cosmic-glassborder transition-all duration-300">
-              <span className="text-neon-pink mr-2 sm:mr-3 text-lg sm:text-xl flex-shrink-0 mt-0.5">✨</span>
-              <div className="flex-1 min-w-0">
-                <SmartGlossaryText 
-                  text={suggestion} 
-                  className="text-text-white leading-relaxed text-sm sm:text-base break-words" 
-                  mode={tone}
-                />
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
+        
+        {/* Conseils généraux pour cette photo */}
+        <div className="mb-8">
+          <h4 className="text-lg font-semibold text-white mb-4 flex items-center">
+            <span className="text-xl mr-2">✨</span>
+            Pour cette photo
+          </h4>
+          <ul className="space-y-3 sm:space-y-4">
+            {analysis.suggestions.map((suggestion, index) => (
+              <li key={index} className="flex items-start glass-card p-3 sm:p-4 hover:bg-cosmic-glassborder transition-all duration-300">
+                <span className="text-neon-cyan mr-2 sm:mr-3 text-lg sm:text-xl flex-shrink-0 mt-0.5">▶</span>
+                <div className="flex-1 min-w-0">
+                  <SmartGlossaryText 
+                    text={suggestion} 
+                    className="text-text-white leading-relaxed text-sm sm:text-base break-words" 
+                    mode={tone}
+                  />
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-      {/* Conseils pour la prochaine prise */}
-      {analysis.nextShotTips && analysis.nextShotTips.length > 0 && (
-        <div className="glass-card p-4 sm:p-8 hover-glow">
-          <h3 className="text-xl sm:text-2xl font-bold text-text-white mb-4 sm:mb-6 flex items-center">
-            <span className="text-2xl sm:text-3xl mr-2 sm:mr-3">📸</span>
-            <span className="text-neon-cyan">Conseils pour la prochaine prise</span>
-          </h3>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {analysis.nextShotTips.map((tip, index) => {
-              const categoryIcons = {
-                technique: '⚙️',
-                composition: '🎯',
-                éclairage: '💡',
-                créativité: '✨'
-              }
-              
-              const difficultyColors = {
-                débutant: 'bg-green-500/20 text-green-400',
-                intermédiaire: 'bg-yellow-500/20 text-yellow-400',
-                avancé: 'bg-red-500/20 text-red-400'
-              }
-              
-              return (
-                <div key={index} className="glass-card p-4 sm:p-6 hover:bg-cosmic-glassborder transition-all duration-300">
-                  <div className="flex items-center justify-between mb-3 sm:mb-4">
-                    <div className="flex items-center space-x-2 min-w-0">
-                      <span className="text-lg sm:text-xl flex-shrink-0">{categoryIcons[tip.category]}</span>
-                      <span className="text-xs sm:text-sm font-semibold text-neon-pink capitalize truncate">
-                        {tip.category}
+        {/* Conseils pour la prochaine prise */}
+        {analysis.nextShotTips && analysis.nextShotTips.length > 0 && (
+          <div>
+            <h4 className="text-lg font-semibold text-white mb-4 flex items-center">
+              <span className="text-xl mr-2">📸</span>
+              Conseils pour la prochaine prise
+            </h4>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {analysis.nextShotTips.map((tip, index) => {
+                const categoryIcons = {
+                  technique: '⚙️',
+                  composition: '🎯',
+                  éclairage: '💡',
+                  créativité: '✨'
+                }
+                
+                const difficultyColors = {
+                  débutant: 'bg-green-500/20 text-green-400',
+                  intermédiaire: 'bg-yellow-500/20 text-yellow-400',
+                  avancé: 'bg-red-500/20 text-red-400'
+                }
+                
+                return (
+                  <div key={index} className="glass-card p-4 sm:p-6 hover:bg-cosmic-glassborder transition-all duration-300">
+                    <div className="flex items-center justify-between mb-3 sm:mb-4">
+                      <div className="flex items-center space-x-2 min-w-0">
+                        <span className="text-lg sm:text-xl flex-shrink-0">{categoryIcons[tip.category]}</span>
+                        <span className="text-xs sm:text-sm font-semibold text-neon-cyan capitalize truncate">
+                          {tip.category}
+                        </span>
+                      </div>
+                      <span className={`text-xs px-2 py-1 rounded-full flex-shrink-0 ${difficultyColors[tip.difficulty]}`}>
+                        {tip.difficulty}
                       </span>
                     </div>
-                    <span className={`text-xs px-2 py-1 rounded-full flex-shrink-0 ${difficultyColors[tip.difficulty]}`}>
-                      {tip.difficulty}
-                    </span>
+                    <div className="min-w-0">
+                      <SmartGlossaryText 
+                        text={tip.tip} 
+                        className="text-text-gray leading-relaxed text-xs sm:text-sm break-words" 
+                        mode={tone}
+                      />
+                    </div>
                   </div>
-                  <div className="min-w-0">
-                    <SmartGlossaryText 
-                      text={tip.tip} 
-                      className="text-text-gray leading-relaxed text-xs sm:text-sm break-words" 
-                      mode={tone}
-                    />
-                  </div>
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Conseils de retouche précis */}
       {analysis.toolRecommendations && (
         <div className="glass-card p-4 sm:p-8 hover-glow">
           <h3 className="text-xl sm:text-2xl font-bold text-text-white mb-4 sm:mb-6 flex items-center">
             <span className="text-2xl sm:text-3xl mr-2 sm:mr-3">🎨</span>
-            <span className="text-neon-pink">Conseils de retouche précis</span>
+            <span className="text-neon-pink">Conseils de retouche</span>
           </h3>
           
           <div className="grid md:grid-cols-2 gap-6">
@@ -552,7 +560,7 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
                   {analysis.toolRecommendations.lightroom.slice(0, 4).map((rec, index) => (
                     <li key={index} className="text-text-gray flex items-start text-sm">
                       <span className="text-neon-cyan mr-2 flex-shrink-0">▶</span>
-                      <span className="font-mono text-neon-pink">{rec}</span>
+                      <span className="font-mono text-white">{rec}</span>
                     </li>
                   ))}
                 </ul>
@@ -591,7 +599,7 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
                   {analysis.toolRecommendations.snapseed.slice(0, 4).map((rec, index) => (
                     <li key={index} className="text-text-gray flex items-start text-sm">
                       <span className="text-neon-cyan mr-2 flex-shrink-0">▶</span>
-                      <span className="font-mono text-neon-pink">{rec}</span>
+                      <span className="font-mono text-white">{rec}</span>
                     </li>
                   ))}
                 </ul>
