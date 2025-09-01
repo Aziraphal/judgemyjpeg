@@ -284,16 +284,16 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
       },
       "toolRecommendations": {
         "lightroom": [
-          "Ombres : +30",
-          "Contraste : +15", 
-          "Clarté : +10",
-          "Ajouter un filtre dégradé sur le ciel (exposition -0.5)"
+          "ANALYSE CETTE PHOTO SPÉCIFIQUEMENT et donne 4 conseils précis adaptés à SES défauts/qualités",
+          "Format obligatoire : 'Paramètre : valeur' (ex: 'Exposition : -0.3', 'Vibrance : +25')",
+          "VARIE les paramètres selon la photo : Ombres, Hautes lumières, Exposition, Contraste, Clarté, Vibrance, Saturation, Correction colorimétrique, etc.",
+          "ADAPTE les valeurs selon les problèmes visuels détectés sur CETTE photo"
         ],
         "snapseed": [
-          "Détails → Netteté : +20",
-          "HDR → Intensité : +15", 
-          "Recadrage → Règle des tiers pour centrer le sujet",
-          "Saturation → +10 pour renforcer les couleurs"
+          "ANALYSE CETTE PHOTO SPÉCIFIQUEMENT et donne 4 actions précises adaptées à SES besoins",
+          "Format obligatoire : 'Outil → Action : valeur' (ex: 'Éclairage → Exposition : -15', 'Couleurs → Saturation : +8')",
+          "VARIE les outils selon la photo : Éclairage, Couleurs, Détails, HDR, Portrait, Perspective, Recadrage, etc.",
+          "ADAPTE les réglages selon les problèmes visuels détectés sur CETTE photo"
         ]
       },
       "nextShotTips": [
@@ -345,15 +345,22 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
     • LOW (score 0-30) : Photo déjà excellente, risque de sur-traitement
     • SOIS HONNÊTE : si la photo est déjà parfaite, dis-le !
 
-    ⚡ OBLIGATIONS POUR "toolRecommendations" SÉCURISÉS :
-    • ADAPTE l'intensité des conseils selon le potentiel de retouche :
-      - Potentiel HIGH : valeurs marquées (+20 à +50)
-      - Potentiel MEDIUM : valeurs modérées (+10 à +30) 
-      - Potentiel LOW : valeurs subtiles (+2 à +15)
-    • Lightroom : VALEURS PRÉCISES adaptées au potentiel ("Ombres : +5" si photo déjà bonne)
-    • Snapseed : ACTIONS PRÉCISES adaptées ("Détails → Netteté : +8" si déjà nette)
+    🔍 ANALYSE VISUELLE OBLIGATOIRE AVANT CONSEILS :
+    • REGARDE attentivement cette photo spécifique
+    • IDENTIFIE ses problèmes réels (sous-exposition ? sur-exposition ? manque de contraste ? couleurs ternes ?)
+    • ADAPTE tes conseils aux défauts VISIBLES sur cette image
+    • VARIE complètement tes recommandations selon chaque photo
+
+    ⚡ OBLIGATIONS POUR "toolRecommendations" SPÉCIFIQUES :
+    • JAMAIS les mêmes conseils pour 2 photos différentes
+    • ADAPTE l'intensité selon le potentiel ET les problèmes détectés :
+      - Photo sombre → Exposition/Ombres positifs
+      - Photo claire → Hautes lumières négatives  
+      - Photo terne → Vibrance/Saturation positives
+      - Photo nette → Pas de netteté, focus sur couleurs/expo
+    • UTILISE des paramètres variés : Exposition, Ombres, Hautes lumières, Contraste, Clarté, Vibrance, Saturation, Balance des blancs, etc.
     • JAMAIS de conseils qui risquent de dégrader (sur-exposition, sur-saturation)
-    • Utilise des réglages réalistes et SÉCURISÉS
+    • SOIS CRÉATIF et spécifique à chaque image
     `
 
     const response = await openai.chat.completions.create({
