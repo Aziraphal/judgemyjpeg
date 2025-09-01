@@ -40,36 +40,13 @@ export async function generateUserInsights(userData: {
   totalPhotos: number
 }): Promise<UserInsights> {
   try {
-    // TEMPORAIREMENT DÉSACTIVÉ - Retourne le fallback directement
-    throw new Error('Gemini temporairement désactivé')
+    // FONCTION DÉSACTIVÉE - Service insights non disponible
+    throw new Error('Service d\'insights personnalisés temporairement indisponible. Réessayez plus tard.')
 
   } catch (error) {
-    // Note: logger would require user context here
-    // Keep console.error for now as this is a service function
     logger.error('Erreur génération insights:', error)
     
-    // Fallback avec des insights basiques
-    return {
-      patterns: {
-        favoriteStyles: ['Style moderne', 'Composition classique'],
-        strengths: ['Créativité', 'Technique solide'],
-        improvements: ['Éclairage', 'Composition'],
-        preferences: 'Vous semblez apprécier les photos avec une bonne composition et des couleurs vives.'
-      },
-      recommendations: {
-        nextPhotos: ['Portrait en lumière naturelle', 'Paysage urbain', 'Macro créatif'],
-        techniques: ['Règle des tiers', 'Éclairage doux', 'Profondeur de champ'],
-        challenges: ['Photo noir et blanc', 'Photo de nuit', 'Portrait artistique']
-      },
-      tutorials: [
-        {
-          title: 'Maîtriser la composition',
-          description: 'Apprenez les règles fondamentales de composition photographique',
-          priority: 'high',
-          category: 'composition'
-        }
-      ],
-      personalizedAdvice: 'Continuez à explorer différents styles ! Votre créativité est votre point fort.'
-    }
+    // Relancer l'erreur au lieu de retourner des données mockées
+    throw error
   }
 }

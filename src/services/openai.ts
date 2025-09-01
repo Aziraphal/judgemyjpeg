@@ -298,39 +298,39 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
       },
       "nextShotTips": [
         {
-          "tip": "Conseil spécifique pour améliorer la prochaine prise de vue",
+          "tip": "ANALYSE LES DÉFAUTS DE CETTE PHOTO et donne un conseil précis pour éviter ce problème lors de la PROCHAINE prise de vue",
           "category": "technique|composition|éclairage|créativité",
           "difficulty": "débutant|intermédiaire|avancé"
         },
         {
-          "tip": "Deuxième conseil pour la prise de vue suivante",
-          "category": "technique|composition|éclairage|créativité",
+          "tip": "IDENTIFIE un point faible spécifique de cette image et suggère une amélioration concrète pour les futures photos",
+          "category": "technique|composition|éclairage|créativité", 
           "difficulty": "débutant|intermédiaire|avancé"
         },
         {
-          "tip": "Troisième conseil pratique pour s'améliorer",
+          "tip": "OBSERVE ce qui manque à cette photo et propose une technique précise à appliquer la prochaine fois",
           "category": "technique|composition|éclairage|créativité",
           "difficulty": "débutant|intermédiaire|avancé"
         }
       ],
       "editingRecommendations": [
         {
-          "suggestion": "Retouche spécifique pour améliorer CETTE photo",
+          "suggestion": "REGARDE LES DÉFAUTS VISUELS de cette photo et propose UNE retouche précise pour corriger le problème principal",
           "tool": "Lightroom|Photoshop|Snapseed|GIMP",
-          "difficulty": "facile|moyen|difficile",
-          "expectedImprovement": "Résultat attendu de cette retouche"
+          "difficulty": "facile|moyen|difficile", 
+          "expectedImprovement": "EXPLIQUE le résultat visuel concret attendu pour CETTE photo spécifique"
         },
         {
-          "suggestion": "Deuxième suggestion de retouche pour cette photo",
+          "suggestion": "IDENTIFIE un deuxième point d'amélioration sur cette image et suggère la retouche adaptée", 
           "tool": "Lightroom|Photoshop|Snapseed|GIMP",
           "difficulty": "facile|moyen|difficile",
-          "expectedImprovement": "Bénéfice de cette modification"
+          "expectedImprovement": "DÉCRIS l'amélioration visuelle précise pour cette photo"
         },
         {
-          "suggestion": "Troisième idée de retouche ciblée",
-          "tool": "Lightroom|Photoshop|Snapseed|GIMP",
+          "suggestion": "OBSERVE un troisième aspect perfectible de cette photo et propose une solution de retouche ciblée",
+          "tool": "Lightroom|Photoshop|Snapseed|GIMP", 
           "difficulty": "facile|moyen|difficile",
-          "expectedImprovement": "Impact visuel escompté"
+          "expectedImprovement": "EXPLIQUE le gain visuel attendu sur cette image particulière"
         }
       ]
     }

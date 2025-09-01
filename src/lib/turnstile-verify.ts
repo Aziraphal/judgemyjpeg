@@ -10,8 +10,11 @@ interface TurnstileResponse {
 }
 
 export async function verifyTurnstileToken(token: string, userIP?: string): Promise<boolean> {
-  // En développement, accepter le token de bypass
+  // ⚠️ DÉVELOPPEMENT UNIQUEMENT : Bypass pour tests automatisés
+  // Ce bypass ne fonctionne QUE en NODE_ENV=development
+  // En production, toutes les requêtes passent par Cloudflare Turnstile
   if (process.env.NODE_ENV === 'development' && token === 'dev-bypass-token') {
+    console.warn('🚨 Turnstile bypassed - Development mode only')
     return true
   }
 
