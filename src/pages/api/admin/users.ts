@@ -4,8 +4,6 @@ import { logger, getClientIP } from '@/lib/logger'
 import { rateLimit } from '@/lib/rate-limit'
 import { AuditLogger } from '@/lib/audit-trail'
 
-const auditLogger = new AuditLogger()
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -203,6 +201,8 @@ async function handleUpdateUser(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function handleDeleteUser(req: NextApiRequest, res: NextApiResponse) {
+  const auditLogger = new AuditLogger(req)
+  
   // Rate limiting strict pour suppression utilisateur (1 par minute)
   const rateLimitResult = await rateLimit(req, res, {
     interval: 60 * 1000, // 1 minute
