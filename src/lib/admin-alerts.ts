@@ -210,7 +210,7 @@ async function checkApiHealth(metrics: BusinessMetrics, alerts: Alert[]): Promis
 async function sendCriticalAlert(alert: Alert, metrics: BusinessMetrics): Promise<void> {
   try {
     // Email admin (depuis env ou fallback)
-    const adminEmail = process.env.ADMIN_EMAIL || 'cyril.paquier@gmail.com'
+    const adminEmail = process.env.ADMIN_EMAIL || 'contact.judgemyjpeg@gmail.com'
     
     const subject = `🚨 ALERTE CRITIQUE - ${alert.metric}`
     const description = `

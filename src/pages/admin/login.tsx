@@ -345,7 +345,7 @@ export default function AdminLoginPage() {
                       <h4 className="text-blue-300 font-semibold mb-2">📧 Notifications Email</h4>
                       <p className="text-sm text-text-gray">
                         Alertes critiques envoyées automatiquement à<br/>
-                        <strong className="text-blue-300">cyril.paquier@gmail.com</strong>
+                        <strong className="text-blue-300">contact.judgemyjpeg@gmail.com</strong>
                       </p>
                     </div>
                     

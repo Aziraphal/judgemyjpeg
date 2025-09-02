@@ -47,7 +47,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
 
     // Préparer l'email admin
-    const adminEmail = process.env.ADMIN_EMAIL || 'cyril.paquier@gmail.com'
+    const adminEmail = process.env.ADMIN_EMAIL || 'contact.judgemyjpeg@gmail.com'
     const categoryEmojis = {
       support: '🛠️',
       partnership: '🤝', 

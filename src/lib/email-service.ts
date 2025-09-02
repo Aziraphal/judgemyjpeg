@@ -171,7 +171,7 @@ export async function sendCriticalSecurityAlert(
   metadata?: Record<string, any>
 ): Promise<void> {
   try {
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@judgemyjpeg.fr'
+    const adminEmail = process.env.ADMIN_EMAIL || 'contact.judgemyjpeg@gmail.com'
     
     await getResendClient().emails.send({
       from: 'JudgeMyJPEG Security <security@judgemyjpeg.fr>',
