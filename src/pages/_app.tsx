@@ -187,5 +187,14 @@ export default function App({
 
 // Export Web Vitals reporting function for Next.js
 export function reportWebVitals(metric: any) {
-  recordWebVital(metric)
+  try {
+    // Vérifier que la métrique a les propriétés requises
+    if (metric?.name && typeof metric.value === 'number' && metric.id) {
+      recordWebVital(metric)
+    } else {
+      console.warn('Invalid web vital metric:', metric)
+    }
+  } catch (error) {
+    console.error('Error recording web vital:', error)
+  }
 }
