@@ -13,6 +13,7 @@ import { validateUpload } from '@/lib/file-validation'
 import { AuditLogger } from '@/lib/audit-trail'
 import { cacheService } from '@/lib/cache-service'
 import { moderateImage, ModerationResult } from '@/lib/moderation'
+import { recordAnalysisMetric } from '@/lib/business-metrics'
 
 export const config = {
   api: {
@@ -34,6 +35,9 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     filename: 'analyze.ts',
     method: req.method 
   }, req.user.id, ip)
+
+  // Timer pour mesurer durée totale
+  const analysisStartTime = Date.now()
 
   try {
 
@@ -354,10 +358,15 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     // Audit: Successful photo analysis
     await auditLogger.photoAnalysis(req.user.id, photo.filename, analysis.score)
     
+    // Mesurer durée totale et enregistrer métrique de succès
+    const analysisDuration = Date.now() - analysisStartTime
+    recordAnalysisMetric(photo.id, analysisDuration, true)
+
     logger.info('Photo analysis completed successfully', {
       photoId: photo.id,
       score: analysis.score,
-      filename: photo.filename
+      filename: photo.filename,
+      duration: analysisDuration
     }, req.user.id, ip)
 
     res.status(200).json({
@@ -382,6 +391,11 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     })
 
   } catch (error) {
+    // Mesurer durée et enregistrer métrique d'échec
+    const analysisDuration = Date.now() - analysisStartTime
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    recordAnalysisMetric('failed-' + Date.now(), analysisDuration, false, errorMessage)
+
     logger.error('Photo analysis failed', error, req.user.id, ip)
     
     // Gestion spécifique des erreurs formidable

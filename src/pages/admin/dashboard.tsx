@@ -355,6 +355,12 @@ export default function AdminDashboard() {
                     >
                       📊 Analytics de sécurité
                     </button>
+                    <button
+                      onClick={() => router.push('/admin/metrics')}
+                      className="w-full bg-neon-cyan/20 text-neon-cyan px-4 py-2 rounded hover:bg-neon-cyan/30 transition-colors text-left"
+                    >
+                      📈 Métriques Business
+                    </button>
                   </div>
                 </div>
               </div>

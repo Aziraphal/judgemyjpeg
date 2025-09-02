@@ -11,6 +11,7 @@ import { useEffect } from 'react'
 import { GA_TRACKING_ID, pageview } from '@/lib/gtag'
 import { logger } from '@/lib/logger'
 import Script from 'next/script'
+import { recordWebVital, collectResourceTimings, observeLongTasks } from '@/lib/performance-monitor'
 
 export default function App({
   Component,
@@ -33,6 +34,24 @@ export default function App({
       }
     }
   }, [router.events])
+
+  // Performance monitoring
+  useEffect(() => {
+    // Observer les long tasks et collecter les resource timings
+    observeLongTasks()
+    
+    // Collecter les resource timings après le load
+    const collectTimings = () => {
+      setTimeout(collectResourceTimings, 5000) // 5s après le load
+    }
+    
+    if (document.readyState === 'complete') {
+      collectTimings()
+    } else {
+      window.addEventListener('load', collectTimings)
+      return () => window.removeEventListener('load', collectTimings)
+    }
+  }, [])
 
   return (
     <>
@@ -164,4 +183,9 @@ export default function App({
       </SessionProvider>
     </>
   )
+}
+
+// Export Web Vitals reporting function for Next.js
+export function reportWebVitals(metric: any) {
+  recordWebVital(metric)
 }
