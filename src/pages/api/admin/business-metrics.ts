@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/pages/api/auth/[...nextauth]'
 import { collectBusinessMetrics } from '@/lib/business-metrics'
+import { checkAndSendAlerts } from '@/lib/admin-alerts'
 import { logger } from '@/lib/logger'
 
 /**
@@ -35,6 +36,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Collecte des métriques
     const metrics = await collectBusinessMetrics()
+    
+    // Vérification proactive des alertes (async, ne bloque pas la réponse)
+    checkAndSendAlerts(metrics).catch(error => {
+      logger.error('Alert check failed during metrics collection:', error)
+    })
 
     // Headers pour éviter le cache
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate')

@@ -36,6 +36,8 @@ export default function AdminLoginPage() {
   const [lastUpdate, setLastUpdate] = useState<string>('')
   const [healthStatus, setHealthStatus] = useState<'healthy' | 'warning' | 'critical'>('healthy')
   const [isLoadingMetrics, setIsLoadingMetrics] = useState(false)
+  const [isTestingAlerts, setIsTestingAlerts] = useState(false)
+  const [alertStatus, setAlertStatus] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
 
   // Vérifier si utilisateur est admin
@@ -68,6 +70,28 @@ export default function AdminLoginPage() {
       setError('Erreur chargement des métriques admin')
     } finally {
       setIsLoadingMetrics(false)
+    }
+  }
+
+  const testAlertSystem = async () => {
+    setIsTestingAlerts(true)
+    setAlertStatus('')
+    try {
+      const response = await fetch('/api/admin/alerts/check', {
+        method: 'POST'
+      })
+      const data = await response.json()
+      
+      if (data.success) {
+        setAlertStatus(`✅ Test réussi: ${data.test_alerts} alertes envoyées par email`)
+      } else {
+        setAlertStatus('❌ Test échoué')
+      }
+    } catch (error) {
+      console.error('Erreur test alertes:', error)
+      setAlertStatus('❌ Erreur lors du test')
+    } finally {
+      setIsTestingAlerts(false)
     }
   }
 
@@ -195,6 +219,13 @@ export default function AdminLoginPage() {
                 {isLoadingMetrics ? '⏳' : '🔄'} Actualiser
               </button>
               <button
+                onClick={testAlertSystem}
+                disabled={isTestingAlerts}
+                className="btn-neon-pink"
+              >
+                {isTestingAlerts ? '⏳' : '🚨'} Test Alertes
+              </button>
+              <button
                 onClick={() => router.push('/admin/dashboard')}
                 className="btn-ghost"
               >
@@ -206,6 +237,16 @@ export default function AdminLoginPage() {
           {error && (
             <div className="bg-red-900/20 border border-red-500/30 text-red-300 p-4 rounded-lg mb-6">
               ❌ {error}
+            </div>
+          )}
+
+          {alertStatus && (
+            <div className={`p-4 rounded-lg mb-6 ${
+              alertStatus.includes('✅') 
+                ? 'bg-green-900/20 border border-green-500/30 text-green-300'
+                : 'bg-red-900/20 border border-red-500/30 text-red-300'
+            }`}>
+              {alertStatus}
             </div>
           )}
 
@@ -228,7 +269,7 @@ export default function AdminLoginPage() {
                 </div>
               </div>
 
-              <div className="grid md:grid-cols-3 gap-6">
+              <div className="grid md:grid-cols-3 gap-6 mb-8">
                 {/* Analyses */}
                 <div className="glass-card p-6">
                   <h3 className="text-lg font-semibold text-white mb-4">📸 Analyses IA</h3>
@@ -289,6 +330,41 @@ export default function AdminLoginPage() {
                       <span className="text-text-gray">DB</span>
                       <span className="font-bold text-green-400">{metrics.api_health.db_response_time}ms</span>
                     </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Section Alertes Automatiques */}
+              <div className="glass-card p-6">
+                <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+                  🚨 <span className="ml-2">Système d'Alertes Automatiques</span>
+                </h3>
+                <div className="space-y-4">
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
+                      <h4 className="text-blue-300 font-semibold mb-2">📧 Notifications Email</h4>
+                      <p className="text-sm text-text-gray">
+                        Alertes critiques envoyées automatiquement à<br/>
+                        <strong className="text-blue-300">cyril.paquier@gmail.com</strong>
+                      </p>
+                    </div>
+                    
+                    <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
+                      <h4 className="text-yellow-300 font-semibold mb-2">⚡ Seuils Surveillés</h4>
+                      <ul className="text-sm text-text-gray space-y-1">
+                        <li>• Taux succès analyses &lt; 85%</li>
+                        <li>• Temps réponse &gt; 30s</li>
+                        <li>• Erreurs &gt; 20/heure</li>
+                        <li>• APIs externes en panne</li>
+                      </ul>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3">
+                    <p className="text-sm text-green-300 flex items-center">
+                      <span className="mr-2">✅</span>
+                      <strong>Surveillance active:</strong> Vérification automatique toutes les 30s lors de l'accès aux métriques
+                    </p>
                   </div>
                 </div>
               </div>
