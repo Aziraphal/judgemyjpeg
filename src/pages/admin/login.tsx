@@ -40,7 +40,7 @@ export default function AdminLoginPage() {
 
   // Vérifier si utilisateur est admin
   const isAdmin = session?.user?.email && 
-    ['admin@judgemyjpeg.com', 'contact@judgemyjpeg.com'].includes(session.user.email)
+    ['admin@judgemyjpeg.com', 'contact@judgemyjpeg.com', 'cyril.paquier@gmail.com'].includes(session.user.email)
 
   useEffect(() => {
     if (isAdmin) {

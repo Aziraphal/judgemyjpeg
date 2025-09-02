@@ -301,8 +301,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   }
   
-  // Vérification admin (email hardcodé pour sécurité - à adapter selon tes besoins)
-  const adminEmails = ['admin@judgemyjpeg.com', 'contact@judgemyjpeg.com']
+  // Vérification admin (email hardcodé pour sécurité)
+  const adminEmails = ['admin@judgemyjpeg.com', 'contact@judgemyjpeg.com', 'cyril.paquier@gmail.com']
   if (!adminEmails.includes(session.user.email)) {
     return {
       redirect: {

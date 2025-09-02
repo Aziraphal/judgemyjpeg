@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     
     // Vérification admin (même liste que dans la page)
-    const adminEmails = ['admin@judgemyjpeg.com', 'contact@judgemyjpeg.com']
+    const adminEmails = ['admin@judgemyjpeg.com', 'contact@judgemyjpeg.com', 'cyril.paquier@gmail.com']
     if (!adminEmails.includes(session.user.email)) {
       logger.security('Unauthorized admin access attempt', {
         endpoint: '/api/admin/business-metrics',
