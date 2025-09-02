@@ -207,7 +207,13 @@ export default function FeedbackModal({ isOpen, onClose, initialPage }: Feedback
                   value={formData.title}
                   onChange={(e) => setFormData({...formData, title: e.target.value})}
                   placeholder="Résumé en quelques mots..."
-                  className="w-full p-3 bg-cosmic-dark border border-cosmic-glassborder rounded-lg text-text-white focus:border-neon-cyan focus:outline-none"
+                  className="w-full p-3 rounded-lg border focus:outline-none"
+                  style={{ 
+                    backgroundColor: '#1F2937', 
+                    color: '#FFFFFF', 
+                    borderColor: '#374151',
+                    fontSize: '16px'
+                  }}
                 />
               </div>
 
@@ -221,7 +227,13 @@ export default function FeedbackModal({ isOpen, onClose, initialPage }: Feedback
                   onChange={(e) => setFormData({...formData, message: e.target.value})}
                   placeholder="Décrivez ce que vous pensez, ce qui vous pose problème, vos idées d'amélioration... Soyez franc, c'est exactement ce qu'on veut entendre !"
                   rows={4}
-                  className="w-full p-3 bg-cosmic-dark border border-cosmic-glassborder rounded-lg text-text-white focus:border-neon-cyan focus:outline-none resize-none"
+                  className="w-full p-3 rounded-lg border focus:outline-none resize-none"
+                  style={{ 
+                    backgroundColor: '#1F2937', 
+                    color: '#FFFFFF', 
+                    borderColor: '#374151',
+                    fontSize: '16px'
+                  }}
                 />
                 <div className="text-right text-sm text-text-muted mt-1">
                   {formData.message.length}/2000
@@ -239,7 +251,13 @@ export default function FeedbackModal({ isOpen, onClose, initialPage }: Feedback
                     value={formData.email}
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
                     placeholder="Pour vous répondre si besoin..."
-                    className="w-full p-3 bg-cosmic-dark border border-cosmic-glassborder rounded-lg text-text-white focus:border-neon-cyan focus:outline-none"
+                    className="w-full p-3 rounded-lg border focus:outline-none"
+                    style={{ 
+                      backgroundColor: '#1F2937', 
+                      color: '#FFFFFF', 
+                      borderColor: '#374151',
+                      fontSize: '16px'
+                    }}
                   />
                 </div>
               )}
