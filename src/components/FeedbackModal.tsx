@@ -176,11 +176,16 @@ export default function FeedbackModal({ isOpen, onClose, initialPage }: Feedback
                 <select
                   value={formData.category}
                   onChange={(e) => setFormData({...formData, category: e.target.value})}
-                  className="w-full p-3 bg-cosmic-dark border border-cosmic-glassborder rounded-lg text-text-white focus:border-neon-cyan focus:outline-none [&>option]:bg-cosmic-dark [&>option]:text-text-white"
+                  className="w-full p-3 bg-cosmic-dark border border-cosmic-glassborder rounded-lg text-text-white focus:border-neon-cyan focus:outline-none"
+                  style={{ color: '#E5E7EB' }}
                 >
-                  <option value="">Sélectionnez...</option>
+                  <option value="" style={{ backgroundColor: '#1F2937', color: '#E5E7EB' }}>Sélectionnez...</option>
                   {categories.map((cat) => (
-                    <option key={cat.value} value={cat.value}>
+                    <option 
+                      key={cat.value} 
+                      value={cat.value}
+                      style={{ backgroundColor: '#1F2937', color: '#E5E7EB' }}
+                    >
                       {cat.label}
                     </option>
                   ))}
