@@ -6,12 +6,12 @@ import * as Sentry from '@sentry/nextjs'
 
 // Types des métriques de performance
 interface WebVitalsMetric {
-  name: 'CLS' | 'FID' | 'FCP' | 'LCP' | 'TTFB' | 'INP'
+  name: 'CLS' | 'FID' | 'FCP' | 'LCP' | 'TTFB' | 'INP' | string  // Permettre d'autres métriques
   value: number
-  rating: 'good' | 'needs-improvement' | 'poor'
-  delta: number
+  rating?: 'good' | 'needs-improvement' | 'poor'  // Optionnel car calculé
+  delta?: number
   id: string
-  navigationType: 'navigate' | 'reload' | 'back-forward' | 'back_forward' | 'prerender'
+  navigationType?: 'navigate' | 'reload' | 'back-forward' | 'back_forward' | 'prerender'
 }
 
 interface BusinessPerformanceMetric {
@@ -26,7 +26,7 @@ interface BusinessPerformanceMetric {
  */
 export function recordWebVital(metric: WebVitalsMetric): void {
   // Seuils recommandés Google
-  const thresholds = {
+  const thresholds: Record<string, { good: number; poor: number }> = {
     CLS: { good: 0.1, poor: 0.25 },
     FID: { good: 100, poor: 300 },
     FCP: { good: 1800, poor: 3000 },
@@ -36,6 +36,11 @@ export function recordWebVital(metric: WebVitalsMetric): void {
   }
 
   const threshold = thresholds[metric.name]
+  if (!threshold) {
+    console.warn(`Unknown metric: ${metric.name}`)
+    return
+  }
+  
   const rating = metric.value <= threshold.good 
     ? 'good' 
     : metric.value <= threshold.poor 
@@ -47,9 +52,13 @@ export function recordWebVital(metric: WebVitalsMetric): void {
     category: 'web-vitals',
     message: `${metric.name}: ${metric.value}`,
     data: {
-      ...metric,
+      name: metric.name,
+      value: metric.value,
+      id: metric.id,
+      delta: metric.delta || 0,
+      navigationType: metric.navigationType || 'unknown',
       rating,
-      url: window.location.pathname
+      url: typeof window !== 'undefined' ? window.location.pathname : 'server'
     },
     level: rating === 'poor' ? 'warning' : 'info'
   })
@@ -67,8 +76,9 @@ export function recordWebVital(metric: WebVitalsMetric): void {
         name: metric.name,
         value: metric.value,
         rating,
-        navigationType: metric.navigationType,
-        id: metric.id
+        navigationType: metric.navigationType || 'unknown',
+        id: metric.id,
+        delta: metric.delta || 0
       }
     })
   }

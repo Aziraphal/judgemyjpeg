@@ -1,4 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/pages/api/auth/[...nextauth]'
 import { collectBusinessMetrics } from '@/lib/business-metrics'
 import { logger } from '@/lib/logger'
 
@@ -6,7 +8,7 @@ import { logger } from '@/lib/logger'
  * API Admin - Métriques Business en Temps Réel
  * GET /api/admin/business-metrics
  * 
- * Authentification: Token admin requis
+ * Authentification: Session NextAuth requise avec email admin
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
@@ -14,10 +16,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    // Vérification token admin simple
-    const adminToken = req.headers.authorization?.replace('Bearer ', '')
-    if (!adminToken || adminToken !== process.env.ADMIN_SECRET_KEY) {
-      return res.status(401).json({ error: 'Unauthorized - Admin token required' })
+    // Vérification session NextAuth
+    const session = await getServerSession(req, res, authOptions)
+    
+    if (!session?.user?.email) {
+      return res.status(401).json({ error: 'Unauthorized - Authentication required' })
+    }
+    
+    // Vérification admin (même liste que dans la page)
+    const adminEmails = ['admin@judgemyjpeg.com', 'contact@judgemyjpeg.com']
+    if (!adminEmails.includes(session.user.email)) {
+      logger.security('Unauthorized admin access attempt', {
+        endpoint: '/api/admin/business-metrics',
+        email: session.user.email
+      })
+      return res.status(403).json({ error: 'Forbidden - Admin access required' })
     }
 
     // Collecte des métriques

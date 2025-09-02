@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { GetServerSideProps } from 'next'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/pages/api/auth/[...nextauth]'
 import Link from 'next/link'
 
 interface BusinessMetrics {
@@ -39,17 +42,7 @@ export default function AdminMetricsPage() {
 
   const fetchMetrics = async () => {
     try {
-      const adminToken = sessionStorage.getItem('admin_token')
-      if (!adminToken) {
-        router.push('/admin/login')
-        return
-      }
-
-      const response = await fetch('/api/admin/business-metrics', {
-        headers: {
-          'Authorization': `Bearer ${adminToken}`
-        }
-      })
+      const response = await fetch('/api/admin/business-metrics')
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`)
@@ -292,4 +285,34 @@ export default function AdminMetricsPage() {
       </div>
     </div>
   )
+}
+
+// Protection server-side avec NextAuth
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getServerSession(context.req, context.res, authOptions)
+  
+  // Redirection si pas authentifié
+  if (!session?.user?.email) {
+    return {
+      redirect: {
+        destination: '/auth/signin?callbackUrl=/admin/metrics',
+        permanent: false,
+      },
+    }
+  }
+  
+  // Vérification admin (email hardcodé pour sécurité - à adapter selon tes besoins)
+  const adminEmails = ['admin@judgemyjpeg.com', 'contact@judgemyjpeg.com']
+  if (!adminEmails.includes(session.user.email)) {
+    return {
+      redirect: {
+        destination: '/?error=unauthorized',
+        permanent: false,
+      },
+    }
+  }
+  
+  return {
+    props: {},
+  }
 }
