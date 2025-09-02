@@ -84,7 +84,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         priority,
         ip
       }),
-      reply_to: email
+      replyTo: email
     })
 
     // Email de confirmation à l'utilisateur
