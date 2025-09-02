@@ -160,6 +160,7 @@ export default function Contact() {
                         <div>
                           <h3 className="font-semibold text-green-400">Message envoyé !</h3>
                           <p className="text-green-300 text-sm">Je vous répondrai sous 2-6 heures en moyenne.</p>
+                          <p className="text-yellow-300 text-xs mt-1">📧 Pensez à vérifier vos spams si vous ne recevez pas de confirmation.</p>
                         </div>
                       </div>
                     </div>
@@ -222,9 +223,22 @@ export default function Contact() {
                         value={formData.category}
                         onChange={handleChange}
                         className="w-full px-4 py-3 bg-cosmic-glass border border-cosmic-glassborder rounded-lg text-text-white focus:border-neon-cyan focus:outline-none"
+                        style={{
+                          backgroundColor: '#1F2937',
+                          color: '#FFFFFF',
+                          borderColor: '#374151'
+                        }}
                       >
                         {categories.map(cat => (
-                          <option key={cat.id} value={cat.id}>
+                          <option 
+                            key={cat.id} 
+                            value={cat.id}
+                            style={{
+                              backgroundColor: '#1F2937',
+                              color: '#FFFFFF',
+                              padding: '8px'
+                            }}
+                          >
                             {cat.name}
                           </option>
                         ))}
