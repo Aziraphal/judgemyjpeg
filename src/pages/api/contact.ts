@@ -212,16 +212,16 @@ function createConfirmationEmailHTML(name: string, subject: string): string {
       <div style="padding: 40px 30px;">
         <h2 style="color: #22C55E; margin-bottom: 20px; text-align: center;">Merci ${name} !</h2>
         
-        <p style="font-size: 16px; line-height: 1.6; margin-bottom: 30px; text-align: center;">
-          Votre message concernant <strong>"${subject}"</strong> a été reçu et sera traité dans les plus brefs délais.
+        <p style="font-size: 18px; line-height: 1.6; margin-bottom: 30px; text-align: center; color: #FFFFFF;">
+          Votre message concernant <strong style="color: #00F5FF;">"${subject}"</strong> a été reçu et sera traité dans les plus brefs délais.
         </p>
         
-        <div style="background: rgba(34, 197, 94, 0.1); padding: 20px; border-radius: 10px; margin: 20px 0;">
-          <h3 style="color: #22C55E; margin-top: 0;">⏰ Temps de réponse</h3>
-          <ul style="margin: 0; padding-left: 20px;">
-            <li>Support technique: 24-48h</li>
-            <li>Questions générales: 2-5 jours</li>
-            <li>Partenariats: 1 semaine</li>
+        <div style="background: rgba(34, 197, 94, 0.2); padding: 25px; border-radius: 12px; margin: 25px 0; border: 2px solid #22C55E;">
+          <h3 style="color: #00FF88; margin-top: 0; font-size: 20px;">⏰ Temps de réponse</h3>
+          <ul style="margin: 10px 0; padding-left: 25px; color: #FFFFFF; font-size: 16px; line-height: 1.8;">
+            <li><strong>Support technique:</strong> 24-48h</li>
+            <li><strong>Questions générales:</strong> 2-5 jours</li>
+            <li><strong>Partenariats:</strong> 1 semaine</li>
           </ul>
         </div>
         
@@ -238,8 +238,8 @@ function createConfirmationEmailHTML(name: string, subject: string): string {
         </div>
       </div>
       
-      <div style="background: rgba(0,0,0,0.3); padding: 20px; text-align: center; font-size: 12px; opacity: 0.7;">
-        <p style="margin: 0;">© ${new Date().getFullYear()} JudgeMyJPEG - L'IA qui juge vos photos</p>
+      <div style="background: rgba(0,0,0,0.5); padding: 20px; text-align: center; font-size: 14px;">
+        <p style="margin: 0; color: #CCCCCC;">© ${new Date().getFullYear()} JudgeMyJPEG - L'IA qui juge vos photos</p>
       </div>
     </div>
   `
