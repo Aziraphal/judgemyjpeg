@@ -295,7 +295,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (!session?.user?.email) {
     return {
       redirect: {
-        destination: '/auth/signin?callbackUrl=/admin/metrics',
+        destination: '/admin/login',
         permanent: false,
       },
     }
