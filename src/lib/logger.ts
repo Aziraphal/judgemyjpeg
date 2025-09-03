@@ -83,6 +83,11 @@ class Logger {
   }
 
   warn(message: string, meta?: any, userId?: string, ip?: string) {
+    // Filtrer les warnings crypto browser extensions
+    if (message.includes('Crypto injection detected') || 
+        (meta && (meta.type === 'ethereum' || meta.type === 'web3'))) {
+      return // Ignore les warnings crypto
+    }
     this.log('warn', message, meta, userId, ip)
   }
 
