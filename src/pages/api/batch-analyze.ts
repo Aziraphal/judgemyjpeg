@@ -149,28 +149,15 @@ export default async function handler(
 
     logger.debug(`🚀 Début analyse batch: ${images.length} photos pour ${session.user.email}`)
 
-    // Analyser chaque image avec le nouveau système intelligent
-    const analysisResults = []
-    const photosForBatch = []
-
-    for (let i = 0; i < images.length; i++) {
-      const image = images[i]
-      
+    // 🚀 Analyser toutes les images EN PARALLÈLE pour éviter les timeouts
+    const analysisPromises = images.map(async (image, index) => {
       try {
-        logger.debug(`📸 Analyse ${i + 1}/${images.length}: ${image.filename}`)
+        logger.debug(`📸 Analyse ${index + 1}/${images.length}: ${image.filename}`)
         
         const analysis = await analyzePhoto(image.data, tone)
         
-        // Préparer pour l'analyse batch
-        photosForBatch.push({
-          id: image.id,
-          filename: image.filename,
-          analysis: analysis,
-          imageBase64: image.data
-        })
-        
-        // Sauvegarder en base
-        await prisma.photo.create({
+        // Sauvegarder en base en parallèle
+        const photoRecord = prisma.photo.create({
           data: {
             filename: image.filename,
             url: `data:image/jpeg;base64,${image.data}`, // Base64 inline pour analyse batch
@@ -180,14 +167,57 @@ export default async function handler(
           }
         })
         
+        return {
+          id: image.id,
+          filename: image.filename,
+          analysis: analysis,
+          imageBase64: image.data,
+          photoRecord
+        }
+        
       } catch (error) {
         logger.error(`❌ Erreur analyse ${image.filename}:`, error)
-        analysisResults.push({
+        return {
           id: image.id,
           error: 'Erreur lors de l\'analyse'
+        }
+      }
+    })
+
+    // Attendre TOUTES les analyses en parallèle avec timeout
+    logger.info(`⚡ Lancement de ${images.length} analyses en parallèle...`)
+    const analysisResults = await Promise.allSettled(analysisPromises)
+    
+    // Séparer les succès et les erreurs
+    const photosForBatch = []
+    const errors = []
+    
+    for (let i = 0; i < analysisResults.length; i++) {
+      const result = analysisResults[i]
+      
+      if (result.status === 'fulfilled' && result.value && !result.value.error) {
+        photosForBatch.push({
+          id: result.value.id,
+          filename: result.value.filename,
+          analysis: result.value.analysis,
+          imageBase64: result.value.imageBase64
+        })
+        
+        // Attendre la sauvegarde DB si elle existe
+        if (result.value.photoRecord) {
+          await result.value.photoRecord
+        }
+      } else {
+        errors.push({
+          id: images[i].id,
+          error: result.status === 'rejected' 
+            ? 'Timeout ou erreur réseau' 
+            : result.value?.error || 'Erreur inconnue'
         })
       }
     }
+    
+    logger.info(`✅ Analyses terminées: ${photosForBatch.length} succès, ${errors.length} erreurs`)
 
     // Générer le rapport intelligent avec classement et détection célébrités
     let report = null
@@ -223,9 +253,15 @@ export default async function handler(
       logger.debug(`🏆 Meilleure photo: ${batchReport.bestPhoto.filename} (${batchReport.bestPhoto.score}/100)`)
       logger.debug(`🎨 Photos célèbres détectées: ${batchReport.famousPhotosCount}`)
       
-    } else {
-      // Ajouter les erreurs d'analyse
-      results.push(...analysisResults)
+    }
+    
+    // Ajouter les erreurs d'analyse à la fin
+    errors.forEach(error => {
+      results.push(error)
+    })
+    
+    // Générer un rapport même avec des erreurs partielles
+    if (results.length === 0) {
       report = {
         totalPhotos: 0,
         avgScore: 0,
@@ -382,6 +418,8 @@ export const config = {
   api: {
     bodyParser: {
       sizeLimit: '50mb', // Limite élevée pour batch
-    }
+    },
+    responseLimit: false, // Désactiver la limite de réponse
+    externalResolver: true, // Pour les timeouts longs
   }
 }

@@ -123,6 +123,10 @@ export default function BatchAnalysis() {
       const updatedPhotos = photos.map(p => ({ ...p, status: 'analyzing' as const }))
       setPhotos(updatedPhotos)
       
+      // Estimé du temps d'analyse
+      const estimatedTime = Math.round(photos.length * 12) // ~12s par photo en parallèle
+      console.log(`🚀 Démarrage analyse de ${photos.length} photos (temps estimé: ${estimatedTime}s)`)
+      
       // Convertir toutes les images en base64
       const imagesData = await Promise.all(
         updatedPhotos.map(async (photo) => ({
@@ -132,7 +136,10 @@ export default function BatchAnalysis() {
         }))
       )
       
-      // Analyser toutes les photos d'un coup
+      // Analyser toutes les photos d'un coup avec timeout étendu
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 180000) // 3 minutes timeout
+      
       const response = await fetch('/api/batch-analyze', {
         method: 'POST',
         headers: {
@@ -141,8 +148,11 @@ export default function BatchAnalysis() {
         body: JSON.stringify({
           images: imagesData,
           tone: 'professional'
-        })
+        }),
+        signal: controller.signal
       })
+      
+      clearTimeout(timeoutId)
       
       if (response.ok) {
         const data = await response.json()
@@ -187,7 +197,21 @@ export default function BatchAnalysis() {
       }
     } catch (error) {
       logger.error('Erreur analyse batch:', error)
-      alert('Erreur de réseau ou images trop volumineuses. Essayez avec moins de photos ou des images plus petites.')
+      
+      // Messages d'erreur spécifiques
+      let errorMessage = 'Erreur lors de l\'analyse en lot'
+      
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          errorMessage = 'Timeout - L\'analyse a pris trop de temps. Essayez avec moins de photos ou des images plus petites.'
+        } else if (error.message.includes('Failed to fetch')) {
+          errorMessage = 'Erreur de connexion. Vérifiez votre réseau et réessayez.'
+        } else {
+          errorMessage = error.message
+        }
+      }
+      
+      alert(errorMessage)
       const errorPhotos = photos.map(p => ({ ...p, status: 'error' as const }))
       setPhotos(errorPhotos)
     } finally {
