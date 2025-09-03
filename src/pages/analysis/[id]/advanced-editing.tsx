@@ -149,7 +149,13 @@ export default function AdvancedEditingPage() {
 
   const urlToBase64ViaCanvas = async (url: string): Promise<string> => {
     return new Promise((resolve, reject) => {
-      const img = new Image()
+      // Vérifier si on est côté client
+      if (typeof window === 'undefined') {
+        reject(new Error('Canvas not available on server side'))
+        return
+      }
+      
+      const img = new window.Image()
       img.crossOrigin = 'anonymous'
       img.onload = () => {
         const canvas = document.createElement('canvas')
