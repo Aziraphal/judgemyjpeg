@@ -564,10 +564,12 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
           
           <button
             onClick={() => {
-              // Sauvegarder les données dans le localStorage pour la page d'analyse avancée
+              // Sauvegarder les données dans le localStorage pour la page d'analyse avancée  
+              // Utiliser imageData directe si disponible pour éviter les problèmes CSP
               const analysisData = {
                 id: photo.id,
-                imageUrl: photo.url,
+                imageUrl: photo.url.startsWith('data:') ? photo.url : photo.url, // Garder l'URL originale
+                imageBase64: photo.url.startsWith('data:') ? photo.url.split(',')[1] : null, // Extraire base64 si dispo
                 originalName: photo.filename,
                 score: analysis.score,
                 analysis: `${analysis.technical.composition} ${analysis.technical.lighting} ${analysis.technical.focus} ${analysis.technical.exposure}`,

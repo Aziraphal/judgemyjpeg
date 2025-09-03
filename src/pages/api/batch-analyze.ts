@@ -238,35 +238,84 @@ export default async function handler(
     }
     
     if (photosForBatch.length > 0) {
-      const batchReport = await batchAnalyzer.analyzeBatch(photosForBatch)
-      
-      // Construire les résultats avec ranking et détection célébrités
-      for (const rankedPhoto of batchReport.ranking) {
-        results.push({
-          id: rankedPhoto.id,
-          analysis: rankedPhoto.analysis,
-          rank: rankedPhoto.rank,
-          isFamous: rankedPhoto.isFamous,
-          famousInfo: rankedPhoto.famousInfo
-        })
+      try {
+        const batchReport = await batchAnalyzer.analyzeBatch(photosForBatch)
+        
+        // Construire les résultats avec ranking et détection célébrités
+        for (const rankedPhoto of batchReport.ranking) {
+          results.push({
+            id: rankedPhoto.id,
+            analysis: rankedPhoto.analysis,
+            rank: rankedPhoto.rank,
+            isFamous: rankedPhoto.isFamous,
+            famousInfo: rankedPhoto.famousInfo
+          })
+        }
+        
+        report = {
+          totalPhotos: batchReport.totalPhotos,
+          avgScore: batchReport.avgScore,
+          bestPhoto: batchReport.bestPhoto,
+          worstPhoto: batchReport.worstPhoto,
+          categoryAverages: batchReport.categoryAverages,
+          overallRecommendations: batchReport.overallRecommendations,
+          photographyStyle: batchReport.photographyStyle,
+          improvementPriority: batchReport.improvementPriority,
+          famousPhotosCount: batchReport.famousPhotosCount
+        }
+        
+        logger.debug(`✅ Analyse batch terminée: ${photosForBatch.length}/${images.length} réussies`)
+        logger.debug(`🏆 Meilleure photo: ${batchReport.bestPhoto.filename} (${batchReport.bestPhoto.score}/100)`)
+        logger.debug(`🎨 Photos célèbres détectées: ${batchReport.famousPhotosCount}`)
+        
+      } catch (batchError) {
+        logger.error('Erreur batch analyzer, fallback vers analyse simple:', batchError)
+        
+        // Fallback : analyse simple sans détection célébrités
+        for (const photo of photosForBatch) {
+          results.push({
+            id: photo.id,
+            analysis: photo.analysis,
+            rank: 0,
+            isFamous: false
+          })
+        }
+        
+        // Rapport simple
+        const scores = photosForBatch.map(p => p.analysis.score)
+        const avgScore = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
+        const bestPhoto = photosForBatch.reduce((best, current) => 
+          current.analysis.score > best.analysis.score ? current : best
+        )
+        const worstPhoto = photosForBatch.reduce((worst, current) => 
+          current.analysis.score < worst.analysis.score ? current : worst
+        )
+        
+        report = {
+          totalPhotos: photosForBatch.length,
+          avgScore,
+          bestPhoto: {
+            id: bestPhoto.id,
+            filename: bestPhoto.filename,
+            score: bestPhoto.analysis.score,
+            reason: 'Score le plus élevé'
+          },
+          worstPhoto: {
+            id: worstPhoto.id,
+            filename: worstPhoto.filename,
+            score: worstPhoto.analysis.score,
+            issues: ['Score le plus faible']
+          },
+          categoryAverages: {
+            composition: 10, lighting: 10, focus: 10, exposure: 10,
+            creativity: 10, emotion: 10, storytelling: 5
+          },
+          overallRecommendations: ['Rapport simplifié suite à erreur technique'],
+          photographyStyle: 'Indéterminé',
+          improvementPriority: 'Analyse détaillée indisponible',
+          famousPhotosCount: 0
+        }
       }
-      
-      report = {
-        totalPhotos: batchReport.totalPhotos,
-        avgScore: batchReport.avgScore,
-        bestPhoto: batchReport.bestPhoto,
-        worstPhoto: batchReport.worstPhoto,
-        categoryAverages: batchReport.categoryAverages,
-        overallRecommendations: batchReport.overallRecommendations,
-        photographyStyle: batchReport.photographyStyle,
-        improvementPriority: batchReport.improvementPriority,
-        famousPhotosCount: batchReport.famousPhotosCount
-      }
-      
-      logger.debug(`✅ Analyse batch terminée: ${photosForBatch.length}/${images.length} réussies`)
-      logger.debug(`🏆 Meilleure photo: ${batchReport.bestPhoto.filename} (${batchReport.bestPhoto.score}/100)`)
-      logger.debug(`🎨 Photos célèbres détectées: ${batchReport.famousPhotosCount}`)
-      
     }
     
     // Ajouter les erreurs d'analyse à la fin

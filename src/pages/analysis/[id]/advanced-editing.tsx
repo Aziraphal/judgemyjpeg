@@ -88,14 +88,33 @@ export default function AdvancedEditingPage() {
     try {
       setIsLoading(true)
       
-      // Convertir l'image en base64
-      const imageBase64 = await urlToBase64(photo.imageUrl)
+      // Essayer de récupérer l'image en base64 depuis le localStorage d'abord
+      let imageBase64 = ''
+      
+      // Essayer d'utiliser imageBase64 directement depuis localStorage
+      if ((photo as any).imageBase64) {
+        imageBase64 = (photo as any).imageBase64
+      }
+      // Sinon vérifier si l'URL est déjà en base64 (format data:image/...)
+      else if (photo.imageUrl.startsWith('data:image/')) {
+        imageBase64 = photo.imageUrl.split(',')[1] // Enlever le préfixe data:
+      } else {
+        // Dernière tentative : conversion via fetch (peut échouer à cause de CSP)
+        try {
+          logger.info('Tentative de conversion Cloudinary vers base64...')
+          const fullBase64 = await urlToBase64(photo.imageUrl)
+          imageBase64 = fullBase64.split(',')[1]
+        } catch (cspError) {
+          logger.error('CSP blocked, trying canvas approach')
+          imageBase64 = await urlToBase64ViaCanvas(photo.imageUrl)
+        }
+      }
       
       const response = await fetch('/api/analysis/advanced-editing', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          imageBase64: imageBase64.split(',')[1], // Enlever le préfixe data:
+          imageBase64: imageBase64,
           currentScore: photo.score,
           currentAnalysis: photo.analysis,
           exifData: photo.exifData,
@@ -125,6 +144,31 @@ export default function AdvancedEditingPage() {
       const reader = new FileReader()
       reader.onloadend = () => resolve(reader.result as string)
       reader.readAsDataURL(blob)
+    })
+  }
+
+  const urlToBase64ViaCanvas = async (url: string): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image()
+      img.crossOrigin = 'anonymous'
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d')
+        
+        canvas.width = img.width
+        canvas.height = img.height
+        
+        ctx?.drawImage(img, 0, 0)
+        
+        try {
+          const base64 = canvas.toDataURL('image/jpeg', 0.8)
+          resolve(base64.split(',')[1]) // Retourner juste la partie base64
+        } catch (error) {
+          reject(error)
+        }
+      }
+      img.onerror = () => reject(new Error('Image loading failed'))
+      img.src = url
     })
   }
 
