@@ -221,8 +221,21 @@ export default async function handler(
     logger.info(`✅ Analyses terminées: ${photosForBatch.length} succès, ${errors.length} erreurs`)
 
     // Générer le rapport intelligent avec classement et détection célébrités
-    let report = null
     const results = []
+    let report = {
+      totalPhotos: 0,
+      avgScore: 0,
+      bestPhoto: { id: '', filename: '', score: 0, reason: 'Aucune analyse réussie' },
+      worstPhoto: { id: '', filename: '', score: 0, issues: ['Aucune analyse réussie'] },
+      categoryAverages: {
+        composition: 0, lighting: 0, focus: 0, exposure: 0,
+        creativity: 0, emotion: 0, storytelling: 0
+      },
+      overallRecommendations: ['Aucune analyse réussie'],
+      photographyStyle: 'Indéterminé',
+      improvementPriority: 'Réussir l\'upload des photos',
+      famousPhotosCount: 0
+    }
     
     if (photosForBatch.length > 0) {
       const batchReport = await batchAnalyzer.analyzeBatch(photosForBatch)
@@ -261,23 +274,7 @@ export default async function handler(
       results.push(error)
     })
     
-    // Générer un rapport même avec des erreurs partielles
-    if (results.length === 0) {
-      report = {
-        totalPhotos: 0,
-        avgScore: 0,
-        bestPhoto: { id: '', filename: '', score: 0, reason: 'Aucune analyse réussie' },
-        worstPhoto: { id: '', filename: '', score: 0, issues: ['Aucune analyse réussie'] },
-        categoryAverages: {
-          composition: 0, lighting: 0, focus: 0, exposure: 0,
-          creativity: 0, emotion: 0, storytelling: 0
-        },
-        overallRecommendations: ['Aucune analyse réussie'],
-        photographyStyle: 'Indéterminé',
-        improvementPriority: 'Réussir l\'upload des photos',
-        famousPhotosCount: 0
-      }
-    }
+    // Le rapport par défaut est déjà initialisé ci-dessus
 
     return res.status(200).json({
       success: true,
