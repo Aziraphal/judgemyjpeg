@@ -195,7 +195,8 @@ export default async function handler(
     for (let i = 0; i < analysisResults.length; i++) {
       const result = analysisResults[i]
       
-      if (result.status === 'fulfilled' && result.value && !result.value.error) {
+      if (result.status === 'fulfilled' && result.value && !result.value.error && 
+          result.value.filename && result.value.analysis && result.value.imageBase64) {
         photosForBatch.push({
           id: result.value.id,
           filename: result.value.filename,
