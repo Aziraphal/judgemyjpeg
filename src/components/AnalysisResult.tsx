@@ -534,6 +534,82 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
         )}
       </div>
 
+      {/* Analyse de retouche approfondie */}
+      <div className="glass-card p-4 sm:p-8 hover-glow border border-neon-cyan/20">
+        <div className="text-center space-y-4">
+          <div>
+            <h3 className="text-xl sm:text-2xl font-bold text-text-white mb-2 flex items-center justify-center">
+              <span className="text-2xl sm:text-3xl mr-2 sm:mr-3">🔍</span>
+              <span className="text-neon-cyan">Analyse de retouche approfondie</span>
+            </h3>
+            <p className="text-text-gray text-sm sm:text-base">
+              Obtenez des conseils de retouche précis avec des valeurs exactes pour Lightroom Web et Snapseed
+            </p>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+            <div className="flex items-center space-x-2 text-sm">
+              <span className="text-blue-400">💻</span>
+              <span className="text-text-gray">Lightroom Web (gratuit)</span>
+            </div>
+            <div className="flex items-center space-x-2 text-sm">
+              <span className="text-green-400">📱</span>
+              <span className="text-text-gray">Snapseed (mobile)</span>
+            </div>
+            <div className="flex items-center space-x-2 text-sm">
+              <span className="text-neon-pink">⚡</span>
+              <span className="text-text-gray">Valeurs précises</span>
+            </div>
+          </div>
+          
+          <button
+            onClick={() => {
+              // Sauvegarder les données dans le localStorage pour la page d'analyse avancée
+              const analysisData = {
+                id: photo.id,
+                imageUrl: photo.url,
+                originalName: photo.filename,
+                score: analysis.score,
+                analysis: `${analysis.technical.composition} ${analysis.technical.lighting} ${analysis.technical.focus} ${analysis.technical.exposure}`,
+                exifData: analysis.exifData,
+                createdAt: photo.createdAt
+              }
+              
+              // Récupérer les analyses existantes
+              const existingAnalyses = JSON.parse(localStorage.getItem('photo-analyses') || '[]')
+              
+              // Ajouter ou mettre à jour cette analyse
+              const analysisIndex = existingAnalyses.findIndex((a: any) => a.id === photo.id)
+              if (analysisIndex >= 0) {
+                existingAnalyses[analysisIndex] = analysisData
+              } else {
+                existingAnalyses.unshift(analysisData)
+              }
+              
+              // Limiter à 50 analyses max
+              if (existingAnalyses.length > 50) {
+                existingAnalyses.splice(50)
+              }
+              
+              localStorage.setItem('photo-analyses', JSON.stringify(existingAnalyses))
+              
+              // Naviguer vers la page d'analyse avancée
+              window.open(`/analysis/${photo.id}/advanced-editing`, '_blank')
+            }}
+            className="btn-neon-pink text-sm sm:text-base px-6 py-3 font-semibold hover:scale-105 transition-all duration-300"
+          >
+            <span className="flex items-center space-x-2">
+              <span>🎨</span>
+              <span>Obtenir des conseils précis</span>
+            </span>
+          </button>
+          
+          <div className="text-xs text-text-muted">
+            💡 Conseils étape par étape avec valeurs exactes pour améliorer réellement votre score
+          </div>
+        </div>
+      </div>
+
       {/* Conseils de retouche précis */}
       {analysis.toolRecommendations && (
         <div className="glass-card p-4 sm:p-8 hover-glow">
