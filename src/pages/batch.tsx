@@ -83,8 +83,8 @@ export default function BatchAnalysis() {
   }, [status])
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    // Limite à 5 photos pour le premium
-    const maxFiles = isPremium ? 5 : 3
+    // Limite temporaire à 3 photos max (problème avec 4+)
+    const maxFiles = 3 // Temporairement limité à 3 pour tous
     const selectedFiles = acceptedFiles.slice(0, maxFiles)
     
     const newPhotos: BatchPhoto[] = selectedFiles.map((file, index) => ({
@@ -475,8 +475,13 @@ export default function BatchAnalysis() {
                   {isDragActive ? 'Déposez vos photos ici' : 'Glissez-déposez vos photos'}
                 </h3>
                 <p className="text-text-gray mb-4">
-                  ou cliquez pour sélectionner • Max {isPremium ? '5' : '3'} photos • 15MB max
+                  ou cliquez pour sélectionner • Max 3 photos • 15MB max
                 </p>
+                <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3 mb-4">
+                  <p className="text-yellow-300 text-sm">
+                    ⚠️ Limite temporaire à 3 photos pour garantir la stabilité
+                  </p>
+                </div>
                 <div className="text-sm text-text-muted">
                   Formats supportés : JPEG, PNG, WebP
                 </div>
@@ -489,7 +494,7 @@ export default function BatchAnalysis() {
             <div className="glass-card p-8 mb-8">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-text-white">
-                  Photos sélectionnées ({photos.length}/{isPremium ? '5' : '3'})
+                  Photos sélectionnées ({photos.length}/3)
                 </h3>
                 {!isAnalyzing && !report && (
                   <button

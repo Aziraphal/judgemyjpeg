@@ -112,11 +112,11 @@ export default async function handler(
       return res.status(400).json({ error: 'Images manquantes' })
     }
 
-    // Limiter le nombre d'images selon le statut
-    const maxImages = isPremium ? 5 : 3
+    // Limiter le nombre d'images temporairement à 3 max
+    const maxImages = 3 // Temporairement limité à 3 pour stabilité
     if (images.length > maxImages) {
       return res.status(400).json({ 
-        error: `Limite dépassée : ${maxImages} images max${!isPremium ? ' (Premium: 5)' : ''}` 
+        error: `Limite temporaire : ${maxImages} images max (problèmes techniques avec 4+)` 
       })
     }
 

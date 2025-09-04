@@ -226,10 +226,16 @@ export default function AdvancedEditingPage() {
           <h1 className="text-xl font-bold text-red-400 mb-2">Erreur</h1>
           <p className="text-text-gray mb-6">{error || 'Données non disponibles'}</p>
           <button
-            onClick={() => router.back()}
+            onClick={() => {
+              if (window.opener) {
+                window.close()
+              } else {
+                router.push('/')
+              }
+            }}
             className="btn-neon-cyan"
           >
-            ← Retour
+            ✕ Fermer
           </button>
         </div>
       </div>
@@ -250,10 +256,18 @@ export default function AdvancedEditingPage() {
           {/* Header */}
           <div className="mb-8">
             <button
-              onClick={() => router.back()}
+              onClick={() => {
+                // Tenter de fermer l'onglet, sinon redirection
+                if (window.opener) {
+                  window.close()
+                } else {
+                  // Fallback : retour à l'accueil
+                  router.push('/')
+                }
+              }}
               className="btn-neon-secondary mb-4"
             >
-              ← Retour à l'analyse
+              ✕ Fermer l'analyse
             </button>
             
             <h1 className="text-3xl font-bold mb-2">
