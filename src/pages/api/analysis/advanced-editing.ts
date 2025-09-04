@@ -73,15 +73,22 @@ DONNÉES TECHNIQUES ACTUELLES :
 - Focale : ${exifData.focalLength || 'Inconnue'}mm
 ` : ''
 
-    const prompt = `Tu es un expert en retouche photo professionnel. Analyse cette image et ses données techniques pour proposer des conseils de retouche PRÉCIS et EFFICACES.
+    const prompt = `Tu es un expert en retouche photo professionnel avec 15 ans d'expérience. Analyse cette image VISUELLEMENT et propose des corrections SPÉCIFIQUES qui vont réellement améliorer la qualité photographique.
 
-CONTEXTE :
-- Score actuel : ${currentScore}/100
-- Analyse précédente : "${currentAnalysis}"
+CONTEXTE ACTUEL :
+- Score obtenu : ${currentScore}/100
+- Problèmes identifiés : "${currentAnalysis}"
 ${exifContext}
 
-MISSION : 
-Propose des corrections concrètes et mesurables qui vont VRAIMENT améliorer le score de cette photo.
+MISSION CRITIQUE : 
+Identifie les VRAIS défauts visibles sur cette photo et donne des valeurs de correction PRÉCISES qui vont concrètement améliorer :
+1. L'exposition (zones sous/sur-exposées)
+2. Le contraste local et global  
+3. La netteté des détails importants
+4. L'équilibre colorimétrique
+5. La composition (recadrage si nécessaire)
+
+IMPORTANT : Tes conseils doivent être basés sur ce que tu VOIS réellement dans l'image, pas sur des généralités.
 
 FORMAT DE RÉPONSE (JSON strict) :
 {
@@ -125,13 +132,14 @@ FORMAT DE RÉPONSE (JSON strict) :
   }
 }
 
-RÈGLES IMPÉRATIVES :
-1. Valeurs EXACTES et réalistes (pas de "-999" ou "+100")
-2. Steps ordonnés par IMPACT (high -> medium -> low)
-3. Maximum 5 steps par plateforme
-4. Estimation de score réaliste (+5 à +20 points max)
-5. Conseils applicables aux versions gratuites
-6. Terminologie française
+RÈGLES CRITIQUES POUR EFFICACITÉ :
+1. Analyse VISUELLE de l'image - identifie les défauts réels que tu vois
+2. Valeurs TESTÉES et réalistes : Exposition (-1.0 à +1.0), Contraste (-50 à +50), etc.
+3. Ordre par IMPACT VISUEL RÉEL (ce qui fait vraiment la différence)
+4. Maximum 4 steps ESSENTIELS (pas de remplissage)
+5. Estimation CONSERVATIVE du gain de score (+3 à +15 points maximum)
+6. Instructions PRÉCISES : "Zone X trop sombre, augmenter de Y"
+7. Focus sur les DÉFAUTS MAJEURS visibles, ignorer les détails mineurs
 
 TYPES DE CORRECTIONS POSSIBLES :
 - Exposition (exposure, highlights, shadows, whites, blacks)
