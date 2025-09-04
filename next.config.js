@@ -25,7 +25,7 @@ const nextConfig = {
     dangerouslyAllowSVG: false,
   },
   
-  // En-têtes de sécurité - Configuration forcée pour Railway
+  // En-têtes de sécurité - Configuration forcée pour Railway (v2.1 - Cloudinary fix)
   async headers() {
     const securityHeaders = [
       {
