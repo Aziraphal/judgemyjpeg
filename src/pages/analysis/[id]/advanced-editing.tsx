@@ -280,12 +280,12 @@ export default function AdvancedEditingPage() {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
             
             {/* Photo et scores */}
             <div className="lg:col-span-1">
-              <div className="glass-card p-6 sticky top-8">
-                <div className="aspect-square relative rounded-lg overflow-hidden mb-4">
+              <div className="glass-card p-4 lg:p-6 lg:sticky lg:top-8">
+                <div className="aspect-video lg:aspect-square relative rounded-lg overflow-hidden mb-4">
                   <Image
                     src={photoData.imageUrl}
                     alt={photoData.originalName}
@@ -355,10 +355,10 @@ export default function AdvancedEditingPage() {
               </div>
 
               {/* Tabs */}
-              <div className="flex space-x-4 mb-6">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mb-6">
                 <button
                   onClick={() => setActiveTab('lightroom')}
-                  className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+                  className={`flex-1 px-4 sm:px-6 py-3 rounded-lg font-semibold transition-all text-center ${
                     activeTab === 'lightroom'
                       ? 'bg-blue-600 text-white'
                       : 'bg-cosmic-glass text-text-gray hover:text-text-white'
@@ -368,7 +368,7 @@ export default function AdvancedEditingPage() {
                 </button>
                 <button
                   onClick={() => setActiveTab('snapseed')}
-                  className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+                  className={`flex-1 px-4 sm:px-6 py-3 rounded-lg font-semibold transition-all text-center ${
                     activeTab === 'snapseed'
                       ? 'bg-green-600 text-white'
                       : 'bg-cosmic-glass text-text-gray hover:text-text-white'
@@ -397,12 +397,12 @@ export default function AdvancedEditingPage() {
                   </div>
 
                   {editingAnalysis.lightroom.steps.map((step, index) => (
-                    <div key={step.id} className="glass-card p-6">
+                    <div key={step.id} className="glass-card p-4 sm:p-6">
                       <div className="flex items-start space-x-4">
                         <div className="flex-shrink-0">
                           <button
                             onClick={() => toggleStep(`lightroom-${step.id}`)}
-                            className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${
+                            className={`w-10 h-10 lg:w-8 lg:h-8 rounded-full border-2 flex items-center justify-center transition-all text-sm font-semibold ${
                               completedSteps.has(`lightroom-${step.id}`)
                                 ? 'bg-green-500 border-green-500 text-white'
                                 : 'border-gray-500 hover:border-neon-cyan'
@@ -413,27 +413,29 @@ export default function AdvancedEditingPage() {
                         </div>
                         
                         <div className="flex-1">
-                          <div className="flex items-center space-x-3 mb-2">
-                            <h4 className="text-lg font-semibold text-text-white">{step.title}</h4>
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getImpactColor(step.impact)}`}>
-                              {step.impact === 'high' && 'Impact élevé'}
-                              {step.impact === 'medium' && 'Impact moyen'}
-                              {step.impact === 'low' && 'Impact faible'}
-                            </span>
-                            <span className="text-sm">
-                              {getDifficultyIcon(step.difficulty)} {step.difficulty === 'easy' ? 'Facile' : step.difficulty === 'medium' ? 'Moyen' : 'Avancé'}
-                            </span>
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+                            <h4 className="text-base sm:text-lg font-semibold text-text-white">{step.title}</h4>
+                            <div className="flex flex-wrap gap-2">
+                              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getImpactColor(step.impact)}`}>
+                                {step.impact === 'high' && 'Impact élevé'}
+                                {step.impact === 'medium' && 'Impact moyen'}
+                                {step.impact === 'low' && 'Impact faible'}
+                              </span>
+                              <span className="text-xs sm:text-sm bg-gray-500/20 px-2 py-1 rounded-full">
+                                {getDifficultyIcon(step.difficulty)} {step.difficulty === 'easy' ? 'Facile' : step.difficulty === 'medium' ? 'Moyen' : 'Avancé'}
+                              </span>
+                            </div>
                           </div>
                           
                           <p className="text-text-gray mb-4">{step.description}</p>
                           
                           <div className="bg-blue-500/10 rounded-lg p-4 border border-blue-500/30">
                             <h5 className="text-blue-300 font-semibold mb-2">⚙️ Réglages à appliquer :</h5>
-                            <div className="grid grid-cols-2 gap-3">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                               {Object.entries(step.values).map(([param, value]) => (
-                                <div key={param} className="flex justify-between">
-                                  <span className="text-text-gray capitalize">{param} :</span>
-                                  <span className="text-blue-300 font-mono">{value}</span>
+                                <div key={param} className="flex justify-between bg-black/20 rounded px-2 py-1">
+                                  <span className="text-text-gray capitalize text-sm">{param} :</span>
+                                  <span className="text-blue-300 font-mono text-sm font-semibold">{value}</span>
                                 </div>
                               ))}
                             </div>
@@ -464,12 +466,12 @@ export default function AdvancedEditingPage() {
                   </div>
 
                   {editingAnalysis.snapseed.steps.map((step, index) => (
-                    <div key={step.id} className="glass-card p-6">
+                    <div key={step.id} className="glass-card p-4 sm:p-6">
                       <div className="flex items-start space-x-4">
                         <div className="flex-shrink-0">
                           <button
                             onClick={() => toggleStep(`snapseed-${step.id}`)}
-                            className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${
+                            className={`w-10 h-10 lg:w-8 lg:h-8 rounded-full border-2 flex items-center justify-center transition-all text-sm font-semibold ${
                               completedSteps.has(`snapseed-${step.id}`)
                                 ? 'bg-green-500 border-green-500 text-white'
                                 : 'border-gray-500 hover:border-neon-cyan'
@@ -480,27 +482,29 @@ export default function AdvancedEditingPage() {
                         </div>
                         
                         <div className="flex-1">
-                          <div className="flex items-center space-x-3 mb-2">
-                            <h4 className="text-lg font-semibold text-text-white">{step.title}</h4>
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getImpactColor(step.impact)}`}>
-                              {step.impact === 'high' && 'Impact élevé'}
-                              {step.impact === 'medium' && 'Impact moyen'}
-                              {step.impact === 'low' && 'Impact faible'}
-                            </span>
-                            <span className="text-sm">
-                              {getDifficultyIcon(step.difficulty)} {step.difficulty === 'easy' ? 'Facile' : step.difficulty === 'medium' ? 'Moyen' : 'Avancé'}
-                            </span>
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+                            <h4 className="text-base sm:text-lg font-semibold text-text-white">{step.title}</h4>
+                            <div className="flex flex-wrap gap-2">
+                              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getImpactColor(step.impact)}`}>
+                                {step.impact === 'high' && 'Impact élevé'}
+                                {step.impact === 'medium' && 'Impact moyen'}
+                                {step.impact === 'low' && 'Impact faible'}
+                              </span>
+                              <span className="text-xs sm:text-sm bg-gray-500/20 px-2 py-1 rounded-full">
+                                {getDifficultyIcon(step.difficulty)} {step.difficulty === 'easy' ? 'Facile' : step.difficulty === 'medium' ? 'Moyen' : 'Avancé'}
+                              </span>
+                            </div>
                           </div>
                           
                           <p className="text-text-gray mb-4">{step.description}</p>
                           
                           <div className="bg-green-500/10 rounded-lg p-4 border border-green-500/30">
                             <h5 className="text-green-300 font-semibold mb-2">📱 Actions dans Snapseed :</h5>
-                            <div className="grid grid-cols-2 gap-3">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                               {Object.entries(step.values).map(([param, value]) => (
-                                <div key={param} className="flex justify-between">
-                                  <span className="text-text-gray capitalize">{param} :</span>
-                                  <span className="text-green-300 font-mono">{value}</span>
+                                <div key={param} className="flex justify-between bg-black/20 rounded px-2 py-1">
+                                  <span className="text-text-gray capitalize text-sm">{param} :</span>
+                                  <span className="text-green-300 font-mono text-sm font-semibold">{value}</span>
                                 </div>
                               ))}
                             </div>
