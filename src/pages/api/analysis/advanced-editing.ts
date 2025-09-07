@@ -203,25 +203,97 @@ Analyse cette photo et donne des conseils CONCRETS qui marchent !`
       throw new Error('Pas de réponse de l\'IA')
     }
 
-    // Parser la réponse JSON
+    // Parser la réponse JSON avec fallbacks multiples
     let analysisResult: AdvancedEditingAnalysis
+    
+    logger.info('Raw AI response preview:', { 
+      contentStart: content.substring(0, 200),
+      contentEnd: content.substring(content.length - 200),
+      contentLength: content.length
+    })
+    
     try {
-      // Nettoyer la réponse pour extraire le JSON
-      const jsonMatch = content.match(/\{[\s\S]*\}/)
-      if (!jsonMatch) {
-        throw new Error('Format JSON invalide')
+      // Méthode 1: Chercher JSON avec accolades équilibrées
+      let jsonString = ''
+      let braceCount = 0
+      let startIndex = -1
+      
+      for (let i = 0; i < content.length; i++) {
+        const char = content[i]
+        if (char === '{') {
+          if (startIndex === -1) startIndex = i
+          braceCount++
+        } else if (char === '}') {
+          braceCount--
+          if (braceCount === 0 && startIndex !== -1) {
+            jsonString = content.substring(startIndex, i + 1)
+            break
+          }
+        }
       }
       
-      analysisResult = JSON.parse(jsonMatch[0])
-      
-      // Validation des données
-      if (!analysisResult.estimatedNewScore || !analysisResult.lightroom || !analysisResult.snapseed) {
-        throw new Error('Structure de réponse invalide')
+      // Méthode 2: Fallback avec regex simple si méthode 1 échoue
+      if (!jsonString) {
+        const jsonMatch = content.match(/\{[\s\S]*?\}/)
+        jsonString = jsonMatch ? jsonMatch[0] : ''
       }
+      
+      // Méthode 3: Dernier recours - prendre tout entre première { et dernière }
+      if (!jsonString) {
+        const firstBrace = content.indexOf('{')
+        const lastBrace = content.lastIndexOf('}')
+        if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+          jsonString = content.substring(firstBrace, lastBrace + 1)
+        }
+      }
+      
+      if (!jsonString) {
+        logger.error('Aucun JSON trouvé dans la réponse IA:', { content })
+        throw new Error('Format JSON introuvable')
+      }
+      
+      logger.info('JSON extracted:', { jsonStart: jsonString.substring(0, 100) })
+      
+      analysisResult = JSON.parse(jsonString)
+      
+      // Validation robuste des données
+      if (typeof analysisResult !== 'object' || !analysisResult) {
+        throw new Error('JSON invalide - pas un objet')
+      }
+      
+      if (!analysisResult.estimatedNewScore || typeof analysisResult.estimatedNewScore !== 'number') {
+        throw new Error('estimatedNewScore manquant ou invalide')
+      }
+      
+      if (!analysisResult.lightroom || !Array.isArray(analysisResult.lightroom.steps)) {
+        throw new Error('Structure lightroom invalide')
+      }
+      
+      if (!analysisResult.snapseed || !Array.isArray(analysisResult.snapseed.steps)) {
+        throw new Error('Structure snapseed invalide')
+      }
+
+      // Valeurs par défaut pour les champs optionnels
+      analysisResult.scoreImprovement = analysisResult.scoreImprovement || (analysisResult.estimatedNewScore - currentScore)
+      analysisResult.explanation = analysisResult.explanation || 'Analyse de retouche générée'
+      analysisResult.priority = analysisResult.priority || 'exposure'
+      
+      // URLs par défaut si manquantes
+      if (!analysisResult.lightroom.webUrl) {
+        analysisResult.lightroom.webUrl = 'https://lightroom.adobe.com'
+      }
+      if (!analysisResult.snapseed.downloadUrl) {
+        analysisResult.snapseed.downloadUrl = 'https://play.google.com/store/apps/details?id=com.niksoftware.snapseed'
+      }
+      
+      logger.info('JSON validation successful')
       
     } catch (parseError) {
-      logger.error('Erreur parsing JSON IA:', parseError)
-      throw new Error('Réponse IA invalide')
+      logger.error('Erreur parsing JSON IA:', { 
+        error: parseError instanceof Error ? parseError.message : String(parseError),
+        contentPreview: content.substring(0, 500)
+      })
+      throw new Error(`Réponse IA invalide: ${parseError instanceof Error ? parseError.message : 'Erreur parsing'}`)
     }
 
     // Logs pour monitoring
