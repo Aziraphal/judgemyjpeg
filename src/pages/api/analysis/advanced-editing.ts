@@ -12,6 +12,95 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!
 })
 
+/**
+ * Nettoie une chaîne JSON en échappant les caractères problématiques
+ */
+function cleanJsonString(jsonStr: string): string {
+  try {
+    let cleaned = jsonStr
+    
+    // Méthode robuste: diviser en tokens et nettoyer les valeurs string
+    const tokens: string[] = []
+    let current = ''
+    let inString = false
+    let escapeNext = false
+    
+    for (let i = 0; i < cleaned.length; i++) {
+      const char = cleaned[i]
+      
+      if (escapeNext) {
+        current += char
+        escapeNext = false
+        continue
+      }
+      
+      if (char === '\\') {
+        current += char
+        escapeNext = true
+        continue
+      }
+      
+      if (char === '"') {
+        if (inString) {
+          // Fin de string - nettoyer le contenu accumulé
+          const cleanContent = current.replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t')
+          tokens.push(cleanContent + '"')
+          current = ''
+          inString = false
+        } else {
+          // Début de string
+          if (current.trim()) tokens.push(current)
+          current = '"'
+          inString = true
+        }
+        continue
+      }
+      
+      if (inString) {
+        // Dans une string - accumuler (les \n seront nettoyés à la fin)
+        current += char
+      } else {
+        // Hors string - caractères structurels JSON
+        if (char.match(/\s/) && !current.trim()) {
+          // Ignorer les espaces en début
+          continue
+        }
+        current += char
+      }
+    }
+    
+    // Ajouter le dernier token
+    if (current) {
+      if (inString) {
+        // String non fermée - la fermer après nettoyage
+        const cleanContent = current.replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t')
+        tokens.push(cleanContent + '"')
+      } else {
+        tokens.push(current)
+      }
+    }
+    
+    const result = tokens.join('')
+    
+    // Validation finale: essayer de parser pour vérifier
+    JSON.parse(result)
+    
+    return result
+    
+  } catch (error) {
+    logger.warn('Erreur nettoyage JSON avancé, fallback simple:', error)
+    
+    // Fallback simple mais efficace
+    return jsonStr
+      .replace(/\n(?=(?:[^"]*"[^"]*")*[^"]*$)/g, '\\n')  // \n hors des strings
+      .replace(/\r(?=(?:[^"]*"[^"]*")*[^"]*$)/g, '\\r')  // \r hors des strings
+      .replace(/\t(?=(?:[^"]*"[^"]*")*[^"]*$)/g, '\\t')  // \t hors des strings
+      .replace(/"([^"]*)\n([^"]*)"/g, '"$1\\n$2"')       // \n dans les strings
+      .replace(/"([^"]*)\r([^"]*)"/g, '"$1\\r$2"')       // \r dans les strings
+      .replace(/"([^"]*)\t([^"]*)"/g, '"$1\\t$2"')       // \t dans les strings
+  }
+}
+
 interface AdvancedEditingRequest {
   imageBase64: string
   currentScore: number
@@ -252,9 +341,13 @@ Analyse cette photo et donne des conseils CONCRETS qui marchent !`
         throw new Error('Format JSON introuvable')
       }
       
-      logger.info('JSON extracted:', { jsonStart: jsonString.substring(0, 100) })
+      logger.info('JSON extracted (raw):', { jsonStart: jsonString.substring(0, 100) })
       
-      analysisResult = JSON.parse(jsonString)
+      // Nettoyer le JSON avant parsing
+      const cleanedJsonString = cleanJsonString(jsonString)
+      logger.info('JSON cleaned:', { jsonStart: cleanedJsonString.substring(0, 100) })
+      
+      analysisResult = JSON.parse(cleanedJsonString)
       
       // Validation robuste des données
       if (typeof analysisResult !== 'object' || !analysisResult) {
