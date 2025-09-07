@@ -56,6 +56,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'Image et score requis' })
     }
 
+    // Gérer le fallback mobile - conversion côté serveur si nécessaire
+    let finalImageBase64 = imageBase64
+    
+    if (imageBase64.startsWith('CLOUDINARY_URL:')) {
+      const cloudinaryUrl = imageBase64.replace('CLOUDINARY_URL:', '')
+      logger.info('Mobile fallback - Converting Cloudinary URL server-side', { url: cloudinaryUrl.substring(0, 50) })
+      
+      try {
+        const response = await fetch(cloudinaryUrl)
+        if (!response.ok) {
+          throw new Error(`Fetch failed: ${response.status}`)
+        }
+        
+        const buffer = await response.arrayBuffer()
+        const base64 = Buffer.from(buffer).toString('base64')
+        finalImageBase64 = base64
+        
+        logger.info('Server-side conversion successful', { size: base64.length })
+      } catch (fetchError) {
+        logger.error('Server-side conversion failed:', fetchError)
+        return res.status(400).json({ 
+          error: 'Impossible de traiter l\'image depuis Cloudinary',
+          details: fetchError instanceof Error ? fetchError.message : 'Erreur inconnue'
+        })
+      }
+    }
+
     logger.info('Advanced editing analysis requested', {
       currentScore,
       platform,
@@ -160,7 +187,7 @@ Analyse cette photo et donne des conseils CONCRETS qui marchent !`
             {
               type: 'image_url',
               image_url: {
-                url: `data:image/jpeg;base64,${imageBase64}`,
+                url: `data:image/jpeg;base64,${finalImageBase64}`,
                 detail: 'high'
               }
             }

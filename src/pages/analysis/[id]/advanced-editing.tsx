@@ -87,29 +87,61 @@ export default function AdvancedEditingPage() {
   const generateEditingAnalysis = async (photo: PhotoData) => {
     try {
       setIsLoading(true)
+      setError(null)
       
       // Essayer de récupérer l'image en base64 depuis le localStorage d'abord
       let imageBase64 = ''
       
+      console.log('🔍 Debug mobile - Starting image conversion...', {
+        hasImageBase64: !!(photo as any).imageBase64,
+        isDataUrl: photo.imageUrl.startsWith('data:image/'),
+        imageUrlStart: photo.imageUrl.substring(0, 50),
+        userAgent: navigator.userAgent
+      })
+      
       // Essayer d'utiliser imageBase64 directement depuis localStorage
       if ((photo as any).imageBase64) {
         imageBase64 = (photo as any).imageBase64
+        console.log('✅ Using cached base64 from localStorage')
       }
       // Sinon vérifier si l'URL est déjà en base64 (format data:image/...)
       else if (photo.imageUrl.startsWith('data:image/')) {
         imageBase64 = photo.imageUrl.split(',')[1] // Enlever le préfixe data:
+        console.log('✅ Using data URL base64')
       } else {
-        // Dernière tentative : conversion via fetch (peut échouer à cause de CSP)
-        try {
-          logger.info('Tentative de conversion Cloudinary vers base64...')
-          const fullBase64 = await urlToBase64(photo.imageUrl)
-          imageBase64 = fullBase64.split(',')[1]
-        } catch (cspError) {
-          logger.error('CSP blocked, trying canvas approach')
-          imageBase64 = await urlToBase64ViaCanvas(photo.imageUrl)
+        // Sur mobile, essayer le fallback API d'abord (plus fiable)
+        const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+        
+        if (isMobile) {
+          console.log('📱 Mobile detected - using fallback mode with Cloudinary URL')
+          // Passer l'URL directement à l'API qui se chargera de la conversion côté serveur
+          imageBase64 = 'CLOUDINARY_URL:' + photo.imageUrl
+        } else {
+          // Desktop : tentative de conversion locale
+          try {
+            console.log('🔄 Trying fetch conversion...')
+            const fullBase64 = await urlToBase64(photo.imageUrl)
+            imageBase64 = fullBase64.split(',')[1]
+            console.log('✅ Fetch conversion successful')
+          } catch (cspError) {
+            console.log('❌ Fetch failed, trying canvas...', cspError)
+            try {
+              imageBase64 = await urlToBase64ViaCanvas(photo.imageUrl)
+              console.log('✅ Canvas conversion successful')
+            } catch (canvasError) {
+              console.error('❌ Canvas conversion failed:', canvasError)
+              console.log('📱 Falling back to server-side conversion')
+              imageBase64 = 'CLOUDINARY_URL:' + photo.imageUrl
+            }
+          }
         }
       }
       
+      console.log('🚀 Sending API request...', {
+        imageSize: imageBase64.length,
+        currentScore: photo.score
+      })
+
       const response = await fetch('/api/analysis/advanced-editing', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -122,16 +154,35 @@ export default function AdvancedEditingPage() {
         })
       })
 
+      console.log('📡 API Response received:', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok
+      })
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error('❌ API Error:', errorText)
+        throw new Error(`Erreur API ${response.status}: ${errorText}`)
+      }
+
       const result = await response.json()
+      console.log('✅ API Result:', { success: result.success, hasAnalysis: !!result.analysis })
       
       if (result.success) {
         setEditingAnalysis(result.analysis)
+        console.log('🎉 Analysis loaded successfully')
       } else {
+        console.error('❌ Analysis failed:', result.error)
         setError(result.error || 'Erreur analyse avancée')
       }
     } catch (error) {
+      console.error('💥 Critical error in advanced analysis:', error)
       logger.error('Erreur analyse avancée:', error)
-      setError('Erreur lors de l\'analyse avancée')
+      
+      // Message d'erreur plus détaillé pour le debug mobile
+      const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue'
+      setError(`Erreur mobile: ${errorMessage}`)
     } finally {
       setIsLoading(false)
     }
