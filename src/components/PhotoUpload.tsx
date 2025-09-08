@@ -6,6 +6,7 @@ import AnalysisCounter from './AnalysisCounter'
 import { extractExifData } from '@/utils/exifExtractor'
 import { ExifData } from '@/types/exif'
 import { logger } from '@/lib/logger'
+import AdvancedLoadingAnimation from './AdvancedLoadingAnimation'
 
 // Type pour la fonction de refresh du compteur
 declare global {
@@ -432,87 +433,11 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
                   </p>
                 </div>
 
-                {/* Animation ÉNORME selon le tone */}
-                <div className="flex justify-center items-center h-20">
-                  {tone === 'roast' ? (
-                    // Animation EXPLOSIVE pour le mode roast
-                    <div className="flex items-center space-x-6">
-                      <div className="relative">
-                        <div className="text-5xl animate-pulse" style={{animationDuration: '0.6s'}}>🔪</div>
-                        <div className="absolute -top-2 -right-2 w-4 h-4 bg-red-500 rounded-full animate-ping"></div>
-                        <div className="absolute -bottom-1 -left-2 w-3 h-3 bg-orange-500 rounded-full animate-ping" style={{animationDelay: '0.3s'}}></div>
-                      </div>
-                      <div className="flex flex-col space-y-2">
-                        <div className="flex space-x-2">
-                          <div className="w-3 h-3 bg-orange-400 rounded-full animate-ping"></div>
-                          <div className="w-4 h-4 bg-yellow-400 rounded-full animate-ping" style={{animationDelay: '0.1s'}}></div>
-                          <div className="w-3 h-3 bg-red-400 rounded-full animate-ping" style={{animationDelay: '0.2s'}}></div>
-                        </div>
-                        <div className="flex space-x-2">
-                          <div className="w-2 h-2 bg-red-500 rounded-full animate-ping" style={{animationDelay: '0.4s'}}></div>
-                          <div className="w-3 h-3 bg-orange-500 rounded-full animate-ping" style={{animationDelay: '0.5s'}}></div>
-                          <div className="w-2 h-2 bg-yellow-500 rounded-full animate-ping" style={{animationDelay: '0.6s'}}></div>
-                        </div>
-                      </div>
-                      <div className="relative">
-                        <div className="text-5xl animate-bounce" style={{animationDelay: '0.4s', animationDuration: '1s'}}>⚡</div>
-                        <div className="absolute -top-4 -left-2 text-xl animate-pulse" style={{animationDelay: '0.7s'}}>💥</div>
-                        <div className="absolute -bottom-2 -right-2 text-lg animate-pulse" style={{animationDelay: '0.9s'}}>🔥</div>
-                      </div>
-                    </div>
-                  ) : tone === 'expert' ? (
-                    // Animation EXPERT pour le mode expert
-                    <div className="flex items-center space-x-8">
-                      <div className="relative">
-                        <div className="text-5xl animate-pulse" style={{animationDuration: '1.5s'}}>🎯</div>
-                        <div className="absolute -top-3 -right-3 text-2xl animate-pulse" style={{animationDelay: '0.3s', animationDuration: '1.2s'}}>🔍</div>
-                        <div className="absolute -bottom-2 -left-2 text-xl animate-pulse" style={{animationDelay: '0.6s', animationDuration: '1.8s'}}>📊</div>
-                      </div>
-                      <div className="flex flex-col items-center space-y-2">
-                        <div className="flex space-x-1">
-                          {[...Array(7)].map((_, i) => (
-                            <div 
-                              key={i}
-                              className={`w-1 rounded-full animate-pulse ${
-                                i % 3 === 0 ? 'h-8 bg-yellow-400' :
-                                i % 3 === 1 ? 'h-6 bg-amber-500' : 'h-10 bg-orange-400'
-                              }`}
-                              style={{animationDelay: `${i * 0.1}s`, animationDuration: '2s'}}
-                            />
-                          ))}
-                        </div>
-                        <div className="text-xs text-amber-400 animate-pulse" style={{animationDuration: '1.5s'}}>
-                          ANALYSE EXPERTE
-                        </div>
-                      </div>
-                      <div className="relative">
-                        <div className="text-4xl animate-bounce" style={{animationDuration: '2s'}}>🏆</div>
-                        <div className="absolute -top-1 -right-1 text-sm animate-pulse" style={{animationDelay: '0.5s'}}>✨</div>
-                        <div className="absolute -bottom-1 -left-1 text-sm animate-pulse" style={{animationDelay: '1s'}}>💎</div>
-                      </div>
-                    </div>
-                  ) : (
-                    // Animation SOPHISTIQUÉE pour le mode pro
-                    <div className="flex items-center space-x-8">
-                      <div className="relative">
-                        <div className="text-4xl animate-spin" style={{animationDuration: '4s'}}>⚙️</div>
-                        <div className="absolute -top-2 -right-2 text-lg animate-spin" style={{animationDuration: '3s', animationDirection: 'reverse'}}>⚙️</div>
-                        <div className="absolute -bottom-1 -left-1 text-sm animate-spin" style={{animationDuration: '2s'}}>⚙️</div>
-                      </div>
-                      <div className="flex flex-col items-center space-y-3">
-                        <div className="flex space-x-2">
-                          <div className="w-3 h-8 bg-blue-400 rounded-full animate-pulse"></div>
-                          <div className="w-2 h-6 bg-cyan-300 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
-                          <div className="w-3 h-10 bg-blue-500 rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
-                          <div className="w-2 h-7 bg-cyan-400 rounded-full animate-pulse" style={{animationDelay: '0.6s'}}></div>
-                          <div className="w-3 h-9 bg-blue-300 rounded-full animate-pulse" style={{animationDelay: '0.8s'}}></div>
-                        </div>
-                        <div className="text-xs text-neon-cyan animate-pulse">Analyse en cours...</div>
-                      </div>
-                      <div className="text-4xl animate-spin" style={{animationDuration: '5s', animationDirection: 'reverse'}}>🔬</div>
-                    </div>
-                  )}
-                </div>
+                {/* Animation SPECTACULAIRE selon le tone */}
+                <AdvancedLoadingAnimation 
+                  mode={tone === 'general' ? 'general' : tone} 
+                  size="xl"
+                />
               </div>
             </div>
           </div>
