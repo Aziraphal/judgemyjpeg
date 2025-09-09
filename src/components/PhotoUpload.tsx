@@ -190,40 +190,81 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
         formData.append('exifData', JSON.stringify(exifData))
       }
 
-      // Utiliser l'API de test si en mode test
-      const apiUrl = testMode ? '/api/photos/analyze-test' : '/api/photos/analyze'
-      logger.debug(`Sending to API: ${apiUrl}`)
+      // URL absolue pour éviter les problèmes DNS mobile
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
+      const apiUrl = testMode ? `${baseUrl}/api/photos/analyze-test` : `${baseUrl}/api/photos/analyze`
       
-      // Les messages progressifs sont maintenant intégrés dans l'interface
+      logger.debug(`Sending to API: ${apiUrl}`)
       logger.debug(`Starting ${tone} analysis...`)
 
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        body: formData,
-        signal: AbortSignal.timeout(90000),
-      })
+      // Retry logic pour les erreurs réseau mobiles
+      let lastError: Error | null = null
+      const maxRetries = 2
       
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        logger.error(`Server error ${response.status}:`, errorData.error || 'Unknown')
-        
-        // Si erreur de limite atteinte, déclencher le modal starter pack
-        if (errorData.error?.includes('limite') || errorData.error?.includes('atteinte')) {
-          onAnalysisLimitReached?.()
-        }
-        
-        throw new Error(errorData.error || 'Erreur lors de l\'analyse')
-      }
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          const response = await fetch(apiUrl, {
+            method: 'POST',
+            body: formData,
+            signal: AbortSignal.timeout(90000),
+            headers: {
+              'Cache-Control': 'no-cache',
+            }
+          })
+          
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}))
+            logger.error(`Server error ${response.status}:`, errorData.error || 'Unknown')
+            
+            // Si erreur de limite atteinte, déclencher le modal starter pack
+            if (errorData.error?.includes('limite') || errorData.error?.includes('atteinte')) {
+              onAnalysisLimitReached?.()
+            }
+            
+            throw new Error(errorData.error || 'Erreur lors de l\'analyse')
+          }
 
-      const result = await response.json()
-      logger.debug('Analysis completed successfully')
-      
-      // Actualiser le compteur d'analyses après succès
-      if (window.refreshAnalysisCounter) {
-        window.refreshAnalysisCounter()
+          const result = await response.json()
+          logger.debug('Analysis completed successfully')
+          
+          // Actualiser le compteur d'analyses après succès
+          if (window.refreshAnalysisCounter) {
+            window.refreshAnalysisCounter()
+          }
+          
+          onAnalysisComplete(result)
+          return // Succès - sortir de la boucle retry
+          
+        } catch (error) {
+          lastError = error as Error
+          
+          // Si c'est une erreur réseau et qu'on peut retry
+          if (attempt < maxRetries && (
+            error instanceof TypeError ||
+            (error instanceof Error && (
+              error.message.includes('fetch') ||
+              error.message.includes('network') ||
+              error.message.includes('NAME_NOT_RESOLVED') ||
+              error.message.includes('Failed to fetch')
+            ))
+          )) {
+            logger.warn(`🔄 Network error on attempt ${attempt}/${maxRetries}, retrying...`, {
+              error: error.message,
+              attempt
+            })
+            await new Promise(resolve => setTimeout(resolve, 1000 * attempt)) // Backoff progressif
+            continue
+          }
+          
+          // Propager l'erreur si pas de retry possible
+          throw error
+        }
       }
       
-      onAnalysisComplete(result)
+      // Si on arrive ici, tous les retry ont échoué
+      if (lastError) {
+        throw lastError
+      }
 
     } catch (error) {
       // Log pour debug uniquement
