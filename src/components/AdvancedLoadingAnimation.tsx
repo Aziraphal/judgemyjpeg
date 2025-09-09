@@ -6,7 +6,7 @@
 import { useEffect, useState } from 'react'
 
 interface AdvancedLoadingAnimationProps {
-  mode: 'roast' | 'expert' | 'general' | 'advanced-editing'
+  mode: 'roast' | 'expert' | 'general'
   size?: 'sm' | 'md' | 'lg' | 'xl'
 }
 
@@ -186,60 +186,6 @@ export default function AdvancedLoadingAnimation({ mode, size = 'lg' }: Advanced
     )
   }
 
-  if (mode === 'advanced-editing') {
-    return (
-      <div className={`relative ${getSizeClasses()} mx-auto`}>
-        {/* Outils flottants */}
-        <div className="absolute inset-0">
-          {['🎨', '📐', '🖌️', '⚡', '🔧', '📊'].map((tool, i) => (
-            <div
-              key={i}
-              className={`absolute text-2xl animate-bounce filter drop-shadow-lg`}
-              style={{
-                left: `${15 + i * 12}%`,
-                top: `${20 + (i % 2) * 40}%`,
-                animationDelay: `${i * 0.2}s`,
-                animationDuration: `${1.5 + i * 0.2}s`,
-                filter: `drop-shadow(0 0 10px rgba(${i % 2 ? '59, 130, 246' : '34, 197, 94'}, 0.6))`
-              }}
-            >
-              {tool}
-            </div>
-          ))}
-        </div>
-
-        {/* Logo central Lightroom/Snapseed */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="relative">
-            <div className={`${getMainIconSize()} animate-pulse z-20`} style={{animationDuration: '2s'}}>
-              📱
-            </div>
-            <div className="absolute -top-4 -left-4 text-3xl animate-spin" style={{animationDuration: '3s', filter: 'drop-shadow(0 0 15px rgba(59, 130, 246, 0.6))'}}>
-              💻
-            </div>
-          </div>
-        </div>
-
-        {/* Barres de progression multiples */}
-        <div className="absolute bottom-2 left-2 right-2">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="mb-1 last:mb-0">
-              <div className="w-full h-1 bg-gray-600 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-gradient-to-r from-blue-400 to-green-400 animate-pulse rounded-full"
-                  style={{
-                    width: `${30 + i * 20}%`,
-                    animationDelay: `${i * 0.3}s`,
-                    animationDuration: '2s'
-                  }}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    )
-  }
 
   // Mode général par défaut
   return (
