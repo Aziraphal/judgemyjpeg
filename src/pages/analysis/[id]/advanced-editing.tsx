@@ -9,6 +9,45 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { logger } from '@/lib/logger'
 
+// Traduction des paramètres techniques en français
+const paramTranslations: Record<string, string> = {
+  // Lightroom/général
+  'exposure': 'Exposition',
+  'highlights': 'Hautes lumières',
+  'shadows': 'Ombres',
+  'whites': 'Blancs',
+  'blacks': 'Noirs',
+  'contrast': 'Contraste',
+  'clarity': 'Clarté',
+  'vibrance': 'Vibrance',
+  'saturation': 'Saturation',
+  'temperature': 'Température',
+  'tint': 'Teinte',
+  'texture': 'Texture',
+  'dehaze': 'Dehaze',
+  'noise': 'Réduction bruit',
+  'sharpening': 'Netteté',
+  'luminance': 'Luminance',
+  'color': 'Couleur',
+  
+  // Snapseed
+  'brightness': 'Luminosité',
+  'ambiance': 'Ambiance',
+  'warmth': 'Chaleur',
+  'crop': 'Recadrage',
+  'straighten': 'Redresser',
+  'perspective': 'Perspective',
+  'vignette': 'Vignettage',
+  'blur': 'Flou',
+  'drama': 'Drame',
+  'vintage': 'Vintage',
+  'grainy': 'Grain',
+  'retrolux': 'Retrolux',
+  'tune': 'Réglage',
+  'details': 'Détails',
+  'structure': 'Structure'
+}
+
 interface EditingStep {
   id: string
   title: string
@@ -53,6 +92,44 @@ export default function AdvancedEditingPage() {
   const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set())
   const [error, setError] = useState<string | null>(null)
 
+  // Fonction pour sauvegarder la progression
+  const saveProgressToStorage = (photoId: string, steps: Set<string>) => {
+    try {
+      const progressData = {
+        photoId,
+        completedSteps: Array.from(steps),
+        timestamp: new Date().toISOString(),
+        activeTab
+      }
+      localStorage.setItem(`progress_${photoId}`, JSON.stringify(progressData))
+      logger.debug('Progress saved to localStorage:', progressData)
+    } catch (error) {
+      logger.warn('Failed to save progress:', error)
+    }
+  }
+
+  // Fonction pour charger la progression
+  const loadProgressFromStorage = (photoId: string) => {
+    try {
+      const saved = localStorage.getItem(`progress_${photoId}`)
+      if (saved) {
+        const progressData = JSON.parse(saved)
+        setCompletedSteps(new Set(progressData.completedSteps))
+        if (progressData.activeTab) {
+          setActiveTab(progressData.activeTab)
+        }
+        logger.debug('Progress loaded from localStorage:', progressData)
+      }
+    } catch (error) {
+      logger.warn('Failed to load progress:', error)
+    }
+  }
+
+  // Fonction pour traduire les paramètres
+  const translateParam = (param: string): string => {
+    return paramTranslations[param.toLowerCase()] || param
+  }
+
   useEffect(() => {
     if (id) {
       fetchPhotoData()
@@ -69,6 +146,8 @@ export default function AdvancedEditingPage() {
         
         if (photo) {
           setPhotoData(photo)
+          // Charger la progression sauvegardée avant de générer l'analyse
+          loadProgressFromStorage(id as string)
           await generateEditingAnalysis(photo)
         } else {
           setError('Photo non trouvée')
@@ -237,6 +316,11 @@ export default function AdvancedEditingPage() {
       newCompleted.add(stepId)
     }
     setCompletedSteps(newCompleted)
+    
+    // Sauvegarder immédiatement la progression
+    if (id) {
+      saveProgressToStorage(id as string, newCompleted)
+    }
   }
 
   const getImpactColor = (impact: string) => {
@@ -408,7 +492,13 @@ export default function AdvancedEditingPage() {
               {/* Tabs */}
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mb-6">
                 <button
-                  onClick={() => setActiveTab('lightroom')}
+                  onClick={() => {
+                    setActiveTab('lightroom')
+                    // Sauvegarder le changement d'onglet
+                    if (id) {
+                      saveProgressToStorage(id as string, completedSteps)
+                    }
+                  }}
                   className={`flex-1 px-4 sm:px-6 py-3 rounded-lg font-semibold transition-all text-center ${
                     activeTab === 'lightroom'
                       ? 'bg-blue-600 text-white'
@@ -418,7 +508,13 @@ export default function AdvancedEditingPage() {
                   💻 Lightroom Web
                 </button>
                 <button
-                  onClick={() => setActiveTab('snapseed')}
+                  onClick={() => {
+                    setActiveTab('snapseed')
+                    // Sauvegarder le changement d'onglet
+                    if (id) {
+                      saveProgressToStorage(id as string, completedSteps)
+                    }
+                  }}
                   className={`flex-1 px-4 sm:px-6 py-3 rounded-lg font-semibold transition-all text-center ${
                     activeTab === 'snapseed'
                       ? 'bg-green-600 text-white'
@@ -485,7 +581,7 @@ export default function AdvancedEditingPage() {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                               {Object.entries(step.values).map(([param, value]) => (
                                 <div key={param} className="flex justify-between bg-black/20 rounded px-2 py-1">
-                                  <span className="text-text-gray capitalize text-sm">{param} :</span>
+                                  <span className="text-text-gray text-sm">{translateParam(param)} :</span>
                                   <span className="text-blue-300 font-mono text-sm font-semibold">{value}</span>
                                 </div>
                               ))}
@@ -554,7 +650,7 @@ export default function AdvancedEditingPage() {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                               {Object.entries(step.values).map(([param, value]) => (
                                 <div key={param} className="flex justify-between bg-black/20 rounded px-2 py-1">
-                                  <span className="text-text-gray capitalize text-sm">{param} :</span>
+                                  <span className="text-text-gray text-sm">{translateParam(param)} :</span>
                                   <span className="text-green-300 font-mono text-sm font-semibold">{value}</span>
                                 </div>
                               ))}
