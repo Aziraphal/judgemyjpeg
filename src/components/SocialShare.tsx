@@ -48,11 +48,37 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
 
   const shareUrl = typeof window !== 'undefined' ? window.location.origin : ''
   const shareText = generateShareText()
-  const hashtags = tone === 'roast' 
-    ? '#JudgeMyJPEG #PhotoFail #IAhumour #Photography'
-    : '#JudgeMyJPEG #PhotographyTips #AIAnalysis #Photography'
+  
+  // Hashtags adaptés au type de photo et au ton
+  const getHashtags = () => {
+    const baseHashtags = '#JudgeMyJPEG #PhotographieIA #AIAnalysis'
+    
+    if (tone === 'roast') {
+      return `${baseHashtags} #PhotoFail #IAhumour #Photography #Funny #Roasted`
+    } else if (tone === 'expert') {
+      return `${baseHashtags} #PhotographyTips #PhotoExpert #ProTips #Photography`
+    } else {
+      return `${baseHashtags} #Photography #PhotoTips #Amateur #Learning`
+    }
+  }
+  
+  const hashtags = getHashtags()
+  const fullShareText = `${shareText}\n\n${hashtags}`
 
-  const socialLinks = {
+  const socialLinks: Record<string, {
+    url: string
+    icon: string
+    name: string
+    color: string
+    copyText?: boolean
+  }> = {
+    instagram: {
+      url: `https://www.instagram.com/`,
+      icon: '📷',
+      name: 'Instagram',
+      color: 'hover:bg-pink-500/20 hover:text-pink-400',
+      copyText: true // Pour copier le texte avec hashtags
+    },
     twitter: {
       url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}&hashtags=${encodeURIComponent(hashtags.replace(/#/g, ''))}`,
       icon: '𝕏',
@@ -70,6 +96,13 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
       icon: '💬',
       name: 'WhatsApp',
       color: 'hover:bg-green-500/20 hover:text-green-400'
+    },
+    snapchat: {
+      url: `https://www.snapchat.com/`,
+      icon: '👻',
+      name: 'Snapchat',
+      color: 'hover:bg-yellow-400/20 hover:text-yellow-400',
+      copyText: true
     }
   }
 
@@ -81,6 +114,20 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
       if (button) {
         const originalText = button.innerHTML
         button.innerHTML = '✅ Copié !'
+        setTimeout(() => {
+          button.innerHTML = originalText
+        }, 2000)
+      }
+    })
+  }
+
+  const copyInstagramText = (platform: string) => {
+    navigator.clipboard.writeText(fullShareText).then(() => {
+      // Feedback visuel pour Instagram/Snapchat
+      const button = document.getElementById(`${platform}-button`)
+      if (button) {
+        const originalText = button.innerHTML
+        button.innerHTML = '✅ Texte copié !'
         setTimeout(() => {
           button.innerHTML = originalText
         }, 2000)
@@ -116,23 +163,52 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
 
       {/* Boutons de partage */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 mb-3 sm:mb-4">
-        {Object.entries(socialLinks).map(([platform, config]) => (
-          <a
-            key={platform}
-            href={config.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`
-              flex items-center justify-center space-x-1 sm:space-x-2 p-2 sm:p-3 rounded-lg 
-              bg-cosmic-glass border border-cosmic-glassborder
-              transition-all duration-300 hover:scale-105 hover:shadow-neon-cyan/20 hover:shadow-lg
-              ${config.color}
-            `}
-          >
-            <span className="text-base sm:text-lg">{config.icon}</span>
-            <span className="text-xs sm:text-sm font-medium">{config.name}</span>
-          </a>
-        ))}
+        {Object.entries(socialLinks).map(([platform, config]) => {
+          if (config.copyText) {
+            // Boutons Instagram et Snapchat : copier le texte + ouvrir l'app
+            return (
+              <button
+                key={platform}
+                id={`${platform}-button`}
+                onClick={() => {
+                  copyInstagramText(platform)
+                  // Ouvrir l'app après copie
+                  setTimeout(() => {
+                    window.open(config.url, '_blank')
+                  }, 100)
+                }}
+                className={`
+                  flex items-center justify-center space-x-1 sm:space-x-2 p-2 sm:p-3 rounded-lg 
+                  bg-cosmic-glass border border-cosmic-glassborder
+                  transition-all duration-300 hover:scale-105 hover:shadow-neon-cyan/20 hover:shadow-lg
+                  ${config.color} cursor-pointer
+                `}
+              >
+                <span className="text-base sm:text-lg">{config.icon}</span>
+                <span className="text-xs sm:text-sm font-medium">{config.name}</span>
+              </button>
+            )
+          } else {
+            // Boutons classiques avec lien direct
+            return (
+              <a
+                key={platform}
+                href={config.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`
+                  flex items-center justify-center space-x-1 sm:space-x-2 p-2 sm:p-3 rounded-lg 
+                  bg-cosmic-glass border border-cosmic-glassborder
+                  transition-all duration-300 hover:scale-105 hover:shadow-neon-cyan/20 hover:shadow-lg
+                  ${config.color}
+                `}
+              >
+                <span className="text-base sm:text-lg">{config.icon}</span>
+                <span className="text-xs sm:text-sm font-medium">{config.name}</span>
+              </a>
+            )
+          }
+        })}
       </div>
 
       {/* Actions supplémentaires */}
