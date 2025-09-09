@@ -2,8 +2,7 @@ import { PhotoAnalysis, AnalysisTone } from '@/types/analysis'
 import OrientedImage from '@/components/OrientedImage'
 import FavoriteButton from '@/components/FavoriteButton'
 import AddToCollectionModal from '@/components/AddToCollectionModal'
-import SocialShare from '@/components/SocialShare'
-import InstagramGenerator from '@/components/InstagramGenerator'
+import PhotoShareModal from '@/components/PhotoShareModal'
 import ExifDisplay from '@/components/ExifDisplay'
 import { PDFExporter } from '@/services/pdf-export'
 import { useState, useEffect } from 'react'
@@ -28,6 +27,7 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
   const { data: session } = useSession()
   const { t } = useTranslations()
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false)
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false)
   const [showHelpBanner, setShowHelpBanner] = useState(true)
 
   // Vérifier localStorage pour masquer le bandeau après première visite
@@ -808,18 +808,27 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
         </div>
       )}
 
-      {/* Générateur Instagram */}
-      <InstagramGenerator 
-        photo={photo}
-        analysis={analysis}
-      />
-
-      {/* Partage social */}
-      <SocialShare 
-        photo={photo}
-        analysis={analysis}
-        tone={tone}
-      />
+      {/* Partage sur Instagram */}
+      <div className="glass-card p-4 sm:p-6 hover-glow">
+        <div className="text-center">
+          <h3 className="text-lg sm:text-xl font-bold text-text-white mb-2 flex items-center justify-center">
+            <span className="text-xl sm:text-2xl mr-2">📸</span>
+            <span>Partager sur Instagram</span>
+          </h3>
+          <p className="text-text-gray text-sm mb-4">
+            Partagez votre analyse avec une image personnalisée
+          </p>
+          <button
+            onClick={() => setIsShareModalOpen(true)}
+            className="btn-neon-pink text-sm sm:text-base px-6 py-3 font-semibold hover:scale-105 transition-all duration-300"
+          >
+            <span className="flex items-center space-x-2">
+              <span>📱</span>
+              <span>Créer le post Instagram</span>
+            </span>
+          </button>
+        </div>
+      </div>
 
       {/* Bouton Nouvelle Analyse (Mobile uniquement) */}
       {onNewAnalysis && (
@@ -859,6 +868,15 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
         onClose={() => setIsCollectionModalOpen(false)}
         photoId={photo.id}
         photoName={photo.filename}
+      />
+
+      {/* Modal de partage Instagram */}
+      <PhotoShareModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        analysis={analysis}
+        photoUrl={photo.url}
+        tone={tone}
       />
     </div>
   )
