@@ -40,13 +40,39 @@ export default function AdminLoginPage() {
   const [alertStatus, setAlertStatus] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
 
-  // Vérifier si utilisateur est admin
-  const isAdmin = session?.user?.email && 
-    ['admin@judgemyjpeg.com', 'contact@judgemyjpeg.com', 'cyril.paquier@gmail.com'].includes(session.user.email)
+  // État pour vérifier les permissions admin depuis la DB
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [adminCheckDone, setAdminCheckDone] = useState(false)
+
+  // Vérifier les permissions admin dans la DB
+  useEffect(() => {
+    async function checkAdminStatus() {
+      if (session?.user?.email && !adminCheckDone) {
+        try {
+          const response = await fetch('/api/admin/check-permissions')
+          const data = await response.json()
+          
+          if (response.ok && data.isAdmin) {
+            setIsAdmin(true)
+            setShowMetrics(true)
+            fetchMetrics()
+          } else {
+            setIsAdmin(false)
+          }
+        } catch (error) {
+          console.error('Erreur vérification admin:', error)
+          setIsAdmin(false)
+        } finally {
+          setAdminCheckDone(true)
+        }
+      }
+    }
+    
+    checkAdminStatus()
+  }, [session, adminCheckDone])
 
   useEffect(() => {
-    if (isAdmin) {
-      setShowMetrics(true)
+    if (isAdmin && showMetrics) {
       fetchMetrics()
       const interval = setInterval(fetchMetrics, 30000) // Auto-refresh
       return () => clearInterval(interval)
