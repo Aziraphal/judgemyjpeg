@@ -1,6 +1,7 @@
 # *
 User-agent: *
 Allow: /
+Allow: /_next/static/*
 Disallow: /admin*
 Disallow: /api/*
 Disallow: /auth/*
@@ -8,7 +9,7 @@ Disallow: /*success*
 Disallow: /test-upload*
 Disallow: /status*
 Disallow: /offline*
-Disallow: /_next/*
+Disallow: /_next/server*
 Disallow: /node_modules/*
 Disallow: *.disabled*
 
