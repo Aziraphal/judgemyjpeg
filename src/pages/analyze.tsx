@@ -170,8 +170,8 @@ export default function AnalyzePage() {
       <main className={`min-h-screen particles-container relative transition-all duration-1000 ${
         isUploading && selectedTone === 'roast' 
           ? 'bg-red-900/20 bg-gradient-to-br from-red-900/30 to-black'
-        : isUploading && selectedTone === 'expert'
-          ? 'bg-yellow-900/10 bg-gradient-to-br from-yellow-800/20 to-black'
+        : isUploading && selectedTone === 'artcritic'
+          ? 'bg-amber-900/10 bg-gradient-to-br from-amber-800/20 to-black'
           : 'bg-cosmic-overlay'
       }`}>
         {/* Floating decorative elements */}
