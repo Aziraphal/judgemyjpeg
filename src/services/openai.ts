@@ -396,16 +396,22 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
 
     const rawAnalysis = JSON.parse(jsonMatch[0])
     
-    // Calculer le score total côté serveur
+    // Calculer le score total côté serveur selon le mode
     const partialScores = rawAnalysis.partialScores
-    const calculatedScore = 
-      partialScores.composition +
-      partialScores.lighting +
-      partialScores.focus +
-      partialScores.exposure +
-      partialScores.creativity +
-      partialScores.emotion +
-      partialScores.storytelling
+    
+    // Scores techniques et artistiques
+    const technicalScore = partialScores.composition + partialScores.lighting + partialScores.focus + partialScores.exposure
+    const artisticScore = partialScores.creativity + partialScores.emotion + partialScores.storytelling
+    
+    // Pondération selon le mode d'analyse
+    let calculatedScore: number
+    if (tone === 'artcritic') {
+      // Art Critic: 40% technique, 60% artistique
+      calculatedScore = Math.round((technicalScore * 0.4) + (artisticScore * 0.6))
+    } else {
+      // Professional & Roast: 60% technique, 40% artistique (classique)
+      calculatedScore = Math.round((technicalScore * 0.6) + (artisticScore * 0.4))
+    }
     
     // Générer l'analyse EXIF si données disponibles
     const exifAnalysisData = exifData ? generateExifAnalysis(exifData) : undefined
