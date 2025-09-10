@@ -221,7 +221,11 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
               <div className="space-y-3">
                 {/* Technique */}
                 <div>
-                  <h5 className="text-sm font-medium text-neon-cyan mb-2">Technique (/60)</h5>
+                  <h5 className="text-sm font-medium text-neon-cyan mb-2">
+                    Technique (/60)
+                    {tone === 'artcritic' && <span className="text-xs text-text-muted ml-1">(40% du score final)</span>}
+                    {tone !== 'artcritic' && <span className="text-xs text-text-muted ml-1">(60% du score final)</span>}
+                  </h5>
                   <div className="space-y-2 text-xs">
                     {(() => {
                       const breakdown = getScoreBreakdown()
@@ -259,7 +263,11 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
 
                 {/* Artistique */}
                 <div>
-                  <h5 className="text-sm font-medium text-neon-pink mb-2">Artistique (/40)</h5>
+                  <h5 className="text-sm font-medium text-neon-pink mb-2">
+                    Artistique (/40)
+                    {tone === 'artcritic' && <span className="text-xs text-text-muted ml-1">(60% du score final)</span>}
+                    {tone !== 'artcritic' && <span className="text-xs text-text-muted ml-1">(40% du score final)</span>}
+                  </h5>
                   <div className="space-y-2 text-xs">
                     {(() => {
                       const breakdown = getScoreBreakdown()
