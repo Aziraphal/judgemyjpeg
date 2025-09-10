@@ -7,7 +7,7 @@ interface SocialShareProps {
     url: string
   }
   analysis: PhotoAnalysis
-  tone: 'professional' | 'roast' | 'expert'
+  tone: 'professional' | 'roast' | 'artcritic'
 }
 
 export default function SocialShare({ photo, analysis, tone }: SocialShareProps) {
@@ -20,7 +20,7 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
     
     // Bonus ton (0-30 points)
     if (tone === 'roast') viralScore += 30  // Le roast est plus viral
-    else if (tone === 'expert') viralScore += 15
+    else if (tone === 'artcritic') viralScore += 15
     else viralScore += 10
     
     // Bonus scores extrêmes (0-30 points)
@@ -39,8 +39,8 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
     
     if (tone === 'roast') {
       return `${baseText} 🔥 L'IA m'a grillé mais j'ai adoré ! 😂`
-    } else if (tone === 'expert') {
-      return `${baseText} 🎯 Analyse experte niveau maître ! 💎`
+    } else if (tone === 'artcritic') {
+      return `${baseText} 🎨 Vision artistique par l'IA ! 🖼️`
     } else {
       return `${baseText} 📸 Analyse pro par IA !`
     }
@@ -55,8 +55,8 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
     
     if (tone === 'roast') {
       return `${baseHashtags} #PhotoFail #IAhumour #Photography #Funny #Roasted`
-    } else if (tone === 'expert') {
-      return `${baseHashtags} #PhotographyTips #PhotoExpert #ProTips #Photography`
+    } else if (tone === 'artcritic') {
+      return `${baseHashtags} #ArtistiquéPhoto #CritiqueArt #VisionArtistique #Photography`
     } else {
       return `${baseHashtags} #Photography #PhotoTips #Amateur #Learning`
     }

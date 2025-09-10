@@ -6,7 +6,7 @@
 import { useEffect, useState } from 'react'
 
 interface AdvancedLoadingAnimationProps {
-  mode: 'roast' | 'expert' | 'general'
+  mode: 'roast' | 'artcritic' | 'general'
   size?: 'sm' | 'md' | 'lg' | 'xl'
 }
 
@@ -93,92 +93,120 @@ export default function AdvancedLoadingAnimation({ mode, size = 'lg' }: Advanced
     )
   }
 
-  if (mode === 'expert') {
+  if (mode === 'artcritic') {
     return (
       <div className={`relative ${getSizeClasses()} mx-auto`}>
-        {/* Réseau de connexions techniques SVG */}
-        <div className="absolute inset-0 opacity-60">
+        {/* Cadre doré vintage qui se forme */}
+        <div className="absolute inset-0 overflow-hidden">
           <svg className="w-full h-full" viewBox="0 0 128 128">
             <defs>
-              <linearGradient id="techGlow" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="rgb(59, 130, 246)" stopOpacity="0.8"/>
-                <stop offset="100%" stopColor="rgb(6, 182, 212)" stopOpacity="0.8"/>
+              <linearGradient id="goldFrame" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="rgb(251, 191, 36)" stopOpacity="0.9"/>
+                <stop offset="50%" stopColor="rgb(245, 158, 11)" stopOpacity="1"/>
+                <stop offset="100%" stopColor="rgb(217, 119, 6)" stopOpacity="0.9"/>
               </linearGradient>
-              <linearGradient id="techGlow2" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="rgb(6, 182, 212)" stopOpacity="0.8"/>
-                <stop offset="100%" stopColor="rgb(99, 102, 241)" stopOpacity="0.8"/>
+              <linearGradient id="goldFrame2" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="rgb(217, 119, 6)" stopOpacity="0.8"/>
+                <stop offset="100%" stopColor="rgb(146, 64, 14)" stopOpacity="0.9"/>
               </linearGradient>
             </defs>
             
-            {/* Lignes de connexion animées */}
-            <path d="M20,64 Q40,30 64,64 T108,64" fill="none" stroke="url(#techGlow)" strokeWidth="2" className="animate-pulse">
-              <animate attributeName="stroke-dasharray" values="0,200;100,100;200,0;0,200" dur="4s" repeatCount="indefinite"/>
-            </path>
-            <path d="M64,20 Q90,40 64,64 T64,108" fill="none" stroke="url(#techGlow2)" strokeWidth="2" className="animate-pulse" style={{animationDelay: '1s'}}>
-              <animate attributeName="stroke-dasharray" values="0,180;90,90;180,0;0,180" dur="3.5s" repeatCount="indefinite"/>
-            </path>
-            <path d="M30,30 Q64,50 98,30 Q80,64 98,98 Q64,80 30,98 Q50,64 30,30" fill="none" stroke="url(#techGlow)" strokeWidth="1" className="animate-pulse" style={{animationDelay: '2s'}}>
-              <animate attributeName="stroke-dasharray" values="0,300;150,150;300,0;0,300" dur="5s" repeatCount="indefinite"/>
-            </path>
+            {/* Cadre extérieur qui se dessine progressivement */}
+            <rect x="8" y="8" width="112" height="112" fill="none" stroke="url(#goldFrame)" strokeWidth="4" rx="2" className="animate-pulse">
+              <animate attributeName="stroke-dasharray" values="0,400;200,200;400,0;400,0" dur="3s" repeatCount="indefinite"/>
+            </rect>
+            
+            {/* Cadre intérieur décoratif */}
+            <rect x="16" y="16" width="96" height="96" fill="none" stroke="url(#goldFrame2)" strokeWidth="2" rx="1" className="animate-pulse" style={{animationDelay: '0.5s'}}>
+              <animate attributeName="stroke-dasharray" values="0,350;175,175;350,0;350,0" dur="2.5s" repeatCount="indefinite"/>
+            </rect>
+            
+            {/* Ornements de coins */}
+            <circle cx="20" cy="20" r="3" fill="url(#goldFrame)" className="animate-pulse" style={{animationDelay: '1s'}}/>
+            <circle cx="108" cy="20" r="3" fill="url(#goldFrame)" className="animate-pulse" style={{animationDelay: '1.2s'}}/>
+            <circle cx="20" cy="108" r="3" fill="url(#goldFrame)" className="animate-pulse" style={{animationDelay: '1.4s'}}/>
+            <circle cx="108" cy="108" r="3" fill="url(#goldFrame)" className="animate-pulse" style={{animationDelay: '1.6s'}}/>
           </svg>
         </div>
 
-        {/* Points de connexion clignotants */}
+        {/* Étoiles scintillantes autour du cadre */}
         <div className="absolute inset-0">
-          {[...Array(8)].map((_, i) => (
+          {[...Array(6)].map((_, i) => (
             <div
               key={i}
-              className="absolute w-2 h-2 bg-cyan-400 rounded-full animate-pulse"
+              className="absolute text-yellow-400 animate-pulse"
               style={{
-                left: `${20 + (i % 4) * 20}%`,
-                top: `${20 + Math.floor(i / 4) * 60}%`,
-                animationDelay: `${i * 0.3}s`,
-                animationDuration: '2s'
+                left: `${15 + (i % 3) * 35}%`,
+                top: `${10 + Math.floor(i / 3) * 80}%`,
+                animationDelay: `${i * 0.4}s`,
+                animationDuration: '1.8s',
+                fontSize: i % 2 === 0 ? '12px' : '8px'
               }}
-            />
+            >
+              ✨
+            </div>
           ))}
         </div>
         
-        {/* Engrenages imbriqués centraux */}
+        {/* Tableau central avec effet de mise en valeur */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="relative">
+            {/* Fond de tableau vintage */}
             <div 
-              className={`${getMainIconSize()} text-blue-400 filter drop-shadow-2xl animate-spin z-20`}
+              className="absolute inset-0 bg-gradient-to-br from-amber-100/20 to-yellow-200/30 rounded border border-amber-300/40 animate-pulse"
               style={{
-                animationDuration: '4s',
-                filter: 'drop-shadow(0 0 20px rgba(59, 130, 246, 0.8))'
+                width: '80px',
+                height: '80px',
+                margin: '-40px 0 0 -40px',
+                animationDuration: '3s'
               }}
-            >⚙️</div>
+            />
             
+            {/* Icône principale - palette d'artiste */}
             <div 
-              className="absolute -top-2 -right-2 text-3xl text-cyan-400 animate-spin z-10" 
-              style={{
-                animationDuration: '3s', 
-                animationDirection: 'reverse',
-                filter: 'drop-shadow(0 0 15px rgba(6, 182, 212, 0.7))'
-              }}
-            >⚙️</div>
-            
-            <div 
-              className="absolute -bottom-2 -left-2 text-2xl text-indigo-400 animate-spin z-10" 
+              className={`${getMainIconSize()} text-amber-400 filter drop-shadow-2xl animate-bounce z-20`}
               style={{
                 animationDuration: '2s',
-                filter: 'drop-shadow(0 0 12px rgba(99, 102, 241, 0.7))'
+                filter: 'drop-shadow(0 0 25px rgba(251, 191, 36, 0.8))'
               }}
-            >⚙️</div>
+            >🖼️</div>
             
-            {/* Microscope analyseur */}
-            <div className="absolute -right-8 top-1/2 transform -translate-y-1/2">
+            {/* Accessoires artistiques qui gravitent */}
+            <div 
+              className="absolute -top-6 -left-4 text-2xl text-yellow-500 animate-spin z-10" 
+              style={{
+                animationDuration: '6s',
+                filter: 'drop-shadow(0 0 12px rgba(245, 158, 11, 0.7))'
+              }}
+            >🎨</div>
+            
+            <div 
+              className="absolute -bottom-4 -right-6 text-xl text-amber-600 animate-bounce z-10" 
+              style={{
+                animationDuration: '1.5s',
+                animationDelay: '0.3s',
+                filter: 'drop-shadow(0 0 10px rgba(217, 119, 6, 0.6))'
+              }}
+            >🖌️</div>
+            
+            <div 
+              className="absolute top-2 -right-8 text-lg text-yellow-400 animate-pulse z-10" 
+              style={{
+                animationDuration: '2.2s',
+                animationDelay: '0.8s'
+              }}
+            >🏛️</div>
+            
+            {/* Lumière de galerie */}
+            <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
               <div 
-                className="text-4xl text-cyan-300 animate-bounce" 
-                style={{
-                  animationDuration: '2s',
-                  filter: 'drop-shadow(0 0 15px rgba(6, 182, 212, 0.6))'
-                }}
-              >🔬</div>
-              <div className="absolute -top-1 left-1/2 transform -translate-x-1/2">
-                <div className="w-6 h-0.5 bg-gradient-to-r from-blue-400 to-cyan-400 animate-pulse" style={{animationDuration: '1.5s'}} />
-              </div>
+                className="w-12 h-1 bg-gradient-to-r from-transparent via-yellow-200 to-transparent animate-pulse opacity-60" 
+                style={{animationDuration: '2.5s'}}
+              />
+              <div 
+                className="w-8 h-0.5 bg-gradient-to-r from-transparent via-amber-300 to-transparent animate-pulse opacity-80 mt-1" 
+                style={{animationDuration: '2s', animationDelay: '0.5s'}}
+              />
             </div>
           </div>
         </div>

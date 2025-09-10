@@ -1,5 +1,5 @@
 // Types pour l'analyse de photos - utilisables côté client et serveur
-export type AnalysisTone = 'professional' | 'roast' | 'expert'
+export type AnalysisTone = 'professional' | 'roast' | 'artcritic'
 export type AnalysisLanguage = 'fr' | 'en' | 'es' | 'de' | 'it' | 'pt'
 export type PhotoType = 
   | 'general'

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import * as Popover from '@radix-ui/react-popover'
 
-export type AnalysisTone = 'professional' | 'roast' | 'expert'
+export type AnalysisTone = 'professional' | 'roast' | 'artcritic'
 
 interface ToneSelectorProps {
   selectedTone: AnalysisTone
@@ -29,13 +29,13 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
       color: 'border-neon-pink/50 bg-neon-pink/10',
       selectedColor: 'border-neon-pink bg-neon-pink/20'
     },
-    expert: {
-      label: 'Mode Expert',
-      icon: '🎯',
-      description: 'Analyse professionnelle ultra-avancée',
-      tooltip: 'Analyse détaillée niveau professionnel avec terminologie technique et références artistiques',
-      color: 'border-yellow-400/50 bg-yellow-400/10',
-      selectedColor: 'border-yellow-400 bg-yellow-400/20'
+    artcritic: {
+      label: 'Critique d\'Art',
+      icon: '🎨',
+      description: 'Vision artistique et culturelle',
+      tooltip: 'Analyse selon l\'histoire de la photographie, mouvements artistiques et impact émotionnel',
+      color: 'border-amber-400/50 bg-amber-400/10',
+      selectedColor: 'border-amber-400 bg-amber-400/20'
     }
   }
 
@@ -163,18 +163,18 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
               </div>
             </div>
 
-            {/* Exemple Expert */}
-            <div className="glass-card p-4 border border-yellow-400/30">
+            {/* Exemple Critique d'Art */}
+            <div className="glass-card p-4 border border-amber-400/30">
               <div className="flex items-center mb-3">
-                <span className="text-xl mr-2">🎯</span>
-                <span className="text-yellow-400 font-semibold">Mode Expert</span>
+                <span className="text-xl mr-2">🎨</span>
+                <span className="text-amber-400 font-semibold">Critique d'Art</span>
               </div>
               <div className="text-text-gray text-sm space-y-2">
                 <p><strong>Exemple :</strong></p>
                 <p className="italic">
-                  "Distribution tonale révèle contraste local insuffisant. 
-                  Cette palette évoque Crewdson. Le bokeh circulaire 
-                  indique une optique limitée. Potentiel commercial: 7/10."
+                  "Cette composition rappelle l'école pictorialiste. 
+                  L'usage de la lumière évoque Rembrandt, créant 
+                  une introspection romantique. Patrimoine visuel riche."
                 </p>
               </div>
             </div>

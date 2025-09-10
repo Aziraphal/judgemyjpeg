@@ -165,8 +165,8 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
               />
             </div>
             
-            {/* Affichage des données EXIF pour le mode Expert */}
-            {tone === 'expert' && analysis.hasExifData && analysis.exifData && (
+            {/* Affichage des données EXIF pour le mode Art Critic */}
+            {tone === 'artcritic' && analysis.hasExifData && analysis.exifData && (
               <ExifDisplay exifData={analysis.exifData} className="mt-4" />
             )}
           </div>

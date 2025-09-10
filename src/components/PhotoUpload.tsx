@@ -169,9 +169,9 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
       const finalSizeMB = Math.round(processedFile.size / 1024 / 1024 * 100) / 100
       logger.debug(`Processing file for ${tone} analysis...`)
       
-      // Extraire les données EXIF pour le mode Expert
+      // Extraire les données EXIF pour le mode Art Critic
       let exifData: ExifData | null = null
-      if (tone === 'expert') {
+      if (tone === 'artcritic') {
         try {
           exifData = await extractExifData(processedFile)
         } catch (exifError) {
@@ -436,20 +436,20 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
             <div className="space-y-2">
               <p className={`text-xl sm:text-2xl font-bold text-glow ${
                 tone === 'roast' ? 'text-red-400' : 
-                tone === 'expert' ? 'text-yellow-400' : 'text-neon-cyan'
+                tone === 'artcritic' ? 'text-amber-400' : 'text-neon-cyan'
               }`}>
                 <span aria-hidden="true">{
                   tone === 'roast' ? '🔥 ' : 
-                  tone === 'expert' ? '🎯 ' : '🚀 '
+                  tone === 'artcritic' ? '🎨 ' : '🚀 '
                 }</span>
                 {tone === 'roast' ? 'Analyse critique en cours...' : 
-                 tone === 'expert' ? 'Analyse experte en cours...' : 'Analyse IA en cours...'}
+                 tone === 'artcritic' ? 'Critique d\'art en cours...' : 'Analyse IA en cours...'}
               </p>
               <p className="text-sm sm:text-base text-text-gray">
                 {tone === 'roast' 
                   ? 'L\'IA prépare une critique sans concession'
-                  : tone === 'expert'
-                  ? 'Analyse de niveau maître en cours...' 
+                  : tone === 'artcritic'
+                  ? 'Vision artistique et culturelle...' 
                   : 'GPT-4 Vision analyse votre photo avec précision'
                 }
               </p>
@@ -462,13 +462,13 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
                 <div className="text-center space-y-2">
                   <h3 className="text-lg font-bold text-glow">
                     {tone === 'roast' ? '🔥 Préparation du châtiment' : 
-                     tone === 'expert' ? '🎯 Expertise en cours' : '⚡ Analyse en cours'}
+                     tone === 'artcritic' ? '🎨 Vision artistique' : '⚡ Analyse en cours'}
                   </h3>
                   <p className="text-sm text-text-muted">
                     {tone === 'roast' 
                       ? "L'IA prépare une critique sans concession..." 
-                      : tone === 'expert'
-                      ? "Analyse photographique de niveau professionnel..."
+                      : tone === 'artcritic'
+                      ? "Analyse selon l'histoire de l'art photographique..."
                       : "L'IA examine chaque détail de votre photo..."
                     }
                   </p>
@@ -476,7 +476,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
 
                 {/* Animation SPECTACULAIRE selon le tone */}
                 <AdvancedLoadingAnimation 
-                  mode={tone === 'professional' ? 'expert' : tone === 'roast' ? 'roast' : tone === 'expert' ? 'expert' : 'general'} 
+                  mode={tone === 'professional' ? 'professional' : tone === 'roast' ? 'roast' : tone === 'artcritic' ? 'artcritic' : 'general'} 
                   size="xl"
                 />
               </div>

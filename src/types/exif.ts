@@ -57,7 +57,7 @@ export interface ExifEnrichedAnalysis {
   }
   
   // Métadonnées d'analyse
-  tone: 'roast' | 'pro' | 'expert'
+  tone: 'roast' | 'pro' | 'artcritic'
   language: string
   processingTime: number
   hasExifData: boolean

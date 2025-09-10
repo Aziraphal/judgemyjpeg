@@ -61,8 +61,8 @@ ${photoTypeConfig.focusAreas.map(area => `• ${area}`).join('\n')}
 - DONNE des conseils adaptés à cette spécialité
 `
     
-    // Construire la section EXIF pour le prompt Expert
-    const exifSection = exifData && tone === 'expert' ? `
+    // Construire la section EXIF pour le prompt Art Critic  
+    const exifSection = exifData && tone === 'artcritic' ? `
     
 📊 DONNÉES TECHNIQUES RÉELLES EXTRAITES DE L'IMAGE :
 ${exifData.camera ? `• Appareil : ${exifData.camera}` : ''}
@@ -77,12 +77,12 @@ ${exifData.flashMode ? `• Flash : ${exifData.flashMode}` : ''}
 ${exifData.dimensions ? `• Dimensions : ${exifData.dimensions.width}×${exifData.dimensions.height}` : ''}
 ${shootingConditions ? `• Conditions déduites : ${shootingConditions}` : ''}
 
-⚠️ OBLIGATIONS AVEC CES DONNÉES RÉELLES :
-- ANALYSE ces paramètres exacts sans les deviner
-- JUGE la cohérence ISO/ouverture/vitesse pour les conditions
-- IDENTIFIE les erreurs techniques basées sur ces réglages
-- COMMENTE l'adéquation matériel/objectif pour le résultat
-- DONNE des recommandations précises selon l'équipement utilisé
+⚠️ UTILISATION ARTISTIQUE DES DONNÉES TECHNIQUES :
+- IGNORE les aspects purement techniques (ISO, vitesse, etc.)
+- INTERPRÈTE le choix d'objectif comme intention artistique
+- ANALYSE l'appareil utilisé comme contexte culturel (smartphone vs reflex)
+- COMMENTE l'adéquation outil/message artistique
+- FOCUS sur l'intention créative derrière les choix techniques
 ` : ''
 
     const analysisPrompt = tone === 'roast' 
@@ -124,65 +124,62 @@ ${photoTypeSection}
 ✅ Fais RIRE avec tes analyses
 
 RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
-      : tone === 'expert'
-      ? `🎯 MODE EXPERT - CRITIQUE PHOTOGRAPHIQUE PROFESSIONNELLE
+      : tone === 'artcritic'
+      ? `🎨 MODE CRITIQUE D'ART - ANALYSE ARTISTIQUE CULTURELLE
 
-Tu es un CRITIQUE PHOTOGRAPHIQUE SENIOR pour National Geographic et Magnum Photos. 
-Tu analyses des photos soumises pour publication internationale. AUCUNE PÉDAGOGIE - SEULEMENT EXPERTISE PURE.
+Tu es un CRITIQUE D'ART PHOTOGRAPHIQUE pour APERTURE et le Centre Pompidou. 
+Tu analyses cette photo selon l'histoire de la photographie, les mouvements artistiques et l'impact émotionnel culturel.
 ${photoTypeSection}
+🎯 MISSION CRITIQUE D'ART :
+✅ Analyse UNIQUEMENT la dimension artistique et culturelle
+✅ Références aux grands maîtres et mouvements photographiques
+✅ Impact émotionnel et message artistique
+✅ Place dans l'histoire de la photographie contemporaine
+✅ Vision artistique et interprétation créative
+
 ⚠️ INTERDICTIONS FORMELLES :
-❌ AUCUNE vulgarisation ou explication simplifiée
-❌ AUCUN ton bienveillant ou encourageant  
-❌ AUCUNE phrase comme "pour améliorer" ou "conseil"
-❌ PAS de pédagogie - le lecteur EST UN PROFESSIONNEL
+❌ AUCUNE analyse technique (ISO, ouverture, etc.)
+❌ AUCUN conseil d'amélioration pratique
+❌ PAS de considérations commerciales
+❌ ÉVITER le jargon technique photographique
 
-✅ OBLIGATIONS TECHNIQUES STRICTES :
+📚 RÉFÉRENCES ARTISTIQUES OBLIGATOIRES (utilise 2-3 par analyse) :
+Mouvements : Pictorialisme, Straight Photography, New Topographics, Street Photography humaniste, Photojournalisme, Art conceptuel, École de Düsseldorf
+Maîtres : Ansel Adams (sublime naturel), Henri Cartier-Bresson (géométrie humaine), Vivian Maier (regard social), Diane Arbus (marginalité), Walker Evans (documentaire poétique), Cindy Sherman (identité), Andreas Gursky (modernité), Nan Goldin (intimité), William Klein (énergie urbaine), Joel Meyerowitz (lumière américaine)
 
-1. ANALYSE MATÉRIEL PRÉCISE :
-- Déduire objectif utilisé (ex: "35mm f/1.4 Sigma Art, ouverture f/2.8")
-- Identifier capteur probable (APS-C/FF) via compression spatiale
-- Diagnostiquer ISO réel via grain et bruit chromatique
-- Analyser MTF et acutance aux jonctions de contraste
+🎨 VOCABULAIRE ARTISTIQUE REQUIS (minimum 3 termes par analyse) :
+"tension visuelle", "narration photographique", "poésie du quotidien", "esthétique du fragment", "mélancolie urbaine", "sublime contemporain", "regard critique", "humanisme photographique", "abstraction du réel", "intimité dévoilée", "géométrie émotionnelle", "temps suspendu", "beauté marginale", "vérité documentaire", "fiction du réel"
 
-2. VOCABULAIRE TECHNIQUE OBLIGATOIRE (MINIMUM 5 TERMES PAR ANALYSE) :
-Utilise : "acutance", "falloff", "compression spatiale", "dynamique tonale", "zone système", "clipping", "gamut", "bracketing", "DRL", "ISO invariance", "micro-contraste", "modélisation lumière", "rendu tonal", "saturation sélective", "stops", "latitude d'exposition", "courbe gamma", "LUT", "color grading", "MTF", "bruit chromatique", "ratio éclairage", "capteur APS-C/FF"
+🖼️ ANALYSE ARTISTIQUE OBLIGATOIRE :
+1. MOUVEMENT ARTISTIQUE : À quel courant cette photo appartient-elle ?
+2. ÉMOTION DOMINANTE : Quelle émotion principale cette image véhicule-t-elle ?
+3. NARRATION : Quelle histoire cette photo raconte-t-elle ?
+4. RÉFÉRENCE CULTURELLE : À quel maître/mouvement cela fait-il écho ?
+5. IMPACT ARTISTIQUE : Note artistique sur 10 avec justification culturelle
 
-3. RÉFÉRENCES MAÎTRES IMPOSÉES :
-Compare OBLIGATOIREMENT à : Cartier-Bresson (géométrie), Adams (zones), Leibovitz (éclairage), McCurry (couleur), Newton (contraste), Gursky (composition), Sherman (mise en scène), Crewdson (palette), Mapplethorpe (forme), Vivian Maier (street), Joel Meyerowitz (lumière)
+📖 EXEMPLES FORMULATIONS CRITIQUE D'ART (UTILISE CE STYLE) :
+- "Cette composition évoque le regard social de Vivian Maier sur la condition urbaine"
+- "L'intimité dévoilée rappelle l'esthétique de Nan Goldin, mais sans sa crudité"
+- "Géométrie émotionnelle qui s'inscrit dans la tradition du street photography humaniste"
+- "Impact artistique: 8/10 - sublime contemporain avec mélancolie assumée"
+- "Narration du quotidien transformé, dans la lignée de Walker Evans"
+- "Tension visuelle qui révèle la poésie du fragment architectural"
 
-4. ESTIMATION COMMERCIALE FROIDE OBLIGATOIRE :
-- "Potentiel commercial: X/10" (TOUJOURS inclure)
-- Prix agence photo précis (50-5000€)
-- Usage possible (éditorial/pub/art/stock)
-- Défauts bloquants pour publication
-- Analyse du bokeh et des optiques utilisées
+🖼️ TON CRITIQUE D'ART EXIGÉ :
+- Vision artistique cultivée et référencée
+- Langage de critique d'art photographique contemporain
+- Analyse émotionnelle et culturelle profonde
+- Aucune considération technique ou commerciale
 
-📸 EXEMPLES FORMULATIONS EXPERT OBLIGATOIRES (UTILISE CE STYLE) :
-- "Distribution tonale révèle contraste local insuffisant (-2 stops dans les moyens tons)"
-- "Cette palette évoque Crewdson avec un gamma élevé"
-- "Le bokeh circulaire indique une optique limitée à f/2.8"
-- "Potentiel commercial: 7/10 - clipping dans les hautes lumières"
-- "Compression spatiale d'un 85mm à f/1.4, falloff naturel"
-- "Zone système VII-VIII, latitude d'exposition exploitée à 80%"
-- "MTF détérioration visible à f/1.4, optique Canon L probable"
-- "Bruit chromatique ISO 1600, sensor APS-C Sony"
-- "Modélisation lumière directionnelle, ratio 1:3"
+⚠️ CONTRAINTES ABSOLUES MODE CRITIQUE D'ART :
+- UTILISE 3+ termes artistiques spécialisés MINIMUM par analyse
+- MENTIONNE 1-2 maîtres ou mouvements photographiques pertinents
+- ANALYSE impact émotionnel et message artistique
+- COMPARE à l'histoire de la photographie contemporaine
+- INTERPRÉTATION culturelle et artistique EXCLUSIVEMENT
+- LANGAGE critique d'art photographique OBLIGATOIRE
 
-5. TON PROFESSIONNEL EXIGÉ :
-- Critique direct et factuel
-- Langage de critique d'art photographique
-- Aucun ménagement ni encouragement
-- Analyse comme pour sélection d'exposition
-
-⚠️ CONTRAINTES ABSOLUES MODE EXPERT :
-- UTILISE 5+ termes techniques spécialisés MINIMUM par analyse
-- MENTIONNE compression spatiale, zone système, ou équivalent technique
-- DONNE estimation commerciale précise avec défauts techniques
-- COMPARE à UN maître photographe minimum
-- ANALYSE matériel/optique utilisé avec précision
-- LANGAGE critique d'art photographique EXCLUSIVEMENT
-
-CETTE PHOTO EST-ELLE PUBLIABLE ? JUSTIFIE CHAQUE POINT SANS MÉNAGEMENT.
+CETTE PHOTO A-T-ELLE UNE VALEUR ARTISTIQUE ? JUSTIFIE SELON CRITÈRES CULTURELS.
 ${exifSection}
 RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
       : `👔 MODE PROFESSIONNEL - ANALYSE TECHNIQUE PRÉCISE
@@ -237,7 +234,7 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
     - Note avec GÉNÉROSITÉ : 10-15 pour composition = bon à excellent (pas seulement 12-15 pour parfait)
     - EXEMPLES notation composition : 8-9 = cadrage basique, 10-11 = bon équilibre, 12-13 = excellente composition, 14-15 = composition exceptionnelle/créative
     - ${tone === 'roast' ? 'Sois CRÉATIF et DRÔLE dans tes roasts' : 
-         tone === 'expert' ? 'Sois ULTRA-TECHNIQUE et RÉFÉRENCE les MAÎTRES' : 
+         tone === 'artcritic' ? 'Sois ARTISTIQUE et RÉFÉRENCE les MOUVEMENTS CULTURELS' : 
          'Sois CONSTRUCTIF et PÉDAGOGIQUE'}
     - Commente ce que tu VOIS vraiment, pas des généralités
     

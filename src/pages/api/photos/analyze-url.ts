@@ -41,7 +41,7 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
       return res.status(400).json({ error: 'URL de photo non valide' })
     }
 
-    const analysisTone: AnalysisTone = (tone === 'roast' || tone === 'professional' || tone === 'expert') ? tone : 'professional'
+    const analysisTone: AnalysisTone = (tone === 'roast' || tone === 'professional' || tone === 'artcritic') ? tone : 'professional'
     const analysisLanguage: AnalysisLanguage = (['fr', 'en', 'es', 'de', 'it', 'pt'].includes(language)) ? language : 'fr'
 
     // Récupérer l'image depuis Cloudinary et la convertir en base64 pour OpenAI
