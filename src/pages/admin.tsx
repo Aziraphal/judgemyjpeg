@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
+import { withAdminProtection } from '@/lib/withAdminProtection'
 
 export default function AdminPage() {
   const { data: session, status } = useSession()
@@ -348,3 +349,6 @@ export default function AdminPage() {
     </>
   )
 }
+
+// PROTECTION ADMIN CRITIQUE - Cette page était 100% publique !
+export const getServerSideProps = withAdminProtection()
