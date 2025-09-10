@@ -13,8 +13,5 @@ Disallow: /_next/server*
 Disallow: /node_modules/*
 Disallow: *.disabled*
 
-# Host
-Host: https://www.judgemyjpeg.fr
-
 # Sitemaps
 Sitemap: https://www.judgemyjpeg.fr/sitemap.xml
