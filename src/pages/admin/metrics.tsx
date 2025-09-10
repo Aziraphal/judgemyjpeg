@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/pages/api/auth/[...nextauth]'
 import Link from 'next/link'
+import { withAdminProtection } from '@/lib/withAdminProtection'
 
 interface BusinessMetrics {
   analyses: {
@@ -287,32 +286,4 @@ export default function AdminMetricsPage() {
   )
 }
 
-// Protection server-side avec NextAuth
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getServerSession(context.req, context.res, authOptions)
-  
-  // Redirection si pas authentifié
-  if (!session?.user?.email) {
-    return {
-      redirect: {
-        destination: '/admin/login',
-        permanent: false,
-      },
-    }
-  }
-  
-  // Vérification admin (email hardcodé pour sécurité)
-  const adminEmails = ['admin@judgemyjpeg.com', 'contact@judgemyjpeg.com', 'cyril.paquier@gmail.com']
-  if (!adminEmails.includes(session.user.email)) {
-    return {
-      redirect: {
-        destination: '/?error=unauthorized',
-        permanent: false,
-      },
-    }
-  }
-  
-  return {
-    props: {},
-  }
-}
+export const getServerSideProps = withAdminProtection()

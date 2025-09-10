@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { logger } from '@/lib/logger'
+import { withAdminProtection } from '@/lib/withAdminProtection'
 
 interface SecurityStats {
   totalUsers: number
@@ -489,3 +490,6 @@ export default function AdminDashboard() {
     </>
   )
 }
+
+// Protection admin obligatoire
+export const getServerSideProps = withAdminProtection()

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Head from 'next/head'
+import { withAdminProtection } from '@/lib/withAdminProtection'
 
 export default function FixUserPage() {
   const [email, setEmail] = useState('jennifernachtegale@gmail.com')
@@ -119,3 +120,5 @@ export default function FixUserPage() {
     </>
   )
 }
+
+export const getServerSideProps = withAdminProtection()

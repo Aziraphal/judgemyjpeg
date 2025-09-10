@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Head from 'next/head'
+import { withAdminProtection } from '@/lib/withAdminProtection'
 
 export default function SEOTrackingPage() {
   const [verificationStatus, setVerificationStatus] = useState({
@@ -155,3 +156,5 @@ NEXT_PUBLIC_GTAG_ID=G-XXXXXXXXXX
     </>
   )
 }
+
+export const getServerSideProps = withAdminProtection()
