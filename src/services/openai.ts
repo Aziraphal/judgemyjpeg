@@ -11,8 +11,38 @@ import {
 } from '@/types/analysis'
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY!
+  apiKey: process.env.OPENAI_API_KEY!,
+  timeout: 60000, // 60 secondes timeout
+  maxRetries: 3  // Retry automatique OpenAI
 })
+
+// Circuit breaker simple pour OpenAI
+let failureCount = 0
+let lastFailureTime = 0
+const CIRCUIT_BREAKER_THRESHOLD = 5
+const CIRCUIT_BREAKER_TIMEOUT = 300000 // 5 minutes
+
+function isCircuitBreakerOpen(): boolean {
+  if (failureCount >= CIRCUIT_BREAKER_THRESHOLD) {
+    if (Date.now() - lastFailureTime < CIRCUIT_BREAKER_TIMEOUT) {
+      return true
+    } else {
+      // Reset après timeout
+      failureCount = 0
+      lastFailureTime = 0
+    }
+  }
+  return false
+}
+
+function recordFailure(): void {
+  failureCount++
+  lastFailureTime = Date.now()
+}
+
+function recordSuccess(): void {
+  failureCount = Math.max(0, failureCount - 1)
+}
 
 export async function analyzePhoto(
   imageBase64: string, 
@@ -22,7 +52,29 @@ export async function analyzePhoto(
   photoType: PhotoType = 'general',
   userId?: string
 ): Promise<PhotoAnalysis> {
+  let imageData = imageBase64 // Copie locale pour cleanup
+  
   try {
+    // Vérifier le circuit breaker
+    if (isCircuitBreakerOpen()) {
+      logger.error('OpenAI circuit breaker open', { 
+        userId,
+        failureCount,
+        lastFailureTime 
+      })
+      throw new Error('Service IA temporairement indisponible. Veuillez réessayer dans quelques minutes.')
+    }
+    
+    // Log taille image pour monitoring memory
+    const imageSizeKB = Math.round(imageData.length / 1024)
+    if (imageSizeKB > 10000) { // 10MB
+      logger.warn('Large image processing', { 
+        userId,
+        imageSizeKB,
+        tone,
+        photoType 
+      })
+    }
     // Configuration des langues
     const languageConfig = {
       fr: { name: 'français', code: 'fr' },
@@ -373,7 +425,7 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
             {
               type: "image_url",
               image_url: {
-                url: `data:image/jpeg;base64,${imageBase64}`
+                url: `data:image/jpeg;base64,${imageData}`
               }
             }
           ]
@@ -432,13 +484,84 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
       }
     }
     
+    // Enregistrer le succès pour circuit breaker
+    recordSuccess()
+    
+    // Cleanup memory
+    imageData = ''
+    
     return analysis
 
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      logger.error('Erreur analyse OpenAI:', error)
+    // Gestion détaillée des erreurs OpenAI avec retry logic
+    if (error instanceof Error) {
+      // Erreurs OpenAI spécifiques
+      if (error.message.includes('rate_limit_exceeded')) {
+        logger.error('OpenAI rate limit exceeded', { 
+          userId,
+          error: error.message,
+          endpoint: 'analyzePhoto'
+        })
+        throw new Error('Limite de requêtes OpenAI atteinte. Veuillez réessayer dans quelques minutes.')
+      }
+      
+      if (error.message.includes('insufficient_quota')) {
+        logger.error('OpenAI quota exceeded', { 
+          userId,
+          error: error.message 
+        })
+        throw new Error('Quota OpenAI épuisé. Service temporairement indisponible.')
+      }
+      
+      if (error.message.includes('invalid_api_key')) {
+        logger.error('OpenAI API key invalid', { 
+          userId,
+          error: error.message 
+        })
+        throw new Error('Erreur de configuration du service IA.')
+      }
+      
+      // Erreurs de timeout/network
+      if (error.message.includes('timeout') || error.message.includes('ENOTFOUND')) {
+        logger.error('OpenAI timeout/network error', { 
+          userId,
+          error: error.message 
+        })
+        throw new Error('Timeout de l\'analyse IA. Veuillez réessayer.')
+      }
+      
+      // Erreur de parsing JSON
+      if (error.message.includes('JSON') || error.message.includes('parse')) {
+        logger.error('OpenAI response parsing error', { 
+          userId,
+          error: error.message 
+        })
+        throw new Error('Réponse IA mal formatée. Veuillez réessayer.')
+      }
     }
-    throw new Error('Impossible d\'analyser la photo')
+    
+    // Erreur générique avec log complet et enregistrement échec
+    recordFailure()
+    
+    logger.error('OpenAI analysis failed', {
+      userId,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      tone,
+      language,
+      photoType,
+      failureCount: failureCount
+    })
+    
+    throw new Error('Impossible d\'analyser la photo. Veuillez réessayer.')
+  } finally {
+    // Cleanup obligatoire en cas d'erreur aussi
+    imageData = ''
+    
+    // Force garbage collection si disponible
+    if (global.gc) {
+      global.gc()
+    }
   }
 }
 

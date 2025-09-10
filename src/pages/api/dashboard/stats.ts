@@ -14,16 +14,10 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
   }, req.user.id, ip)
 
   try {
-    const user = await prisma.user.findUnique({
-      where: { email: req.user.email }
-    })
+    // Utiliser directement l'ID du middleware auth (éviter query user inutile)
+    const userId = req.user.id
 
-    if (!user) {
-      logger.error('User not found for stats', { email: req.user.email }, req.user.id, ip)
-      return res.status(404).json({ error: 'Utilisateur non trouvé' })
-    }
-
-    // Statistiques globales
+    // Statistiques globales optimisées
     const [
       totalPhotos,
       topPhotos,
@@ -35,122 +29,113 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     ] = await Promise.all([
       // Total des photos
       prisma.photo.count({
-        where: { userId: user.id }
+        where: { userId }
       }),
       
-      // Top photos (score >= 85)
+      // Top photos (score >= 85)  
       prisma.photo.count({
         where: { 
-          userId: user.id,
+          userId,
           score: { gte: 85 }
         }
       }),
       
       // Total favoris
       prisma.favorite.count({
-        where: { userId: user.id }
+        where: { userId }
       }),
       
       // Total collections
       prisma.collection.count({
-        where: { userId: user.id }
+        where: { userId }
       }),
       
-      // Score moyen
+      // Score moyen + distribution en une seule query optimisée
       prisma.photo.aggregate({
         where: { 
-          userId: user.id,
+          userId,
           score: { not: null }
         },
-        _avg: { score: true }
+        _avg: { score: true },
+        _count: true
       }),
       
       // Photos récentes (7 derniers jours)
       prisma.photo.count({
         where: {
-          userId: user.id,
+          userId,
           createdAt: {
             gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
           }
         }
       }),
       
-      // Distribution des scores
-      prisma.photo.findMany({
-        where: { 
-          userId: user.id,
-          score: { not: null }
-        },
-        select: { score: true }
-      })
+      // Distribution des scores avec groupBy optimisé
+      prisma.$queryRaw`
+        SELECT 
+          CASE 
+            WHEN score >= 85 THEN 'excellent'
+            WHEN score >= 70 THEN 'good' 
+            WHEN score >= 50 THEN 'average'
+            ELSE 'poor'
+          END as category,
+          COUNT(*) as count
+        FROM "Photo" 
+        WHERE "userId" = ${userId} AND score IS NOT NULL
+        GROUP BY category
+      `
     ])
 
-    // Analyser la distribution des scores
-    const scores = scoreDistribution.map(p => p.score!).filter(Boolean)
-    const distribution = {
-      excellent: scores.filter(s => s >= 85).length,
-      good: scores.filter(s => s >= 70 && s < 85).length,
-      average: scores.filter(s => s >= 50 && s < 70).length,
-      poor: scores.filter(s => s < 50).length,
-    }
-
-    // Évolution mensuelle (3 derniers mois)
-    const monthlyData = await prisma.photo.groupBy({
-      by: ['createdAt'],
-      where: {
-        userId: user.id,
-        createdAt: {
-          gte: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000)
-        }
-      },
-      _count: true,
-      _avg: { score: true }
-    })
-
-    // Grouper par mois
-    const monthlyStats = monthlyData.reduce((acc: any, curr) => {
-      const month = curr.createdAt.toISOString().slice(0, 7) // YYYY-MM
-      if (!acc[month]) {
-        acc[month] = { count: 0, totalScore: 0, photos: 0 }
-      }
-      acc[month].count += curr._count
-      acc[month].totalScore += curr._avg.score || 0
-      acc[month].photos++
+    // Traiter la distribution optimisée depuis raw query
+    const distribution = (scoreDistribution as any[]).reduce((acc, row) => {
+      acc[row.category] = Number(row.count)
       return acc
-    }, {})
+    }, { excellent: 0, good: 0, average: 0, poor: 0 })
 
-    // Dernières photos avec score
-    const latestPhotos = await prisma.photo.findMany({
-      where: { userId: user.id },
-      orderBy: { createdAt: 'desc' },
-      take: 6,
-      select: {
-        id: true,
-        url: true,
-        filename: true,
-        score: true,
-        createdAt: true,
-        _count: {
-          select: { favorites: true }
-        }
-      }
-    })
+    // Évolution mensuelle optimisée avec SQL direct
+    const monthlyStatsRaw = await prisma.$queryRaw`
+      SELECT 
+        DATE_TRUNC('month', "createdAt") as month,
+        COUNT(*) as count,
+        AVG(score) as avg_score
+      FROM "Photo" 
+      WHERE "userId" = ${userId} 
+        AND "createdAt" >= ${new Date(Date.now() - 90 * 24 * 60 * 60 * 1000)}
+      GROUP BY DATE_TRUNC('month', "createdAt")
+      ORDER BY month DESC
+      LIMIT 3
+    ` as any[]
 
-    // Collections populaires
-    const popularCollections = await prisma.collection.findMany({
-      where: { userId: user.id },
-      orderBy: {
-        items: { _count: 'desc' }
-      },
-      take: 5,
-      include: {
-        _count: { select: { items: true } },
-        items: {
-          take: 1,
-          include: { photo: true }
-        }
-      }
-    })
+    // Dernières photos optimisées avec JOIN au lieu de _count
+    const latestPhotos = await prisma.$queryRaw`
+      SELECT 
+        p.id, p.url, p.filename, p.score, p."createdAt",
+        COUNT(f.id) as favorite_count
+      FROM "Photo" p
+      LEFT JOIN "Favorite" f ON f."photoId" = p.id
+      WHERE p."userId" = ${userId}
+      GROUP BY p.id, p.url, p.filename, p.score, p."createdAt"
+      ORDER BY p."createdAt" DESC
+      LIMIT 6
+    ` as any[]
+
+    // Collections populaires optimisées
+    const popularCollections = await prisma.$queryRaw`
+      SELECT 
+        c.id, c.name, c.color,
+        COUNT(ci.id) as photo_count,
+        (SELECT json_build_object('id', p.id, 'url', p.url, 'filename', p.filename)
+         FROM "CollectionItem" ci2 
+         JOIN "Photo" p ON p.id = ci2."photoId"
+         WHERE ci2."collectionId" = c.id 
+         LIMIT 1) as preview_photo
+      FROM "Collection" c
+      LEFT JOIN "CollectionItem" ci ON ci."collectionId" = c.id
+      WHERE c."userId" = ${userId}
+      GROUP BY c.id, c.name, c.color
+      ORDER BY photo_count DESC
+      LIMIT 5
+    ` as any[]
 
     const stats = {
       overview: {
@@ -162,21 +147,25 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
         recentPhotos,
       },
       distribution,
-      monthlyStats: Object.entries(monthlyStats).map(([month, data]: [string, any]) => ({
-        month,
-        count: data.count,
-        avgScore: data.photos > 0 ? Math.round((data.totalScore / data.photos) * 10) / 10 : 0
-      })).slice(-3), // 3 derniers mois
+      monthlyStats: monthlyStatsRaw.map(row => ({
+        month: new Date(row.month).toISOString().slice(0, 7),
+        count: Number(row.count),
+        avgScore: row.avg_score ? Math.round(Number(row.avg_score) * 10) / 10 : 0
+      })),
       latestPhotos: latestPhotos.map(photo => ({
-        ...photo,
-        favoriteCount: photo._count.favorites
+        id: photo.id,
+        url: photo.url,
+        filename: photo.filename,
+        score: photo.score,
+        createdAt: photo.createdAt,
+        favoriteCount: Number(photo.favorite_count)
       })),
       popularCollections: popularCollections.map(collection => ({
         id: collection.id,
         name: collection.name,
         color: collection.color,
-        photoCount: collection._count.items,
-        previewPhoto: collection.items[0]?.photo || null
+        photoCount: Number(collection.photo_count),
+        previewPhoto: collection.preview_photo
       }))
     }
 

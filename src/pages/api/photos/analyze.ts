@@ -14,6 +14,7 @@ import { AuditLogger } from '@/lib/audit-trail'
 import { cacheService } from '@/lib/cache-service'
 import { moderateImage, ModerationResult } from '@/lib/moderation'
 import { recordAnalysisMetric } from '@/lib/business-metrics'
+import { rateLimit } from '@/lib/rate-limit'
 
 export const config = {
   api: {
@@ -40,6 +41,23 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
   const analysisStartTime = Date.now()
 
   try {
+    // Rate limiting robuste - priorité utilisateurs authentifiés
+    const rateLimitResult = await rateLimit(req, res, {
+      interval: 60 * 1000, // 1 minute
+      uniqueTokenPerInterval: 500,
+      maxRequests: 3, // 3 analyses/min pour anonymes
+      authenticatedMaxRequests: 10 // 10 analyses/min pour users connectés
+    })
+
+    if (!rateLimitResult.success) {
+      await auditLogger.logSecurity('rate_limit_exceeded', {})
+
+      return res.status(429).json({ 
+        error: `Trop de requêtes. Limite ${rateLimitResult.isAuthenticated ? '10' : '3'} analyses par minute.`,
+        remainingTime: rateLimitResult.resetTime ? Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000) : 60,
+        upgradeMessage: rateLimitResult.isAuthenticated ? null : 'Connectez-vous pour une limite plus élevée (10/min)'
+      })
+    }
 
     // Parse le fichier uploadé avec limite Railway
     const form = formidable({

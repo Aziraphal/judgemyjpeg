@@ -63,6 +63,8 @@ model User {
   starterPackUsed      Boolean          @default(false)
   starterSharesCount   Int              @default(0)
   starterPackPurchased Boolean          @default(false)
+  role                 String           @default("user")
+  isAdmin              Boolean          @default(false)
   accounts             Account[]
   collections          Collection[]
   favorites            Favorite[]
