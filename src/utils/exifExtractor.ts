@@ -9,10 +9,19 @@ import { logger } from '@/lib/logger'
  */
 export async function extractExifData(file: File): Promise<ExifData | null> {
   try {
+    // Vérifier si le fichier est valide
+    if (!file || file.size === 0) {
+      return null
+    }
+
     // Convertir le fichier en ArrayBuffer pour ExifReader
     const arrayBuffer = await file.arrayBuffer()
     
-    // Extraire les tags EXIF
+    if (!arrayBuffer || arrayBuffer.byteLength === 0) {
+      return null
+    }
+    
+    // Extraire les tags EXIF avec protection supplémentaire
     const tags = ExifReader.load(arrayBuffer, {
       expanded: true,
       includeUnknown: false

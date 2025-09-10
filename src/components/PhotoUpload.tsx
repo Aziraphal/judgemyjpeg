@@ -176,6 +176,8 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
           exifData = await extractExifData(processedFile)
         } catch (exifError) {
           logger.warn('⚠️ EXIF extraction failed:', exifError)
+          // Continue sans EXIF - ne pas faire planter l'analyse
+          exifData = null
         }
       }
       
