@@ -476,7 +476,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
 
                 {/* Animation SPECTACULAIRE selon le tone */}
                 <AdvancedLoadingAnimation 
-                  mode={tone === 'professional' ? 'professional' : tone === 'roast' ? 'roast' : tone === 'artcritic' ? 'artcritic' : 'general'} 
+                  mode={tone === 'professional' ? 'general' : tone === 'roast' ? 'roast' : tone === 'artcritic' ? 'artcritic' : 'general'} 
                   size="xl"
                 />
               </div>
