@@ -28,6 +28,12 @@ export default function CritiquePhotoIA() {
             "name": "Critique Photo IA",
             "description": "Service de critique photo par intelligence artificielle",
             "url": "https://www.judgemyjpeg.fr/critique-photo-ia",
+            "inLanguage": "fr-FR",
+            "isPartOf": {
+              "@type": "WebSite",
+              "name": "JudgeMyJPEG",
+              "url": "https://www.judgemyjpeg.fr"
+            },
             "mainEntity": {
               "@type": "Service",
               "name": "Critique Photo IA",
@@ -36,6 +42,13 @@ export default function CritiquePhotoIA() {
                 "@type": "Organization",
                 "name": "JudgeMyJPEG",
                 "url": "https://www.judgemyjpeg.fr"
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "EUR",
+                "description": "Critique photo gratuite par IA",
+                "availability": "https://schema.org/InStock"
               }
             }
           })}

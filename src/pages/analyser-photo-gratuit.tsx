@@ -28,11 +28,28 @@ export default function AnalyserPhotoGratuit() {
             "name": "Analyser Photo Gratuit",
             "description": "Service gratuit d'analyse photo par intelligence artificielle",
             "url": "https://www.judgemyjpeg.fr/analyser-photo-gratuit",
-            "offers": {
-              "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "EUR",
-              "description": "Analyse photo gratuite par IA"
+            "inLanguage": "fr-FR",
+            "isPartOf": {
+              "@type": "WebSite",
+              "name": "JudgeMyJPEG",
+              "url": "https://www.judgemyjpeg.fr"
+            },
+            "mainEntity": {
+              "@type": "Service",
+              "name": "Analyse Photo Gratuite",
+              "description": "Analyse photo gratuite par intelligence artificielle",
+              "provider": {
+                "@type": "Organization",
+                "name": "JudgeMyJPEG",
+                "url": "https://www.judgemyjpeg.fr"
+              },
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "EUR",
+                "description": "Analyse photo gratuite par IA",
+                "availability": "https://schema.org/InStock"
+              }
             }
           })}
         </script>
