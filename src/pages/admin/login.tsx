@@ -44,6 +44,13 @@ export default function AdminLoginPage() {
   const [isAdmin, setIsAdmin] = useState(false)
   const [adminCheckDone, setAdminCheckDone] = useState(false)
 
+  // Redirection automatique si déjà connecté et admin
+  useEffect(() => {
+    if (session?.user && isAdmin && adminCheckDone) {
+      router.replace('/admin/dashboard')
+    }
+  }, [session, isAdmin, adminCheckDone, router])
+
   // Vérifier les permissions admin dans la DB
   useEffect(() => {
     async function checkAdminStatus() {
