@@ -395,37 +395,37 @@ export default function AdminDashboard() {
                 </h3>
 
                 {/* Filtres sécurisés */}
-                <div className="grid md:grid-cols-5 gap-4 mb-6 p-4 bg-cosmic-glass/20 rounded-lg">
+                <div className="grid md:grid-cols-5 gap-4 mb-6 p-4 bg-cosmic-dark/50 border border-cosmic-glassborder rounded-lg">
                   <div>
-                    <label className="block text-xs text-text-gray mb-1">Score Min</label>
+                    <label className="block text-xs text-text-white font-medium mb-1">Score Min</label>
                     <input
                       type="number"
                       min="0"
                       max="100"
                       value={photoFilters.minScore}
                       onChange={(e) => setPhotoFilters(prev => ({...prev, minScore: e.target.value}))}
-                      className="w-full px-3 py-2 bg-cosmic-dark/50 border border-cosmic-glassborder rounded text-text-white text-sm"
+                      className="w-full px-3 py-2 bg-cosmic-dark border border-cosmic-glassborder rounded text-text-white text-sm focus:border-neon-cyan focus:outline-none"
                       placeholder="0"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-text-gray mb-1">Score Max</label>
+                    <label className="block text-xs text-text-white font-medium mb-1">Score Max</label>
                     <input
                       type="number"
                       min="0"
                       max="100"
                       value={photoFilters.maxScore}
                       onChange={(e) => setPhotoFilters(prev => ({...prev, maxScore: e.target.value}))}
-                      className="w-full px-3 py-2 bg-cosmic-dark/50 border border-cosmic-glassborder rounded text-text-white text-sm"
+                      className="w-full px-3 py-2 bg-cosmic-dark border border-cosmic-glassborder rounded text-text-white text-sm focus:border-neon-cyan focus:outline-none"
                       placeholder="100"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-text-gray mb-1">Tone IA</label>
+                    <label className="block text-xs text-text-white font-medium mb-1">Tone IA</label>
                     <select
                       value={photoFilters.analysisTone}
                       onChange={(e) => setPhotoFilters(prev => ({...prev, analysisTone: e.target.value}))}
-                      className="w-full px-3 py-2 bg-cosmic-dark/50 border border-cosmic-glassborder rounded text-text-white text-sm"
+                      className="w-full px-3 py-2 bg-cosmic-dark border border-cosmic-glassborder rounded text-text-white text-sm focus:border-neon-cyan focus:outline-none"
                     >
                       <option value="">Tous</option>
                       <option value="artcritic">Art Critic</option>
@@ -434,20 +434,20 @@ export default function AdminDashboard() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs text-text-gray mb-1">Date début</label>
+                    <label className="block text-xs text-text-white font-medium mb-1">Date début</label>
                     <input
                       type="date"
                       value={photoFilters.startDate}
                       onChange={(e) => setPhotoFilters(prev => ({...prev, startDate: e.target.value}))}
-                      className="w-full px-3 py-2 bg-cosmic-dark/50 border border-cosmic-glassborder rounded text-text-white text-sm"
+                      className="w-full px-3 py-2 bg-cosmic-dark border border-cosmic-glassborder rounded text-text-white text-sm focus:border-neon-cyan focus:outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-text-gray mb-1">Limite</label>
+                    <label className="block text-xs text-text-white font-medium mb-1">Limite</label>
                     <select
                       value={photoFilters.limit}
                       onChange={(e) => setPhotoFilters(prev => ({...prev, limit: Number(e.target.value), offset: 0}))}
-                      className="w-full px-3 py-2 bg-cosmic-dark/50 border border-cosmic-glassborder rounded text-text-white text-sm"
+                      className="w-full px-3 py-2 bg-cosmic-dark border border-cosmic-glassborder rounded text-text-white text-sm focus:border-neon-cyan focus:outline-none"
                     >
                       <option value={25}>25</option>
                       <option value={50}>50</option>
@@ -704,22 +704,22 @@ export default function AdminDashboard() {
                   <h3 className="text-lg font-semibold text-text-white mb-4">🔧 Actions</h3>
                   <div className="space-y-3">
                     <button
-                      onClick={() => router.push('/admin/users')}
+                      onClick={() => alert('Fonctionnalité en cours d\'intégration dans le dashboard unifié')}
                       className="w-full bg-blue-600/20 text-blue-300 px-4 py-2 rounded hover:bg-blue-600/30 transition-colors"
                     >
                       👥 Gérer les utilisateurs
                     </button>
                     <button
-                      onClick={() => router.push('/admin/users?filter=new')}
+                      onClick={() => alert('Fonctionnalité en cours d\'intégration dans le dashboard unifié')}
                       className="w-full bg-green-600/20 text-green-300 px-4 py-2 rounded hover:bg-green-600/30 transition-colors"
                     >
                       ✨ Nouveaux utilisateurs
                     </button>
                     <button
-                      onClick={() => router.push('/admin/users?filter=premium')}
+                      onClick={() => router.push('/admin/users')}
                       className="w-full bg-yellow-600/20 text-yellow-300 px-4 py-2 rounded hover:bg-yellow-600/30 transition-colors"
                     >
-                      💎 Utilisateurs premium
+                      💎 Page utilisateurs (externe)
                     </button>
                   </div>
                 </div>
