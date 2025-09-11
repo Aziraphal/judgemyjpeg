@@ -394,38 +394,38 @@ export default function AdminDashboard() {
                   </span>
                 </h3>
 
-                {/* Filtres sécurisés */}
-                <div className="grid md:grid-cols-5 gap-4 mb-6 p-4 bg-cosmic-dark/50 border border-cosmic-glassborder rounded-lg">
+                {/* Filtres haute visibilité */}
+                <div className="grid md:grid-cols-5 gap-4 mb-6 p-4 bg-gray-900/90 border-2 border-white/40 rounded-lg shadow-lg">
                   <div>
-                    <label className="block text-xs text-text-white font-medium mb-1">Score Min</label>
+                    <label className="block text-sm text-white font-bold mb-2 drop-shadow-lg">Score Min</label>
                     <input
                       type="number"
                       min="0"
                       max="100"
                       value={photoFilters.minScore}
                       onChange={(e) => setPhotoFilters(prev => ({...prev, minScore: e.target.value}))}
-                      className="w-full px-3 py-2 bg-cosmic-dark border border-cosmic-glassborder rounded text-text-white text-sm focus:border-neon-cyan focus:outline-none"
+                      className="w-full px-3 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg text-sm font-medium focus:border-blue-500 focus:outline-none focus:bg-blue-50"
                       placeholder="0"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-text-white font-medium mb-1">Score Max</label>
+                    <label className="block text-sm text-white font-bold mb-2 drop-shadow-lg">Score Max</label>
                     <input
                       type="number"
                       min="0"
                       max="100"
                       value={photoFilters.maxScore}
                       onChange={(e) => setPhotoFilters(prev => ({...prev, maxScore: e.target.value}))}
-                      className="w-full px-3 py-2 bg-cosmic-dark border border-cosmic-glassborder rounded text-text-white text-sm focus:border-neon-cyan focus:outline-none"
+                      className="w-full px-3 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg text-sm font-medium focus:border-blue-500 focus:outline-none focus:bg-blue-50"
                       placeholder="100"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-text-white font-medium mb-1">Tone IA</label>
+                    <label className="block text-sm text-white font-bold mb-2 drop-shadow-lg">Tone IA</label>
                     <select
                       value={photoFilters.analysisTone}
                       onChange={(e) => setPhotoFilters(prev => ({...prev, analysisTone: e.target.value}))}
-                      className="w-full px-3 py-2 bg-cosmic-dark border border-cosmic-glassborder rounded text-text-white text-sm focus:border-neon-cyan focus:outline-none"
+                      className="w-full px-3 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg text-sm font-medium focus:border-blue-500 focus:outline-none focus:bg-blue-50"
                     >
                       <option value="">Tous</option>
                       <option value="artcritic">Art Critic</option>
@@ -434,20 +434,20 @@ export default function AdminDashboard() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs text-text-white font-medium mb-1">Date début</label>
+                    <label className="block text-sm text-white font-bold mb-2 drop-shadow-lg">Date début</label>
                     <input
                       type="date"
                       value={photoFilters.startDate}
                       onChange={(e) => setPhotoFilters(prev => ({...prev, startDate: e.target.value}))}
-                      className="w-full px-3 py-2 bg-cosmic-dark border border-cosmic-glassborder rounded text-text-white text-sm focus:border-neon-cyan focus:outline-none"
+                      className="w-full px-3 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg text-sm font-medium focus:border-blue-500 focus:outline-none focus:bg-blue-50"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-text-white font-medium mb-1">Limite</label>
+                    <label className="block text-sm text-white font-bold mb-2 drop-shadow-lg">Limite</label>
                     <select
                       value={photoFilters.limit}
                       onChange={(e) => setPhotoFilters(prev => ({...prev, limit: Number(e.target.value), offset: 0}))}
-                      className="w-full px-3 py-2 bg-cosmic-dark border border-cosmic-glassborder rounded text-text-white text-sm focus:border-neon-cyan focus:outline-none"
+                      className="w-full px-3 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg text-sm font-medium focus:border-blue-500 focus:outline-none focus:bg-blue-50"
                     >
                       <option value={25}>25</option>
                       <option value={50}>50</option>
@@ -704,13 +704,13 @@ export default function AdminDashboard() {
                   <h3 className="text-lg font-semibold text-text-white mb-4">🔧 Actions</h3>
                   <div className="space-y-3">
                     <button
-                      onClick={() => alert('Fonctionnalité en cours d\'intégration dans le dashboard unifié')}
+                      onClick={() => router.push('/admin/users')}
                       className="w-full bg-blue-600/20 text-blue-300 px-4 py-2 rounded hover:bg-blue-600/30 transition-colors"
                     >
                       👥 Gérer les utilisateurs
                     </button>
                     <button
-                      onClick={() => alert('Fonctionnalité en cours d\'intégration dans le dashboard unifié')}
+                      onClick={() => window.open('/admin/users?filter=new', '_blank')}
                       className="w-full bg-green-600/20 text-green-300 px-4 py-2 rounded hover:bg-green-600/30 transition-colors"
                     >
                       ✨ Nouveaux utilisateurs
