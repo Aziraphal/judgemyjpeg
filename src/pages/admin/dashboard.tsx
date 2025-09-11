@@ -32,18 +32,65 @@ interface DashboardStats {
   }
 }
 
+interface PhotoAnalytic {
+  id: string
+  score: number
+  analysisTone: string
+  createdAt: string
+  userEmail: string
+  partialScores: string
+  filename: string
+}
+
+interface PhotoAnalyticsData {
+  analytics: PhotoAnalytic[]
+  totalCount: number
+  stats: {
+    avgScore: number
+    distribution: {
+      excellent: number
+      good: number
+      average: number
+      poor: number
+    }
+    toneBreakdown: {
+      artcritic: number
+      roast: number
+      professional: number
+    }
+  }
+}
+
 export default function AdminDashboard() {
   const router = useRouter()
   const [activeTab, setActiveTab] = useState('overview')
   const [securityStats, setSecurityStats] = useState<SecurityStats | null>(null)
   const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null)
+  const [photoAnalytics, setPhotoAnalytics] = useState<PhotoAnalyticsData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  
+  // Filtres Photo Analytics
+  const [photoFilters, setPhotoFilters] = useState({
+    minScore: '',
+    maxScore: '',
+    analysisTone: '',
+    startDate: '',
+    endDate: '',
+    limit: 50,
+    offset: 0
+  })
 
   useEffect(() => {
     checkAuth()
     loadDashboardData()
   }, [])
+
+  useEffect(() => {
+    if (activeTab === 'photos') {
+      loadPhotoAnalytics()
+    }
+  }, [activeTab, photoFilters])
 
   const checkAuth = () => {
     const token = sessionStorage.getItem('admin_token')
@@ -85,6 +132,50 @@ export default function AdminDashboard() {
     }
   }
 
+  const loadPhotoAnalytics = async () => {
+    try {
+      const token = sessionStorage.getItem('admin_token')
+      const params = new URLSearchParams()
+      
+      // 🔒 SÉCURITÉ: Validation et nettoyage des filtres côté client
+      if (photoFilters.minScore && !isNaN(Number(photoFilters.minScore))) {
+        params.append('minScore', photoFilters.minScore)
+      }
+      if (photoFilters.maxScore && !isNaN(Number(photoFilters.maxScore))) {
+        params.append('maxScore', photoFilters.maxScore)
+      }
+      if (photoFilters.analysisTone && ['artcritic', 'roast', 'professional'].includes(photoFilters.analysisTone)) {
+        params.append('analysisTone', photoFilters.analysisTone)
+      }
+      if (photoFilters.startDate) {
+        params.append('startDate', photoFilters.startDate)
+      }
+      if (photoFilters.endDate) {
+        params.append('endDate', photoFilters.endDate)
+      }
+      params.append('limit', Math.min(photoFilters.limit, 200).toString()) // Max sécurisé
+      params.append('offset', Math.max(photoFilters.offset, 0).toString())
+
+      const response = await fetch(`/api/admin/photo-analytics?${params.toString()}`, {
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      }
+
+      const data = await response.json()
+      setPhotoAnalytics(data)
+      
+    } catch (error) {
+      logger.error('Failed to load photo analytics:', error)
+      setError('Erreur lors du chargement des analytics photos')
+    }
+  }
+
   const logout = () => {
     sessionStorage.removeItem('admin_token')
     router.push('/admin/login')
@@ -92,6 +183,7 @@ export default function AdminDashboard() {
 
   const tabs = [
     { id: 'overview', label: 'Vue d\'ensemble', icon: '📊' },
+    { id: 'photos', label: 'Photo Analytics', icon: '📸' },
     { id: 'security', label: 'Sécurité', icon: '🛡️' },
     { id: 'users', label: 'Utilisateurs', icon: '👥' },
     { id: 'system', label: 'Système', icon: '⚙️' }
@@ -302,6 +394,219 @@ export default function AdminDashboard() {
                     </div>
                   )}
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* Photo Analytics Tab */}
+          {activeTab === 'photos' && (
+            <div className="space-y-8">
+              {/* Filtres et Stats */}
+              <div className="glass-card p-6">
+                <h3 className="text-xl font-semibold text-text-white mb-6 flex items-center">
+                  📸 <span className="ml-2">Photo Analytics</span>
+                  <span className="ml-auto text-sm text-text-gray">
+                    {photoAnalytics?.totalCount || 0} analyses totales
+                  </span>
+                </h3>
+
+                {/* Filtres sécurisés */}
+                <div className="grid md:grid-cols-5 gap-4 mb-6 p-4 bg-cosmic-glass/20 rounded-lg">
+                  <div>
+                    <label className="block text-xs text-text-gray mb-1">Score Min</label>
+                    <input
+                      type="number"
+                      min="0"
+                      max="100"
+                      value={photoFilters.minScore}
+                      onChange={(e) => setPhotoFilters(prev => ({...prev, minScore: e.target.value}))}
+                      className="w-full px-3 py-2 bg-cosmic-dark/50 border border-cosmic-glassborder rounded text-text-white text-sm"
+                      placeholder="0"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-text-gray mb-1">Score Max</label>
+                    <input
+                      type="number"
+                      min="0"
+                      max="100"
+                      value={photoFilters.maxScore}
+                      onChange={(e) => setPhotoFilters(prev => ({...prev, maxScore: e.target.value}))}
+                      className="w-full px-3 py-2 bg-cosmic-dark/50 border border-cosmic-glassborder rounded text-text-white text-sm"
+                      placeholder="100"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-text-gray mb-1">Tone IA</label>
+                    <select
+                      value={photoFilters.analysisTone}
+                      onChange={(e) => setPhotoFilters(prev => ({...prev, analysisTone: e.target.value}))}
+                      className="w-full px-3 py-2 bg-cosmic-dark/50 border border-cosmic-glassborder rounded text-text-white text-sm"
+                    >
+                      <option value="">Tous</option>
+                      <option value="artcritic">Art Critic</option>
+                      <option value="roast">Roast</option>
+                      <option value="professional">Professional</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs text-text-gray mb-1">Date début</label>
+                    <input
+                      type="date"
+                      value={photoFilters.startDate}
+                      onChange={(e) => setPhotoFilters(prev => ({...prev, startDate: e.target.value}))}
+                      className="w-full px-3 py-2 bg-cosmic-dark/50 border border-cosmic-glassborder rounded text-text-white text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-text-gray mb-1">Limite</label>
+                    <select
+                      value={photoFilters.limit}
+                      onChange={(e) => setPhotoFilters(prev => ({...prev, limit: Number(e.target.value), offset: 0}))}
+                      className="w-full px-3 py-2 bg-cosmic-dark/50 border border-cosmic-glassborder rounded text-text-white text-sm"
+                    >
+                      <option value={25}>25</option>
+                      <option value={50}>50</option>
+                      <option value={100}>100</option>
+                      <option value={200}>200</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Stats Distribution */}
+                {photoAnalytics?.stats && (
+                  <div className="grid md:grid-cols-4 gap-4 mb-6">
+                    <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4 text-center">
+                      <div className="text-2xl font-bold text-green-400">
+                        {photoAnalytics.stats.distribution.excellent}
+                      </div>
+                      <div className="text-xs text-green-300">Excellent (85+)</div>
+                    </div>
+                    <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 text-center">
+                      <div className="text-2xl font-bold text-blue-400">
+                        {photoAnalytics.stats.distribution.good}
+                      </div>
+                      <div className="text-xs text-blue-300">Bon (70-84)</div>
+                    </div>
+                    <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 text-center">
+                      <div className="text-2xl font-bold text-yellow-400">
+                        {photoAnalytics.stats.distribution.average}
+                      </div>
+                      <div className="text-xs text-yellow-300">Moyen (50-69)</div>
+                    </div>
+                    <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 text-center">
+                      <div className="text-2xl font-bold text-red-400">
+                        {photoAnalytics.stats.distribution.poor}
+                      </div>
+                      <div className="text-xs text-red-300">Faible (&lt;50)</div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Tableau des Scores */}
+              <div className="glass-card p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h4 className="text-lg font-semibold text-text-white">📊 Analyses Récentes</h4>
+                  <div className="text-sm text-text-gray">
+                    Score moyen: <span className="font-bold text-neon-cyan">{photoAnalytics?.stats.avgScore || 0}/100</span>
+                  </div>
+                </div>
+
+                {photoAnalytics?.analytics && photoAnalytics.analytics.length > 0 ? (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b border-cosmic-glassborder text-text-gray">
+                          <th className="text-left py-3 px-2">Score</th>
+                          <th className="text-left py-3 px-2">Tone</th>
+                          <th className="text-left py-3 px-2">Utilisateur</th>
+                          <th className="text-left py-3 px-2">Détails</th>
+                          <th className="text-left py-3 px-2">Fichier</th>
+                          <th className="text-left py-3 px-2">Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {photoAnalytics.analytics.map((analysis) => {
+                          // Parser partialScores pour extraire détails
+                          let scoreDetails = 'N/A'
+                          try {
+                            const partial = JSON.parse(analysis.partialScores)
+                            if (partial.technical !== undefined && partial.artistic !== undefined) {
+                              scoreDetails = `T:${partial.technical} A:${partial.artistic}`
+                            }
+                          } catch (e) {
+                            scoreDetails = 'Parse error'
+                          }
+
+                          return (
+                          <tr key={analysis.id} className="border-b border-cosmic-glassborder/30 hover:bg-cosmic-glass/10">
+                            <td className="py-3 px-2">
+                              <span className={`font-bold ${
+                                analysis.score >= 85 ? 'text-green-400' :
+                                analysis.score >= 70 ? 'text-blue-400' :
+                                analysis.score >= 50 ? 'text-yellow-400' : 'text-red-400'
+                              }`}>
+                                {analysis.score}/100
+                              </span>
+                            </td>
+                            <td className="py-3 px-2">
+                              <span className={`px-2 py-1 rounded text-xs ${
+                                analysis.analysisTone === 'artcritic' ? 'bg-purple-500/20 text-purple-300' : 
+                                analysis.analysisTone === 'roast' ? 'bg-red-500/20 text-red-300' :
+                                'bg-blue-500/20 text-blue-300'
+                              }`}>
+                                {analysis.analysisTone === 'artcritic' ? '🎨 Art Critic' : 
+                                 analysis.analysisTone === 'roast' ? '🔥 Roast' : '👨‍🎓 Pro'}
+                              </span>
+                            </td>
+                            <td className="py-3 px-2 text-text-gray font-mono text-xs">
+                              {analysis.userEmail}
+                            </td>
+                            <td className="py-3 px-2 text-text-white text-xs">
+                              {scoreDetails}
+                            </td>
+                            <td className="py-3 px-2 text-text-gray text-xs truncate max-w-32">
+                              {analysis.filename}
+                            </td>
+                            <td className="py-3 px-2 text-text-gray text-xs">
+                              {new Date(analysis.createdAt).toLocaleDateString('fr-FR')}
+                            </td>
+                          </tr>
+                          )
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="text-center py-12 text-text-gray">
+                    <div className="text-4xl mb-2">📊</div>
+                    <p>Aucune analyse trouvée avec ces filtres</p>
+                  </div>
+                )}
+
+                {/* Pagination sécurisée */}
+                {photoAnalytics && photoAnalytics.totalCount > photoFilters.limit && (
+                  <div className="flex justify-center items-center mt-6 space-x-2">
+                    <button
+                      onClick={() => setPhotoFilters(prev => ({...prev, offset: Math.max(0, prev.offset - prev.limit)}))}
+                      disabled={photoFilters.offset === 0}
+                      className="px-3 py-1 bg-cosmic-glass/20 text-text-white rounded disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                    >
+                      ← Précédent
+                    </button>
+                    <span className="text-text-gray text-sm">
+                      {Math.floor(photoFilters.offset / photoFilters.limit) + 1} / {Math.ceil(photoAnalytics.totalCount / photoFilters.limit)}
+                    </span>
+                    <button
+                      onClick={() => setPhotoFilters(prev => ({...prev, offset: prev.offset + prev.limit}))}
+                      disabled={photoFilters.offset + photoFilters.limit >= photoAnalytics.totalCount}
+                      className="px-3 py-1 bg-cosmic-glass/20 text-text-white rounded disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                    >
+                      Suivant →
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           )}
