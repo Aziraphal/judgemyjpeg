@@ -4,6 +4,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { useSession, signOut } from 'next-auth/react'
 import Head from 'next/head'
 import { logger } from '@/lib/logger'
 import { withAdminProtection } from '@/lib/withAdminProtection'
@@ -63,6 +64,7 @@ interface PhotoAnalyticsData {
 
 export default function AdminDashboard() {
   const router = useRouter()
+  const { data: session, status } = useSession()
   const [activeTab, setActiveTab] = useState('overview')
   const [securityStats, setSecurityStats] = useState<SecurityStats | null>(null)
   const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null)
@@ -82,9 +84,10 @@ export default function AdminDashboard() {
   })
 
   useEffect(() => {
-    checkAuth()
-    loadDashboardData()
-  }, [])
+    if (status === 'authenticated') {
+      loadDashboardData()
+    }
+  }, [status])
 
   useEffect(() => {
     if (activeTab === 'photos') {
@@ -92,25 +95,13 @@ export default function AdminDashboard() {
     }
   }, [activeTab, photoFilters])
 
-  const checkAuth = () => {
-    const token = sessionStorage.getItem('admin_token')
-    if (!token) {
-      router.push('/admin/login')
-    }
-  }
-
   const loadDashboardData = async () => {
     try {
       setLoading(true)
-      const token = sessionStorage.getItem('admin_token')
 
       const [securityResponse, statsResponse] = await Promise.all([
-        fetch('/api/admin/security-stats', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        }),
-        fetch('/api/admin/dashboard-stats', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        })
+        fetch('/api/admin/security-stats'),
+        fetch('/api/admin/dashboard-stats')
       ])
 
       if (!securityResponse.ok || !statsResponse.ok) {
@@ -134,7 +125,6 @@ export default function AdminDashboard() {
 
   const loadPhotoAnalytics = async () => {
     try {
-      const token = sessionStorage.getItem('admin_token')
       const params = new URLSearchParams()
       
       // 🔒 SÉCURITÉ: Validation et nettoyage des filtres côté client
@@ -156,12 +146,7 @@ export default function AdminDashboard() {
       params.append('limit', Math.min(photoFilters.limit, 200).toString()) // Max sécurisé
       params.append('offset', Math.max(photoFilters.offset, 0).toString())
 
-      const response = await fetch(`/api/admin/photo-analytics?${params.toString()}`, {
-        headers: { 
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      })
+      const response = await fetch(`/api/admin/photo-analytics?${params.toString()}`)
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`)
@@ -177,8 +162,7 @@ export default function AdminDashboard() {
   }
 
   const logout = () => {
-    sessionStorage.removeItem('admin_token')
-    router.push('/admin/login')
+    signOut({ callbackUrl: '/' })
   }
 
   const tabs = [
