@@ -38,7 +38,8 @@ export function withAuth(handler: (req: AuthenticatedRequest, res: NextApiRespon
           email: true, 
           name: true, 
           isAdmin: true, 
-          role: true 
+          role: true,
+          emailVerified: true
         }
       })
 
@@ -48,6 +49,22 @@ export function withAuth(handler: (req: AuthenticatedRequest, res: NextApiRespon
           endpoint: req.url
         })
         return res.status(401).json({ error: 'Utilisateur non trouvé' })
+      }
+
+      // 🔒 VÉRIFICATION EMAIL OBLIGATOIRE (sauf pour admins)
+      if (!user.emailVerified && !user.isAdmin) {
+        const ip = getClientIP(req)
+        logger.warn('🚨 ACCÈS BLOQUÉ - Email non vérifié', {
+          userId: user.id,
+          email: user.email,
+          endpoint: req.url
+        }, user.id, ip)
+        
+        return res.status(403).json({ 
+          error: 'Email non vérifié', 
+          message: 'Vérifiez votre boite email pour activer votre compte',
+          requireEmailVerification: true
+        })
       }
 
       // Ajouter l'utilisateur à la requête
