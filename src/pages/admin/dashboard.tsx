@@ -69,6 +69,7 @@ export default function AdminDashboard() {
   const [securityStats, setSecurityStats] = useState<SecurityStats | null>(null)
   const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null)
   const [photoAnalytics, setPhotoAnalytics] = useState<PhotoAnalyticsData | null>(null)
+  const [usersData, setUsersData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   
@@ -85,6 +86,15 @@ export default function AdminDashboard() {
     sortOrder: 'desc' as 'asc' | 'desc'
   })
 
+  // Filtres utilisateurs
+  const [userFilters, setUserFilters] = useState({
+    search: '',
+    status: '',
+    subscription: '',
+    page: 1,
+    limit: 20
+  })
+
   useEffect(() => {
     if (status === 'authenticated') {
       loadDashboardData()
@@ -96,6 +106,12 @@ export default function AdminDashboard() {
       loadPhotoAnalytics()
     }
   }, [activeTab, photoFilters])
+
+  useEffect(() => {
+    if (activeTab === 'users') {
+      loadUsersData()
+    }
+  }, [activeTab, userFilters])
 
   const loadDashboardData = async () => {
     try {
@@ -162,6 +178,37 @@ export default function AdminDashboard() {
     } catch (error) {
       logger.error('Failed to load photo analytics:', error)
       setError('Erreur lors du chargement des analytics photos')
+    }
+  }
+
+  const loadUsersData = async () => {
+    try {
+      const params = new URLSearchParams()
+      
+      if (userFilters.search) {
+        params.append('search', userFilters.search)
+      }
+      if (userFilters.status) {
+        params.append('status', userFilters.status)
+      }
+      if (userFilters.subscription) {
+        params.append('subscription', userFilters.subscription)
+      }
+      params.append('page', userFilters.page.toString())
+      params.append('limit', userFilters.limit.toString())
+
+      const response = await fetch(`/api/admin/users?${params.toString()}`)
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      }
+
+      const data = await response.json()
+      setUsersData(data.data)
+      
+    } catch (error) {
+      console.error('Failed to load users data:', error)
+      setError('Erreur lors du chargement des utilisateurs')
     }
   }
 
@@ -752,69 +799,181 @@ export default function AdminDashboard() {
           {/* Users Tab */}
           {activeTab === 'users' && (
             <div className="space-y-8">
-              {/* Aperçu utilisateurs */}
-              <div className="grid md:grid-cols-3 gap-6">
-                <div className="glass-card p-6">
-                  <h3 className="text-lg font-semibold text-text-white mb-4">👥 Utilisateurs</h3>
-                  <div className="space-y-3">
-                    <div className="text-center">
-                      <div className="text-3xl font-bold text-neon-cyan mb-2">
-                        {(dashboardStats as any)?.totalUsers || 0}
-                      </div>
-                      <div className="text-sm text-text-gray">Total utilisateurs</div>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-text-gray">Actifs</span>
-                      <span className="text-green-400">{securityStats?.activeUsers || 0}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-text-gray">Abonnés</span>
-                      <span className="text-yellow-400">{dashboardStats?.activeSubscriptions || 0}</span>
-                    </div>
+              <div className="glass-card p-6">
+                <h3 className="text-xl font-semibold text-text-white mb-6 flex items-center">
+                  👥 <span className="ml-2">Gestion des utilisateurs</span>
+                  <span className="ml-auto text-sm text-text-gray">
+                    {usersData?.pagination?.total || 0} utilisateurs totaux
+                  </span>
+                </h3>
+
+                {/* Filtres utilisateurs */}
+                <div className="grid md:grid-cols-4 gap-4 mb-6 p-4 bg-gray-900/90 border-2 border-white/40 rounded-lg shadow-lg">
+                  <div>
+                    <label className="block text-sm text-white font-bold mb-2 drop-shadow-lg">Recherche</label>
+                    <input
+                      type="text"
+                      value={userFilters.search}
+                      onChange={(e) => setUserFilters(prev => ({...prev, search: e.target.value, page: 1}))}
+                      className="w-full px-3 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg text-sm font-medium focus:border-blue-500 focus:outline-none focus:bg-blue-50"
+                      placeholder="Email ou nom..."
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-white font-bold mb-2 drop-shadow-lg">Statut</label>
+                    <select
+                      value={userFilters.status}
+                      onChange={(e) => setUserFilters(prev => ({...prev, status: e.target.value, page: 1}))}
+                      className="w-full px-3 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg text-sm font-medium focus:border-blue-500 focus:outline-none focus:bg-blue-50"
+                    >
+                      <option value="">Tous</option>
+                      <option value="active">✅ Actifs</option>
+                      <option value="inactive">⏳ Inactifs</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm text-white font-bold mb-2 drop-shadow-lg">Abonnement</label>
+                    <select
+                      value={userFilters.subscription}
+                      onChange={(e) => setUserFilters(prev => ({...prev, subscription: e.target.value, page: 1}))}
+                      className="w-full px-3 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg text-sm font-medium focus:border-blue-500 focus:outline-none focus:bg-blue-50"
+                    >
+                      <option value="">Tous</option>
+                      <option value="free">🆓 Gratuit</option>
+                      <option value="premium">💎 Premium</option>
+                      <option value="lifetime">♾️ Lifetime</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm text-white font-bold mb-2 drop-shadow-lg">Par page</label>
+                    <select
+                      value={userFilters.limit}
+                      onChange={(e) => setUserFilters(prev => ({...prev, limit: Number(e.target.value), page: 1}))}
+                      className="w-full px-3 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg text-sm font-medium focus:border-blue-500 focus:outline-none focus:bg-blue-50"
+                    >
+                      <option value={10}>10</option>
+                      <option value={20}>20</option>
+                      <option value={50}>50</option>
+                      <option value={100}>100</option>
+                    </select>
                   </div>
                 </div>
 
-                <div className="glass-card p-6">
-                  <h3 className="text-lg font-semibold text-text-white mb-4">📊 Statistiques</h3>
-                  <div className="space-y-3">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-text-gray">Nouveaux cette semaine</span>
-                      <span className="text-blue-400">{(dashboardStats as any)?.newUsersThisWeek || 0}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-text-gray">Nouveaux aujourd'hui</span>
-                      <span className="text-green-400">{(dashboardStats as any)?.newUsersToday || 0}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-text-gray">Sessions actives</span>
-                      <span className="text-yellow-400">{securityStats?.totalSessions || 0}</span>
-                    </div>
-                  </div>
+                {/* Bouton reset filtres */}
+                <div className="flex justify-end mb-4">
+                  <button
+                    onClick={() => {
+                      setUserFilters({
+                        search: '',
+                        status: '',
+                        subscription: '',
+                        page: 1,
+                        limit: 20
+                      })
+                    }}
+                    className="px-4 py-2 bg-red-600/20 text-red-300 border border-red-500/40 rounded-lg hover:bg-red-600/30 transition-colors text-sm font-medium"
+                  >
+                    🔄 Reset filtres
+                  </button>
                 </div>
 
-                <div className="glass-card p-6">
-                  <h3 className="text-lg font-semibold text-text-white mb-4">🔧 Actions</h3>
-                  <div className="space-y-3">
+                {/* Tableau utilisateurs */}
+                {usersData?.users && usersData.users.length > 0 ? (
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-cosmic-glassborder text-left">
+                          <th className="py-3 px-2 text-text-white font-semibold">Email</th>
+                          <th className="py-3 px-2 text-text-white font-semibold">Nom</th>
+                          <th className="py-3 px-2 text-text-white font-semibold">Statut</th>
+                          <th className="py-3 px-2 text-text-white font-semibold">Abonnement</th>
+                          <th className="py-3 px-2 text-text-white font-semibold">Analyses</th>
+                          <th className="py-3 px-2 text-text-white font-semibold">Inscrit</th>
+                          <th className="py-3 px-2 text-text-white font-semibold">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {usersData.users.map((user: any) => (
+                          <tr key={user.id} className="border-b border-cosmic-glassborder/30 hover:bg-cosmic-glass/10">
+                            <td className="py-3 px-2 text-text-white text-sm font-mono">
+                              {user.email}
+                            </td>
+                            <td className="py-3 px-2 text-text-gray text-sm">
+                              {user.name || 'N/A'}
+                            </td>
+                            <td className="py-3 px-2">
+                              <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                user.status === 'active' ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300'
+                              }`}>
+                                {user.status === 'active' ? '✅ Actif' : '❌ Inactif'}
+                              </span>
+                            </td>
+                            <td className="py-3 px-2">
+                              <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                user.subscription?.type === 'lifetime' ? 'bg-purple-500/20 text-purple-300' :
+                                user.subscription?.type === 'premium' ? 'bg-yellow-500/20 text-yellow-300' :
+                                'bg-gray-500/20 text-gray-300'
+                              }`}>
+                                {user.subscription?.type === 'lifetime' ? '♾️ Lifetime' :
+                                 user.subscription?.type === 'premium' ? '💎 Premium' : '🆓 Gratuit'}
+                              </span>
+                            </td>
+                            <td className="py-3 px-2 text-text-white text-sm">
+                              {user.stats?.totalAnalyses || 0}
+                            </td>
+                            <td className="py-3 px-2 text-text-gray text-xs">
+                              {new Date(user.createdAt).toLocaleDateString('fr-FR')}
+                            </td>
+                            <td className="py-3 px-2">
+                              <div className="flex space-x-1">
+                                <button
+                                  onClick={() => alert(`Actions utilisateur ${user.email} à implémenter`)}
+                                  className="px-2 py-1 bg-blue-600/20 text-blue-300 rounded text-xs hover:bg-blue-600/30"
+                                >
+                                  ✏️
+                                </button>
+                                <button
+                                  onClick={() => alert(`Supprimer ${user.email} - nécessite confirmation`)}
+                                  className="px-2 py-1 bg-red-600/20 text-red-300 rounded text-xs hover:bg-red-600/30"
+                                >
+                                  🗑️
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="text-center py-12 text-text-gray">
+                    <div className="text-4xl mb-2">👤</div>
+                    <p>Aucun utilisateur trouvé avec ces filtres</p>
+                  </div>
+                )}
+
+                {/* Pagination */}
+                {usersData?.pagination && usersData.pagination.totalPages > 1 && (
+                  <div className="flex justify-center items-center mt-6 space-x-2">
                     <button
-                      onClick={() => router.push('/admin/users')}
-                      className="w-full bg-blue-600/20 text-blue-300 px-4 py-2 rounded hover:bg-blue-600/30 transition-colors"
+                      onClick={() => setUserFilters(prev => ({...prev, page: Math.max(1, prev.page - 1)}))}
+                      disabled={userFilters.page === 1}
+                      className="px-3 py-1 bg-cosmic-glass/20 text-text-white rounded disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                     >
-                      👥 Gérer les utilisateurs
+                      ← Précédent
                     </button>
+                    <span className="text-text-gray text-sm">
+                      {userFilters.page} / {usersData.pagination.totalPages}
+                    </span>
                     <button
-                      onClick={() => window.open('/admin/users?filter=new', '_blank')}
-                      className="w-full bg-green-600/20 text-green-300 px-4 py-2 rounded hover:bg-green-600/30 transition-colors"
+                      onClick={() => setUserFilters(prev => ({...prev, page: Math.min(usersData.pagination.totalPages, prev.page + 1)}))}
+                      disabled={userFilters.page === usersData.pagination.totalPages}
+                      className="px-3 py-1 bg-cosmic-glass/20 text-text-white rounded disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                     >
-                      ✨ Nouveaux utilisateurs
-                    </button>
-                    <button
-                      onClick={() => router.push('/admin/users')}
-                      className="w-full bg-yellow-600/20 text-yellow-300 px-4 py-2 rounded hover:bg-yellow-600/30 transition-colors"
-                    >
-                      💎 Page utilisateurs (externe)
+                      Suivant →
                     </button>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           )}

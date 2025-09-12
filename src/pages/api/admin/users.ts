@@ -1,17 +1,23 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { withAuth, AuthenticatedRequest } from '@/lib/auth-middleware'
 import { prisma } from '@/lib/prisma'
 import { logger, getClientIP } from '@/lib/logger'
 import { rateLimit } from '@/lib/rate-limit'
 import { AuditLogger } from '@/lib/audit-trail'
 
-export default async function handler(
-  req: NextApiRequest,
+export default withAuth(async function handler(
+  req: AuthenticatedRequest,
   res: NextApiResponse
 ) {
-  // Vérifier l'auth admin
-  const authHeader = req.headers.authorization
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ success: false, message: 'Unauthorized' })
+  const ip = getClientIP(req)
+  
+  // 🔒 VÉRIFICATION ADMIN
+  if (!req.user.isAdmin && req.user.role !== 'admin') {
+    logger.warn('🚨 TENTATIVE ACCÈS NON AUTORISÉ - Users API', {
+      userId: req.user.id,
+      email: req.user.email,
+    }, req.user.id, ip)
+    return res.status(403).json({ success: false, message: 'Accès interdit' })
   }
 
   try {
@@ -26,15 +32,15 @@ export default async function handler(
         return res.status(405).json({ success: false, message: 'Method not allowed' })
     }
   } catch (error) {
-    logger.error('[ADMIN] Users API error:', error)
+    logger.error('[ADMIN] Users API error:', error, req.user.id, ip)
     res.status(500).json({
       success: false,
       message: 'Erreur serveur'
     })
   }
-}
+})
 
-async function handleGetUsers(req: NextApiRequest, res: NextApiResponse) {
+async function handleGetUsers(req: AuthenticatedRequest, res: NextApiResponse) {
   const { search, status, subscription, page = '1', limit = '20' } = req.query
   
   const pageNum = parseInt(page as string)
@@ -137,7 +143,7 @@ async function handleGetUsers(req: NextApiRequest, res: NextApiResponse) {
   })
 }
 
-async function handleUpdateUser(req: NextApiRequest, res: NextApiResponse) {
+async function handleUpdateUser(req: AuthenticatedRequest, res: NextApiResponse) {
   const { userId, action, data } = req.body
 
   if (!userId || !action) {
@@ -200,7 +206,7 @@ async function handleUpdateUser(req: NextApiRequest, res: NextApiResponse) {
   })
 }
 
-async function handleDeleteUser(req: NextApiRequest, res: NextApiResponse) {
+async function handleDeleteUser(req: AuthenticatedRequest, res: NextApiResponse) {
   const auditLogger = new AuditLogger(req)
   
   // Rate limiting strict pour suppression utilisateur (1 par minute)
