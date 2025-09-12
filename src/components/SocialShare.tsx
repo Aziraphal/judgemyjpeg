@@ -34,15 +34,68 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
     return { level: 'FAIBLE', color: 'text-gray-400' }
   }
 
+  // Génère un résumé percutant de l'analyse IA
+  const generateAnalysisSummary = () => {
+    const analysisText = analysis.analysis || ''
+    
+    // Extraire des phrases clés de l'analyse
+    const sentences = analysisText.split(/[.!?]+/).filter(s => s.trim().length > 10)
+    
+    if (sentences.length === 0) return ''
+    
+    // Chercher la phrase la plus percutante/critique
+    let keyPhrase = ''
+    
+    // Priorité aux phrases avec des mots-clés impactants
+    const impactWords = [
+      'excellent', 'magnifique', 'superbe', 'parfait', 'exceptionnel',
+      'raté', 'flou', 'sombre', 'mal cadrée', 'décevant', 'amateur',
+      'composition', 'éclairage', 'couleurs', 'contraste', 'netteté'
+    ]
+    
+    for (const sentence of sentences) {
+      const lowerSentence = sentence.toLowerCase()
+      if (impactWords.some(word => lowerSentence.includes(word))) {
+        keyPhrase = sentence.trim()
+        break
+      }
+    }
+    
+    // Si pas de phrase impactante, prendre la première phrase substantielle
+    if (!keyPhrase && sentences.length > 0) {
+      keyPhrase = sentences[0].trim()
+    }
+    
+    // Limiter la longueur pour le partage (max 100 caractères)
+    if (keyPhrase.length > 100) {
+      keyPhrase = keyPhrase.substring(0, 97) + '...'
+    }
+    
+    return keyPhrase
+  }
+
   const generateShareText = () => {
     const baseText = `🤖 JudgeMyJPEG a jugé ma photo : ${analysis.score}/100`
+    const summary = generateAnalysisSummary()
     
-    if (tone === 'roast') {
-      return `${baseText} 🔥 L'IA m'a grillé mais j'ai adoré ! 😂`
-    } else if (tone === 'artcritic') {
-      return `${baseText} 🎨 Vision artistique par l'IA ! 🖼️`
+    if (summary) {
+      // Avec résumé de l'analyse
+      if (tone === 'roast') {
+        return `${baseText} 🔥\n"${summary}"\nL'IA m'a grillé mais j'ai adoré ! 😂`
+      } else if (tone === 'artcritic') {
+        return `${baseText} 🎨\n"${summary}"\nVision artistique par l'IA ! 🖼️`
+      } else {
+        return `${baseText} 📸\n"${summary}"\nAnalyse pro par IA !`
+      }
     } else {
-      return `${baseText} 📸 Analyse pro par IA !`
+      // Fallback si pas d'analyse
+      if (tone === 'roast') {
+        return `${baseText} 🔥 L'IA m'a grillé mais j'ai adoré ! 😂`
+      } else if (tone === 'artcritic') {
+        return `${baseText} 🎨 Vision artistique par l'IA ! 🖼️`
+      } else {
+        return `${baseText} 📸 Analyse pro par IA !`
+      }
     }
   }
 
