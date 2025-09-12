@@ -12,6 +12,8 @@ interface PhotoAnalyticsFilters {
   endDate?: string
   limit?: number
   offset?: number
+  sortBy?: 'score' | 'createdAt'
+  sortOrder?: 'asc' | 'desc'
 }
 
 interface PhotoAnalyticsResponse {
@@ -89,7 +91,9 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
       startDate: req.query.startDate as string | undefined,
       endDate: req.query.endDate as string | undefined,
       limit: Math.min(parseInt(req.query.limit as string) || 50, 200), // Max 200 pour perfs
-      offset: parseInt(req.query.offset as string) || 0
+      offset: parseInt(req.query.offset as string) || 0,
+      sortBy: (req.query.sortBy as 'score' | 'createdAt') || 'createdAt',
+      sortOrder: (req.query.sortOrder as 'asc' | 'desc') || 'desc'
     }
 
     // 🔒 CONSTRUCTION SÉCURISÉE WHERE CLAUSE
@@ -132,7 +136,7 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
             }
           }
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { [filters.sortBy!]: filters.sortOrder },
         take: filters.limit,
         skip: filters.offset
       }),

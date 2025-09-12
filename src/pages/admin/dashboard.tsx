@@ -80,7 +80,9 @@ export default function AdminDashboard() {
     startDate: '',
     endDate: '',
     limit: 50,
-    offset: 0
+    offset: 0,
+    sortBy: 'createdAt' as 'score' | 'createdAt',
+    sortOrder: 'desc' as 'asc' | 'desc'
   })
 
   useEffect(() => {
@@ -145,6 +147,8 @@ export default function AdminDashboard() {
       }
       params.append('limit', Math.min(photoFilters.limit, 200).toString()) // Max sécurisé
       params.append('offset', Math.max(photoFilters.offset, 0).toString())
+      params.append('sortBy', photoFilters.sortBy)
+      params.append('sortOrder', photoFilters.sortOrder)
 
       const response = await fetch(`/api/admin/photo-analytics?${params.toString()}`)
 
@@ -455,6 +459,53 @@ export default function AdminDashboard() {
                       <option value={200}>200</option>
                     </select>
                   </div>
+                </div>
+
+                {/* Tri et Actions */}
+                <div className="flex justify-between items-center mb-6 p-4 bg-blue-900/30 border border-blue-500/40 rounded-lg">
+                  <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-2">
+                      <label className="text-sm text-white font-bold">Trier par:</label>
+                      <select
+                        value={photoFilters.sortBy}
+                        onChange={(e) => setPhotoFilters(prev => ({...prev, sortBy: e.target.value as 'score' | 'createdAt', offset: 0}))}
+                        className="px-3 py-1 bg-white text-gray-900 border border-gray-300 rounded text-sm font-medium focus:border-blue-500 focus:outline-none"
+                      >
+                        <option value="createdAt">📅 Date</option>
+                        <option value="score">📊 Score</option>
+                      </select>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <label className="text-sm text-white font-bold">Ordre:</label>
+                      <select
+                        value={photoFilters.sortOrder}
+                        onChange={(e) => setPhotoFilters(prev => ({...prev, sortOrder: e.target.value as 'asc' | 'desc', offset: 0}))}
+                        className="px-3 py-1 bg-white text-gray-900 border border-gray-300 rounded text-sm font-medium focus:border-blue-500 focus:outline-none"
+                      >
+                        <option value="desc">⬇️ Décroissant</option>
+                        <option value="asc">⬆️ Croissant</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <button
+                    onClick={() => {
+                      setPhotoFilters(prev => ({
+                        ...prev,
+                        minScore: '',
+                        maxScore: '',
+                        analysisTone: '',
+                        startDate: '',
+                        endDate: '',
+                        sortBy: 'createdAt',
+                        sortOrder: 'desc',
+                        offset: 0
+                      }))
+                    }}
+                    className="px-4 py-2 bg-red-600/20 text-red-300 border border-red-500/40 rounded-lg hover:bg-red-600/30 transition-colors text-sm font-medium"
+                  >
+                    🔄 Reset filtres
+                  </button>
                 </div>
 
                 {/* Stats Distribution */}
