@@ -52,7 +52,9 @@ export function withAuth(handler: (req: AuthenticatedRequest, res: NextApiRespon
       }
 
       // 🔒 VÉRIFICATION EMAIL OBLIGATOIRE (sauf pour admins)
-      if (!user.emailVerified && !user.isAdmin) {
+      const isAdminUser = user.isAdmin || user.role === 'admin'
+      
+      if (!user.emailVerified && !isAdminUser) {
         const ip = getClientIP(req)
         logger.warn('🚨 ACCÈS BLOQUÉ - Email non vérifié', {
           userId: user.id,
