@@ -508,6 +508,30 @@ export default function AdminDashboard() {
                   </button>
                 </div>
 
+                {/* Stats Status */}
+                {photoAnalytics?.stats && (
+                  <div className="grid md:grid-cols-3 gap-4 mb-6">
+                    <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4 text-center">
+                      <div className="text-2xl font-bold text-green-400">
+                        {(photoAnalytics.stats as any).statusCount?.completed || 0}
+                      </div>
+                      <div className="text-xs text-green-300">✅ Analyses terminées</div>
+                    </div>
+                    <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 text-center">
+                      <div className="text-2xl font-bold text-yellow-400">
+                        {(photoAnalytics.stats as any).statusCount?.pending || 0}
+                      </div>
+                      <div className="text-xs text-yellow-300">⏳ En cours</div>
+                    </div>
+                    <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 text-center">
+                      <div className="text-2xl font-bold text-red-400">
+                        {(photoAnalytics.stats as any).statusCount?.failed || 0}
+                      </div>
+                      <div className="text-xs text-red-300">❌ Échouées</div>
+                    </div>
+                  </div>
+                )}
+
                 {/* Stats Distribution */}
                 {photoAnalytics?.stats && (
                   <div className="grid md:grid-cols-4 gap-4 mb-6">
@@ -577,23 +601,40 @@ export default function AdminDashboard() {
                           return (
                           <tr key={analysis.id} className="border-b border-cosmic-glassborder/30 hover:bg-cosmic-glass/10">
                             <td className="py-3 px-2">
-                              <span className={`font-bold ${
-                                analysis.score >= 85 ? 'text-green-400' :
-                                analysis.score >= 70 ? 'text-blue-400' :
-                                analysis.score >= 50 ? 'text-yellow-400' : 'text-red-400'
-                              }`}>
-                                {analysis.score}/100
-                              </span>
+                              {(analysis as any).score !== null ? (
+                                <span className={`font-bold ${
+                                  (analysis as any).score >= 85 ? 'text-green-400' :
+                                  (analysis as any).score >= 70 ? 'text-blue-400' :
+                                  (analysis as any).score >= 50 ? 'text-yellow-400' : 'text-red-400'
+                                }`}>
+                                  {(analysis as any).score}/100
+                                </span>
+                              ) : (
+                                <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                  (analysis as any).status === 'pending' ? 'bg-yellow-500/20 text-yellow-300' :
+                                  (analysis as any).status === 'failed' ? 'bg-red-500/20 text-red-300' :
+                                  'bg-gray-500/20 text-gray-300'
+                                }`}>
+                                  {(analysis as any).status === 'pending' ? '⏳ En cours' :
+                                   (analysis as any).status === 'failed' ? '❌ Échouée' : '⚪ N/A'}
+                                </span>
+                              )}
                             </td>
                             <td className="py-3 px-2">
-                              <span className={`px-2 py-1 rounded text-xs ${
-                                analysis.analysisTone === 'artcritic' ? 'bg-purple-500/20 text-purple-300' : 
-                                analysis.analysisTone === 'roast' ? 'bg-red-500/20 text-red-300' :
-                                'bg-blue-500/20 text-blue-300'
-                              }`}>
-                                {analysis.analysisTone === 'artcritic' ? '🎨 Art Critic' : 
-                                 analysis.analysisTone === 'roast' ? '🔥 Roast' : '👨‍🎓 Pro'}
-                              </span>
+                              {(analysis as any).analysisTone ? (
+                                <span className={`px-2 py-1 rounded text-xs ${
+                                  (analysis as any).analysisTone === 'artcritic' ? 'bg-purple-500/20 text-purple-300' : 
+                                  (analysis as any).analysisTone === 'roast' ? 'bg-red-500/20 text-red-300' :
+                                  'bg-blue-500/20 text-blue-300'
+                                }`}>
+                                  {(analysis as any).analysisTone === 'artcritic' ? '🎨 Art Critic' : 
+                                   (analysis as any).analysisTone === 'roast' ? '🔥 Roast' : '👨‍🎓 Pro'}
+                                </span>
+                              ) : (
+                                <span className="px-2 py-1 rounded text-xs bg-gray-500/20 text-gray-300">
+                                  ⚪ N/A
+                                </span>
+                              )}
                             </td>
                             <td className="py-3 px-2 text-text-gray font-mono text-xs">
                               {analysis.userEmail}

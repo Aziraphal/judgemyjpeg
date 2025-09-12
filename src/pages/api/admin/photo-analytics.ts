@@ -19,16 +19,22 @@ interface PhotoAnalyticsFilters {
 interface PhotoAnalyticsResponse {
   analytics: {
     id: string
-    score: number
-    analysisTone: string
+    score: number | null // Peut être null pour analyses non terminées
+    analysisTone: string | null
     createdAt: string
     userEmail: string // Masqué pour RGPD
-    partialScores: string // JSON avec détail scores
+    partialScores: string // JSON avec détail scores  
     filename: string // Sans path complet
+    status: 'completed' | 'pending' | 'failed' // Statut analyse
   }[]
   totalCount: number
   stats: {
     avgScore: number
+    statusCount: {
+      completed: number
+      pending: number
+      failed: number
+    }
     distribution: {
       excellent: number // 85+
       good: number     // 70-84
@@ -96,9 +102,9 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
       sortOrder: (req.query.sortOrder as 'asc' | 'desc') || 'desc'
     }
 
-    // 🔒 CONSTRUCTION SÉCURISÉE WHERE CLAUSE
+    // 🔒 CONSTRUCTION SÉCURISÉE WHERE CLAUSE - TOUTES LES PHOTOS
     const whereClause: any = {
-      score: { not: null } // Seulement analyses terminées
+      // Plus de filtre score: { not: null } pour voir toutes les analyses
     }
 
     if (filters.minScore !== undefined) {
@@ -144,9 +150,9 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
       // Count total pour pagination
       prisma.photo.count({ where: whereClause }),
 
-      // Score moyen
+      // Score moyen (seulement analyses terminées)
       prisma.photo.aggregate({
-        where: { ...whereClause },
+        where: { ...whereClause, score: { not: null } },
         _avg: { score: true }
       }),
 
@@ -173,16 +179,28 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
       })
     ])
 
-    // 🔒 MASQUAGE EMAIL RGPD-COMPLIANT
-    const sanitizedAnalytics = analytics.map(photo => ({
-      id: photo.id,
-      score: photo.score!,
-      analysisTone: photo.analysisTone,
-      createdAt: photo.createdAt.toISOString(),
-      userEmail: maskEmail(photo.user.email!), // Masquage sécurisé
-      partialScores: photo.partialScores || '{}',
-      filename: sanitizeFilename(photo.filename) // Nettoyer paths
-    }))
+    // 🔒 MASQUAGE EMAIL RGPD-COMPLIANT + STATUT ANALYSE
+    const sanitizedAnalytics = analytics.map(photo => {
+      let status: 'completed' | 'pending' | 'failed' = 'pending'
+      
+      if (photo.score !== null && photo.analysisTone) {
+        status = 'completed'
+      } else if (photo.createdAt < new Date(Date.now() - 10 * 60 * 1000)) {
+        // Plus de 10 min sans analyse = probablement échoué
+        status = 'failed'  
+      }
+      
+      return {
+        id: photo.id,
+        score: photo.score,
+        analysisTone: photo.analysisTone,
+        createdAt: photo.createdAt.toISOString(),
+        userEmail: maskEmail(photo.user.email!), // Masquage sécurisé
+        partialScores: photo.partialScores || '{}',
+        filename: sanitizeFilename(photo.filename), // Nettoyer paths
+        status
+      }
+    })
 
     // Traitement distribution
     const distributionMap = (distribution as any[]).reduce((acc, row) => {
@@ -199,11 +217,18 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
       return acc
     }, { artcritic: 0, roast: 0, professional: 0 })
 
+    // Calculer stats par statut
+    const statusCount = sanitizedAnalytics.reduce((acc, photo) => {
+      acc[photo.status]++
+      return acc
+    }, { completed: 0, pending: 0, failed: 0 })
+
     const response: PhotoAnalyticsResponse = {
       analytics: sanitizedAnalytics,
       totalCount,
       stats: {
         avgScore: avgScore._avg.score ? Math.round(avgScore._avg.score * 10) / 10 : 0,
+        statusCount,
         distribution: distributionMap,
         toneBreakdown: toneMap as { artcritic: number; roast: number; professional: number }
       }
