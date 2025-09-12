@@ -132,6 +132,7 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
           id: true,
           score: true,
           analysisTone: true,
+          analysis: true, // Nécessaire pour détection erreurs
           createdAt: true,
           filename: true, // Nom fichier uniquement
           partialScores: true,
@@ -179,15 +180,33 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
       })
     ])
 
-    // 🔒 MASQUAGE EMAIL RGPD-COMPLIANT + STATUT ANALYSE
+    // 🔒 MASQUAGE EMAIL RGPD-COMPLIANT + STATUT ANALYSE AMÉLIORÉ
     const sanitizedAnalytics = analytics.map(photo => {
       let status: 'completed' | 'pending' | 'failed' = 'pending'
       
-      if (photo.score !== null && photo.analysisTone) {
+      // Analyse terminée avec succès
+      if (photo.score !== null && photo.analysisTone && photo.analysis) {
         status = 'completed'
-      } else if (photo.createdAt < new Date(Date.now() - 10 * 60 * 1000)) {
-        // Plus de 10 min sans analyse = probablement échoué
-        status = 'failed'  
+      } 
+      // Détection d'erreur plus intelligente
+      else {
+        const ageInMinutes = (Date.now() - new Date(photo.createdAt).getTime()) / (1000 * 60)
+        
+        // Cas d'erreur probable:
+        if (ageInMinutes > 5 && !photo.score && !photo.analysis) {
+          // Plus de 5min sans aucun résultat = échoué
+          status = 'failed'
+        } else if (ageInMinutes > 15) {
+          // Plus de 15min = définitivement échoué
+          status = 'failed'  
+        } else if (photo.analysis && !photo.score) {
+          // A une analyse mais pas de score = erreur parsing
+          status = 'failed'
+        } else if (photo.score && !photo.analysis) {
+          // A un score mais pas d'analyse = données incohérentes
+          status = 'failed'
+        }
+        // Sinon reste 'pending' si récent (< 5min)
       }
       
       return {
