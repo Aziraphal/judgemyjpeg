@@ -49,17 +49,80 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
   const shareUrl = typeof window !== 'undefined' ? window.location.origin : ''
   const shareText = generateShareText()
   
-  // Hashtags adaptés au type de photo et au ton
+  // Hashtags intelligents basés sur le contenu de l'analyse
   const getHashtags = () => {
     const baseHashtags = '#JudgeMyJPEG #PhotographieIA #AIAnalysis'
+    let contextHashtags: string[] = []
     
-    if (tone === 'roast') {
-      return `${baseHashtags} #PhotoFail #IAhumour #Photography #Funny #Roasted`
-    } else if (tone === 'artcritic') {
-      return `${baseHashtags} #ArtistiquéPhoto #CritiqueArt #VisionArtistique #Photography`
-    } else {
-      return `${baseHashtags} #Photography #PhotoTips #Amateur #Learning`
+    // Analyse du texte d'analyse pour détecter le contenu
+    const analysisText = analysis.analysis?.toLowerCase() || ''
+    
+    // Hashtags par sujet/type de photo détecté
+    if (analysisText.includes('portrait') || analysisText.includes('visage') || analysisText.includes('regard')) {
+      contextHashtags.push('#Portrait', '#PortraitPhotography')
     }
+    if (analysisText.includes('paysage') || analysisText.includes('nature') || analysisText.includes('montagne') || analysisText.includes('ciel')) {
+      contextHashtags.push('#Paysage', '#Nature', '#LandscapePhotography')
+    }
+    if (analysisText.includes('rue') || analysisText.includes('urbain') || analysisText.includes('ville') || analysisText.includes('street')) {
+      contextHashtags.push('#StreetPhotography', '#Urbain', '#Ville')
+    }
+    if (analysisText.includes('macro') || analysisText.includes('détail') || analysisText.includes('fleur') || analysisText.includes('insecte')) {
+      contextHashtags.push('#MacroPhotography', '#Macro', '#Détail')
+    }
+    if (analysisText.includes('nuit') || analysisText.includes('étoile') || analysisText.includes('nocturne')) {
+      contextHashtags.push('#PhotoNuit', '#NightPhotography', '#Nocturne')
+    }
+    if (analysisText.includes('sport') || analysisText.includes('action') || analysisText.includes('mouvement')) {
+      contextHashtags.push('#SportPhotography', '#Action', '#Mouvement')
+    }
+    if (analysisText.includes('mariage') || analysisText.includes('événement') || analysisText.includes('fête')) {
+      contextHashtags.push('#EventPhotography', '#Wedding', '#Mariage')
+    }
+    
+    // Hashtags techniques basés sur les critiques
+    if (analysisText.includes('flou') || analysisText.includes('netteté') || analysisText.includes('focus')) {
+      contextHashtags.push('#Focus', '#Netteté')
+    }
+    if (analysisText.includes('exposition') || analysisText.includes('luminosité') || analysisText.includes('éclairage')) {
+      contextHashtags.push('#Exposition', '#Lighting', '#Éclairage')
+    }
+    if (analysisText.includes('couleur') || analysisText.includes('saturation') || analysisText.includes('contraste')) {
+      contextHashtags.push('#Colors', '#Couleurs', '#Editing')
+    }
+    if (analysisText.includes('composition') || analysisText.includes('cadrage') || analysisText.includes('règle des tiers')) {
+      contextHashtags.push('#Composition', '#Cadrage', '#RuleOfThirds')
+    }
+    
+    // Hashtags par qualité/niveau 
+    if (analysis.score >= 85) {
+      contextHashtags.push('#PhotoPro', '#Excellence', '#Masterpiece')
+    } else if (analysis.score >= 70) {
+      contextHashtags.push('#BonnePhoto', '#Quality', '#GoodShot')
+    } else if (analysis.score <= 40) {
+      contextHashtags.push('#PhotoFail', '#Learning', '#Progress')
+    }
+    
+    // Hashtags par tone spécifique
+    if (tone === 'roast') {
+      contextHashtags.push('#PhotoFail', '#IAhumour', '#Funny', '#Roasted', '#Fails')
+    } else if (tone === 'artcritic') {
+      contextHashtags.push('#ArtistiquéPhoto', '#CritiqueArt', '#VisionArtistique', '#ArtPhotography')
+    } else {
+      contextHashtags.push('#PhotoTips', '#Amateur', '#Learning', '#PhotoSkills')
+    }
+    
+    // Ajouter hashtags génériques populaires
+    const generalHashtags = ['#Photography', '#Photo', '#Photographer', '#InstaPhoto', '#PicOfTheDay']
+    
+    // Limiter à 30 hashtags max (limite Instagram)
+    const allHashtags = [
+      ...baseHashtags.split(' '),
+      ...contextHashtags.slice(0, 15), // Max 15 contextuels
+      ...generalHashtags.slice(0, 10)  // Max 10 génériques
+    ].slice(0, 30)
+    
+    return allHashtags.join(' ')
   }
   
   const hashtags = getHashtags()
