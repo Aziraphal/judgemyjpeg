@@ -36,7 +36,14 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
 
   // Génère un résumé percutant de l'analyse IA
   const generateAnalysisSummary = () => {
-    const analysisText = analysis.analysis || ''
+    // Combiner tous les textes d'analyse disponibles
+    const allTexts: string[] = [
+      ...Object.values(analysis.technical || {}),
+      ...Object.values(analysis.artistic || {}),
+      ...(analysis.suggestions || [])
+    ].filter(text => typeof text === 'string' && text.trim().length > 0)
+    
+    const analysisText = allTexts.join(' ').toLowerCase()
     
     // Extraire des phrases clés de l'analyse
     const sentences = analysisText.split(/[.!?]+/).filter(s => s.trim().length > 10)
@@ -108,7 +115,13 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
     let contextHashtags: string[] = []
     
     // Analyse du texte d'analyse pour détecter le contenu
-    const analysisText = analysis.analysis?.toLowerCase() || ''
+    const allAnalysisTexts = [
+      ...Object.values(analysis.technical || {}),
+      ...Object.values(analysis.artistic || {}),
+      ...(analysis.suggestions || [])
+    ].filter(text => typeof text === 'string').join(' ')
+    
+    const analysisText = allAnalysisTexts.toLowerCase()
     
     // Hashtags par sujet/type de photo détecté
     if (analysisText.includes('portrait') || analysisText.includes('visage') || analysisText.includes('regard')) {
