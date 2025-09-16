@@ -20,39 +20,42 @@ export default function AnalyserPhotoGratuit() {
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.judgemyjpeg.fr/analyser-photo-gratuit" />
         
-        {/* Schema.org */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebPage",
-            "name": "Analyser Photo Gratuit",
-            "description": "Service gratuit d'analyse photo par intelligence artificielle",
-            "url": "https://www.judgemyjpeg.fr/analyser-photo-gratuit",
-            "inLanguage": "fr-FR",
-            "isPartOf": {
-              "@type": "WebSite",
-              "name": "JudgeMyJPEG",
-              "url": "https://www.judgemyjpeg.fr"
-            },
-            "mainEntity": {
-              "@type": "Service",
-              "name": "Analyse Photo Gratuite",
-              "description": "Analyse photo gratuite par intelligence artificielle",
-              "provider": {
-                "@type": "Organization",
+        {/* Schema.org JSON-LD */}
+        <script 
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebPage",
+              "name": "Analyser Photo Gratuit",
+              "description": "Service gratuit d'analyse photo par intelligence artificielle",
+              "url": "https://www.judgemyjpeg.fr/analyser-photo-gratuit",
+              "inLanguage": "fr-FR",
+              "isPartOf": {
+                "@type": "WebSite",
                 "name": "JudgeMyJPEG",
                 "url": "https://www.judgemyjpeg.fr"
               },
-              "offers": {
-                "@type": "Offer",
-                "price": "0",
-                "priceCurrency": "EUR",
-                "description": "Analyse photo gratuite par IA",
-                "availability": "https://schema.org/InStock"
+              "mainEntity": {
+                "@type": "Service",
+                "name": "Analyse Photo Gratuite",
+                "description": "Analyse photo gratuite par intelligence artificielle",
+                "provider": {
+                  "@type": "Organization",
+                  "name": "JudgeMyJPEG",
+                  "url": "https://www.judgemyjpeg.fr"
+                },
+                "offers": {
+                  "@type": "Offer",
+                  "price": "0",
+                  "priceCurrency": "EUR",
+                  "description": "Analyse photo gratuite par IA",
+                  "availability": "https://schema.org/InStock"
+                }
               }
-            }
-          })}
-        </script>
+            })
+          }}
+        />
       </Head>
 
       <main className="min-h-screen bg-cosmic-overlay particles-container relative">

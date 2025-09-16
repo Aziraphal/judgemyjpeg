@@ -20,39 +20,42 @@ export default function CritiquePhotoIA() {
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.judgemyjpeg.fr/critique-photo-ia" />
         
-        {/* Schema.org pour SEO */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebPage",
-            "name": "Critique Photo IA",
-            "description": "Service de critique photo par intelligence artificielle",
-            "url": "https://www.judgemyjpeg.fr/critique-photo-ia",
-            "inLanguage": "fr-FR",
-            "isPartOf": {
-              "@type": "WebSite",
-              "name": "JudgeMyJPEG",
-              "url": "https://www.judgemyjpeg.fr"
-            },
-            "mainEntity": {
-              "@type": "Service",
+        {/* Schema.org JSON-LD */}
+        <script 
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebPage",
               "name": "Critique Photo IA",
-              "description": "Analyse et critique de photos par intelligence artificielle",
-              "provider": {
-                "@type": "Organization",
+              "description": "Service de critique photo par intelligence artificielle", 
+              "url": "https://www.judgemyjpeg.fr/critique-photo-ia",
+              "inLanguage": "fr-FR",
+              "isPartOf": {
+                "@type": "WebSite",
                 "name": "JudgeMyJPEG",
                 "url": "https://www.judgemyjpeg.fr"
               },
-              "offers": {
-                "@type": "Offer",
-                "price": "0",
-                "priceCurrency": "EUR",
-                "description": "Critique photo gratuite par IA",
-                "availability": "https://schema.org/InStock"
+              "mainEntity": {
+                "@type": "Service",
+                "name": "Critique Photo IA",
+                "description": "Analyse et critique de photos par intelligence artificielle",
+                "provider": {
+                  "@type": "Organization", 
+                  "name": "JudgeMyJPEG",
+                  "url": "https://www.judgemyjpeg.fr"
+                },
+                "offers": {
+                  "@type": "Offer",
+                  "price": "0",
+                  "priceCurrency": "EUR",
+                  "description": "Critique photo gratuite par IA",
+                  "availability": "https://schema.org/InStock"
+                }
               }
-            }
-          })}
-        </script>
+            })
+          }}
+        />
       </Head>
 
       <main className="min-h-screen bg-cosmic-overlay particles-container relative">
