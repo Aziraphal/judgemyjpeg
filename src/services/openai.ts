@@ -389,9 +389,9 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
 
     ⚡ OBLIGATIONS POUR "retouchPotential" :
     • ANALYSE le potentiel d'amélioration réel de cette photo par retouche
-    • HIGH (score 70-100) : Photo avec défauts marqués, forte marge d'amélioration
-    • MEDIUM (score 30-70) : Photo correcte avec améliorations possibles
-    • LOW (score 0-30) : Photo déjà excellente, risque de sur-traitement
+    • HIGH (score 0-60) : Photo avec défauts marqués, forte marge d'amélioration
+    • MEDIUM (score 61-84) : Photo correcte avec améliorations possibles  
+    • LOW (score 85-100) : Photo déjà excellente, risque de sur-traitement
     • SOIS HONNÊTE : si la photo est déjà parfaite, dis-le !
 
     🔍 ANALYSE VISUELLE OBLIGATOIRE AVANT CONSEILS :
@@ -460,7 +460,7 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
         }
       ],
       max_tokens: 2000,
-      temperature: 0.7
+      temperature: 0.9
     })
 
     const content = response.choices[0]?.message?.content
