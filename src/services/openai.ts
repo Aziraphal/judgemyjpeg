@@ -333,53 +333,53 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
       },
       "toolRecommendations": {
         "lightroom": [
-          "ANALYSE CETTE PHOTO SPÉCIFIQUEMENT et donne 4 conseils précis adaptés à SES défauts/qualités",
-          "Format obligatoire : 'Paramètre : valeur' (ex: 'Exposition : -0.3', 'Vibrance : +25')",
-          "VARIE les paramètres selon la photo : Ombres, Hautes lumières, Exposition, Contraste, Clarté, Vibrance, Saturation, Correction colorimétrique, etc.",
-          "ADAPTE les valeurs selon les problèmes visuels détectés sur CETTE photo"
+          "Conseil 1 spécifique à cette photo",
+          "Conseil 2 adapté aux défauts visibles", 
+          "Conseil 3 pour améliorer cette image",
+          "Conseil 4 ciblé sur les problèmes détectés"
         ],
         "snapseed": [
-          "ANALYSE CETTE PHOTO SPÉCIFIQUEMENT et donne 4 actions précises adaptées à SES besoins",
-          "Format obligatoire : 'Outil → Action : valeur' (ex: 'Éclairage → Exposition : -15', 'Couleurs → Saturation : +8')",
-          "VARIE les outils selon la photo : Éclairage, Couleurs, Détails, HDR, Portrait, Perspective, Recadrage, etc.",
-          "ADAPTE les réglages selon les problèmes visuels détectés sur CETTE photo"
+          "Action 1 adaptée à cette photo",
+          "Action 2 pour corriger les défauts visibles",
+          "Action 3 spécifique à cette image", 
+          "Action 4 ciblée sur les améliorations possibles"
         ]
       },
       "nextShotTips": [
         {
-          "tip": "ANALYSE LES DÉFAUTS DE CETTE PHOTO et donne un conseil précis pour éviter ce problème lors de la PROCHAINE prise de vue",
-          "category": "technique|composition|éclairage|créativité",
-          "difficulty": "débutant|intermédiaire|avancé"
+          "tip": "Conseil spécifique basé sur les défauts de cette photo",
+          "category": "technique",
+          "difficulty": "débutant"
         },
         {
-          "tip": "IDENTIFIE un point faible spécifique de cette image et suggère une amélioration concrète pour les futures photos",
-          "category": "technique|composition|éclairage|créativité", 
-          "difficulty": "débutant|intermédiaire|avancé"
+          "tip": "Conseil adapté pour améliorer la prochaine prise de vue",
+          "category": "composition", 
+          "difficulty": "intermédiaire"
         },
         {
-          "tip": "OBSERVE ce qui manque à cette photo et propose une technique précise à appliquer la prochaine fois",
-          "category": "technique|composition|éclairage|créativité",
-          "difficulty": "débutant|intermédiaire|avancé"
+          "tip": "Technique précise pour éviter le problème observé",
+          "category": "éclairage",
+          "difficulty": "avancé"
         }
       ],
       "editingRecommendations": [
         {
-          "suggestion": "REGARDE LES DÉFAUTS VISUELS de cette photo et propose UNE retouche précise pour corriger le problème principal",
-          "tool": "Lightroom|Photoshop|Snapseed|GIMP",
-          "difficulty": "facile|moyen|difficile", 
-          "expectedImprovement": "EXPLIQUE le résultat visuel concret attendu pour CETTE photo spécifique"
+          "suggestion": "Retouche spécifique pour corriger le défaut principal observé",
+          "tool": "Lightroom",
+          "difficulty": "facile", 
+          "expectedImprovement": "Amélioration visuelle concrète pour cette photo"
         },
         {
-          "suggestion": "IDENTIFIE un deuxième point d'amélioration sur cette image et suggère la retouche adaptée", 
-          "tool": "Lightroom|Photoshop|Snapseed|GIMP",
-          "difficulty": "facile|moyen|difficile",
-          "expectedImprovement": "DÉCRIS l'amélioration visuelle précise pour cette photo"
+          "suggestion": "Correction ciblée sur le deuxième point faible détecté", 
+          "tool": "Photoshop",
+          "difficulty": "moyen",
+          "expectedImprovement": "Résultat attendu spécifique à cette image"
         },
         {
-          "suggestion": "OBSERVE un troisième aspect perfectible de cette photo et propose une solution de retouche ciblée",
-          "tool": "Lightroom|Photoshop|Snapseed|GIMP", 
-          "difficulty": "facile|moyen|difficile",
-          "expectedImprovement": "EXPLIQUE le gain visuel attendu sur cette image particulière"
+          "suggestion": "Retouche créative adaptée aux caractéristiques de cette photo",
+          "tool": "Snapseed", 
+          "difficulty": "difficile",
+          "expectedImprovement": "Impact visuel prévu sur cette image particulière"
         }
       ]
     }
@@ -410,6 +410,34 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
     • UTILISE des paramètres variés : Exposition, Ombres, Hautes lumières, Contraste, Clarté, Vibrance, Saturation, Balance des blancs, etc.
     • JAMAIS de conseils qui risquent de dégrader (sur-exposition, sur-saturation)
     • SOIS CRÉATIF et spécifique à chaque image
+
+    📝 EXEMPLES CONCRETS DE RECOMMANDATIONS VARIÉES (adapte selon CETTE photo) :
+
+    🌅 Pour photo sombre/sous-exposée :
+    - "Exposition : +0.8"
+    - "Ombres : +40" 
+    - "Noirs : +15"
+    - "Vibrance : +20"
+
+    ☀️ Pour photo sur-exposée :
+    - "Hautes lumières : -60"
+    - "Exposition : -0.4"
+    - "Blancs : -25"
+    - "Contraste : +15"
+
+    🎨 Pour photo terne/plate :
+    - "Vibrance : +30"
+    - "Saturation : +8"
+    - "Contraste : +20"
+    - "Clarté : +10"
+
+    🖼️ Pour photo déjà bien exposée :
+    - "Balance des blancs : -200K"
+    - "Teinte : +5"
+    - "Correction colorimétrique HSL"
+    - "Masquage de netteté : +25"
+
+    ANALYSE CETTE PHOTO et choisis les 4 paramètres les plus pertinents selon SES défauts spécifiques.
     `
 
     const response = await openai.chat.completions.create({
