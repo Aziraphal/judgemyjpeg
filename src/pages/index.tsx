@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import { useSession, signIn, signOut } from 'next-auth/react'
 import { useState, useEffect } from 'react'
-import Footer from '@/components/Footer'
 import { logger } from '@/lib/logger'
 
 export default function Home() {
@@ -456,7 +455,6 @@ export default function Home() {
           </div>
         </div>
       </main>
-      <Footer />
     </>
   )
 }

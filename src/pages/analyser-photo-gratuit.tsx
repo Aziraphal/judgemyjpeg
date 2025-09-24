@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
-import Footer from '@/components/Footer'
 
 export default function AnalyserPhotoGratuit() {
   const { data: session } = useSession()
@@ -264,8 +263,6 @@ export default function AnalyserPhotoGratuit() {
 
         </div>
       </main>
-      
-      <Footer />
     </>
   )
 }

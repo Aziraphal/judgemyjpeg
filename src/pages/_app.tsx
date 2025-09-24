@@ -5,6 +5,7 @@ import SecurityStatusBar from '@/components/SecurityStatusBar'
 import CookieConsent from '@/components/CookieConsent'
 import FeedbackButton from '@/components/FeedbackButton'
 import SecurityMonitor from '@/components/SecurityMonitor'
+import Footer from '@/components/Footer'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
@@ -180,6 +181,9 @@ export default function App({
         {!router.pathname.startsWith('/admin') && !router.pathname.startsWith('/auth') && (
           <FeedbackButton variant="floating" size="md" />
         )}
+        
+        {/* Footer avec mentions légales OBLIGATOIRES sur toutes les pages */}
+        <Footer />
       </SessionProvider>
     </>
   )
