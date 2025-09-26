@@ -57,21 +57,30 @@ export function useAnalysisLimit() {
       if (response.ok) {
         const data = await response.json()
         
+        // Vérification défensive pour éviter les erreurs
+        const starterPack = data.starterPack || {
+          hasStarterPack: false,
+          purchased: false,
+          analysisCount: 0,
+          sharesCount: 0,
+          exportsCount: 0
+        }
+        
         // Déterminer si l'utilisateur est épuisé
         const isMonthlyExhausted = data.subscriptionStatus === 'free' && data.monthlyAnalysisCount >= data.maxMonthlyAnalyses
-        const hasNoStarterAnalyses = !data.starterPack.hasStarterPack || data.starterPack.analysisCount === 0
+        const hasNoStarterAnalyses = !starterPack.hasStarterPack || starterPack.analysisCount === 0
         const isExhausted = isMonthlyExhausted && hasNoStarterAnalyses && !['premium', 'annual'].includes(data.subscriptionStatus)
         
         // Détermine si on doit afficher le modal starter pack
         const shouldShowStarterModal = isExhausted && 
                                      data.subscriptionStatus === 'free' && 
-                                     !data.starterPack.purchased // N'a jamais acheté le starter pack
+                                     !starterPack.purchased // N'a jamais acheté le starter pack
         
         setState({
-          canAnalyze: data.canAnalyze,
-          monthlyCount: data.monthlyAnalysisCount,
-          maxMonthly: data.maxMonthlyAnalyses,
-          starterPack: data.starterPack,
+          canAnalyze: data.canAnalyze || false,
+          monthlyCount: data.monthlyAnalysisCount || 0,
+          maxMonthly: data.maxMonthlyAnalyses || 3,
+          starterPack,
           daysUntilReset: data.daysUntilReset,
           isExhausted,
           shouldShowStarterModal
