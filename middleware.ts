@@ -20,7 +20,7 @@ export function middleware(request: NextRequest) {
     script-src 'self' 'unsafe-eval' https://js.stripe.com https://www.googletagmanager.com https://www.google-analytics.com;
     style-src 'self' 'unsafe-inline';
     img-src 'self' data: blob: https://res.cloudinary.com https://lh3.googleusercontent.com;
-    connect-src 'self' https://api.stripe.com https://generativelanguage.googleapis.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://*.google-analytics.com;
+    connect-src 'self' https://judgemyjpeg.fr https://api.stripe.com https://generativelanguage.googleapis.com https://ipapi.co https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://*.google-analytics.com;
     frame-src https://js.stripe.com;
     font-src 'self' data:;
     object-src 'none';
