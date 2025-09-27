@@ -176,6 +176,7 @@ export default function SignUpPage() {
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full p-3 bg-cosmic-glass border border-cosmic-glassborder rounded-lg text-text-white placeholder-text-muted focus:outline-none focus:border-neon-cyan"
                   placeholder="John Doe"
+                  autoComplete="name"
                   required
                 />
               </div>
@@ -192,6 +193,7 @@ export default function SignUpPage() {
                   onChange={(e) => setFormData({ ...formData, nickname: e.target.value })}
                   className="w-full p-3 bg-cosmic-glass border border-cosmic-glassborder rounded-lg text-text-white placeholder-text-muted focus:outline-none focus:border-neon-cyan"
                   placeholder="PhotoMaster, ArtistPro, etc."
+                  autoComplete="nickname"
                 />
                 <p className="text-xs text-text-muted mt-1">
                   Ce nom sera affiché sur le site (ex: "Bonjour, MonPseudo"). Si vide, votre nom complet sera utilisé.
@@ -209,6 +211,7 @@ export default function SignUpPage() {
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="w-full p-3 bg-cosmic-glass border border-cosmic-glassborder rounded-lg text-text-white placeholder-text-muted focus:outline-none focus:border-neon-cyan"
                   placeholder="votre@email.com"
+                  autoComplete="email"
                   required
                 />
               </div>

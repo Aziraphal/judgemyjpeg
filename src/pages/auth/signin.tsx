@@ -137,6 +137,7 @@ export default function SignInPage() {
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="w-full p-3 bg-cosmic-glass border border-cosmic-glassborder rounded-lg text-text-white placeholder-text-muted focus:outline-none focus:border-neon-cyan"
                   placeholder="votre@email.com"
+                  autoComplete="email"
                   required
                 />
               </div>
