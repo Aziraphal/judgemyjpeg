@@ -30,6 +30,13 @@ export default function InsightsPage() {
 
       if (!response.ok) {
         const errorData = await response.json()
+        
+        // Gestion spéciale pour le service en développement
+        if (response.status === 503 && errorData.status === 'development') {
+          setError(errorData.message || 'Service en développement')
+          return
+        }
+        
         throw new Error(errorData.error || 'Erreur génération insights')
       }
 
