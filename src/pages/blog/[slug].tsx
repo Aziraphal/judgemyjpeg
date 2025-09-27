@@ -505,7 +505,7 @@ export default function BlogPostPage({ post }: BlogPostPageProps) {
               "name": "JudgeMyJPEG",
               "logo": "https://www.judgemyjpeg.fr/favicon.ico"
             },
-            "url": `https://www.judgemyjpeg.fr/blog/${post.slug}`,
+            "url": "https://www.judgemyjpeg.fr/blog/" + post.slug,
             "keywords": post.tags.join(', '),
             "articleSection": post.category
           })}
