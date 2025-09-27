@@ -29,7 +29,8 @@ export function middleware(request: NextRequest) {
     frame-ancestors 'none';
   `.replace(/\s{2,}/g, ' ').trim()
   
-  response.headers.set('Content-Security-Policy', csp)
+  // CSP temporairement désactivé - géré par next.config.js
+  // response.headers.set('Content-Security-Policy', csp)
 
   // Cache headers for static assets
   const url = request.nextUrl.pathname
