@@ -129,18 +129,7 @@ const nextConfig = {
         destination: '/pricing',
         permanent: true,
       },
-      // Redirect www vers non-www - Corrigé pour .fr
-      {
-        source: '/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'www.judgemyjpeg.fr',
-          },
-        ],
-        destination: 'https://judgemyjpeg.fr/:path*',
-        permanent: true,
-      },
+      // Redirection www supprimée - Railway doit être configuré pour www uniquement
     ]
   },
 }
