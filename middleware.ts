@@ -14,7 +14,22 @@ export function middleware(request: NextRequest) {
   response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload')
   response.headers.set('Cross-Origin-Opener-Policy', 'same-origin')
   
-  // CSP entièrement supprimé - géré uniquement par next.config.js
+  // CSP forcé car next.config.js ne s'applique pas
+  const csp = [
+    "default-src 'self'",
+    "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://www.googletagmanager.com https://challenges.cloudflare.com https://*.cloudflare.com",
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: blob: https://res.cloudinary.com https://lh3.googleusercontent.com",
+    "connect-src 'self' https://judgemyjpeg.fr https://api.stripe.com https://api.openai.com https://res.cloudinary.com https://generativelanguage.googleapis.com https://ipapi.co https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://*.google-analytics.com https://challenges.cloudflare.com",
+    "frame-src https://js.stripe.com https://challenges.cloudflare.com",
+    "font-src 'self' data:",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "block-all-mixed-content"
+  ].join('; ')
+  
+  response.headers.set('Content-Security-Policy', csp)
 
   // Cache headers for static assets
   const url = request.nextUrl.pathname
