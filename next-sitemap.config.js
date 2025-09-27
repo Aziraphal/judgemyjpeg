@@ -60,7 +60,8 @@ module.exports = {
     '/all-photos',
     // Pages désactivées
     '/lightroom-plugin*',
-    '*.disabled*'
+    '*.disabled*',
+    '/sentry-example-page'
   ],
   robotsTxtOptions: {
     policies: [

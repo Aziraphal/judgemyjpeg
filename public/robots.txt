@@ -1,9 +1,6 @@
-# JudgeMyJPEG - Official robots.txt
-# Override Cloudflare managed content
-
+# *
 User-agent: *
 Allow: /
-Allow: /_next/static/*
 Disallow: /admin*
 Disallow: /api/*
 Disallow: /auth/*
@@ -11,19 +8,12 @@ Disallow: /*success*
 Disallow: /test-upload*
 Disallow: /status*
 Disallow: /offline*
-Disallow: /_next/server*
+Disallow: /_next/*
 Disallow: /node_modules/*
 Disallow: *.disabled*
 
-# Allow AI crawlers for SEO and content discovery
-User-agent: ClaudeBot
-Allow: /
-
-User-agent: GPTBot
-Allow: /
-
-User-agent: Google-Extended
-Allow: /
+# Host
+Host: https://www.judgemyjpeg.fr
 
 # Sitemaps
 Sitemap: https://www.judgemyjpeg.fr/sitemap.xml

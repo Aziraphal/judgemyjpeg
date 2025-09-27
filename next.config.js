@@ -129,16 +129,16 @@ const nextConfig = {
         destination: '/pricing',
         permanent: true,
       },
-      // Redirect www vers non-www si configuré côté serveur
+      // Redirect www vers non-www - Corrigé pour .fr
       {
         source: '/:path*',
         has: [
           {
             type: 'host',
-            value: 'www.judgemyjpeg.com',
+            value: 'www.judgemyjpeg.fr',
           },
         ],
-        destination: 'https://judgemyjpeg.com/:path*',
+        destination: 'https://judgemyjpeg.fr/:path*',
         permanent: true,
       },
     ]
