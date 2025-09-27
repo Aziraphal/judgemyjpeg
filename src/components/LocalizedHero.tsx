@@ -24,7 +24,7 @@ interface LocalizedContent {
     symbol: string
     monthly: number
     annual: number
-    lifetime: number
+    starter: number
   }
   marketMessage?: string
 }
@@ -35,24 +35,24 @@ const LOCALIZED_CONTENT: Record<AnalysisLanguage, LocalizedContent> = {
     title: "JudgeMyJPEG",
     subtitle: "L'IA qui critique vos photos avec style",
     description: "Obtenez des analyses professionnelles et sarcastiques de vos photos par intelligence artificielle. Améliorez votre photographie avec des conseils experts.",
-    cta: "Analyser gratuitement",
+    cta: "Créer un compte gratuit",
     features: [
       "3 analyses gratuites par mois",
-      "Modes Pro & Cassant disponibles",
+      "Modes Pro & Cassant disponibles", 
       "Conseils techniques personnalisés",
       "Interface française intuitive"
     ],
     testimonial: {
-      text: "Cette IA m'a fait progresser en photo plus que 3 ans de cours !",
-      author: "Marie L.",
-      role: "Photographe amateur, Lyon"
+      text: "Interface intuitive et analyses détaillées, parfait pour améliorer ses photos !",
+      author: "Utilisateur vérifié",
+      role: "Community JudgeMyJPEG"
     },
     pricing: {
       currency: "EUR",
       symbol: "€",
       monthly: 9.99,
       annual: 79,
-      lifetime: 149
+      starter: 4.99
     },
     marketMessage: "🇫🇷 Créé en France, pour les photographes francophones"
   },
@@ -61,7 +61,7 @@ const LOCALIZED_CONTENT: Record<AnalysisLanguage, LocalizedContent> = {
     title: "JudgeMyJPEG",
     subtitle: "AI that critiques your photos with style",
     description: "Get professional and witty photo analysis powered by artificial intelligence. Improve your photography with expert insights and personalized recommendations.",
-    cta: "Analyze for free",
+    cta: "Sign up for free",
     features: [
       "3 free analyses per month",
       "Pro & Roast modes available",
@@ -69,16 +69,16 @@ const LOCALIZED_CONTENT: Record<AnalysisLanguage, LocalizedContent> = {
       "Clean, intuitive interface"
     ],
     testimonial: {
-      text: "This AI has improved my photography more than 3 years of classes!",
-      author: "Sarah M.",
-      role: "Photography enthusiast, London"
+      text: "Great AI feedback that actually helps improve my photography skills!",
+      author: "Verified user",
+      role: "JudgeMyJPEG Community"
     },
     pricing: {
       currency: "USD",
       symbol: "$",
       monthly: 10.99,
       annual: 89,
-      lifetime: 159
+      starter: 5.49
     },
     marketMessage: "🌍 Global AI photography coach for English speakers"
   },
@@ -87,7 +87,7 @@ const LOCALIZED_CONTENT: Record<AnalysisLanguage, LocalizedContent> = {
     title: "JudgeMyJPEG",
     subtitle: "IA que critica tus fotos con estilo",
     description: "Obtén análisis profesionales y divertidos de tus fotos con inteligencia artificial. Mejora tu fotografía con consejos expertos y recomendaciones personalizadas.",
-    cta: "Analizar gratis",
+    cta: "Crear cuenta gratis",
     features: [
       "3 análisis gratuitos por mes",
       "Modos Profesional y Sarcástico",
@@ -95,16 +95,16 @@ const LOCALIZED_CONTENT: Record<AnalysisLanguage, LocalizedContent> = {
       "Interfaz en español intuitiva"
     ],
     testimonial: {
-      text: "¡Esta IA me ha hecho mejorar más que 3 años de clases!",
-      author: "Carlos R.",
-      role: "Fotógrafo aficionado, Madrid"
+      text: "Excelente análisis con IA que realmente ayuda a mejorar!",
+      author: "Usuario verificado",
+      role: "Comunidad JudgeMyJPEG"
     },
     pricing: {
       currency: "EUR",
       symbol: "€",
       monthly: 9.99,
       annual: 79,
-      lifetime: 149
+      starter: 4.99
     },
     marketMessage: "🌶️ IA fotográfica para el mercado hispanohablante"
   },
@@ -113,7 +113,7 @@ const LOCALIZED_CONTENT: Record<AnalysisLanguage, LocalizedContent> = {
     title: "JudgeMyJPEG",
     subtitle: "KI, die deine Fotos mit Stil kritisiert",
     description: "Erhalte professionelle und unterhaltsame Fotoanalysen durch künstliche Intelligenz. Verbessere deine Fotografie mit Expertenratschlägen und personalisierten Empfehlungen.",
-    cta: "Kostenlos analysieren",
+    cta: "Kostenloses Konto erstellen",
     features: [
       "3 kostenlose Analysen pro Monat",
       "Profi- und Satiremodus verfügbar",
@@ -121,16 +121,16 @@ const LOCALIZED_CONTENT: Record<AnalysisLanguage, LocalizedContent> = {
       "Deutsche Benutzeroberfläche"
     ],
     testimonial: {
-      text: "Diese KI hat mich mehr weitergebracht als 3 Jahre Kurse!",
-      author: "Klaus M.",
-      role: "Hobbyfotograf, München"
+      text: "Hervorragende KI-Analyse, die wirklich beim Verbessern hilft!",
+      author: "Verifizierter Nutzer",
+      role: "JudgeMyJPEG Community"
     },
     pricing: {
       currency: "EUR",
       symbol: "€",
       monthly: 9.99,
       annual: 79,
-      lifetime: 149
+      starter: 4.99
     },
     marketMessage: "🍺 Präzise KI-Fotokritik für deutsche Fotografen"
   },
@@ -139,7 +139,7 @@ const LOCALIZED_CONTENT: Record<AnalysisLanguage, LocalizedContent> = {
     title: "JudgeMyJPEG",
     subtitle: "IA che critica le tue foto con stile",
     description: "Ottieni analisi professionali e divertenti delle tue foto con intelligenza artificiale. Migliora la tua fotografia con consigli esperti e raccomandazioni personalizzate.",
-    cta: "Analizza gratis",
+    cta: "Crea account gratuito",
     features: [
       "3 analisi gratuite al mese",
       "Modi Professionale e Sarcastico",
@@ -147,16 +147,16 @@ const LOCALIZED_CONTENT: Record<AnalysisLanguage, LocalizedContent> = {
       "Interfaccia italiana intuitiva"
     ],
     testimonial: {
-      text: "Questa IA mi ha fatto migliorare più di 3 anni di corsi!",
-      author: "Marco V.",
-      role: "Fotografo amatoriale, Roma"
+      text: "Ottima analisi AI che aiuta davvero a migliorare le foto!",
+      author: "Utente verificato",
+      role: "Community JudgeMyJPEG"
     },
     pricing: {
       currency: "EUR",
       symbol: "€",
       monthly: 9.99,
       annual: 79,
-      lifetime: 149
+      starter: 4.99
     },
     marketMessage: "🍝 IA fotografica per il mercato italiano"
   },
@@ -165,7 +165,7 @@ const LOCALIZED_CONTENT: Record<AnalysisLanguage, LocalizedContent> = {
     title: "JudgeMyJPEG", 
     subtitle: "IA que critica suas fotos com estilo",
     description: "Obtenha análises profissionais e divertidas de suas fotos com inteligência artificial. Melhore sua fotografia com conselhos especializados e recomendações personalizadas.",
-    cta: "Analisar grátis",
+    cta: "Criar conta grátis",
     features: [
       "3 análises gratuitas por mês",
       "Modos Profissional e Sarcástico",
@@ -173,16 +173,16 @@ const LOCALIZED_CONTENT: Record<AnalysisLanguage, LocalizedContent> = {
       "Interface em português intuitiva"
     ],
     testimonial: {
-      text: "Esta IA me fez melhorar mais que 3 anos de aulas!",
-      author: "Ana S.",
-      role: "Fotógrafa amadora, São Paulo"
+      text: "Excelente análise com IA que realmente ajuda a melhorar!",
+      author: "Usuário verificado",
+      role: "Comunidade JudgeMyJPEG"
     },
     pricing: {
       currency: "BRL",
       symbol: "R$",
       monthly: 19.99,
       annual: 159,
-      lifetime: 299
+      starter: 9.99
     },
     marketMessage: "🇧🇷 IA fotográfica para o mercado brasileiro e português"
   }
@@ -246,12 +246,24 @@ export default function LocalizedHero({ forceLanguage }: LocalizedHeroProps) {
 
         {/* CTA principal */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
-          <Link href="/analyze" className="btn-neon-pink text-lg px-8 py-4">
+          <Link href="/auth/signup" className="btn-neon-pink text-lg px-8 py-4">
             {content.cta} ✨
           </Link>
-          <div className="text-text-muted text-sm">
-            {content.features[0]} • {currentLanguage === 'pt' ? 'Sem cartão' : 'Sans carte'}
-          </div>
+          <Link href="/auth/signin" className="btn-neon-secondary text-lg px-8 py-4">
+            {currentLanguage === 'en' ? 'Sign In' : 
+             currentLanguage === 'es' ? 'Iniciar sesión' :
+             currentLanguage === 'de' ? 'Anmelden' :
+             currentLanguage === 'it' ? 'Accedi' :
+             currentLanguage === 'pt' ? 'Entrar' : 'Se connecter'}
+          </Link>
+        </div>
+        
+        <div className="text-center text-text-muted text-sm mb-12">
+          {content.features[0]} • {currentLanguage === 'pt' ? 'Sem cartão' : 
+           currentLanguage === 'en' ? 'No credit card' :
+           currentLanguage === 'es' ? 'Sin tarjeta' :
+           currentLanguage === 'de' ? 'Keine Kreditkarte' :
+           currentLanguage === 'it' ? 'Senza carta' : 'Sans carte'}
         </div>
 
         {/* Features principales */}
@@ -288,9 +300,21 @@ export default function LocalizedHero({ forceLanguage }: LocalizedHeroProps) {
              currentLanguage === 'pt' ? 'Preços' : 'Tarifs'}
           </h3>
           <div className="space-y-2 text-text-gray text-sm">
-            <div>📱 {currentLanguage === 'en' ? 'Monthly' : 'Mensuel'}: <span className="text-neon-cyan">{content.pricing.symbol}{content.pricing.monthly}</span></div>
-            <div>📅 {currentLanguage === 'en' ? 'Annual' : 'Annuel'}: <span className="text-neon-cyan">{content.pricing.symbol}{content.pricing.annual}</span></div>
-            <div>♾️ {currentLanguage === 'en' ? 'Lifetime' : 'À vie'}: <span className="text-neon-pink">{content.pricing.symbol}{content.pricing.lifetime}</span></div>
+            <div>🛒 {currentLanguage === 'en' ? 'Starter Pack' : 
+                       currentLanguage === 'es' ? 'Pack Inicial' :
+                       currentLanguage === 'de' ? 'Starter-Paket' :
+                       currentLanguage === 'it' ? 'Pacchetto Starter' :
+                       currentLanguage === 'pt' ? 'Pacote Inicial' : 'Pack Démarrage'}: <span className="text-neon-pink">{content.pricing.symbol}{content.pricing.starter}</span></div>
+            <div>📱 {currentLanguage === 'en' ? 'Monthly' : 
+                       currentLanguage === 'es' ? 'Mensual' :
+                       currentLanguage === 'de' ? 'Monatlich' :
+                       currentLanguage === 'it' ? 'Mensile' :
+                       currentLanguage === 'pt' ? 'Mensal' : 'Mensuel'}: <span className="text-neon-cyan">{content.pricing.symbol}{content.pricing.monthly}</span></div>
+            <div>📅 {currentLanguage === 'en' ? 'Annual' : 
+                       currentLanguage === 'es' ? 'Anual' :
+                       currentLanguage === 'de' ? 'Jährlich' :
+                       currentLanguage === 'it' ? 'Annuale' :
+                       currentLanguage === 'pt' ? 'Anual' : 'Annuel'}: <span className="text-neon-cyan">{content.pricing.symbol}{content.pricing.annual}</span></div>
           </div>
         </div>
       </div>
