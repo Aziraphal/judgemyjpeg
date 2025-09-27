@@ -2,6 +2,7 @@ import Head from 'next/head'
 import { useSession, signIn, signOut } from 'next-auth/react'
 import { useState, useEffect } from 'react'
 import { logger } from '@/lib/logger'
+import LocalizedHero from '@/components/LocalizedHero'
 
 export default function Home() {
   const { data: session, status } = useSession()
@@ -233,38 +234,20 @@ export default function Home() {
             </div>
           )}
 
-          {/* Hero Section */}
-          <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              <span className="text-transparent bg-gradient-to-r from-neon-pink to-neon-cyan bg-clip-text">
-                JudgeMyJPEG
-              </span>
-            </h1>
-            <p className="text-xl text-text-gray mb-8 max-w-2xl mx-auto">
-              <span className="text-neon-cyan">Analysez vos photos</span> avec une <span className="text-neon-pink">intelligence artificielle experte</span>
-            </p>
-            <div className="text-base text-text-muted mb-6 max-w-3xl mx-auto">
-              <p>✨ <strong className="text-white">Critique photo IA instantanée</strong> • Note sur 100 • Conseils techniques personnalisés</p>
-            </div>
-            
-            {!session ? (
-              <div className="space-y-6">
-                <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
-                  <button
-                    onClick={() => window.location.href = '/auth/signup'}
-                    className="btn-neon-pink text-lg px-8 py-3"
-                  >
-                    Créer un compte
-                  </button>
-                  <button
-                    onClick={() => window.location.href = '/auth/signin'}
-                    className="btn-neon-secondary text-lg px-8 py-3"
-                  >
-                    Se connecter
-                  </button>
-                </div>
-              </div>
-            ) : (
+          {/* Hero Section - Localized for new users */}
+          {!session ? (
+            <LocalizedHero />
+          ) : (
+            <div className="text-center mb-16">
+              <h1 className="text-4xl md:text-6xl font-bold mb-6">
+                <span className="text-transparent bg-gradient-to-r from-neon-pink to-neon-cyan bg-clip-text">
+                  JudgeMyJPEG
+                </span>
+              </h1>
+              <p className="text-xl text-text-gray mb-8 max-w-2xl mx-auto">
+                <span className="text-neon-cyan">Analysez vos photos</span> avec une <span className="text-neon-pink">intelligence artificielle experte</span>
+              </p>
+              
               <div className="space-y-6">
                 <button 
                   onClick={() => window.location.href = '/analyze'}
@@ -307,8 +290,8 @@ export default function Home() {
                   </button>
                 </div>
               </div>
-            )}
-          </div>
+            </div>
+          )}
 
           {/* Top 3 Photos Section - Only for logged in users */}
           {session && topPhotos.length > 0 && (

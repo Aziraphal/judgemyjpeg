@@ -5,7 +5,7 @@ import Head from 'next/head'
 import PhotoUpload from '@/components/PhotoUpload'
 import AnalysisResult from '@/components/AnalysisResult'
 import ToneSelector from '@/components/ToneSelector'
-import LanguageSelector from '@/components/LanguageSelector'
+import SmartLanguageSelector from '@/components/SmartLanguageSelector'
 import SubscriptionStatus from '@/components/SubscriptionStatus'
 import InteractiveTutorial, { useTutorial } from '@/components/InteractiveTutorial'
 import ProgressiveDisclosure, { useProgressiveDisclosure, SkillLevelGroup } from '@/components/ProgressiveDisclosure'
@@ -14,6 +14,7 @@ import StarterPackModal from '@/components/StarterPackModal'
 import { PhotoAnalysis, AnalysisTone, AnalysisLanguage, PhotoType } from '@/types/analysis'
 import { trackPhotoAnalysis } from '@/lib/gtag'
 import { useAnalysisLimit } from '@/hooks/useAnalysisLimit'
+import { useTranslation } from '@/hooks/useTranslation'
 
 export default function AnalyzePage() {
   const { data: session, status } = useSession()
@@ -29,6 +30,22 @@ export default function AnalyzePage() {
   const [userLevel, setUserLevel] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner')
   const [showAdvancedOptions, setShowAdvancedOptions] = useState(false)
   const [showStarterModal, setShowStarterModal] = useState(false)
+  
+  // Hook de traduction avec détection automatique
+  const { t, language: detectedLanguage, setLanguage } = useTranslation()
+  
+  // Synchroniser la langue détectée avec le state selectedLanguage
+  useEffect(() => {
+    if (detectedLanguage && detectedLanguage !== selectedLanguage) {
+      setSelectedLanguage(detectedLanguage)
+    }
+  }, [detectedLanguage])
+  
+  // Gestionnaire pour changement de langue
+  const handleLanguageChange = (lang: AnalysisLanguage) => {
+    setSelectedLanguage(lang)
+    setLanguage(lang) // Met à jour le système de traduction
+  }
   
   // Tutorial système
   const { isActive: tutorialActive, hasCompleted: tutorialCompleted, startTutorial, completeTutorial } = useTutorial('analyze-page')
@@ -161,9 +178,8 @@ export default function AnalyzePage() {
   return (
     <>
       <Head>
-        <title>Analyser Photo en Ligne Gratuit | Critique Photo IA Professionnelle</title>
-        <meta name="description" content="Analysez gratuitement vos photos avec notre IA experte ! Critique photo instantanée, note sur 100, conseils techniques détaillés. Analyse image intelligence artificielle." />
-        <meta name="keywords" content="analyser photo en ligne, critique photo IA, analyse photo gratuit, intelligence artificielle photo, analyser image IA, améliorer photo conseils, analyse technique photo" />
+        <title>{t.analyze.title} | JudgeMyJPEG</title>
+        <meta name="description" content={t.analyze.subtitle} />
         <link rel="canonical" href="https://www.judgemyjpeg.fr/analyze" />
       </Head>
 
@@ -196,11 +212,11 @@ export default function AnalyzePage() {
             <div className="text-center flex-1">
               <h1 className="text-3xl md:text-4xl font-bold mb-2">
                 <span className="text-transparent bg-gradient-to-r from-neon-pink to-neon-cyan bg-clip-text">
-                  Analyser Photo IA Gratuit
+                  {t.analyze.title}
                 </span>
               </h1>
               <p className="text-base text-text-gray">
-                <span className="text-neon-cyan">Critique photo intelligence artificielle</span> • Conseils experts
+                <span className="text-neon-cyan">{t.analyze.subtitle}</span>
               </p>
             </div>
 
@@ -216,7 +232,7 @@ export default function AnalyzePage() {
 
               {/* Options toujours visibles sur desktop */}
               <div className="hidden md:flex items-center space-x-2">
-                {/* Sélecteur de langue */}
+                {/* Sélecteur de langue compact pour desktop */}
                 <div className="relative" data-tutorial="language-selector">
                   <select
                     value={selectedLanguage}
@@ -274,21 +290,14 @@ export default function AnalyzePage() {
                   </button>
                 </div>
                 
-                {/* Sélecteur de langue mobile */}
+                {/* Sélecteur de langue intelligent mobile */}
                 <div className="mb-4">
-                  <label className="block text-text-white text-sm mb-2">🌍 Langue d'analyse</label>
-                  <select
-                    value={selectedLanguage}
-                    onChange={(e) => setSelectedLanguage(e.target.value as AnalysisLanguage)}
-                    className="w-full bg-cosmic-glass border border-cosmic-glassborder rounded text-text-white p-2"
-                  >
-                    <option value="fr">🇫🇷 Français</option>
-                    <option value="en">🇬🇧 English</option>
-                    <option value="es">🇪🇸 Español</option>
-                    <option value="de">🇩🇪 Deutsch</option>
-                    <option value="it">🇮🇹 Italiano</option>
-                    <option value="pt">🇵🇹 Português</option>
-                  </select>
+                  <SmartLanguageSelector
+                    selectedLanguage={selectedLanguage}
+                    onLanguageChange={handleLanguageChange}
+                    showAutoDetection={true}
+                    autoApply={true}
+                  />
                 </div>
 
                 {/* Bouton tutorial mobile */}
@@ -314,7 +323,7 @@ export default function AnalyzePage() {
                   <div className="glass-card p-6" data-tutorial="tone-selector">
                     <h2 className="text-xl font-bold text-text-white mb-6 flex items-center">
                       <span className="text-neon-pink mr-3">🎭</span>
-                      Mode d'analyse
+                      {t.analyze.selectMode}
                     </h2>
                     
                     <ToneSelector 
@@ -331,7 +340,7 @@ export default function AnalyzePage() {
                   <div className="glass-card p-6 h-full" data-tutorial="photo-upload">
                     <h2 className="text-xl font-bold text-text-white mb-6 flex items-center">
                       <span className="text-neon-cyan mr-3">📸</span>
-                      Votre photo
+                      {t.analyze.uploadPhoto}
                     </h2>
                     
                     <PhotoUpload 

@@ -1,5 +1,6 @@
 import { PhotoAnalysis } from '@/types/analysis'
 import ShareableImageGenerator from '@/components/ShareableImageGenerator'
+import { useTranslation } from '@/hooks/useTranslation'
 
 interface SocialShareProps {
   photo: {
@@ -11,6 +12,7 @@ interface SocialShareProps {
 }
 
 export default function SocialShare({ photo, analysis, tone }: SocialShareProps) {
+  const { t } = useTranslation()
   // Calcul de la viralité basé sur le score et le ton
   const getViralPotential = () => {
     let viralScore = 0
@@ -375,6 +377,30 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
               <span>⚡</span>
               <span>Score: {analysis.score}/100</span>
             </div>
+          </div>
+        </div>
+        
+        {/* Perfect Insta Post Extension Promotion */}
+        <div className="mt-4 p-4 bg-gradient-to-r from-pink-500/10 to-purple-500/10 border border-pink-500/30 rounded-lg">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="text-2xl">🚀</div>
+              <div>
+                <h4 className="text-pink-400 font-semibold text-sm">{t.social.perfectInstaPost}</h4>
+                <p className="text-text-muted text-xs">{t.social.extensionDescription}</p>
+              </div>
+            </div>
+            <a
+              href="https://chrome.google.com/webstore/detail/perfect-insta-post"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-neon-pink text-xs px-3 py-2 whitespace-nowrap"
+            >
+              {t.social.getExtension}
+            </a>
+          </div>
+          <div className="mt-2 text-xs text-text-gray">
+            ✨ {t.social.extensionDescription}
           </div>
         </div>
         

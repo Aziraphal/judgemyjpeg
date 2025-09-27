@@ -97,12 +97,18 @@ export default function SignUpPage() {
               <span className="text-neon-pink font-semibold">{formData.email}</span>
             </p>
             <div className="bg-cosmic-glass/50 border border-cosmic-glassborder rounded-lg p-4 mb-6">
-              <div className="space-y-2 text-sm text-text-muted">
-                <p className="flex items-center justify-center space-x-2">
-                  <span>Vérifiez votre boîte de réception et vos spams</span>
-                </p>
-                <p className="flex items-center justify-center space-x-2">
-                  <span>Le lien expire dans 24 heures</span>
+              <div className="space-y-3 text-sm">
+                <div className="bg-yellow-900/30 border border-yellow-500/50 rounded-lg p-3">
+                  <p className="text-yellow-300 font-semibold flex items-center justify-center space-x-2">
+                    <span>⚠️</span>
+                    <span>Vérifiez vos SPAMS si vous ne voyez pas l'email !</span>
+                  </p>
+                  <p className="text-yellow-200 text-xs mt-1 text-center">
+                    Les emails de vérification arrivent parfois dans les spams
+                  </p>
+                </div>
+                <p className="text-text-muted text-center">
+                  Le lien expire dans 24 heures
                 </p>
               </div>
             </div>
