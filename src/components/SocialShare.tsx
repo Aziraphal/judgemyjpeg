@@ -391,7 +391,7 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
               </div>
             </div>
             <a
-              href="https://chrome.google.com/webstore/detail/perfect-insta-post"
+              href="https://chromewebstore.google.com/detail/perfect-insta-post/lddbiholbceiiajhnapabcomkfdmaeei"
               target="_blank"
               rel="noopener noreferrer"
               className="btn-neon-pink text-xs px-3 py-2 whitespace-nowrap"
