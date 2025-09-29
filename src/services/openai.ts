@@ -234,30 +234,27 @@ Maîtres : Ansel Adams (sublime naturel), Henri Cartier-Bresson (géométrie hum
 CETTE PHOTO A-T-ELLE UNE VALEUR ARTISTIQUE ? JUSTIFIE SELON CRITÈRES CULTURELS.
 ${exifSection}
 RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
-      : `👔 MODE PROFESSIONNEL - ANALYSE TECHNIQUE PRÉCISE
+      : `👨‍🎓 MODE PRO - CONSEILS CONSTRUCTIFS SIMPLIFIÉS
 
-Tu es un PHOTOGRAPHE PROFESSIONNEL avec expertise technique. Analyse cette photo avec PRÉCISION TECHNIQUE et donne des conseils concrets.
+Tu es un COACH PHOTO qui donne des conseils CLAIRS et MOTIVANTS. Analyse cette photo avec PÉDAGOGIE et encourage l'apprentissage.
 ${photoTypeSection}
-🎯 STYLE PROFESSIONNEL REQUIS :
-✅ Utilise un vocabulaire TECHNIQUE précis
-✅ Mentionne les "stops" d'exposition (+1 stop, -2 stops, etc.)
-✅ Analyse composition (règle des tiers, lignes directrices)
-✅ Commente la profondeur de champ et le bokeh
-✅ Donne des conseils Lightroom/Photoshop précis
-✅ Ton constructif mais direct
+🎯 STYLE PRO SIMPLIFIÉ :
+✅ Langage ACCESSIBLE et encourageant
+✅ Maximum 4-5 conseils ESSENTIELS (pas plus)
+✅ FOCUS sur les points qui ont le plus d'impact
+✅ Explique POURQUOI (pédagogie)
+✅ Ton POSITIF et constructif
 
-📸 EXEMPLES de FORMULATIONS OBLIGATOIRES :
-- "L'exposition pourrait être légèrement augmentée"
-- "Excellente composition selon la règle des tiers"
-- "La profondeur de champ est bien maîtrisée"
-- "Le bokeh pourrait être plus doux avec f/2.8"
-- "Ajustez les ombres à +30 dans Lightroom"
+📸 STRUCTURE OBLIGATOIRE (CONCISE) :
+1. BRAVO pour... (1 point fort spécifique)
+2. AMÉLIORE-ça (2-3 conseils max, les plus impactants)
+3. CONSEIL CLÉ (1 conseil prioritaire)
 
-✅ OBLIGATIONS TECHNIQUES :
-✅ Utilise un langage technique accessible mais précis
-✅ Analyse la profondeur de champ et l'ouverture
-✅ Commente la composition avec des règles précises
-✅ Donne des valeurs numériques pour les corrections Lightroom
+✅ OBLIGATIONS SIMPLIFIÉES :
+✅ Maximum 3 phrases par conseil
+✅ PAS de jargon technique lourd
+✅ PRIORISE ce qui améliore vraiment la photo
+✅ TERMINE par une note encourageante
 
 RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
 
@@ -290,7 +287,32 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
          'Sois CONSTRUCTIF et PÉDAGOGIQUE'}
     - Commente ce que tu VOIS vraiment, pas des généralités
     
-    Fournissez une analyse détaillée en JSON avec cette structure exacte :
+    ${tone === 'professional' ? 
+      `Fournissez une analyse SIMPLIFIÉE en JSON (mode Pro allégé) avec cette structure exacte :
+
+    {
+      "partialScores": {
+        "composition": [note de 0 à 15],
+        "lighting": [note de 0 à 15], 
+        "focus": [note de 0 à 15],
+        "exposure": [note de 0 à 15],
+        "creativity": [note de 0 à 15],
+        "emotion": [note de 0 à 15],
+        "storytelling": [note de 0 à 10]
+      },
+      "summary": "BRAVO pour [point fort spécifique]. AMÉLIORE [2-3 conseils essentiels max]. CONSEIL CLÉ : [1 conseil prioritaire]. [Note encourageante finale]",
+      "keyInsights": [
+        "Point fort principal de cette photo",
+        "Amélioration #1 la plus impactante", 
+        "Amélioration #2 prioritaire",
+        "Conseil pour la prochaine photo"
+      ],
+      "socialShare": {
+        "text": "Ma photo analysée par l'IA 📸 Score [X]/100 ! [phrase catchy courte]",
+        "hashtags": ["#PhotoIA", "#JudgeMyJPEG"]
+      }
+    }` :
+      'Fournissez une analyse détaillée en JSON avec cette structure exacte :'}
 
     {
       "partialScores": {
