@@ -75,8 +75,8 @@ export function useAutoLocalization() {
   // Fonction pour détecter via IP géolocalisation (gratuit)
   const detectLocationByIP = async (): Promise<LocationData | null> => {
     try {
-      // Utilise ip-api.com (gratuit, 1000 requêtes/min)
-      const response = await fetch('https://ip-api.com/json/', {
+      // Utilise notre propre API qui peut accéder aux headers Cloudflare
+      const response = await fetch('/api/detect-location', {
         method: 'GET',
         headers: { 'Accept': 'application/json' }
       })
@@ -87,7 +87,7 @@ export function useAutoLocalization() {
           country: data.country,
           countryCode: data.countryCode,
           city: data.city,
-          region: data.regionName
+          region: data.region
         }
       }
     } catch (error) {
