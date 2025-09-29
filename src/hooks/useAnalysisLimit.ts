@@ -87,7 +87,23 @@ export function useAnalysisLimit() {
         })
       }
     } catch (error) {
-      logger.error('Erreur récupération statut analyses:', error)
+      logger.error('Erreur chargement statut analyses:', error)
+      
+      // État par défaut en cas d'erreur
+      setState({
+        canAnalyze: false,
+        monthlyCount: 0,
+        maxMonthly: 3,
+        starterPack: {
+          hasStarterPack: false,
+          purchased: false,
+          analysisCount: 0,
+          sharesCount: 0,
+          exportsCount: 0
+        },
+        isExhausted: true,
+        shouldShowStarterModal: false
+      })
     } finally {
       setLoading(false)
     }
