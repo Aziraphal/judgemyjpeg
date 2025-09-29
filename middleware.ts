@@ -14,7 +14,7 @@ export function middleware(request: NextRequest) {
   response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload')
   response.headers.set('Cross-Origin-Opener-Policy', 'same-origin')
   
-  // CSP forcé car next.config.js ne s'applique pas
+  // CSP forcé car next.config.js ne s'applique pas - FORCE IPAPI.CO
   const csp = [
     "default-src 'self'",
     "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://www.googletagmanager.com https://challenges.cloudflare.com https://*.cloudflare.com",
