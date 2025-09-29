@@ -6,7 +6,7 @@
 import { useEffect, useState } from 'react'
 
 interface AdvancedLoadingAnimationProps {
-  mode: 'roast' | 'artcritic' | 'general'
+  mode: 'roast' | 'learning' | 'general'
   size?: 'sm' | 'md' | 'lg' | 'xl'
 }
 
@@ -93,7 +93,7 @@ export default function AdvancedLoadingAnimation({ mode, size = 'lg' }: Advanced
     )
   }
 
-  if (mode === 'artcritic') {
+  if (mode === 'learning') {
     return (
       <div className={`relative ${getSizeClasses()} mx-auto`}>
         {/* Cadre doré vintage qui se forme */}

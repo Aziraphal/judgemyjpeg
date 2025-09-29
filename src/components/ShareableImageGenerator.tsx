@@ -7,7 +7,7 @@ interface ShareableImageGeneratorProps {
     url: string
   }
   analysis: PhotoAnalysis
-  tone: 'professional' | 'roast' | 'artcritic'
+  tone: 'professional' | 'roast' | 'learning'
 }
 
 export default function ShareableImageGenerator({ photo, analysis, tone }: ShareableImageGeneratorProps) {
@@ -80,8 +80,8 @@ export default function ShareableImageGenerator({ photo, analysis, tone }: Share
 
     // Texte du mode
     ctx.font = 'bold 40px Arial'
-    ctx.fillStyle = tone === 'roast' ? '#FF006E' : tone === 'artcritic' ? '#F59E0B' : '#00FFFF'
-    const modeText = tone === 'roast' ? '🔥 MODE CASSANT' : tone === 'artcritic' ? '🎨 CRITIQUE D\'ART' : '👔 MODE PRO'
+    ctx.fillStyle = tone === 'roast' ? '#FF006E' : tone === 'learning' ? '#F59E0B' : '#00FFFF'
+    const modeText = tone === 'roast' ? '🔥 MODE CASSANT' : tone === 'learning' ? '🎨 CRITIQUE D\'ART' : '👔 MODE PRO'
     ctx.fillText(modeText, canvas.width / 2, 900)
 
     // Citation de l'analyse (tronquée)

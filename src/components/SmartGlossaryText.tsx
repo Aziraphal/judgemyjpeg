@@ -6,7 +6,7 @@ import GlossaryTooltip from './GlossaryTooltip'
 interface SmartGlossaryTextProps {
   text: string
   className?: string
-  mode?: 'professional' | 'artcritic' | 'roast'
+  mode?: 'professional' | 'learning' | 'roast'
 }
 
 export default function SmartGlossaryText({ text, className = '', mode = 'professional' }: SmartGlossaryTextProps) {

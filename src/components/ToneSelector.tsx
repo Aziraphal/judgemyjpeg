@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import * as Popover from '@radix-ui/react-popover'
 
-export type AnalysisTone = 'professional' | 'roast' | 'artcritic'
+export type AnalysisTone = 'professional' | 'roast' | 'learning'
 
 interface ToneSelectorProps {
   selectedTone: AnalysisTone
@@ -29,13 +29,13 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
       color: 'border-neon-pink/50 bg-neon-pink/10',
       selectedColor: 'border-neon-pink bg-neon-pink/20'
     },
-    artcritic: {
-      label: 'Critique d\'Art',
-      icon: '🎨',
-      description: 'Vision artistique et culturelle',
-      tooltip: 'Analyse selon l\'histoire de la photographie, mouvements artistiques et impact émotionnel',
-      color: 'border-amber-400/50 bg-amber-400/10',
-      selectedColor: 'border-amber-400 bg-amber-400/20'
+    learning: {
+      label: 'Mode Apprentissage',
+      icon: '📚',
+      description: 'Formation complète et pédagogique',
+      tooltip: 'Analyse détaillée avec explications du pourquoi, conseils pratiques et exercices pour progresser',
+      color: 'border-green-400/50 bg-green-400/10',
+      selectedColor: 'border-green-400 bg-green-400/20'
     }
   }
 
@@ -163,18 +163,18 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
               </div>
             </div>
 
-            {/* Exemple Critique d'Art */}
-            <div className="glass-card p-4 border border-amber-400/30">
+            {/* Exemple Apprentissage */}
+            <div className="glass-card p-4 border border-green-400/30">
               <div className="flex items-center mb-3">
-                <span className="text-xl mr-2">🎨</span>
-                <span className="text-amber-400 font-semibold">Critique d'Art</span>
+                <span className="text-xl mr-2">📚</span>
+                <span className="text-green-400 font-semibold">Mode Apprentissage</span>
               </div>
               <div className="text-text-gray text-sm space-y-2">
                 <p><strong>Exemple :</strong></p>
                 <p className="italic">
-                  "Cette composition rappelle l'école pictorialiste. 
-                  L'usage de la lumière évoque Rembrandt, créant 
-                  une introspection romantique. Patrimoine visuel riche."
+                  "Excellente composition ! Voici pourquoi : la règle des tiers 
+                  guide l'œil. Pour progresser, essaie f/8 pour plus de netteté. 
+                  Exercice : varie tes angles de vue demain."
                 </p>
               </div>
             </div>

@@ -166,7 +166,7 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
             </div>
             
             {/* Affichage des données EXIF pour le mode Art Critic */}
-            {tone === 'artcritic' && analysis.hasExifData && analysis.exifData && (
+            {tone === 'learning' && analysis.hasExifData && analysis.exifData && (
               <ExifDisplay exifData={analysis.exifData} className="mt-4" />
             )}
           </div>
@@ -223,8 +223,8 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
                 <div>
                   <h5 className="text-sm font-medium text-neon-cyan mb-2">
                     Technique (/60)
-                    {tone === 'artcritic' && <span className="text-xs text-text-muted ml-1">(40% du score final)</span>}
-                    {tone !== 'artcritic' && <span className="text-xs text-text-muted ml-1">(60% du score final)</span>}
+                    {tone === 'learning' && <span className="text-xs text-text-muted ml-1">(40% du score final)</span>}
+                    {tone !== 'learning' && <span className="text-xs text-text-muted ml-1">(60% du score final)</span>}
                   </h5>
                   <div className="space-y-2 text-xs">
                     {(() => {
@@ -265,8 +265,8 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
                 <div>
                   <h5 className="text-sm font-medium text-neon-pink mb-2">
                     Artistique (/40)
-                    {tone === 'artcritic' && <span className="text-xs text-text-muted ml-1">(60% du score final)</span>}
-                    {tone !== 'artcritic' && <span className="text-xs text-text-muted ml-1">(40% du score final)</span>}
+                    {tone === 'learning' && <span className="text-xs text-text-muted ml-1">(60% du score final)</span>}
+                    {tone !== 'learning' && <span className="text-xs text-text-muted ml-1">(40% du score final)</span>}
                   </h5>
                   <div className="space-y-2 text-xs">
                     {(() => {

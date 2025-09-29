@@ -8,7 +8,7 @@ interface SocialShareProps {
     url: string
   }
   analysis: PhotoAnalysis
-  tone: 'professional' | 'roast' | 'artcritic'
+  tone: 'professional' | 'roast' | 'learning'
 }
 
 export default function SocialShare({ photo, analysis, tone }: SocialShareProps) {
@@ -22,7 +22,7 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
     
     // Bonus ton (0-30 points)
     if (tone === 'roast') viralScore += 30  // Le roast est plus viral
-    else if (tone === 'artcritic') viralScore += 15
+    else if (tone === 'learning') viralScore += 15
     else viralScore += 10
     
     // Bonus scores extrêmes (0-30 points)
@@ -91,7 +91,7 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
       // Avec résumé de l'analyse
       if (tone === 'roast') {
         return `${baseText} 🔥\n"${summary}"\nL'IA m'a grillé mais j'ai adoré ! 😂`
-      } else if (tone === 'artcritic') {
+      } else if (tone === 'learning') {
         return `${baseText} 🎨\n"${summary}"\nVision artistique par l'IA ! 🖼️`
       } else {
         return `${baseText} 📸\n"${summary}"\nAnalyse pro par IA !`
@@ -100,7 +100,7 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
       // Fallback si pas d'analyse
       if (tone === 'roast') {
         return `${baseText} 🔥 L'IA m'a grillé mais j'ai adoré ! 😂`
-      } else if (tone === 'artcritic') {
+      } else if (tone === 'learning') {
         return `${baseText} 🎨 Vision artistique par l'IA ! 🖼️`
       } else {
         return `${baseText} 📸 Analyse pro par IA !`
@@ -174,7 +174,7 @@ export default function SocialShare({ photo, analysis, tone }: SocialShareProps)
     // Hashtags par tone spécifique
     if (tone === 'roast') {
       contextHashtags.push('#PhotoFail', '#IAhumour', '#Funny', '#Roasted', '#Fails')
-    } else if (tone === 'artcritic') {
+    } else if (tone === 'learning') {
       contextHashtags.push('#ArtistiquéPhoto', '#CritiqueArt', '#VisionArtistique', '#ArtPhotography')
     } else {
       contextHashtags.push('#PhotoTips', '#Amateur', '#Learning', '#PhotoSkills')

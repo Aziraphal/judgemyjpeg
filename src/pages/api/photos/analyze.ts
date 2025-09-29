@@ -219,7 +219,7 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     const language = Array.isArray(fields.language) ? fields.language[0] : fields.language
     const photoType = Array.isArray(fields.photoType) ? fields.photoType[0] : fields.photoType
     
-    const analysisTone: AnalysisTone = (tone === 'roast' || tone === 'professional' || tone === 'artcritic') ? tone : 'professional'
+    const analysisTone: AnalysisTone = (tone === 'roast' || tone === 'professional' || tone === 'learning') ? tone : 'professional'
     const analysisLanguage: AnalysisLanguage = (['fr', 'en', 'es', 'de', 'it', 'pt'].includes(language as string)) ? language as AnalysisLanguage : 'fr'
     const analysisPhotoType: PhotoType = (['general', 'portrait', 'landscape', 'street', 'macro', 'architecture', 'nature', 'sport', 'night', 'wedding', 'abstract', 'documentary', 'fashion', 'food', 'travel', 'other'].includes(photoType as string)) ? photoType as PhotoType : 'general'
 

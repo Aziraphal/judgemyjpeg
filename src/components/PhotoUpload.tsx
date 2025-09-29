@@ -171,7 +171,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
       
       // Extraire les données EXIF pour le mode Art Critic
       let exifData: ExifData | null = null
-      if (tone === 'artcritic') {
+      if (tone === 'learning') {
         try {
           exifData = await extractExifData(processedFile)
         } catch (exifError) {
@@ -438,19 +438,19 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
             <div className="space-y-2">
               <p className={`text-xl sm:text-2xl font-bold text-glow ${
                 tone === 'roast' ? 'text-red-400' : 
-                tone === 'artcritic' ? 'text-amber-400' : 'text-neon-cyan'
+                tone === 'learning' ? 'text-amber-400' : 'text-neon-cyan'
               }`}>
                 <span aria-hidden="true">{
                   tone === 'roast' ? '🔥 ' : 
-                  tone === 'artcritic' ? '🎨 ' : '🚀 '
+                  tone === 'learning' ? '🎨 ' : '🚀 '
                 }</span>
                 {tone === 'roast' ? 'Analyse critique en cours...' : 
-                 tone === 'artcritic' ? 'Critique d\'art en cours...' : 'Analyse IA en cours...'}
+                 tone === 'learning' ? 'Critique d\'art en cours...' : 'Analyse IA en cours...'}
               </p>
               <p className="text-sm sm:text-base text-text-gray">
                 {tone === 'roast' 
                   ? 'L\'IA prépare une critique sans concession'
-                  : tone === 'artcritic'
+                  : tone === 'learning'
                   ? 'Vision artistique et culturelle...' 
                   : 'GPT-4 Vision analyse votre photo avec précision'
                 }
@@ -464,12 +464,12 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
                 <div className="text-center space-y-2">
                   <h3 className="text-lg font-bold text-glow">
                     {tone === 'roast' ? '🔥 Préparation du châtiment' : 
-                     tone === 'artcritic' ? '🎨 Vision artistique' : '⚡ Analyse en cours'}
+                     tone === 'learning' ? '🎨 Vision artistique' : '⚡ Analyse en cours'}
                   </h3>
                   <p className="text-sm text-text-muted">
                     {tone === 'roast' 
                       ? "L'IA prépare une critique sans concession..." 
-                      : tone === 'artcritic'
+                      : tone === 'learning'
                       ? "Analyse selon l'histoire de l'art photographique..."
                       : "L'IA examine chaque détail de votre photo..."
                     }
@@ -478,7 +478,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
 
                 {/* Animation SPECTACULAIRE selon le tone */}
                 <AdvancedLoadingAnimation 
-                  mode={tone === 'professional' ? 'general' : tone === 'roast' ? 'roast' : tone === 'artcritic' ? 'artcritic' : 'general'} 
+                  mode={tone === 'professional' ? 'general' : tone === 'roast' ? 'roast' : tone === 'learning' ? 'learning' : 'general'} 
                   size="xl"
                 />
               </div>
