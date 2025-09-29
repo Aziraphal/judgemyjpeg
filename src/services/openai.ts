@@ -300,17 +300,13 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
         "emotion": [note de 0 à 15],
         "storytelling": [note de 0 à 10]
       },
-      "summary": "BRAVO pour [point fort spécifique]. AMÉLIORE [2-3 conseils essentiels max]. CONSEIL CLÉ : [1 conseil prioritaire]. [Note encourageante finale]",
+      "summary": "Bravo pour [point fort spécifique]. Améliore [2-3 conseils essentiels max]. CONSEIL CLÉ : [1 conseil prioritaire]. [Note encourageante finale]",
       "keyInsights": [
         "Point fort principal de cette photo",
         "Amélioration #1 la plus impactante", 
         "Amélioration #2 prioritaire",
         "Conseil pour la prochaine photo"
-      ],
-      "socialShare": {
-        "text": "Ma photo analysée par l'IA 📸 Score [X]/100 ! [phrase catchy courte]",
-        "hashtags": ["#PhotoIA", "#JudgeMyJPEG"]
-      }
+      ]
     }` :
       'Fournissez une analyse détaillée en JSON avec cette structure exacte :'}
 

@@ -800,6 +800,76 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
         </>
       )}
 
+      {/* Bloc partage dédié pour mode Pro simplifié */}
+      {analysis.summary && analysis.keyInsights && (
+        <div className="glass-card p-6 hover-glow mt-8">
+          <div className="text-center">
+            <h3 className="text-xl font-bold text-text-white mb-4 flex items-center justify-center">
+              <span className="text-2xl mr-3">🔥</span>
+              <span className="text-neon-pink">Fier de ton score ? Partage-le !</span>
+            </h3>
+            
+            <div className="flex flex-wrap justify-center items-center gap-4">
+              {/* Boutons réseaux sociaux */}
+              <button
+                onClick={() => {
+                  const text = `Ma photo analysée par l'IA 📸 Score ${analysis.score}/100 ! #PhotoIA #JudgeMyJPEG`;
+                  const url = window.location.href;
+                  window.open(`https://www.instagram.com/create/story/?${new URLSearchParams({ text, url })}`, '_blank');
+                }}
+                className="btn-gradient-neon px-4 py-2 rounded-lg font-medium flex items-center space-x-2 hover:scale-105 transition-transform"
+              >
+                <span>📸</span>
+                <span>Insta</span>
+              </button>
+              
+              <button
+                onClick={() => {
+                  const text = `Ma photo analysée par l'IA 📸 Score ${analysis.score}/100 ! #PhotoIA #JudgeMyJPEG`;
+                  const url = window.location.href;
+                  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+                }}
+                className="btn-gradient-neon px-4 py-2 rounded-lg font-medium flex items-center space-x-2 hover:scale-105 transition-transform"
+              >
+                <span>🐦</span>
+                <span>X/Twitter</span>
+              </button>
+              
+              <button
+                onClick={() => {
+                  const text = `Ma photo analysée par l'IA 📸 Score ${analysis.score}/100 ! Découvre JudgeMyJPEG : ${window.location.origin}`;
+                  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+                }}
+                className="btn-gradient-neon px-4 py-2 rounded-lg font-medium flex items-center space-x-2 hover:scale-105 transition-transform"
+              >
+                <span>💬</span>
+                <span>WhatsApp</span>
+              </button>
+              
+              <button
+                onClick={() => {
+                  // Ouvrir l'extension Perfect Insta Post ou fallback
+                  const text = `Score ${analysis.score}/100 📸 Analysé par l'IA ! #PhotoIA #JudgeMyJPEG`;
+                  navigator.clipboard?.writeText(text).then(() => {
+                    alert('Texte copié ! 📋 Parfait pour tes stories Instagram ✨');
+                  }).catch(() => {
+                    alert('Extension Perfect Insta Post recommandée pour un partage optimisé ! ✨');
+                  });
+                }}
+                className="btn-gradient-pink px-4 py-2 rounded-lg font-medium flex items-center space-x-2 hover:scale-105 transition-transform border border-neon-pink/50"
+              >
+                <span>✨</span>
+                <span>Perfect Insta Post</span>
+              </button>
+            </div>
+            
+            <p className="text-text-muted text-sm mt-4">
+              Inspire tes amis avec tes progrès en photo ! 📈
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Disclaimer artistique */}
       <div className="mt-8 p-4 bg-cosmic-glass/30 rounded-lg border border-neon-cyan/20">
         <div className="flex items-start space-x-3 text-sm text-text-muted">
