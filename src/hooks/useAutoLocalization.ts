@@ -75,8 +75,8 @@ export function useAutoLocalization() {
   // Fonction pour détecter via IP géolocalisation (gratuit)
   const detectLocationByIP = async (): Promise<LocationData | null> => {
     try {
-      // Utilise ipapi.co (gratuit, 1000 requêtes/jour)
-      const response = await fetch('https://ipapi.co/json/', {
+      // Utilise ip-api.com (gratuit, 1000 requêtes/min)
+      const response = await fetch('https://ip-api.com/json/', {
         method: 'GET',
         headers: { 'Accept': 'application/json' }
       })
@@ -84,10 +84,10 @@ export function useAutoLocalization() {
       if (response.ok) {
         const data = await response.json()
         return {
-          country: data.country_name,
-          countryCode: data.country,
+          country: data.country,
+          countryCode: data.countryCode,
           city: data.city,
-          region: data.region
+          region: data.regionName
         }
       }
     } catch (error) {

@@ -130,13 +130,13 @@ export async function getLocationFromIP(ip: string): Promise<LocationInfo> {
     }
   }
 
-  // Service gratuit ipapi.co (limité à 1000 requests/jour)
+  // Service gratuit ip-api.com (limité à 1000 requests/min)
   // En production, utiliser un service payant ou MaxMind
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), 5000)
   
   try {
-    const response = await fetch(`https://ipapi.co/${ip}/json/`, {
+    const response = await fetch(`https://ip-api.com/json/${ip}`, {
       headers: {
         'User-Agent': 'JudgeMyJPEG/1.0'
       },
