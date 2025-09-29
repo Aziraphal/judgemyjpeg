@@ -96,118 +96,64 @@ export default function AdvancedLoadingAnimation({ mode, size = 'lg' }: Advanced
   if (mode === 'learning') {
     return (
       <div className={`relative ${getSizeClasses()} mx-auto`}>
-        {/* Cadre doré vintage qui se forme */}
-        <div className="absolute inset-0 overflow-hidden">
-          <svg className="w-full h-full" viewBox="0 0 128 128">
-            <defs>
-              <linearGradient id="goldFrame" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="rgb(251, 191, 36)" stopOpacity="0.9"/>
-                <stop offset="50%" stopColor="rgb(245, 158, 11)" stopOpacity="1"/>
-                <stop offset="100%" stopColor="rgb(217, 119, 6)" stopOpacity="0.9"/>
-              </linearGradient>
-              <linearGradient id="goldFrame2" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="rgb(217, 119, 6)" stopOpacity="0.8"/>
-                <stop offset="100%" stopColor="rgb(146, 64, 14)" stopOpacity="0.9"/>
-              </linearGradient>
-            </defs>
-            
-            {/* Cadre extérieur qui se dessine progressivement */}
-            <rect x="8" y="8" width="112" height="112" fill="none" stroke="url(#goldFrame)" strokeWidth="4" rx="2" className="animate-pulse">
-              <animate attributeName="stroke-dasharray" values="0,400;200,200;400,0;400,0" dur="3s" repeatCount="indefinite"/>
-            </rect>
-            
-            {/* Cadre intérieur décoratif */}
-            <rect x="16" y="16" width="96" height="96" fill="none" stroke="url(#goldFrame2)" strokeWidth="2" rx="1" className="animate-pulse" style={{animationDelay: '0.5s'}}>
-              <animate attributeName="stroke-dasharray" values="0,350;175,175;350,0;350,0" dur="2.5s" repeatCount="indefinite"/>
-            </rect>
-            
-            {/* Ornements de coins */}
-            <circle cx="20" cy="20" r="3" fill="url(#goldFrame)" className="animate-pulse" style={{animationDelay: '1s'}}/>
-            <circle cx="108" cy="20" r="3" fill="url(#goldFrame)" className="animate-pulse" style={{animationDelay: '1.2s'}}/>
-            <circle cx="20" cy="108" r="3" fill="url(#goldFrame)" className="animate-pulse" style={{animationDelay: '1.4s'}}/>
-            <circle cx="108" cy="108" r="3" fill="url(#goldFrame)" className="animate-pulse" style={{animationDelay: '1.6s'}}/>
-          </svg>
+        {/* Cercles concentriques doux pour l'apprentissage */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 border-2 border-green-400/30 rounded-full animate-ping" style={{animationDuration: '3s'}} />
+          <div className="absolute inset-6 border border-green-300/40 rounded-full animate-ping" style={{animationDuration: '2.5s', animationDelay: '0.7s'}} />
         </div>
 
-        {/* Étoiles scintillantes autour du cadre */}
+        {/* Points éducatifs simplifiés qui pulsent doucement */}
         <div className="absolute inset-0">
-          {[...Array(6)].map((_, i) => (
+          {[...Array(3)].map((_, i) => (
             <div
               key={i}
-              className="absolute text-yellow-400 animate-pulse"
+              className="absolute w-1.5 h-1.5 bg-green-400/70 rounded-full animate-pulse"
               style={{
-                left: `${15 + (i % 3) * 35}%`,
-                top: `${10 + Math.floor(i / 3) * 80}%`,
-                animationDelay: `${i * 0.4}s`,
-                animationDuration: '1.8s',
-                fontSize: i % 2 === 0 ? '12px' : '8px'
+                left: `${30 + (i * 20)}%`,
+                top: `${30 + (i % 2) * 40}%`,
+                animationDelay: `${i * 0.8}s`,
+                animationDuration: '2.5s'
               }}
-            >
-              ✨
-            </div>
+            />
           ))}
         </div>
         
-        {/* Tableau central avec effet de mise en valeur */}
+        {/* Livre central avec effet pédagogique */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="relative">
-            {/* Fond de tableau vintage */}
+            {/* Icône principale - livre */}
             <div 
-              className="absolute inset-0 bg-gradient-to-br from-amber-100/20 to-yellow-200/30 rounded border border-amber-300/40 animate-pulse"
-              style={{
-                width: '80px',
-                height: '80px',
-                margin: '-40px 0 0 -40px',
-                animationDuration: '3s'
-              }}
-            />
-            
-            {/* Icône principale - palette d'artiste */}
-            <div 
-              className={`${getMainIconSize()} text-amber-400 filter drop-shadow-2xl animate-bounce z-20`}
+              className={`${getMainIconSize()} text-green-400 filter drop-shadow-lg animate-bounce z-20`}
               style={{
                 animationDuration: '2s',
-                filter: 'drop-shadow(0 0 25px rgba(251, 191, 36, 0.8))'
+                filter: 'drop-shadow(0 0 20px rgba(34, 197, 94, 0.6))'
               }}
-            >🖼️</div>
+            >📚</div>
             
-            {/* Accessoires artistiques qui gravitent */}
+            {/* Éléments éducatifs simplifiés */}
             <div 
-              className="absolute -top-6 -left-4 text-2xl text-yellow-500 animate-spin z-10" 
+              className="absolute -top-4 -left-3 text-sm text-blue-400/80 animate-pulse z-10" 
               style={{
-                animationDuration: '6s',
-                filter: 'drop-shadow(0 0 12px rgba(245, 158, 11, 0.7))'
+                animationDuration: '3s',
+                animationDelay: '0.5s'
               }}
-            >🎨</div>
-            
-            <div 
-              className="absolute -bottom-4 -right-6 text-xl text-amber-600 animate-bounce z-10" 
-              style={{
-                animationDuration: '1.5s',
-                animationDelay: '0.3s',
-                filter: 'drop-shadow(0 0 10px rgba(217, 119, 6, 0.6))'
-              }}
-            >🖌️</div>
+            >💡</div>
             
             <div 
-              className="absolute top-2 -right-8 text-lg text-yellow-400 animate-pulse z-10" 
+              className="absolute -bottom-3 -right-4 text-sm text-green-500/80 animate-pulse z-10" 
               style={{
-                animationDuration: '2.2s',
-                animationDelay: '0.8s'
+                animationDuration: '3.5s',
+                animationDelay: '1.2s'
               }}
-            >🏛️</div>
+            >✏️</div>
             
-            {/* Lumière de galerie */}
-            <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
-              <div 
-                className="w-12 h-1 bg-gradient-to-r from-transparent via-yellow-200 to-transparent animate-pulse opacity-60" 
-                style={{animationDuration: '2.5s'}}
-              />
-              <div 
-                className="w-8 h-0.5 bg-gradient-to-r from-transparent via-amber-300 to-transparent animate-pulse opacity-80 mt-1" 
-                style={{animationDuration: '2s', animationDelay: '0.5s'}}
-              />
-            </div>
+            <div 
+              className="absolute top-1 -right-5 text-sm text-purple-400/80 animate-pulse z-10" 
+              style={{
+                animationDuration: '3.2s',
+                animationDelay: '1.8s'
+              }}
+            >🎓</div>
           </div>
         </div>
       </div>
