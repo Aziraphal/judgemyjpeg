@@ -420,14 +420,51 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
         </div>
       </div>
 
-      {/* Analyse Technique */}
+      {/* Version simplifiée (Mode Pro) */}
+      {analysis.summary && analysis.keyInsights ? (
+        <>
+          {/* Résumé principal */}
+          <div className="glass-card p-4 sm:p-8 hover-glow">
+            <h3 className="text-xl sm:text-2xl font-bold text-text-white mb-4 sm:mb-6 flex items-center">
+              <span className="text-2xl sm:text-3xl mr-2 sm:mr-3">🎯</span>
+              <span className="text-neon-cyan">Analyse</span>
+            </h3>
+            <div className="text-text-gray leading-relaxed text-sm sm:text-base">
+              <SmartGlossaryText text={analysis.summary} tone={tone} />
+            </div>
+          </div>
+
+          {/* Points clés */}
+          <div className="glass-card p-4 sm:p-8 hover-glow">
+            <h3 className="text-xl sm:text-2xl font-bold text-text-white mb-4 sm:mb-6 flex items-center">
+              <span className="text-2xl sm:text-3xl mr-2 sm:mr-3">📌</span>
+              <span className="text-neon-pink">Points Clés</span>
+            </h3>
+            <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+              {analysis.keyInsights.map((insight, index) => (
+                <div key={index} className="glass-card p-4 sm:p-6 hover:bg-cosmic-glassborder transition-all duration-300">
+                  <div className="flex items-start space-x-3">
+                    <span className="w-2 h-2 bg-neon-cyan rounded-full mt-2 flex-shrink-0"></span>
+                    <p className="text-text-gray leading-relaxed text-sm sm:text-base">
+                      <SmartGlossaryText text={insight} tone={tone} />
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          {/* Version complète (Mode Expert) */}
+          {/* Analyse Technique */}
       <div className="glass-card p-4 sm:p-8 hover-glow">
         <h3 className="text-xl sm:text-2xl font-bold text-text-white mb-4 sm:mb-6 flex items-center">
           <span className="text-2xl sm:text-3xl mr-2 sm:mr-3">🔧</span>
           <span className="text-neon-cyan">Analyse Technique</span>
         </h3>
         <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
-          {Object.entries(analysis.technical).map(([key, value]) => (
+          {analysis.technical && Object.entries(analysis.technical).map(([key, value]) => (
             <div key={key} className="glass-card p-4 sm:p-6 hover:bg-cosmic-glassborder transition-all duration-300">
               <h4 className="font-bold text-text-white mb-2 sm:mb-3 text-sm sm:text-base capitalize flex items-center">
                 <span className="w-2 h-2 bg-neon-pink rounded-full mr-2"></span>
@@ -448,7 +485,7 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
           <span className="text-neon-pink">Analyse Artistique</span>
         </h3>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {Object.entries(analysis.artistic).map(([key, value]) => (
+          {analysis.artistic && Object.entries(analysis.artistic).map(([key, value]) => (
             <div key={key} className="glass-card p-4 sm:p-6 hover:bg-cosmic-glassborder transition-all duration-300">
               <h4 className="font-bold text-text-white mb-2 sm:mb-3 text-sm sm:text-base capitalize flex items-center">
                 <span className="w-2 h-2 bg-neon-cyan rounded-full mr-2"></span>
@@ -758,6 +795,9 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
             Testez une autre photo pour comparer vos résultats
           </p>
         </div>
+      )}
+
+        </>
       )}
 
       {/* Disclaimer artistique */}

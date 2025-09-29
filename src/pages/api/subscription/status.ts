@@ -30,15 +30,25 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     const isPremium = subscription && (subscription.subscriptionStatus === 'premium' || subscription.subscriptionStatus === 'annual')
 
     res.status(200).json({
-      ...subscription,
-      isPremium: isPremium || false
+      ...(subscription || {}),
+      isPremium: isPremium || false,
+      canAnalyze: subscription?.canAnalyze || false,
+      monthlyAnalysisCount: subscription?.monthlyAnalysisCount || 0,
+      maxMonthlyAnalyses: subscription?.maxMonthlyAnalyses || 3,
+      subscriptionStatus: subscription?.subscriptionStatus || 'free'
     })
 
   } catch (error) {
     logger.error('Subscription status failed', error, req.user.id, ip)
     res.status(500).json({ 
       error: 'Erreur lors de la récupération du statut',
-      details: error instanceof Error ? error.message : 'Erreur inconnue'
+      details: error instanceof Error ? error.message : 'Erreur inconnue',
+      // Valeurs par défaut pour éviter les erreurs client
+      canAnalyze: false,
+      monthlyAnalysisCount: 0,
+      maxMonthlyAnalyses: 3,
+      subscriptionStatus: 'free',
+      isPremium: false
     })
   }
 })

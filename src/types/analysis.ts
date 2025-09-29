@@ -227,13 +227,13 @@ export interface PhotoAnalysis {
     emotion: number
     storytelling: number
   }
-  technical: {
+  technical?: {
     composition: string
     lighting: string
     focus: string
     exposure: string
   }
-  artistic: {
+  artistic?: {
     creativity: string
     emotion: string
     storytelling: string
@@ -282,5 +282,12 @@ export interface PhotoAnalysis {
     timestamp: string
     userId?: string
     sessionId?: string
+  }
+  // NOUVELLES PROPRIÉTÉS MODE PRO SIMPLIFIÉ
+  summary?: string
+  keyInsights?: string[]
+  socialShare?: {
+    text: string
+    hashtags: string[]
   }
 }
