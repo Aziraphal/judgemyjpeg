@@ -499,7 +499,8 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
       </div>
 
 
-      {/* Conseils d'amélioration */}
+      {/* Conseils d'amélioration - Masqué en mode Roast */}
+      {tone !== 'roast' && (
       <div className="glass-card p-4 sm:p-8 hover-glow">
         <h3 className="text-xl sm:text-2xl font-bold text-text-white mb-4 sm:mb-6 flex items-center">
           <span className="text-2xl sm:text-3xl mr-2 sm:mr-3">💡</span>
@@ -577,10 +578,10 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
           </div>
         )}
       </div>
+      )}
 
-
-      {/* Conseils de retouche précis */}
-      {analysis.toolRecommendations && (
+      {/* Conseils de retouche précis - Masqué en mode Roast */}
+      {tone !== 'roast' && analysis.toolRecommendations && (
         <div className="glass-card p-4 sm:p-8 hover-glow">
           <h3 className="text-xl sm:text-2xl font-bold text-text-white mb-4 sm:mb-6 flex items-center">
             <span className="text-2xl sm:text-3xl mr-2 sm:mr-3">🎨</span>
