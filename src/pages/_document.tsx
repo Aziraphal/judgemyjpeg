@@ -4,13 +4,11 @@ export default function Document() {
   return (
     <Html lang="fr">
       <Head>
-        {/* CSP désactivé - Géré par next.config.js uniquement */}
-        {/*
-        <meta 
-          httpEquiv="Content-Security-Policy" 
-          content="..."
+        {/* CSP forcé dans HTML - Bypass Railway */}
+        <meta
+          httpEquiv="Content-Security-Policy"
+          content="default-src 'self'; connect-src 'self' https://ipapi.co https://api.stripe.com https://api.openai.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://*.google-analytics.com; img-src 'self' data: blob: https://res.cloudinary.com https://lh3.googleusercontent.com; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://www.googletagmanager.com https://challenges.cloudflare.com https://*.cloudflare.com; font-src 'self' data:; frame-src https://js.stripe.com https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'; block-all-mixed-content"
         />
-        */}
         
         {/* Favicons - Optimisés avec RealFaviconGenerator */}
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
