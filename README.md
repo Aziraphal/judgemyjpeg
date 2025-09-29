@@ -4,7 +4,7 @@
 
 ![JudgeMyJPEG Logo](https://res.cloudinary.com/judgemyjpeg/image/upload/v1729082345/logo-cosmic.png)
 
-**SaaS d'analyse photo par IA — 3 personnalités (Roast/Pro/Expert) — Freemium & multilingue**
+**SaaS d'analyse photo par IA — 3 personnalités (Roast/Professional/Learning) — Freemium & multilingue**
 
 > 🚀 **Production-ready** • 📊 **Analytics intégrées** • 🛡️ **RGPD compliant** • 💳 **Stripe payments**
 
@@ -32,8 +32,8 @@
 | Mode | Description | Exemple |
 |------|-------------|---------|
 | 🔥 **Roast** | Critiques hilarantes et créatives | *"Cette exposition ressemble à un vampire qui a peur de la lumière..."* |
-| 👨‍🎓 **Pro** | Conseils techniques constructifs | *"Ajustez les ombres à +30 dans Lightroom pour plus de détails"* |
-| ⚡ **Expert** | Analyse ultra-technique professionnelle | *"Compression spatiale d'un 85mm à f/1.4, falloff naturel, zone système VII-VIII"* |
+| 👨‍🎓 **Professional** | Conseils techniques constructifs pour photographes | *"Ajustez les ombres à +30 dans Lightroom pour plus de détails"* |
+| 📚 **Learning** | Analyse pédagogique avec apprentissage progressif | *"Commençons par la composition : remarquez comment la règle des tiers guide le regard..."* |
 
 ---
 
@@ -228,7 +228,7 @@ npm run load-test    # Test de charge avec autocannon
 
 ### **✅ Implémenté**
 
-- [x] 3 modes d'analyse IA (Roast/Pro/Expert)
+- [x] 3 modes d'analyse IA (Roast/Professional/Learning)
 - [x] Support multilingue (6 langues)
 - [x] Types de photographie spécialisés
 - [x] Collections personnalisées
@@ -414,7 +414,7 @@ Tous droits réservés.
 ### **🎯 Unique Value Proposition**
 
 1. **Personnalités IA distinctes** - Seul service avec mode "Roast" créatif
-2. **Analyse technique poussée** - Mode Expert avec vocabulaire professionnel
+2. **Analyse pédagogique avancée** - Mode Learning pour progression continue
 3. **Design gaming unique** - Aesthetic cyber/cosmic dans un marché terne
 4. **Prix accessibles** - 10x moins cher que la concurrence premium
 5. **Innovation constante** - Features uniques (partage social, collections)

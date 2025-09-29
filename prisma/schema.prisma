@@ -74,6 +74,8 @@ model User {
   sessions             Session[]
   userPreferences      UserPreferences?
   userSessions         UserSession[]
+  apiKeys              ApiKey[]
+  apiUsages            ApiUsage[]
 
   @@index([subscriptionStatus])
   @@index([createdAt])
@@ -265,4 +267,47 @@ model Feedback {
   @@index([type, createdAt])
   @@index([status, createdAt])
   @@index([rating, createdAt])
+}
+
+model ApiKey {
+  id                        String     @id @default(cuid())
+  userId                    String
+  name                      String     // Nom descriptif de la clé
+  key                       String     @unique
+  isActive                  Boolean    @default(true)
+  rateLimit                 Int        @default(100) // Requêtes par heure
+  creditsRemaining          Int        @default(1000)
+  totalCreditsAllocated     Int        @default(1000)
+  stripeSubscriptionItemId  String?    // Pour metered billing Stripe
+  lastUsedAt                DateTime?
+  createdAt                 DateTime   @default(now())
+  expiresAt                 DateTime?
+  user                      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  usages                    ApiUsage[]
+
+  @@index([userId])
+  @@index([key])
+  @@index([isActive])
+}
+
+model ApiUsage {
+  id            String    @id @default(cuid())
+  apiKeyId      String
+  userId        String
+  endpoint      String    // Ex: /api/v1/analyze
+  creditsUsed   Int       @default(1)
+  requestData   Json?     // Métadonnées de la requête
+  responseTime  Int?      // Temps de réponse en ms
+  success       Boolean   @default(true)
+  errorMessage  String?
+  ipAddress     String?
+  userAgent     String?
+  timestamp     DateTime  @default(now())
+  apiKey        ApiKey    @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([apiKeyId, timestamp])
+  @@index([userId, timestamp])
+  @@index([endpoint, timestamp])
+  @@index([success])
 }
