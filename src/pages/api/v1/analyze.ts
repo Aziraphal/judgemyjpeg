@@ -7,9 +7,10 @@
  */
 import { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/lib/prisma'
-import { analyzePhotoWithAI } from '@/services/openai'
+import { analyzePhoto } from '@/services/openai'
 import { logger } from '@/lib/logger'
 import crypto from 'crypto'
+import { AnalysisLanguage, AnalysisTone, PhotoType } from '@/types/analysis'
 
 // Rate limiting par API key (Redis recommended pour production)
 const rateLimiter = new Map<string, { count: number; resetAt: number }>()
@@ -112,12 +113,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // 7. Analyser avec OpenAI
     const startTime = Date.now()
-    const analysis = await analyzePhotoWithAI({
-      imageBase64: imageData,
-      tone,
-      language,
-      photoType
-    })
+    const analysis = await analyzePhoto(
+      imageData,                      // imageBase64
+      tone as AnalysisTone,           // tone
+      language as AnalysisLanguage,   // language
+      null,                           // exifData
+      photoType as PhotoType,         // photoType
+      apiKeyRecord.userId             // userId
+    )
     const processingTime = Date.now() - startTime
 
     // 8. Enregistrer usage pour billing

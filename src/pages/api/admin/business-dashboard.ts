@@ -66,25 +66,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       prisma.photo.groupBy({
         by: ['photoType'],
         where: {
-          createdAt: { gte: startDate },
-          photoType: { not: null }
+          createdAt: { gte: startDate }
         },
         _count: true,
         orderBy: { _count: { photoType: 'desc' } },
         take: 5
-      }),
+      }).then(results => results.filter(r => r.photoType !== null)),
 
       // Top langues utilisées
       prisma.photo.groupBy({
-        by: ['language'],
+        by: ['analysisLanguage'],
         where: {
-          createdAt: { gte: startDate },
-          language: { not: null }
+          createdAt: { gte: startDate }
         },
         _count: true,
-        orderBy: { _count: { language: 'desc' } },
+        orderBy: { _count: { analysisLanguage: 'desc' } },
         take: 5
-      }),
+      }).then(results => results.filter(r => r.analysisLanguage !== null)),
 
       // Revenue metrics
       getRevenueMetrics(startDate),
@@ -125,17 +123,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Modes d'analyse popularité
     const tonePriority = { roast: 0, professional: 1, learning: 2 }
     const toneDistribution = await prisma.photo.groupBy({
-      by: ['tone'],
+      by: ['analysisTone'],
       where: {
-        createdAt: { gte: startDate },
-        tone: { not: null }
+        createdAt: { gte: startDate }
       },
       _count: true,
-      orderBy: { _count: { tone: 'desc' } }
+      orderBy: { _count: { analysisTone: 'desc' } }
     }).then(results =>
-      results.sort((a, b) => {
-        const priorityA = tonePriority[a.tone as keyof typeof tonePriority] ?? 999
-        const priorityB = tonePriority[b.tone as keyof typeof tonePriority] ?? 999
+      results.filter(r => r.analysisTone !== null).sort((a, b) => {
+        const priorityA = tonePriority[a.analysisTone as keyof typeof tonePriority] ?? 999
+        const priorityB = tonePriority[b.analysisTone as keyof typeof tonePriority] ?? 999
         return priorityA - priorityB
       })
     )
@@ -168,7 +165,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       analytics: {
         scoreDistribution,
         toneDistribution: toneDistribution.map(t => ({
-          tone: t.tone,
+          tone: t.analysisTone,
           count: t._count,
           percentage: ((t._count / analysesCount) * 100).toFixed(1) + '%'
         })),
@@ -177,7 +174,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           count: pt._count
         })),
         topLanguages: topLanguages.map(l => ({
-          language: l.language,
+          language: l.analysisLanguage,
           count: l._count
         }))
       },
