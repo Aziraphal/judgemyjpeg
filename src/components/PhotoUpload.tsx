@@ -438,20 +438,20 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
             <div className="space-y-2">
               <p className={`text-xl sm:text-2xl font-bold text-glow ${
                 tone === 'roast' ? 'text-red-400' : 
-                tone === 'learning' ? 'text-amber-400' : 'text-neon-cyan'
+                tone === 'learning' ? 'text-green-400' : 'text-neon-cyan'
               }`}>
                 <span aria-hidden="true">{
                   tone === 'roast' ? '🔥 ' : 
-                  tone === 'learning' ? '🎨 ' : '🚀 '
+                  tone === 'learning' ? '📚 ' : '🚀 '
                 }</span>
                 {tone === 'roast' ? 'Analyse critique en cours...' : 
-                 tone === 'learning' ? 'Critique d\'art en cours...' : 'Analyse IA en cours...'}
+                 tone === 'learning' ? 'Formation pédagogique en cours...' : 'Analyse IA en cours...'}
               </p>
               <p className="text-sm sm:text-base text-text-gray">
                 {tone === 'roast' 
                   ? 'L\'IA prépare une critique sans concession'
                   : tone === 'learning'
-                  ? 'Vision artistique et culturelle...' 
+                  ? 'Apprentissage avec explications détaillées...' 
                   : 'GPT-4 Vision analyse votre photo avec précision'
                 }
               </p>
