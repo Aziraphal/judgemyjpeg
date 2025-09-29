@@ -430,7 +430,7 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
               <span className="text-neon-cyan">Analyse</span>
             </h3>
             <div className="text-text-gray leading-relaxed text-sm sm:text-base">
-              <SmartGlossaryText text={analysis.summary} tone={tone} />
+              <SmartGlossaryText text={analysis.summary} mode={tone} />
             </div>
           </div>
 
@@ -446,7 +446,7 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
                   <div className="flex items-start space-x-3">
                     <span className="w-2 h-2 bg-neon-cyan rounded-full mt-2 flex-shrink-0"></span>
                     <p className="text-text-gray leading-relaxed text-sm sm:text-base">
-                      <SmartGlossaryText text={insight} tone={tone} />
+                      <SmartGlossaryText text={insight} mode={tone} />
                     </p>
                   </div>
                 </div>

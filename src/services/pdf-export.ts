@@ -231,7 +231,7 @@ export class PDFExporter {
     // Analyse technique
     this.addSubTitle('Analyse Technique')
     
-    Object.entries(photo.analysis.technical).forEach(([key, value]) => {
+    Object.entries(photo.analysis.technical || {}).forEach(([key, value]) => {
       const title = key === 'composition' ? 'Composition' :
                     key === 'lighting' ? 'Éclairage' :
                     key === 'focus' ? 'Mise au point' : 'Exposition'
@@ -249,7 +249,7 @@ export class PDFExporter {
     // Analyse artistique
     this.addSubTitle('Analyse Artistique')
     
-    Object.entries(photo.analysis.artistic).forEach(([key, value]) => {
+    Object.entries(photo.analysis.artistic || {}).forEach(([key, value]) => {
       const title = key === 'creativity' ? 'Créativité' :
                     key === 'emotion' ? 'Émotion' : 'Narration'
       

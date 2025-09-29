@@ -77,20 +77,20 @@ export class InstagramGenerator {
     const technical = analysis.technical
     
     // Simple heuristics based on analysis content
-    if (artistic.emotion.toLowerCase().includes('portrait') || 
-        technical.composition.toLowerCase().includes('portrait')) {
+    if (artistic?.emotion?.toLowerCase().includes('portrait') || 
+        technical?.composition?.toLowerCase().includes('portrait')) {
       return 'portrait'
     }
-    if (artistic.creativity.toLowerCase().includes('paysage') ||
-        technical.composition.toLowerCase().includes('paysage')) {
+    if (artistic?.creativity?.toLowerCase().includes('paysage') ||
+        technical?.composition?.toLowerCase().includes('paysage')) {
       return 'landscape'
     }
-    if (artistic.storytelling.toLowerCase().includes('rue') ||
-        technical.composition.toLowerCase().includes('street')) {
+    if (artistic?.storytelling?.toLowerCase().includes('rue') ||
+        technical?.composition?.toLowerCase().includes('street')) {
       return 'street'
     }
     if (filename.toLowerCase().includes('macro') ||
-        technical.focus.toLowerCase().includes('macro')) {
+        technical?.focus?.toLowerCase().includes('macro')) {
       return 'macro'
     }
     
@@ -170,21 +170,21 @@ export class InstagramGenerator {
     
     const randomStoryStart = storyElements[Math.floor(Math.random() * storyElements.length)]
     
-    const caption = `${randomStoryStart} ✨\n\n${analysis.artistic.storytelling.substring(0, 150)}...\n\n📊 Analyse IA: ${analysis.score}/100\n\n#Storytelling #Photography #VisualNarrative`
+    const caption = `${randomStoryStart} ✨\n\n${analysis.artistic?.storytelling?.substring(0, 150) || 'Analyse créative indisponible'}...\n\n📊 Analyse IA: ${analysis.score}/100\n\n#Storytelling #Photography #VisualNarrative`
 
     return {
       caption,
       hashtags: this.getHashtagsForType(photoType, 'storytelling'),
-      storyText: `📖 Histoire visuelle\n\n${analysis.artistic.storytelling.substring(0, 100)}...\n\n📊 ${analysis.score}/100`,
+      storyText: `📖 Histoire visuelle\n\n${analysis.artistic?.storytelling?.substring(0, 100) || 'Analyse créative indisponible'}...\n\n📊 ${analysis.score}/100`,
       carouselSlides: [
         {
           title: 'L\'histoire',
-          content: analysis.artistic.storytelling.substring(0, 80) + '...',
+          content: (analysis.artistic?.storytelling?.substring(0, 80) || 'Analyse indisponible') + '...',
           emoji: '📖'
         },
         {
           title: 'Émotion',
-          content: analysis.artistic.emotion.substring(0, 80) + '...',
+          content: (analysis.artistic?.emotion?.substring(0, 80) || 'Analyse indisponible') + '...',
           emoji: '❤️'
         },
         {
