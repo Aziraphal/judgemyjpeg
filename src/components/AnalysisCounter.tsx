@@ -43,14 +43,17 @@ export default function AnalysisCounter({
   const fetchSubscription = async () => {
     try {
       const response = await fetch('/api/subscription/status')
-      if (response.ok) {
-        const data = await response.json()
-        setSubscription(data.subscription)
-        
-        // Déclencher callback si limite atteinte
-        if (!data.subscription.canAnalyze && onLimitReached) {
-          onLimitReached()
-        }
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      }
+
+      const data = await response.json()
+      setSubscription(data.subscription)
+
+      // Déclencher callback si limite atteinte
+      if (!data.subscription?.canAnalyze && onLimitReached) {
+        onLimitReached()
       }
     } catch (error) {
       logger.error('Erreur chargement statut analyses:', error)

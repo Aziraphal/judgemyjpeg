@@ -53,39 +53,42 @@ export function useAnalysisLimit() {
   const fetchAnalysisStatus = async () => {
     try {
       const response = await fetch('/api/subscription/status')
-      
-      if (response.ok) {
-        const data = await response.json()
-        
-        // Vérification défensive pour éviter les erreurs
-        const starterPack = data.starterPack || {
-          hasStarterPack: false,
-          purchased: false,
-          analysisCount: 0,
-          sharesCount: 0,
-          exportsCount: 0
-        }
-        
-        // Déterminer si l'utilisateur est épuisé
-        const isMonthlyExhausted = data.subscriptionStatus === 'free' && data.monthlyAnalysisCount >= data.maxMonthlyAnalyses
-        const hasNoStarterAnalyses = !starterPack.hasStarterPack || starterPack.analysisCount === 0
-        const isExhausted = isMonthlyExhausted && hasNoStarterAnalyses && !['premium', 'annual'].includes(data.subscriptionStatus)
-        
-        // Détermine si on doit afficher le modal starter pack
-        const shouldShowStarterModal = isExhausted && 
-                                     data.subscriptionStatus === 'free' && 
-                                     !starterPack.purchased // N'a jamais acheté le starter pack
-        
-        setState({
-          canAnalyze: data.canAnalyze || false,
-          monthlyCount: data.monthlyAnalysisCount || 0,
-          maxMonthly: data.maxMonthlyAnalyses || 3,
-          starterPack,
-          daysUntilReset: data.daysUntilReset,
-          isExhausted,
-          shouldShowStarterModal
-        })
+
+      if (!response.ok) {
+        // Si la requête échoue (401, 403, 500...), on utilise l'état par défaut
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
       }
+
+      const data = await response.json()
+
+      // Vérification défensive pour éviter les erreurs
+      const starterPack = data.starterPack || {
+        hasStarterPack: false,
+        purchased: false,
+        analysisCount: 0,
+        sharesCount: 0,
+        exportsCount: 0
+      }
+
+      // Déterminer si l'utilisateur est épuisé
+      const isMonthlyExhausted = data.subscriptionStatus === 'free' && data.monthlyAnalysisCount >= data.maxMonthlyAnalyses
+      const hasNoStarterAnalyses = !starterPack.hasStarterPack || starterPack.analysisCount === 0
+      const isExhausted = isMonthlyExhausted && hasNoStarterAnalyses && !['premium', 'annual'].includes(data.subscriptionStatus)
+
+      // Détermine si on doit afficher le modal starter pack
+      const shouldShowStarterModal = isExhausted &&
+                                   data.subscriptionStatus === 'free' &&
+                                   !starterPack.purchased // N'a jamais acheté le starter pack
+
+      setState({
+        canAnalyze: data.canAnalyze || false,
+        monthlyCount: data.monthlyAnalysisCount || 0,
+        maxMonthly: data.maxMonthlyAnalyses || 3,
+        starterPack,
+        daysUntilReset: data.daysUntilReset,
+        isExhausted,
+        shouldShowStarterModal
+      })
     } catch (error) {
       logger.error('Erreur chargement statut analyses:', error)
       
