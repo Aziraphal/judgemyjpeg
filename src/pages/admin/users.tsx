@@ -516,7 +516,7 @@ export default function AdminUsersPage() {
           }}
           user={manualPremiumUser}
           onSuccess={() => {
-            fetchUsers() // Recharger la liste
+            loadUsers() // Recharger la liste
           }}
         />
       </div>

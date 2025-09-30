@@ -51,7 +51,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       logger.info('Manual premium granted', {
         targetUserId: userId,
-        targetEmail: user.email,
+        targetEmail: user.email ?? undefined,
         reason,
         grantedBy: adminUser.email
       }, adminUser.email, ip)
@@ -92,7 +92,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       logger.info('Manual premium revoked', {
         targetUserId: userId,
-        targetEmail: user.email,
+        targetEmail: user.email ?? undefined,
         revokedBy: adminUser.email
       }, adminUser.email, ip)
 
