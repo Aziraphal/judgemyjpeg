@@ -61,15 +61,6 @@ export function useAnalysisLimit() {
 
       const data = await response.json()
 
-      // 🔍 DEBUG: Log pour diagnostiquer le problème
-      console.log('🔍 [useAnalysisLimit] API Response:', {
-        subscriptionStatus: data.subscriptionStatus,
-        canAnalyze: data.canAnalyze,
-        isPremium: data.isPremium,
-        monthlyAnalysisCount: data.monthlyAnalysisCount,
-        maxMonthlyAnalyses: data.maxMonthlyAnalyses
-      })
-
       // Vérification défensive pour éviter les erreurs
       const starterPack = data.starterPack || {
         hasStarterPack: false,
@@ -88,14 +79,6 @@ export function useAnalysisLimit() {
       const shouldShowStarterModal = isExhausted &&
                                    data.subscriptionStatus === 'free' &&
                                    !starterPack.purchased // N'a jamais acheté le starter pack
-
-      // 🔍 DEBUG: Log pour diagnostiquer
-      console.log('🔍 [useAnalysisLimit] Calculated values:', {
-        isMonthlyExhausted,
-        hasNoStarterAnalyses,
-        isExhausted,
-        shouldShowStarterModal
-      })
 
       setState({
         canAnalyze: data.canAnalyze || false,
