@@ -3,6 +3,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Image from 'next/image'
+import { useTranslation } from 'react-i18next'
 import StatCard from '@/components/StatCard'
 import ScoreChart from '@/components/ScoreChart'
 import FavoriteButton from '@/components/FavoriteButton'
@@ -47,6 +48,7 @@ interface DashboardStats {
 }
 
 export default function DashboardPage() {
+  const { t } = useTranslation()
   const { data: session, status } = useSession()
   const router = useRouter()
   const [stats, setStats] = useState<DashboardStats | null>(null)
@@ -96,8 +98,8 @@ export default function DashboardPage() {
   return (
     <>
       <Head>
-        <title>Dashboard - JudgeMyJPEG</title>
-        <meta name="description" content="Vos stats et performances photo en un coup d'œil" />
+        <title>{t('dashboard.title')} - JudgeMyJPEG</title>
+        <meta name="description" content={t('dashboard.metaDescription')} />
       </Head>
 
       <main className="min-h-screen bg-cosmic-overlay particles-container relative">
@@ -112,14 +114,14 @@ export default function DashboardPage() {
             <h1 className="text-4xl md:text-6xl font-bold text-glow mb-4">
               📊{' '}
               <span className="text-transparent bg-gradient-to-r from-neon-pink to-neon-cyan bg-clip-text">
-                Dashboard
+                {t('dashboard.title')}
               </span>
             </h1>
             <p className="text-xl text-text-gray max-w-2xl mx-auto">
-              Vue d'ensemble de vos{' '}
-              <span className="text-neon-cyan font-semibold">statistiques</span>{' '}
-              et{' '}
-              <span className="text-neon-pink font-semibold">performances</span>
+              {t('dashboard.overviewText')}{' '}
+              <span className="text-neon-cyan font-semibold">{t('dashboard.stats')}</span>{' '}
+              {t('dashboard.and')}{' '}
+              <span className="text-neon-pink font-semibold">{t('dashboard.performance')}</span>
             </p>
           </div>
 
@@ -130,33 +132,33 @@ export default function DashboardPage() {
               className="btn-neon-secondary flex items-center justify-center space-x-2 w-full sm:w-auto self-start"
             >
               <span>←</span>
-              <span>Retour à l'accueil</span>
+              <span>{t('nav.backHome')}</span>
             </button>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               <button
                 onClick={() => router.push('/analyze')}
                 className="btn-neon-pink text-sm px-4 py-2"
               >
-                📸 Analyser une photo
+                📸 {t('dashboard.analyzePhoto')}
               </button>
               <button
                 onClick={() => router.push('/batch')}
                 className="btn-neon-secondary text-sm px-4 py-2"
               >
-                📊 Analyse en lot
+                📊 {t('dashboard.batchAnalysis')}
               </button>
               <button
                 onClick={() => router.push('/all-photos')}
                 className="btn-neon-secondary text-sm px-4 py-2"
               >
-                📸 Toutes mes photos
+                📸 {t('dashboard.allPhotos')}
               </button>
               <button
                 onClick={() => router.push('/insights')}
                 className="btn-neon-secondary text-sm px-4 py-2"
               >
-                🧠 Insights IA
+                🧠 {t('dashboard.aiInsights')}
               </button>
             </div>
           </div>
@@ -166,34 +168,34 @@ export default function DashboardPage() {
               {/* Statistiques principales */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatCard
-                  title="Photos analysées"
+                  title={t('dashboard.photosAnalyzed')}
                   value={stats.overview.totalPhotos}
                   icon="📸"
-                  subtitle="Total dans votre galerie"
+                  subtitle={t('dashboard.totalInGallery')}
                   color="primary"
                 />
-                
+
                 <StatCard
-                  title="Chefs-d'œuvre"
+                  title={t('dashboard.masterpieces')}
                   value={stats.overview.topPhotos}
                   icon="🏆"
-                  subtitle="Score ≥ 85/100"
+                  subtitle={t('dashboard.scoreAbove85')}
                   color="success"
                 />
-                
+
                 <StatCard
-                  title="Score moyen"
+                  title={t('dashboard.averageScore')}
                   value={`${stats.overview.avgScore}/100`}
                   icon="⭐"
-                  subtitle="Moyenne de toutes vos photos"
+                  subtitle={t('dashboard.avgAllPhotos')}
                   color="warning"
                 />
-                
+
                 <StatCard
-                  title="Photos récentes"
+                  title={t('dashboard.recentPhotos')}
                   value={stats.overview.recentPhotos}
                   icon="🔥"
-                  subtitle="7 derniers jours"
+                  subtitle={t('dashboard.last7Days')}
                   color="secondary"
                 />
               </div>
@@ -201,21 +203,21 @@ export default function DashboardPage() {
               {/* Seconde ligne de stats */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <StatCard
-                  title="Favoris"
+                  title={t('dashboard.favorites')}
                   value={stats.overview.totalFavorites}
                   icon="❤️"
-                  subtitle="Photos que vous aimez"
+                  subtitle={t('dashboard.photosYouLike')}
                   color="primary"
                 />
-                
+
                 <StatCard
-                  title="Collections"
+                  title={t('collections.title')}
                   value={stats.overview.totalCollections}
                   icon="📁"
-                  subtitle="Vos albums personnalisés"
+                  subtitle={t('dashboard.yourPersonalizedAlbums')}
                   color="secondary"
                 />
-                
+
               </div>
 
               {/* Graphiques et analyses */}
@@ -230,9 +232,9 @@ export default function DashboardPage() {
                 <div className="glass-card p-6 hover-glow">
                   <h3 className="text-lg font-semibold text-text-white mb-6 flex items-center">
                     <span className="text-2xl mr-2">📈</span>
-                    Évolution récente
+                    {t('dashboard.recentEvolution')}
                   </h3>
-                  
+
                   {stats.monthlyStats.length > 0 ? (
                     <div className="space-y-4">
                       {stats.monthlyStats.map((month) => (
@@ -243,13 +245,13 @@ export default function DashboardPage() {
                               {formatMonth(month.month)}
                             </span>
                           </div>
-                          
+
                           <div className="text-right">
                             <div className="text-text-white font-semibold">
                               {month.count} photo{month.count !== 1 ? 's' : ''}
                             </div>
                             <div className="text-text-muted text-sm">
-                              Moy: {month.avgScore}/100
+                              {t('dashboard.avg')}: {month.avgScore}/100
                             </div>
                           </div>
                         </div>
@@ -259,7 +261,7 @@ export default function DashboardPage() {
                     <div className="text-center py-8">
                       <div className="text-4xl mb-4">📅</div>
                       <p className="text-text-muted">
-                        Pas encore de données mensuelles
+                        {t('dashboard.noMonthlyData')}
                       </p>
                     </div>
                   )}
@@ -271,14 +273,14 @@ export default function DashboardPage() {
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-lg font-semibold text-text-white flex items-center">
                     <span className="text-2xl mr-2">📷</span>
-                    Photos récentes
+                    {t('dashboard.recentPhotos')}
                   </h3>
-                  
+
                   <button
                     onClick={() => router.push('/all-photos')}
                     className="btn-neon-secondary text-sm"
                   >
-                    Toutes mes photos →
+                    {t('dashboard.allPhotos')} →
                   </button>
                 </div>
 
@@ -313,7 +315,7 @@ export default function DashboardPage() {
                             <button
                               onClick={() => setCollectionModalPhoto(photo)}
                               className="w-8 h-8 rounded-full bg-cosmic-glass backdrop-blur-sm text-white hover:bg-neon-cyan hover:text-black transition-all duration-200 flex items-center justify-center text-sm"
-                              title="Ajouter à une collection"
+                              title={t('dashboard.addToCollection')}
                             >
                               📁
                             </button>
@@ -335,16 +337,16 @@ export default function DashboardPage() {
                   <div className="text-center py-12">
                     <div className="text-6xl mb-4">📸</div>
                     <h4 className="text-xl font-semibold text-text-white mb-2">
-                      Aucune photo pour le moment
+                      {t('dashboard.noPhotos')}
                     </h4>
                     <p className="text-text-gray mb-6">
-                      Commencez par analyser votre première photo !
+                      {t('dashboard.noPhotosDesc')}
                     </p>
                     <button
                       onClick={() => router.push('/analyze')}
                       className="btn-neon-pink"
                     >
-                      Analyser une photo
+                      {t('dashboard.startAnalyzing')}
                     </button>
                   </div>
                 )}
@@ -356,14 +358,14 @@ export default function DashboardPage() {
                   <div className="flex items-center justify-between mb-6">
                     <h3 className="text-lg font-semibold text-text-white flex items-center">
                       <span className="text-2xl mr-2">📁</span>
-                      Collections populaires
+                      {t('dashboard.popularCollections')}
                     </h3>
-                    
+
                     <button
                       onClick={() => router.push('/collections')}
                       className="btn-neon-secondary text-sm"
                     >
-                      Gérer →
+                      {t('dashboard.manage')} →
                     </button>
                   </div>
 
@@ -395,7 +397,7 @@ export default function DashboardPage() {
                           </div>
                         ) : (
                           <div className="aspect-video bg-cosmic-glass rounded-lg flex items-center justify-center mb-3">
-                            <span className="text-text-muted text-sm">Vide</span>
+                            <span className="text-text-muted text-sm">{t('collections.empty')}</span>
                           </div>
                         )}
                         
@@ -412,13 +414,13 @@ export default function DashboardPage() {
             <div className="text-center py-12">
               <div className="text-6xl mb-4">📊</div>
               <h3 className="text-2xl font-bold text-text-white mb-4">
-                Impossible de charger les statistiques
+                {t('dashboard.cannotLoadStats')}
               </h3>
               <button
                 onClick={fetchStats}
                 className="btn-neon-pink"
               >
-                Réessayer
+                {t('common.retry')}
               </button>
             </div>
           )}

@@ -3,6 +3,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Image from 'next/image'
+import { useTranslation } from 'react-i18next'
 import FavoriteButton from '@/components/FavoriteButton'
 import AddToCollectionModal from '@/components/AddToCollectionModal'
 import { logger } from '@/lib/logger'
@@ -20,6 +21,7 @@ interface Photo {
 }
 
 export default function AllPhotosPage() {
+  const { t } = useTranslation()
   const { data: session, status } = useSession()
   const router = useRouter()
   const [photos, setPhotos] = useState<Photo[]>([])
@@ -93,11 +95,11 @@ export default function AllPhotosPage() {
   }
 
   const getScoreLabel = (score: number | null) => {
-    if (!score) return 'Non noté'
-    if (score >= 85) return 'Excellent'
-    if (score >= 70) return 'Bon'
-    if (score >= 50) return 'Moyen'
-    return 'À améliorer'
+    if (!score) return t('gallery.notRated')
+    if (score >= 85) return t('gallery.excellent')
+    if (score >= 70) return t('gallery.good')
+    if (score >= 50) return t('gallery.average')
+    return t('gallery.needsImprovement')
   }
 
   if (status === 'loading' || loading) {
@@ -111,8 +113,8 @@ export default function AllPhotosPage() {
   return (
     <>
       <Head>
-        <title>Toutes mes photos - JudgeMyJPEG</title>
-        <meta name="description" content="Toutes vos photos analysées avec détails" />
+        <title>{t('gallery.allPhotos')} - JudgeMyJPEG</title>
+        <meta name="description" content={t('gallery.metaDescription')} />
       </Head>
 
       <main className="min-h-screen bg-cosmic-overlay particles-container relative">
@@ -122,11 +124,11 @@ export default function AllPhotosPage() {
             <h1 className="text-4xl md:text-6xl font-bold text-glow mb-4">
               📸{' '}
               <span className="text-transparent bg-gradient-to-r from-neon-pink to-neon-cyan bg-clip-text">
-                Toutes mes photos
+                {t('gallery.allPhotos')}
               </span>
             </h1>
             <p className="text-xl text-text-gray max-w-2xl mx-auto">
-              {photos.length} photo{photos.length !== 1 ? 's' : ''} analysée{photos.length !== 1 ? 's' : ''}
+              {photos.length} {t('gallery.photosAnalyzed')}
             </p>
           </div>
 
@@ -137,34 +139,34 @@ export default function AllPhotosPage() {
               className="btn-neon-secondary flex items-center justify-center space-x-2 w-full sm:w-auto self-start"
             >
               <span>←</span>
-              <span>Retour au dashboard</span>
+              <span>{t('gallery.backToDashboard')}</span>
             </button>
 
             {/* Filtres et tri */}
             <div className="glass-card p-4">
               <div className="flex flex-wrap gap-4 items-center">
                 <div className="flex items-center space-x-2">
-                  <span className="text-text-white font-medium">Filtre:</span>
+                  <span className="text-text-white font-medium">{t('gallery.filter')}:</span>
                   <select
                     value={filter}
                     onChange={(e) => setFilter(e.target.value as any)}
                     className="input-cosmic text-sm"
                   >
-                    <option value="all">Toutes</option>
-                    <option value="top">Top Photos (≥85)</option>
-                    <option value="recent">Récentes (7 jours)</option>
+                    <option value="all">{t('gallery.all')}</option>
+                    <option value="top">{t('gallery.topPhotos')}</option>
+                    <option value="recent">{t('gallery.recent7Days')}</option>
                   </select>
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  <span className="text-text-white font-medium">Tri:</span>
+                  <span className="text-text-white font-medium">{t('gallery.sortBy')}:</span>
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value as any)}
                     className="input-cosmic text-sm"
                   >
-                    <option value="date">Date (plus récent)</option>
-                    <option value="score">Score (meilleur)</option>
+                    <option value="date">{t('gallery.sortByNewest')}</option>
+                    <option value="score">{t('gallery.sortByHighestScore')}</option>
                   </select>
                 </div>
               </div>
@@ -176,16 +178,16 @@ export default function AllPhotosPage() {
             <div className="glass-card p-12 text-center">
               <div className="text-6xl mb-4">📸</div>
               <h3 className="text-2xl font-bold text-text-white mb-4">
-                Aucune photo trouvée
+                {t('gallery.noPhotos')}
               </h3>
               <p className="text-text-gray mb-6">
-                {filter === 'all' ? 'Vous n\'avez pas encore analysé de photos.' : 'Aucune photo ne correspond aux filtres sélectionnés.'}
+                {filter === 'all' ? t('gallery.noPhotosDesc') : t('gallery.noPhotosMatchFilters')}
               </p>
               <button
                 onClick={() => router.push('/analyze')}
                 className="btn-neon-pink"
               >
-                📸 Analyser une photo
+                📸 {t('gallery.analyzePhoto')}
               </button>
             </div>
           ) : (
@@ -227,7 +229,7 @@ export default function AllPhotosPage() {
                               setCollectionModalPhoto(photo)
                             }}
                             className="w-8 h-8 rounded-full bg-cosmic-glass backdrop-blur-sm text-white hover:bg-neon-cyan hover:text-black transition-all duration-200 flex items-center justify-center text-sm"
-                            title="Ajouter à une collection"
+                            title={t('gallery.addToCollection')}
                           >
                             📁
                           </button>
@@ -255,7 +257,7 @@ export default function AllPhotosPage() {
                       {/* Aperçu analyse */}
                       {analysis && (
                         <p className="text-text-gray text-xs line-clamp-2">
-                          {analysis.summary || analysis.critique || 'Analyse disponible'}
+                          {analysis.summary || analysis.critique || t('gallery.analysisAvailable')}
                         </p>
                       )}
                     </div>
@@ -312,20 +314,20 @@ export default function AllPhotosPage() {
                 <div className="space-y-4">
                   {(() => {
                     const analysis = parseAnalysis(selectedPhoto.analysis)
-                    if (!analysis) return <p className="text-text-gray">Aucune analyse disponible</p>
-                    
+                    if (!analysis) return <p className="text-text-gray">{t('gallery.noAnalysisAvailable')}</p>
+
                     return (
                       <>
                         {analysis.critique && (
                           <div>
-                            <h4 className="font-bold text-neon-cyan mb-2">📝 Analyse :</h4>
+                            <h4 className="font-bold text-neon-cyan mb-2">📝 {t('gallery.analysis')} :</h4>
                             <p className="text-text-gray">{analysis.critique}</p>
                           </div>
                         )}
-                        
+
                         {analysis.strengths && analysis.strengths.length > 0 && (
                           <div>
-                            <h4 className="font-bold text-green-400 mb-2">✅ Points forts :</h4>
+                            <h4 className="font-bold text-green-400 mb-2">✅ {t('gallery.strengths')} :</h4>
                             <ul className="list-disc list-inside text-text-gray space-y-1">
                               {analysis.strengths.map((strength: string, index: number) => (
                                 <li key={index}>{strength}</li>
@@ -333,10 +335,10 @@ export default function AllPhotosPage() {
                             </ul>
                           </div>
                         )}
-                        
+
                         {analysis.improvements && analysis.improvements.length > 0 && (
                           <div>
-                            <h4 className="font-bold text-yellow-400 mb-2">🔧 Améliorations :</h4>
+                            <h4 className="font-bold text-yellow-400 mb-2">🔧 {t('gallery.improvements')} :</h4>
                             <ul className="list-disc list-inside text-text-gray space-y-1">
                               {analysis.improvements.map((improvement: any, index: number) => (
                                 <li key={index}>
@@ -349,10 +351,10 @@ export default function AllPhotosPage() {
                             </ul>
                           </div>
                         )}
-                        
+
                         {analysis.suggestions && analysis.suggestions.length > 0 && (
                           <div>
-                            <h4 className="font-bold text-neon-pink mb-2">💡 Suggestions :</h4>
+                            <h4 className="font-bold text-neon-pink mb-2">💡 {t('gallery.suggestions')} :</h4>
                             <ul className="list-disc list-inside text-text-gray space-y-1">
                               {analysis.suggestions.map((suggestion: any, index: number) => (
                                 <li key={index}>
@@ -365,12 +367,12 @@ export default function AllPhotosPage() {
                       </>
                     )
                   })()}
-                  
+
                   <div className="pt-4 border-t border-cosmic-glassborder">
                     <p className="text-text-muted text-sm">
-                      Analysée le {new Date(selectedPhoto.createdAt).toLocaleDateString('fr-FR', { 
-                        day: 'numeric', 
-                        month: 'long', 
+                      {t('gallery.analyzedOn')} {new Date(selectedPhoto.createdAt).toLocaleDateString('fr-FR', {
+                        day: 'numeric',
+                        month: 'long',
                         year: 'numeric',
                         hour: '2-digit',
                         minute: '2-digit'
