@@ -153,19 +153,19 @@ export default function PricingPage() {
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="text-neon-cyan">✓</span>
-                  <span className="text-text-white">Mode Pro, Cassant & Expert</span>
+                  <span className="text-text-white">{t('features.modes')}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="text-neon-cyan">✓</span>
-                  <span className="text-text-white">Score + conseils de base</span>
+                  <span className="text-text-white">{t('features.basicAdvice')}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="text-red-400">✗</span>
-                  <span className="text-text-muted">Images partageables</span>
+                  <span className="text-text-muted">{t('features.shareableImages')}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="text-red-400">✗</span>
-                  <span className="text-text-muted">Insights IA avancés</span>
+                  <span className="text-text-muted">{t('features.advancedInsights')}</span>
                 </div>
               </div>
 
@@ -173,7 +173,7 @@ export default function PricingPage() {
                 disabled
                 className="w-full btn-neon-secondary opacity-50 cursor-not-allowed"
               >
-                Plan actuel
+                {t('pricing.currentPlan')}
               </button>
             </div>
 
@@ -182,41 +182,41 @@ export default function PricingPage() {
               {/* Badge achat unique */}
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                 <div className="bg-yellow-500 text-black px-4 py-1 rounded-full text-sm font-semibold">
-                  ⚡ ACHAT UNIQUE
+                  ⚡ {t('pricing.uniquePurchase')}
                 </div>
               </div>
 
               <div className="text-center mb-6">
                 <div className="text-3xl mb-4">🛒</div>
-                <h3 className="text-2xl font-bold text-text-white mb-2">Starter Pack</h3>
-                <p className="text-text-gray">Testez davantage</p>
+                <h3 className="text-2xl font-bold text-text-white mb-2">{t('pricing.starter')}</h3>
+                <p className="text-text-gray">{t('pricing.testMore')}</p>
               </div>
 
               <div className="text-center mb-8">
                 <div className="text-4xl font-bold text-yellow-400 mb-2">4,99€</div>
-                <div className="text-text-muted">achat unique</div>
+                <div className="text-text-muted">{t('pricing.oneTime')}</div>
               </div>
 
               <div className="space-y-4 mb-8">
                 <div className="flex items-center space-x-3">
                   <span className="text-yellow-400">✓</span>
-                  <span className="text-text-white font-semibold">10 analyses bonus</span>
+                  <span className="text-text-white font-semibold">10 {t('features.bonusAnalyses')}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="text-yellow-400">✓</span>
-                  <span className="text-text-white">Tous les modes (Pro, Roast, Expert)</span>
+                  <span className="text-text-white">{t('features.allModes')}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="text-yellow-400">✓</span>
-                  <span className="text-text-white">3 partages sociaux</span>
+                  <span className="text-text-white">3 {t('features.socialShares')}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="text-yellow-400">✓</span>
-                  <span className="text-text-white">3 exports PDF</span>
+                  <span className="text-text-white">3 {t('features.pdfExports')}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="text-yellow-400">✓</span>
-                  <span className="text-text-white">Limité à 1 par compte</span>
+                  <span className="text-text-white">{t('features.limitedOne')}</span>
                 </div>
               </div>
 
@@ -234,41 +234,41 @@ export default function PricingPage() {
               {/* Badge populaire */}
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                 <div className="bg-neon-pink text-white px-4 py-1 rounded-full text-sm font-semibold">
-                  🔥 POPULAIRE
+                  🔥 {t('pricing.popular')}
                 </div>
               </div>
 
               <div className="text-center mb-6">
                 <div className="text-3xl mb-4">💎</div>
-                <h3 className="text-2xl font-bold text-text-white mb-2">Premium</h3>
-                <p className="text-text-gray">Pour les passionnés</p>
+                <h3 className="text-2xl font-bold text-text-white mb-2">{t('pricing.premium')}</h3>
+                <p className="text-text-gray">{t('pricing.forPassionate')}</p>
               </div>
 
               <div className="text-center mb-8">
                 <div className="text-4xl font-bold text-neon-pink mb-2">9,99€</div>
-                <div className="text-text-muted">par mois</div>
+                <div className="text-text-muted">{t('pricing.perMonth')}</div>
               </div>
 
               <div className="space-y-4 mb-8">
                 <div className="flex items-center space-x-3">
                   <span className="text-neon-pink">✓</span>
-                  <span className="text-text-white font-semibold">Analyses illimitées</span>
+                  <span className="text-text-white font-semibold">{t('features.unlimitedAnalyses')}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="text-neon-pink">✓</span>
-                  <span className="text-text-white">Générateur d'images Stories</span>
+                  <span className="text-text-white">{t('features.storiesCards')}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="text-neon-pink">✓</span>
-                  <span className="text-text-white">Insights IA personnalisés</span>
+                  <span className="text-text-white">{t('features.personalizedInsights')}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="text-neon-pink">✓</span>
-                  <span className="text-text-white">Export de données</span>
+                  <span className="text-text-white">{t('features.dataExport')}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="text-neon-pink">✓</span>
-                  <span className="text-text-white">Support prioritaire</span>
+                  <span className="text-text-white">{t('features.prioritySupport')}</span>
                 </div>
               </div>
 
@@ -306,36 +306,36 @@ export default function PricingPage() {
             <div className="glass-card p-8 hover-glow border-2 border-neon-cyan">
               <div className="text-center mb-6">
                 <div className="text-3xl mb-4">📅</div>
-                <h3 className="text-2xl font-bold text-text-white mb-2">Annuel</h3>
-                <p className="text-text-gray">Meilleure valeur</p>
+                <h3 className="text-2xl font-bold text-text-white mb-2">{t('pricing.annual')}</h3>
+                <p className="text-text-gray">{t('pricing.bestValue2')}</p>
               </div>
 
               <div className="text-center mb-8">
                 <div className="text-4xl font-bold text-neon-cyan mb-2">79€</div>
-                <div className="text-text-muted">par an</div>
-                <div className="text-xs text-neon-pink mt-1">💎 Économisez 33% vs mensuel</div>
+                <div className="text-text-muted">{t('pricing.perYear')}</div>
+                <div className="text-xs text-neon-pink mt-1">💎 {t('pricing.save33')}</div>
               </div>
 
               <div className="space-y-4 mb-8">
                 <div className="flex items-center space-x-3">
                   <span className="text-neon-cyan">✓</span>
-                  <span className="text-text-white">Tout du plan Premium</span>
+                  <span className="text-text-white">{t('features.allPremium')}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="text-neon-cyan">✓</span>
-                  <span className="text-text-white font-semibold">Analyses illimitées</span>
+                  <span className="text-text-white font-semibold">{t('features.unlimitedAnalyses')}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="text-neon-cyan">✓</span>
-                  <span className="text-text-white">Économie de 40€/an</span>
+                  <span className="text-text-white">{t('pricing.save40')}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="text-neon-cyan">✓</span>
-                  <span className="text-text-white">Support prioritaire</span>
+                  <span className="text-text-white">{t('features.prioritySupport')}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="text-neon-cyan">✓</span>
-                  <span className="text-text-white">Engagement réduit</span>
+                  <span className="text-text-white">{t('pricing.reducedCommitment')}</span>
                 </div>
               </div>
 
