@@ -53,15 +53,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         targetUserId: userId,
         targetEmail: user.email ?? undefined,
         reason,
-        grantedBy: adminUser.email
-      }, adminUser.email, ip)
+        grantedBy: adminUser.email ?? undefined
+      }, adminUser.email ?? undefined, ip)
 
       return res.status(200).json({
         success: true,
         user
       })
     } catch (error) {
-      logger.error('Failed to grant manual premium', error, adminUser.email, ip)
+      logger.error('Failed to grant manual premium', error, adminUser.email ?? undefined, ip)
       return res.status(500).json({ error: 'Erreur lors de l\'attribution' })
     }
   }
@@ -93,15 +93,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       logger.info('Manual premium revoked', {
         targetUserId: userId,
         targetEmail: user.email ?? undefined,
-        revokedBy: adminUser.email
-      }, adminUser.email, ip)
+        revokedBy: adminUser.email ?? undefined
+      }, adminUser.email ?? undefined, ip)
 
       return res.status(200).json({
         success: true,
         user
       })
     } catch (error) {
-      logger.error('Failed to revoke manual premium', error, adminUser.email, ip)
+      logger.error('Failed to revoke manual premium', error, adminUser.email ?? undefined, ip)
       return res.status(500).json({ error: 'Erreur lors de la révocation' })
     }
   }
