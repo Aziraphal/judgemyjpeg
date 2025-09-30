@@ -8,6 +8,7 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { logger } from '@/lib/logger'
 import { withAdminProtection } from '@/lib/withAdminProtection'
+import ManualPremiumModal from '@/components/admin/ManualPremiumModal'
 
 interface UserData {
   id: string
@@ -28,6 +29,10 @@ interface UserData {
     totalAnalyses: number
     activeSessions: number
   }
+  manualPremiumAccess?: boolean
+  manualPremiumReason?: string
+  manualPremiumGrantedAt?: string
+  manualPremiumGrantedBy?: string
 }
 
 interface UserResponse {
@@ -51,7 +56,7 @@ export default function AdminUsersPage() {
     total: 0,
     totalPages: 0
   })
-  
+
   const [filters, setFilters] = useState({
     search: '',
     status: '',
@@ -60,6 +65,8 @@ export default function AdminUsersPage() {
   })
 
   const [selectedUser, setSelectedUser] = useState<UserData | null>(null)
+  const [showManualPremiumModal, setShowManualPremiumModal] = useState(false)
+  const [manualPremiumUser, setManualPremiumUser] = useState<UserData | null>(null)
   const [showUserModal, setShowUserModal] = useState(false)
 
   useEffect(() => {
@@ -319,20 +326,29 @@ export default function AdminUsersPage() {
                               </span>
                             </td>
                             <td className="py-4 px-4">
-                              {user.subscription ? (
-                                <div>
-                                  <span className={`px-2 py-1 rounded-full text-xs ${getSubscriptionColor(user.subscription)}`}>
-                                    {user.subscription.type.toUpperCase()}
-                                  </span>
-                                  <div className="text-xs text-text-muted mt-1">
-                                    Expire: {formatDate(user.subscription.expiresAt)}
+                              <div className="space-y-2">
+                                {user.subscription ? (
+                                  <div>
+                                    <span className={`px-2 py-1 rounded-full text-xs ${getSubscriptionColor(user.subscription)}`}>
+                                      {user.subscription.type.toUpperCase()}
+                                    </span>
+                                    <div className="text-xs text-text-muted mt-1">
+                                      Expire: {formatDate(user.subscription.expiresAt)}
+                                    </div>
                                   </div>
-                                </div>
-                              ) : (
-                                <span className="px-2 py-1 rounded-full text-xs text-gray-400 bg-gray-900/20">
-                                  Gratuit
-                                </span>
-                              )}
+                                ) : (
+                                  <span className="px-2 py-1 rounded-full text-xs text-gray-400 bg-gray-900/20">
+                                    Gratuit
+                                  </span>
+                                )}
+                                {user.manualPremiumAccess && (
+                                  <div className="flex items-center gap-1">
+                                    <span className="px-2 py-1 rounded-full text-xs bg-gradient-to-r from-yellow-500/20 to-orange-500/20 text-yellow-400 border border-yellow-500/30">
+                                      🎁 Premium Manuel
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
                             </td>
                             <td className="py-4 px-4">
                               <div className="text-sm text-text-white">
@@ -351,15 +367,31 @@ export default function AdminUsersPage() {
                               </div>
                             </td>
                             <td className="py-4 px-4 text-center">
-                              <button
-                                onClick={() => {
-                                  setSelectedUser(user)
-                                  setShowUserModal(true)
-                                }}
-                                className="bg-blue-600/20 text-blue-300 px-3 py-1 rounded text-xs hover:bg-blue-600/30 transition-colors"
-                              >
-                                Gérer
-                              </button>
+                              <div className="flex gap-2 justify-center">
+                                <button
+                                  onClick={() => {
+                                    setSelectedUser(user)
+                                    setShowUserModal(true)
+                                  }}
+                                  className="bg-blue-600/20 text-blue-300 px-3 py-1 rounded text-xs hover:bg-blue-600/30 transition-colors"
+                                >
+                                  Gérer
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    setManualPremiumUser(user)
+                                    setShowManualPremiumModal(true)
+                                  }}
+                                  className={`px-3 py-1 rounded text-xs transition-colors ${
+                                    user.manualPremiumAccess
+                                      ? 'bg-yellow-600/20 text-yellow-300 hover:bg-yellow-600/30'
+                                      : 'bg-green-600/20 text-green-300 hover:bg-green-600/30'
+                                  }`}
+                                  title={user.manualPremiumAccess ? 'Gérer le premium manuel' : 'Accorder le premium manuel'}
+                                >
+                                  {user.manualPremiumAccess ? '✏️ Premium' : '🎁 Premium'}
+                                </button>
+                              </div>
                             </td>
                           </tr>
                         ))}
@@ -474,6 +506,19 @@ export default function AdminUsersPage() {
             </div>
           </div>
         )}
+
+        {/* Modal Premium Manuel */}
+        <ManualPremiumModal
+          isOpen={showManualPremiumModal}
+          onClose={() => {
+            setShowManualPremiumModal(false)
+            setManualPremiumUser(null)
+          }}
+          user={manualPremiumUser}
+          onSuccess={() => {
+            fetchUsers() // Recharger la liste
+          }}
+        />
       </div>
     </>
   )

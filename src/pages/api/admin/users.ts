@@ -81,6 +81,10 @@ async function handleGetUsers(req: AuthenticatedRequest, res: NextApiResponse) {
         subscriptionStatus: true,
         currentPeriodEnd: true,
         stripeSubscriptionId: true,
+        manualPremiumAccess: true,
+        manualPremiumReason: true,
+        manualPremiumGrantedAt: true,
+        manualPremiumGrantedBy: true,
         photos: {
           select: {
             id: true
