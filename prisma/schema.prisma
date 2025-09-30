@@ -65,6 +65,10 @@ model User {
   starterPackPurchased Boolean          @default(false)
   role                 String           @default("user")
   isAdmin              Boolean          @default(false)
+  manualPremiumAccess  Boolean          @default(false)
+  manualPremiumReason  String?
+  manualPremiumGrantedAt DateTime?
+  manualPremiumGrantedBy String?
   accounts             Account[]
   collections          Collection[]
   favorites            Favorite[]

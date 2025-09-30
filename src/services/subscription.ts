@@ -33,7 +33,9 @@ export async function getUserSubscription(userId: string): Promise<UserSubscript
       starterAnalysisCount: true,
       starterSharesCount: true,
       starterExportsCount: true,
-      starterPackActivated: true
+      starterPackActivated: true,
+      // Manual premium access
+      manualPremiumAccess: true
     }
   })
 
@@ -71,11 +73,12 @@ export async function getUserSubscription(userId: string): Promise<UserSubscript
   }
 
   const maxAnalyses = limits[user.subscriptionStatus as keyof typeof limits] || 3
-  
-  // Vérifier si l'utilisateur peut analyser (plan premium/annual OU dans les limites OU starter pack acheté)
+
+  // Vérifier si l'utilisateur peut analyser (premium manuel OU plan premium/annual OU dans les limites OU starter pack acheté)
   const hasStarterAnalyses = (user.starterPackPurchased ?? false) && !(user.starterPackUsed ?? false) && (user.starterAnalysisCount ?? 0) > 0
-  const canAnalyze = ['premium', 'annual'].includes(user.subscriptionStatus) || 
-                    currentCount < maxAnalyses || 
+  const canAnalyze = user.manualPremiumAccess ||
+                    ['premium', 'annual'].includes(user.subscriptionStatus) ||
+                    currentCount < maxAnalyses ||
                     hasStarterAnalyses
 
   // Calculer les jours jusqu'au reset pour les utilisateurs gratuits
@@ -85,11 +88,15 @@ export async function getUserSubscription(userId: string): Promise<UserSubscript
     daysUntilReset = Math.ceil((nextMonth.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
   }
 
+  // Si l'utilisateur a un accès premium manuel, on le traite comme premium illimité
+  const effectiveStatus = user.manualPremiumAccess ? 'premium' : user.subscriptionStatus as 'free' | 'premium' | 'annual'
+  const effectiveMaxAnalyses = user.manualPremiumAccess ? 999999 : maxAnalyses
+
   return {
     id: user.id,
-    subscriptionStatus: user.subscriptionStatus as 'free' | 'premium' | 'annual',
+    subscriptionStatus: effectiveStatus,
     monthlyAnalysisCount: currentCount,
-    maxMonthlyAnalyses: maxAnalyses,
+    maxMonthlyAnalyses: effectiveMaxAnalyses,
     canAnalyze,
     daysUntilReset,
     starterPack: {
@@ -161,10 +168,11 @@ export async function updateUserSubscription(
 export async function canUseStarterShare(userId: string): Promise<boolean> {
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { starterPackUsed: true, starterSharesCount: true, subscriptionStatus: true }
+    select: { starterPackUsed: true, starterSharesCount: true, subscriptionStatus: true, manualPremiumAccess: true }
   })
-  
+
   return user ? (
+    user.manualPremiumAccess ||
     ['premium', 'annual'].includes(user.subscriptionStatus) ||
     (!user.starterPackUsed && user.starterSharesCount > 0)
   ) : false
@@ -173,10 +181,11 @@ export async function canUseStarterShare(userId: string): Promise<boolean> {
 export async function canUseStarterExport(userId: string): Promise<boolean> {
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { starterPackUsed: true, starterExportsCount: true, subscriptionStatus: true }
+    select: { starterPackUsed: true, starterExportsCount: true, subscriptionStatus: true, manualPremiumAccess: true }
   })
-  
+
   return user ? (
+    user.manualPremiumAccess ||
     ['premium', 'annual'].includes(user.subscriptionStatus) ||
     (!user.starterPackUsed && user.starterExportsCount > 0)
   ) : false
