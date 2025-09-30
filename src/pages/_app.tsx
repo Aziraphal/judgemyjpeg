@@ -13,6 +13,7 @@ import { GA_TRACKING_ID, pageview } from '@/lib/gtag'
 import { logger } from '@/lib/logger'
 import Script from 'next/script'
 import { recordWebVital, collectResourceTimings, observeLongTasks } from '@/lib/performance-monitor'
+import '@/i18n/config' // Import i18next configuration
 
 export default function App({
   Component,

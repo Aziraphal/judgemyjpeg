@@ -4,10 +4,13 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { trackSubscription } from '@/lib/gtag'
 import { logger } from '@/lib/logger'
+import { useTranslation } from 'react-i18next'
+import LanguageSwitcher from '@/components/LanguageSwitcher'
 
 export default function PricingPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
+  const { t } = useTranslation()
   const [loading, setLoading] = useState<string | null>(null)
 
   // Fonction de test pour le développement
@@ -105,25 +108,26 @@ export default function PricingPage() {
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-6xl font-bold text-glow mb-4">
               <span className="text-transparent bg-gradient-to-r from-neon-pink to-neon-cyan bg-clip-text">
-                Tarifs
+                {t('pricing.title')}
               </span>
             </h1>
             <p className="text-xl text-text-gray max-w-2xl mx-auto">
-              Choisissez le plan parfait pour{' '}
-              <span className="text-neon-cyan font-semibold">analyser vos photos</span>{' '}
-              sans limites
+              {t('pricing.subtitle')}{' '}
+              <span className="text-neon-cyan font-semibold">{t('pricing.subtitle2')}</span>{' '}
+              {t('pricing.subtitle3')}
             </p>
           </div>
 
           {/* Navigation */}
-          <div className="flex justify-center mb-12">
+          <div className="flex justify-center items-center gap-4 mb-12">
             <button
               onClick={() => router.push('/')}
               className="btn-neon-secondary flex items-center space-x-2"
             >
               <span>←</span>
-              <span>Retour à l'accueil</span>
+              <span>{t('nav.backHome')}</span>
             </button>
+            <LanguageSwitcher />
           </div>
 
           {/* Plans tarifaires */}
@@ -133,19 +137,19 @@ export default function PricingPage() {
             <div className="glass-card p-8 hover-glow border-2 border-cosmic-glassborder">
               <div className="text-center mb-6">
                 <div className="text-3xl mb-4">🆓</div>
-                <h3 className="text-2xl font-bold text-text-white mb-2">Gratuit</h3>
-                <p className="text-text-gray">Découvrez JudgeMyJPEG</p>
+                <h3 className="text-2xl font-bold text-text-white mb-2">{t('pricing.free')}</h3>
+                <p className="text-text-gray">{t('pricing.discover')}</p>
               </div>
 
               <div className="text-center mb-8">
                 <div className="text-4xl font-bold text-neon-cyan mb-2">0€</div>
-                <div className="text-text-muted">Pour toujours</div>
+                <div className="text-text-muted">{t('pricing.forever')}</div>
               </div>
 
               <div className="space-y-4 mb-8">
                 <div className="flex items-center space-x-3">
                   <span className="text-neon-cyan">✓</span>
-                  <span className="text-text-white">3 analyses par mois</span>
+                  <span className="text-text-white">3 {t('features.analysesPerMonth')}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="text-neon-cyan">✓</span>
