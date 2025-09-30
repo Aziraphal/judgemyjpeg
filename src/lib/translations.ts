@@ -561,7 +561,7 @@ export const translations: Record<AnalysisLanguage, Translations> = {
       signOut: "Sair",
       profile: "Perfil"
     },
-    
+
     analyze: {
       title: "Análise Foto IA",
       subtitle: "Inteligência artificial especialista em fotografia",
@@ -573,7 +573,7 @@ export const translations: Record<AnalysisLanguage, Translations> = {
       dragDrop: "Arraste sua foto aqui ou clique para navegar",
       fileFormats: "Formatos suportados: JPG, PNG, WEBP",
       maxSize: "Tamanho máx: 10MB",
-      
+
       professional: "Profissional",
       roast: "Sarcástico",
       artcritic: "Crítico de Arte",
@@ -582,20 +582,20 @@ export const translations: Record<AnalysisLanguage, Translations> = {
         roast: "Crítica sarcástica e criativa",
         artcritic: "Visão artística e cultural"
       },
-      
+
       globalScore: "Pontuação global",
       technicalScore: "Técnico",
       artisticScore: "Artístico",
       strengths: "Pontos fortes",
       improvements: "Melhorias",
       retouchingPotential: "Potencial de retoque",
-      
+
       newAnalysis: "Nova análise",
       addToCollection: "Adicionar à coleção",
       exportPdf: "Exportar PDF",
       shareResults: "Compartilhar"
     },
-    
+
     social: {
       title: "Compartilhe sua análise",
       description: "Mostre como a IA te criticou!",
@@ -608,7 +608,7 @@ export const translations: Record<AnalysisLanguage, Translations> = {
       getExtension: "Obter Extensão",
       extensionDescription: "Extensão Chrome para criar posts perfeitos do Instagram com IA"
     },
-    
+
     common: {
       loading: "Carregando...",
       error: "Erro",
@@ -624,7 +624,7 @@ export const translations: Record<AnalysisLanguage, Translations> = {
       premium: "Premium",
       upgrade: "Atualizar"
     },
-    
+
     subscription: {
       freeAnalyses: "análises gratuitas por mês",
       upgradeNow: "Atualizar Agora",
@@ -634,6 +634,95 @@ export const translations: Record<AnalysisLanguage, Translations> = {
       lifetime: "Vitalício",
       features: "Recursos",
       noCard: "Sem cartão de crédito necessário"
+    }
+  },
+
+  zh: {
+    nav: {
+      analyze: "Analyze",
+      gallery: "Gallery",
+      collections: "Collections",
+      pricing: "Pricing",
+      blog: "Blog",
+      dashboard: "Dashboard",
+      settings: "Settings",
+      signIn: "Sign In",
+      signOut: "Sign Out",
+      profile: "Profile"
+    },
+
+    analyze: {
+      title: "AI Photo Analysis",
+      subtitle: "Expert artificial intelligence for photography",
+      selectMode: "Analysis mode",
+      selectLanguage: "Analysis language",
+      uploadPhoto: "Upload a photo",
+      uploading: "Uploading...",
+      analyzing: "Analyzing...",
+      dragDrop: "Drop your photo here or click to browse",
+      fileFormats: "Supported formats: JPG, PNG, WEBP",
+      maxSize: "Max size: 10MB",
+
+      professional: "Professional",
+      roast: "Roast",
+      artcritic: "Art Critic",
+      modeDescription: {
+        professional: "Constructive and educational analysis",
+        roast: "Sarcastic and creative critique",
+        artcritic: "Artistic and cultural vision"
+      },
+
+      globalScore: "Global score",
+      technicalScore: "Technical",
+      artisticScore: "Artistic",
+      strengths: "Strengths",
+      improvements: "Improvements",
+      retouchingPotential: "Retouching potential",
+
+      newAnalysis: "New analysis",
+      addToCollection: "Add to collection",
+      exportPdf: "Export PDF",
+      shareResults: "Share"
+    },
+
+    social: {
+      title: "Share your analysis",
+      description: "Show how AI roasted you!",
+      hashtags: "Suggested hashtags",
+      copySuccess: "Copied!",
+      shareCaption: "Share caption",
+      downloadImage: "Download image",
+      postToInstagram: "Post to Instagram",
+      perfectInstaPost: "Perfect Insta Post",
+      getExtension: "Get Extension",
+      extensionDescription: "Chrome extension to create perfect Instagram posts with AI"
+    },
+
+    common: {
+      loading: "Loading...",
+      error: "Error",
+      success: "Success",
+      retry: "Retry",
+      cancel: "Cancel",
+      continue: "Continue",
+      save: "Save",
+      delete: "Delete",
+      edit: "Edit",
+      close: "Close",
+      free: "Free",
+      premium: "Premium",
+      upgrade: "Upgrade"
+    },
+
+    subscription: {
+      freeAnalyses: "free analyses per month",
+      upgradeNow: "Upgrade Now",
+      starterPack: "Starter Pack",
+      monthly: "Monthly",
+      annual: "Annual",
+      lifetime: "Lifetime",
+      features: "Features",
+      noCard: "No credit card required"
     }
   }
 }

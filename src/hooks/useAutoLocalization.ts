@@ -60,7 +60,8 @@ const LANGUAGE_PRIORITY: Record<AnalysisLanguage, number> = {
   'fr': 80,  // Français = marché initial
   'de': 70,  // Allemagne = marché premium
   'pt': 60,  // Portugais/Brésil = croissance
-  'it': 50   // Italien = niche
+  'it': 50,  // Italien = niche
+  'zh': 60   // Chinois = marché en croissance
 }
 
 export function useAutoLocalization() {

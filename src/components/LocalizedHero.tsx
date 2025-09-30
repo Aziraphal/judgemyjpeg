@@ -162,7 +162,7 @@ const LOCALIZED_CONTENT: Record<AnalysisLanguage, LocalizedContent> = {
   },
 
   pt: {
-    title: "JudgeMyJPEG", 
+    title: "JudgeMyJPEG",
     subtitle: "IA que critica suas fotos com estilo",
     description: "Obtenha análises profissionais e divertidas de suas fotos com inteligência artificial. Melhore sua fotografia com conselhos especializados e recomendações personalizadas.",
     cta: "Criar conta grátis",
@@ -185,6 +185,32 @@ const LOCALIZED_CONTENT: Record<AnalysisLanguage, LocalizedContent> = {
       starter: 9.99
     },
     marketMessage: "🇧🇷 IA fotográfica para o mercado brasileiro e português"
+  },
+
+  zh: {
+    title: "JudgeMyJPEG",
+    subtitle: "用风格评判你的照片的AI",
+    description: "通过人工智能获得专业而有趣的照片分析。通过专家见解和个性化建议提高您的摄影技能。",
+    cta: "免费注册",
+    features: [
+      "3 free analyses per month",
+      "Pro & Roast modes available",
+      "Personalized technical advice",
+      "Clean, intuitive interface"
+    ],
+    testimonial: {
+      text: "Great AI feedback that actually helps improve my photography skills!",
+      author: "Verified user",
+      role: "JudgeMyJPEG Community"
+    },
+    pricing: {
+      currency: "CNY",
+      symbol: "¥",
+      monthly: 79,
+      annual: 599,
+      starter: 39
+    },
+    marketMessage: "🇨🇳 面向中文市场的AI摄影教练"
   }
 }
 
