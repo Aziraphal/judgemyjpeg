@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3008",
-    "build": "prisma generate && next build",
+    "build": "prisma db push --accept-data-loss && prisma generate && next build",
     "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "next lint",
