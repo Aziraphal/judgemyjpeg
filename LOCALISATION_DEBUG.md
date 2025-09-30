@@ -1,10 +1,33 @@
 # 🌍 Debug de la Détection de Localisation
 
-## Problème identifié
+## Problèmes identifiés
 
+### 1. VPN en développement local
 Lorsque tu utilises un VPN et changes de serveur (ex: France → États-Unis), la page d'accueil de JudgeMyJPEG reste en français au lieu de basculer en anglais.
 
-## Pourquoi ça arrive ?
+### 2. Utilisateurs connectés avec compte existant
+Quand un utilisateur se connecte avec un compte créé précédemment, le site reste en français même avec une IP US, car les préférences en base de données contenaient `language: "fr"` par défaut.
+
+## Ordre de priorité des langues (NOUVEAU)
+
+Le système utilise maintenant un ordre de priorité intelligent :
+
+1. **Choix manuel explicite** (localStorage: `manual_language_choice`) → Priorité absolue
+   - L'utilisateur a cliqué sur un sélecteur de langue
+   - Son choix est respecté jusqu'à ce qu'il le change
+
+2. **Détection géolocalisée haute confiance** (≥60%) → Priorité haute
+   - Détecte automatiquement la langue via IP/géolocalisation
+   - **Prend priorité sur les préférences BDD** (plus contextuel)
+   - Exemple : Utilisateur FR en vacances aux US → voir en anglais
+
+3. **Paramètre forceLanguage** (prop) → Utilisé par certaines pages
+
+4. **Fallback français** → Dernier recours si aucune détection
+
+⚠️ **Important** : Les préférences en base de données ne sont **plus prioritaires** sur la détection auto ! Cela permet aux utilisateurs de voir le site dans leur langue actuelle, même s'ils ont créé leur compte ailleurs.
+
+## Pourquoi ça arrivait ?
 
 ### 1. **En développement local**
 Quand le serveur Next.js tourne sur `localhost:3008`, l'API de détection reçoit :

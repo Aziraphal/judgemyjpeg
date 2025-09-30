@@ -23,12 +23,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       if (!userPreferences) {
         // Retourner des préférences par défaut
+        // Note: la langue 'fr' ici est un fallback si pas de détection auto
+        // Le système de détection auto prend priorité côté client
         return res.status(200).json({
           displayName: session.user.nickname || session.user.name || '',
           preferredAnalysisMode: 'professional',
           defaultExportFormat: 'pdf',
           theme: 'cosmic',
-          language: 'fr',
+          language: 'fr', // Fallback uniquement
           shareAnalytics: true,
           publicProfile: false
         })

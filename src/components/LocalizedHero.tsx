@@ -193,19 +193,41 @@ interface LocalizedHeroProps {
 }
 
 export default function LocalizedHero({ forceLanguage }: LocalizedHeroProps) {
-  const { detectedLanguage, detectedCountry, isHighConfidence } = useAutoLocalization()
+  const { detectedLanguage, detectedCountry, isHighConfidence, confidence } = useAutoLocalization()
   const [currentLanguage, setCurrentLanguage] = useState<AnalysisLanguage>('fr')
 
-  // Déterminer la langue à utiliser
+  // Déterminer la langue à utiliser - ORDRE DE PRIORITÉ:
+  // 1. Choix manuel explicite (localStorage: manual_language_choice)
+  // 2. Détection géo haute confiance (≥80%)
+  // 3. Détection géo moyenne confiance (≥60%)
+  // 4. Préférences utilisateur en BDD
+  // 5. Fallback français
   useEffect(() => {
+    // 1. Priorité absolue: choix manuel explicite
+    const manualChoice = localStorage.getItem('manual_language_choice')
+    const manualLanguage = localStorage.getItem('manual_chosen_language') as AnalysisLanguage
+
+    if (manualChoice && manualLanguage) {
+      setCurrentLanguage(manualLanguage)
+      return
+    }
+
+    // 2. Force language prop (si passé explicitement)
     if (forceLanguage) {
       setCurrentLanguage(forceLanguage)
-    } else if (detectedLanguage && isHighConfidence) {
-      setCurrentLanguage(detectedLanguage)
-    } else {
-      setCurrentLanguage('fr') // Fallback français
+      return
     }
-  }, [forceLanguage, detectedLanguage, isHighConfidence])
+
+    // 3. Détection géo avec confiance suffisante (≥60%)
+    // Prend priorité sur les préférences BDD car plus contextuel
+    if (detectedLanguage && confidence >= 60) {
+      setCurrentLanguage(detectedLanguage)
+      return
+    }
+
+    // 4. Fallback français (les préférences BDD sont gérées côté Settings)
+    setCurrentLanguage('fr')
+  }, [forceLanguage, detectedLanguage, isHighConfidence, confidence])
 
   const content = LOCALIZED_CONTENT[currentLanguage]
   
