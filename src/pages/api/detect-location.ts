@@ -14,6 +14,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
+    // Mode debug : accepter un paramètre testIP pour forcer une IP
+    const testIP = req.query.testIP as string
+
     // 1. Priorité : Headers Cloudflare (si site derrière CF)
     const cfCountry = req.headers['cf-ipcountry'] as string
     const cfCity = req.headers['cf-ipcity'] as string
@@ -39,12 +42,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // 2. Fallback : Géolocalisation IP via ip-api.com (server-side)
-    const clientIP = req.headers['x-forwarded-for']?.toString().split(',')[0] 
+    const clientIP = testIP // Mode test avec ?testIP=x.x.x.x
+      || req.headers['x-forwarded-for']?.toString().split(',')[0]
       || req.headers['x-real-ip']?.toString()
       || req.socket.remoteAddress
       || '8.8.8.8' // Fallback for development
 
-    logger.debug('Trying IP geolocation for:', clientIP)
+    logger.debug('Trying IP geolocation for:', clientIP, testIP ? '(test mode)' : '')
 
     const response = await fetch(`https://ip-api.com/json/${clientIP}?fields=status,country,countryCode,regionName,city`)
     

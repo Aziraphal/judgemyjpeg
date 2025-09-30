@@ -3,6 +3,7 @@ import { useSession, signIn, signOut } from 'next-auth/react'
 import { useState, useEffect } from 'react'
 import { logger } from '@/lib/logger'
 import LocalizedHero from '@/components/LocalizedHero'
+import LanguageDebugger from '@/components/LanguageDebugger'
 
 export default function Home() {
   const { data: session, status } = useSession()
@@ -438,6 +439,9 @@ export default function Home() {
           </div>
         </div>
       </main>
+
+      {/* Composant de debug localisation (dev only) */}
+      {process.env.NODE_ENV === 'development' && <LanguageDebugger />}
     </>
   )
 }
