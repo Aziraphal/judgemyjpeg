@@ -8,6 +8,7 @@ import { useSession, signOut } from 'next-auth/react'
 import Head from 'next/head'
 import { logger } from '@/lib/logger'
 import { withAdminProtection } from '@/lib/withAdminProtection'
+import UserActionsModal from '@/components/admin/UserActionsModal'
 
 interface SecurityStats {
   totalUsers: number
@@ -55,7 +56,7 @@ interface PhotoAnalyticsData {
       poor: number
     }
     toneBreakdown: {
-      artcritic: number
+      learning: number
       roast: number
       professional: number
     }
@@ -70,6 +71,7 @@ export default function AdminDashboard() {
   const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null)
   const [photoAnalytics, setPhotoAnalytics] = useState<PhotoAnalyticsData | null>(null)
   const [usersData, setUsersData] = useState<any>(null)
+  const [feedbacksData, setFeedbacksData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   
@@ -95,6 +97,10 @@ export default function AdminDashboard() {
     limit: 20
   })
 
+  // Modal actions utilisateur
+  const [selectedUser, setSelectedUser] = useState<any>(null)
+  const [showUserModal, setShowUserModal] = useState(false)
+
   useEffect(() => {
     if (status === 'authenticated') {
       loadDashboardData()
@@ -112,6 +118,12 @@ export default function AdminDashboard() {
       loadUsersData()
     }
   }, [activeTab, userFilters])
+
+  useEffect(() => {
+    if (activeTab === 'feedbacks') {
+      loadFeedbacksData()
+    }
+  }, [activeTab])
 
   const loadDashboardData = async () => {
     try {
@@ -152,7 +164,7 @@ export default function AdminDashboard() {
       if (photoFilters.maxScore && !isNaN(Number(photoFilters.maxScore))) {
         params.append('maxScore', photoFilters.maxScore)
       }
-      if (photoFilters.analysisTone && ['artcritic', 'roast', 'professional'].includes(photoFilters.analysisTone)) {
+      if (photoFilters.analysisTone && ['learning', 'roast', 'professional'].includes(photoFilters.analysisTone)) {
         params.append('analysisTone', photoFilters.analysisTone)
       }
       if (photoFilters.startDate) {
@@ -184,7 +196,7 @@ export default function AdminDashboard() {
   const loadUsersData = async () => {
     try {
       const params = new URLSearchParams()
-      
+
       if (userFilters.search) {
         params.append('search', userFilters.search)
       }
@@ -198,17 +210,34 @@ export default function AdminDashboard() {
       params.append('limit', userFilters.limit.toString())
 
       const response = await fetch(`/api/admin/users?${params.toString()}`)
-      
+
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`)
       }
 
       const data = await response.json()
       setUsersData(data.data)
-      
+
     } catch (error) {
       console.error('Failed to load users data:', error)
       setError('Erreur lors du chargement des utilisateurs')
+    }
+  }
+
+  const loadFeedbacksData = async () => {
+    try {
+      const response = await fetch('/api/admin/feedbacks?limit=50')
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      }
+
+      const data = await response.json()
+      setFeedbacksData(data)
+
+    } catch (error) {
+      console.error('Failed to load feedbacks:', error)
+      setError('Erreur lors du chargement des feedbacks')
     }
   }
 
@@ -221,6 +250,7 @@ export default function AdminDashboard() {
     { id: 'photos', label: 'Photo Analytics', icon: '📸' },
     { id: 'security', label: 'Sécurité', icon: '🛡️' },
     { id: 'users', label: 'Utilisateurs', icon: '👥' },
+    { id: 'feedbacks', label: 'Feedbacks', icon: '💬' },
     { id: 'system', label: 'Système', icon: '⚙️' }
   ]
 
@@ -479,9 +509,9 @@ export default function AdminDashboard() {
                       className="w-full px-3 py-2 bg-white text-gray-900 border-2 border-gray-300 rounded-lg text-sm font-medium focus:border-blue-500 focus:outline-none focus:bg-blue-50"
                     >
                       <option value="">Tous</option>
-                      <option value="artcritic">Art Critic</option>
-                      <option value="roast">Roast</option>
-                      <option value="professional">Professional</option>
+                      <option value="learning">📚 Learning</option>
+                      <option value="roast">🔥 Roast</option>
+                      <option value="professional">👨‍🎓 Professional</option>
                     </select>
                   </div>
                   <div>
@@ -670,11 +700,11 @@ export default function AdminDashboard() {
                             <td className="py-3 px-2">
                               {(analysis as any).analysisTone ? (
                                 <span className={`px-2 py-1 rounded text-xs ${
-                                  (analysis as any).analysisTone === 'artcritic' ? 'bg-purple-500/20 text-purple-300' : 
+                                  (analysis as any).analysisTone === 'learning' ? 'bg-green-500/20 text-green-300' :
                                   (analysis as any).analysisTone === 'roast' ? 'bg-red-500/20 text-red-300' :
                                   'bg-blue-500/20 text-blue-300'
                                 }`}>
-                                  {(analysis as any).analysisTone === 'artcritic' ? '🎨 Art Critic' : 
+                                  {(analysis as any).analysisTone === 'learning' ? '📚 Learning' :
                                    (analysis as any).analysisTone === 'roast' ? '🔥 Roast' : '👨‍🎓 Pro'}
                                 </span>
                               ) : (
@@ -927,16 +957,14 @@ export default function AdminDashboard() {
                             <td className="py-3 px-2">
                               <div className="flex space-x-1">
                                 <button
-                                  onClick={() => alert(`Actions utilisateur ${user.email} à implémenter`)}
-                                  className="px-2 py-1 bg-blue-600/20 text-blue-300 rounded text-xs hover:bg-blue-600/30"
+                                  onClick={() => {
+                                    setSelectedUser(user)
+                                    setShowUserModal(true)
+                                  }}
+                                  className="px-3 py-1 bg-blue-600/20 text-blue-300 rounded text-xs hover:bg-blue-600/30 font-medium"
+                                  title="Gérer l'utilisateur"
                                 >
-                                  ✏️
-                                </button>
-                                <button
-                                  onClick={() => alert(`Supprimer ${user.email} - nécessite confirmation`)}
-                                  className="px-2 py-1 bg-red-600/20 text-red-300 rounded text-xs hover:bg-red-600/30"
-                                >
-                                  🗑️
+                                  ⚙️ Actions
                                 </button>
                               </div>
                             </td>
@@ -972,6 +1000,120 @@ export default function AdminDashboard() {
                     >
                       Suivant →
                     </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Feedbacks Tab */}
+          {activeTab === 'feedbacks' && (
+            <div className="space-y-8">
+              <div className="glass-card p-6">
+                <h3 className="text-xl font-semibold text-text-white mb-6 flex items-center">
+                  💬 <span className="ml-2">Feedbacks utilisateurs</span>
+                  <span className="ml-auto text-sm text-text-gray">
+                    {feedbacksData?.data?.length || 0} feedbacks
+                  </span>
+                </h3>
+
+                {/* Stats rapides */}
+                {feedbacksData?.stats && (
+                  <div className="grid md:grid-cols-4 gap-4 mb-6">
+                    <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4 text-center">
+                      <div className="text-2xl font-bold text-green-400">
+                        {feedbacksData.stats.byType?.feature || 0}
+                      </div>
+                      <div className="text-xs text-green-300">💡 Suggestions</div>
+                    </div>
+                    <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 text-center">
+                      <div className="text-2xl font-bold text-red-400">
+                        {feedbacksData.stats.byType?.bug || 0}
+                      </div>
+                      <div className="text-xs text-red-300">🐛 Bugs</div>
+                    </div>
+                    <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 text-center">
+                      <div className="text-2xl font-bold text-blue-400">
+                        {feedbacksData.stats.byType?.love || 0}
+                      </div>
+                      <div className="text-xs text-blue-300">❤️ Compliments</div>
+                    </div>
+                    <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 text-center">
+                      <div className="text-2xl font-bold text-yellow-400">
+                        {feedbacksData.stats.byStatus?.new || 0}
+                      </div>
+                      <div className="text-xs text-yellow-300">🆕 Nouveaux</div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Liste des feedbacks */}
+                {feedbacksData?.data && feedbacksData.data.length > 0 ? (
+                  <div className="space-y-4">
+                    {feedbacksData.data.map((feedback: any) => (
+                      <div key={feedback.id} className="bg-cosmic-glass/30 border border-cosmic-glassborder rounded-lg p-4 hover:bg-cosmic-glass/50 transition-colors">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex items-center space-x-3">
+                            <span className="text-2xl">
+                              {feedback.type === 'bug' ? '🐛' :
+                               feedback.type === 'feature' ? '💡' :
+                               feedback.type === 'love' ? '❤️' :
+                               feedback.type === 'hate' ? '😕' : '💬'}
+                            </span>
+                            <div>
+                              <div className="flex items-center space-x-2">
+                                <span className="text-text-white font-semibold">
+                                  {feedback.title || 'Sans titre'}
+                                </span>
+                                {feedback.category && (
+                                  <span className="px-2 py-0.5 bg-neon-cyan/20 text-neon-cyan rounded text-xs">
+                                    {feedback.category}
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-xs text-text-muted mt-1">
+                                {feedback.email || 'Anonyme'} • {new Date(feedback.createdAt).toLocaleString('fr-FR')}
+                              </div>
+                            </div>
+                          </div>
+
+                          <span className={`px-3 py-1 rounded text-xs font-medium ${
+                            feedback.status === 'resolved' ? 'bg-green-500/20 text-green-300' :
+                            feedback.status === 'in_progress' ? 'bg-blue-500/20 text-blue-300' :
+                            'bg-yellow-500/20 text-yellow-300'
+                          }`}>
+                            {feedback.status === 'resolved' ? '✅ Résolu' :
+                             feedback.status === 'in_progress' ? '⏳ En cours' : '🆕 Nouveau'}
+                          </span>
+                        </div>
+
+                        <p className="text-text-gray text-sm mb-3 pl-11">
+                          {feedback.message}
+                        </p>
+
+                        {feedback.rating && (
+                          <div className="flex items-center space-x-1 pl-11 mb-2">
+                            <span className="text-xs text-text-muted">Note:</span>
+                            {[...Array(5)].map((_, i) => (
+                              <span key={i} className={i < feedback.rating ? 'text-yellow-400' : 'text-gray-600'}>
+                                ⭐
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
+                        {feedback.page && (
+                          <div className="text-xs text-text-muted pl-11">
+                            📍 Page: <span className="font-mono">{feedback.page}</span>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12 text-text-gray">
+                    <div className="text-4xl mb-2">💬</div>
+                    <p>Aucun feedback pour le moment</p>
                   </div>
                 )}
               </div>
@@ -1026,6 +1168,20 @@ export default function AdminDashboard() {
             </div>
           )}
         </div>
+
+        {/* Modal actions utilisateur */}
+        <UserActionsModal
+          user={selectedUser}
+          isOpen={showUserModal}
+          onClose={() => {
+            setShowUserModal(false)
+            setSelectedUser(null)
+          }}
+          onSuccess={() => {
+            loadUsersData()
+            loadDashboardData()
+          }}
+        />
       </div>
     </>
   )

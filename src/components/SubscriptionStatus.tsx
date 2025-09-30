@@ -21,7 +21,8 @@ export default function SubscriptionStatus({ compact = false }: SubscriptionStat
       const response = await fetch('/api/subscription/status')
       if (response.ok) {
         const data = await response.json()
-        setSubscription(data.subscription)
+        // L'API retourne les données directement, pas dans data.subscription
+        setSubscription(data)
       }
     } catch (error) {
       logger.error('Erreur chargement abonnement:', error)

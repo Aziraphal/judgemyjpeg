@@ -75,6 +75,29 @@ npm run lint            # ESLint (désactivé en build)
 - ✅ Legal : RGPD + mentions légales complètes
 - ⏳ Performance : Build TypeScript à corriger
 
+## 🔄 **Session 29/09/2025 - Mode Apprentissage & Animation**
+### 📚 Transformation complète Mode Créatif → Mode Apprentissage :
+- **Concept changé** : Art Critic → Formation pédagogique complète
+- **Types mis à jour** : 'artcritic' → 'learning' dans tous fichiers TS
+- **Prompt OpenAI réécrit** : Professeur pédagogue vs critique artistique
+- **UI transformée** : ToneSelector, PhotoUpload, couleurs amber → green
+- **Animation simplifiée** : Suppression cadre SVG vintage complexe
+- **Style éducatif** : Cercles verts, éléments 💡✏️🎓, rythme contemplatif
+
+### 🎯 Différenciation modes parfaite :
+- **🔥 Roast** : Divertissement et fun
+- **🎯 Pro** : Mobile-friendly et motivation  
+- **📚 Learning** : Formation complète et pédagogie
+
+### 🔧 Corrections techniques :
+- **Textes fixes** : "Formation pédagogique en cours..." au lieu de "Critique d'art"
+- **Build TypeScript** : Compilation 0 erreur après transformation
+- **Commit optimisé** : -84 lignes complexes, +30 lignes épurées (`52983c3`)
+
+### ⚠️ Problème identifié non résolu :
+- **Subscription status** : "Impossible de charger le statut d'abonnement"
+- **Investigation requise** : useAnalysisLimit.ts ou API /subscription/status
+
 ## 🔄 **Session 18/08/2025 - Feedback System & Audit**
 ### 💬 Système de feedback complet intégré :
 - **FeedbackModal** : Interface complète avec 5 types (❤️🐛💡😕💬)
@@ -200,5 +223,5 @@ npm run lint            # ESLint (désactivé en build)
 - **A/B testing** : Optimisation conversion pricing
 
 ---
-*Dernière mise à jour : 18 août 2025*
-*Status : Audit complet 9.5/10 + Feedback system intégré + Focus produit optimisé*
+*Dernière mise à jour : 29 septembre 2025*
+*Status : Mode Apprentissage implémenté + Animation simplifiée + Subscription bug à résoudre*
