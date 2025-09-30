@@ -83,17 +83,15 @@ export default function AnalyzePage() {
   }, [session])
 
   // Afficher le modal starter pack si les analyses sont épuisées
-  useEffect(() => {
-    // Ne jamais afficher le modal si l'utilisateur peut analyser
-    if (shouldShowStarterModal && !showStarterModal && !canAnalyze) {
-      // Délai de 1 seconde pour l'UX
-      const timer = setTimeout(() => {
-        setShowStarterModal(true)
-      }, 1000)
-
-      return () => clearTimeout(timer)
-    }
-  }, [shouldShowStarterModal, showStarterModal, canAnalyze])
+  // DÉSACTIVÉ : Le modal ne s'affiche plus automatiquement, seulement quand l'API retourne une erreur
+  // useEffect(() => {
+  //   if (shouldShowStarterModal && !showStarterModal && !canAnalyze) {
+  //     const timer = setTimeout(() => {
+  //       setShowStarterModal(true)
+  //     }, 1000)
+  //     return () => clearTimeout(timer)
+  //   }
+  // }, [shouldShowStarterModal, showStarterModal, canAnalyze])
 
   // Démarrer tutorial automatiquement pour nouveaux utilisateurs (désactivé pour éviter les répétitions)
   useEffect(() => {
