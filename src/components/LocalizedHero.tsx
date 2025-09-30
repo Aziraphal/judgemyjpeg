@@ -6,7 +6,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useAutoLocalization } from '@/hooks/useAutoLocalization'
-import { AnalysisLanguage } from './LanguageSelector'
+import type { AnalysisLanguage } from '@/types/analysis'
 
 interface LocalizedContent {
   title: string

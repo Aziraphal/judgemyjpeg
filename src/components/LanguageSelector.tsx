@@ -1,6 +1,5 @@
 import { useState } from 'react'
-
-export type AnalysisLanguage = 'fr' | 'en' | 'es' | 'de' | 'it' | 'pt'
+import type { AnalysisLanguage } from '@/types/analysis'
 
 interface LanguageSelectorProps {
   selectedLanguage: AnalysisLanguage
@@ -25,6 +24,11 @@ export default function LanguageSelector({ selectedLanguage, onLanguageChange }:
       label: 'Español',
       flag: '🇪🇸',
       example: 'Excelente composición siguiendo la regla de los tercios...'
+    },
+    zh: {
+      label: '简体中文',
+      flag: '🇨🇳',
+      example: '构图优秀，遵循三分法则...'
     },
     de: {
       label: 'Deutsch',

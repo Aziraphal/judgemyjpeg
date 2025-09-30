@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect } from 'react'
-import { AnalysisLanguage } from './LanguageSelector'
+import type { AnalysisLanguage } from '@/types/analysis'
 import LanguageSelector from './LanguageSelector'
 import { useAutoLocalization } from '@/hooks/useAutoLocalization'
 

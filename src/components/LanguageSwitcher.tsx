@@ -5,7 +5,7 @@
 
 import { useState } from 'react'
 import { useLanguageSync } from '@/hooks/useLanguageSync'
-import { AnalysisLanguage } from './LanguageSelector'
+import type { AnalysisLanguage } from '@/types/analysis'
 
 export default function LanguageSwitcher() {
   const { currentLanguage, changeLanguage } = useLanguageSync()

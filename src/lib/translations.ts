@@ -3,7 +3,7 @@
  * Support 6 langues : FR, EN, ES, DE, IT, PT
  */
 
-import { AnalysisLanguage } from '@/components/LanguageSelector'
+import type { AnalysisLanguage } from '@/types/analysis'
 
 export interface Translations {
   // Navigation

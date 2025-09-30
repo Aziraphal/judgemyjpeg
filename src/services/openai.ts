@@ -80,6 +80,7 @@ export async function analyzePhoto(
       fr: { name: 'français', code: 'fr' },
       en: { name: 'English', code: 'en' },
       es: { name: 'español', code: 'es' },
+      zh: { name: '中文', code: 'zh' },
       de: { name: 'Deutsch', code: 'de' },
       it: { name: 'italiano', code: 'it' },
       pt: { name: 'português', code: 'pt' }

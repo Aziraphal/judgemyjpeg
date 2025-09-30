@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect } from 'react'
-import { AnalysisLanguage } from '@/components/LanguageSelector'
+import type { AnalysisLanguage } from '@/types/analysis'
 import { logger } from '@/lib/logger'
 
 interface LocationData {

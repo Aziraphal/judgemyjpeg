@@ -3,7 +3,7 @@
  */
 
 import { useState, useEffect } from 'react'
-import { AnalysisLanguage } from '@/components/LanguageSelector'
+import type { AnalysisLanguage } from '@/types/analysis'
 import { translations, Translations } from '@/lib/translations'
 import { useAutoLocalization } from './useAutoLocalization'
 

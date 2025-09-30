@@ -6,7 +6,7 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAutoLocalization } from './useAutoLocalization'
-import { AnalysisLanguage } from '@/components/LanguageSelector'
+import type { AnalysisLanguage } from '@/types/analysis'
 
 export function useLanguageSync() {
   const { i18n } = useTranslation()
