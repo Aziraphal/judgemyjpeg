@@ -51,8 +51,16 @@ export default function AnalysisCounter({
       const data = await response.json()
       setSubscription(data.subscription)
 
+      // 🔍 DEBUG
+      console.log('🔍 [AnalysisCounter] API Response:', {
+        canAnalyze: data.subscription?.canAnalyze,
+        subscriptionStatus: data.subscription?.subscriptionStatus,
+        willTriggerModal: !data.subscription?.canAnalyze && !!onLimitReached
+      })
+
       // Déclencher callback si limite atteinte
       if (!data.subscription?.canAnalyze && onLimitReached) {
+        console.log('🚨 [AnalysisCounter] TRIGGERING MODAL!')
         onLimitReached()
       }
     } catch (error) {
