@@ -849,15 +849,28 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
               
               <button
                 onClick={() => {
-                  // Ouvrir l'extension Perfect Insta Post ou fallback
+                  // Copier le mini résumé + hashtags dans le presse-papiers
                   const text = `Score ${analysis.score}/100 📸 Analysé par l'IA ! #PhotoIA #JudgeMyJPEG`;
                   navigator.clipboard?.writeText(text).then(() => {
                     alert('Texte copié ! 📋 Parfait pour tes stories Instagram ✨');
                   }).catch(() => {
-                    alert('Extension Perfect Insta Post recommandée pour un partage optimisé ! ✨');
+                    alert('Impossible de copier le texte');
                   });
                 }}
+                className="btn-gradient-neon px-4 py-2 rounded-lg font-medium flex items-center space-x-2 hover:scale-105 transition-transform"
+                title="Copier le résumé et hashtags"
+              >
+                <span>📋</span>
+                <span>Copier résumé</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  // Ouvrir le Chrome Web Store pour l'extension Perfect Insta Post
+                  window.open('https://chromewebstore.google.com/detail/perfect-insta-post/lddbiholbceiiajhnapabcomkfdmaeei', '_blank');
+                }}
                 className="btn-gradient-pink px-4 py-2 rounded-lg font-medium flex items-center space-x-2 hover:scale-105 transition-transform border border-neon-pink/50"
+                title="Obtenir l'extension Chrome Perfect Insta Post"
               >
                 <span>✨</span>
                 <span>Perfect Insta Post</span>
