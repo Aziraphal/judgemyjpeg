@@ -65,6 +65,56 @@ module.exports = {
   ],
   robotsTxtOptions: {
     policies: [
+      // AI Crawlers - Explicit permissions for LLMs
+      {
+        userAgent: 'GPTBot',
+        allow: '/',
+        disallow: ['/admin*', '/api/*', '/auth/*']
+      },
+      {
+        userAgent: 'ChatGPT-User',
+        allow: '/'
+      },
+      {
+        userAgent: 'Google-Extended',
+        allow: '/',
+        disallow: ['/admin*', '/api/*']
+      },
+      {
+        userAgent: 'PerplexityBot',
+        allow: '/',
+        disallow: ['/admin*', '/api/*']
+      },
+      {
+        userAgent: 'ClaudeBot',
+        allow: '/',
+        disallow: ['/admin*', '/api/*']
+      },
+      {
+        userAgent: 'anthropic-ai',
+        allow: '/',
+        disallow: ['/admin*']
+      },
+      {
+        userAgent: 'Amazonbot',
+        allow: '/'
+      },
+      {
+        userAgent: 'cohere-ai',
+        allow: '/'
+      },
+      // Traditional Search Engines
+      {
+        userAgent: 'Googlebot',
+        allow: '/',
+        disallow: ['/admin*', '/api/*', '/auth/*']
+      },
+      {
+        userAgent: 'Bingbot',
+        allow: '/',
+        disallow: ['/admin*', '/api/*']
+      },
+      // All other bots
       {
         userAgent: '*',
         allow: '/',
@@ -83,7 +133,8 @@ module.exports = {
       }
     ],
     additionalSitemaps: [
-      'https://www.judgemyjpeg.fr/sitemap.xml'
+      'https://www.judgemyjpeg.fr/sitemap.xml',
+      'https://www.judgemyjpeg.fr/ai.txt'
     ]
   },
   changefreq: 'daily',

@@ -1,4 +1,51 @@
-# *
+# AI Crawlers - OpenAI GPT, Perplexity, Google Gemini, Anthropic Claude
+User-agent: GPTBot
+Allow: /
+Disallow: /admin*
+Disallow: /api/*
+Disallow: /auth/*
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin*
+Disallow: /api/*
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin*
+Disallow: /api/*
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin*
+Disallow: /api/*
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /admin*
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+# Traditional Search Engines
+User-agent: Googlebot
+Allow: /
+Disallow: /admin*
+Disallow: /api/*
+Disallow: /auth/*
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin*
+Disallow: /api/*
+
+# All other bots
 User-agent: *
 Allow: /
 Disallow: /admin*
@@ -11,6 +58,9 @@ Disallow: /offline*
 Disallow: /_next/*
 Disallow: /node_modules/*
 Disallow: *.disabled*
+
+# Crawl-rate optimization for AI bots
+Crawl-delay: 1
 
 # Host
 Host: https://www.judgemyjpeg.fr

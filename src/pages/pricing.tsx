@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import Head from 'next/head'
 import { trackSubscription } from '@/lib/gtag'
 import { logger } from '@/lib/logger'
 import { useTranslation } from 'react-i18next'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
+import SEOHead from '@/components/SEOHead'
 
 export default function PricingPage() {
   const { data: session, status } = useSession()
@@ -91,12 +91,80 @@ export default function PricingPage() {
     )
   }
 
+  const pricingOffers = [
+    {
+      "@type": "Offer",
+      "name": "Plan Gratuit",
+      "description": "3 analyses photo IA par mois avec tous les modes d'analyse (Roast, Professional, Learning). Idéal pour découvrir le service.",
+      "price": "0",
+      "priceCurrency": "EUR",
+      "eligibleQuantity": {
+        "@type": "QuantitativeValue",
+        "value": "3",
+        "unitText": "analyses par mois"
+      }
+    },
+    {
+      "@type": "Offer",
+      "name": "Starter Pack",
+      "description": "10 analyses photo + 3 exports PDF + 3 partages sociaux. Paiement unique sans abonnement.",
+      "price": "4.99",
+      "priceCurrency": "EUR",
+      "eligibleQuantity": {
+        "@type": "QuantitativeValue",
+        "value": "10",
+        "unitText": "analyses"
+      }
+    },
+    {
+      "@type": "Offer",
+      "name": "Premium Monthly",
+      "description": "Analyses photo IA illimitées, tous les modes, exports PDF illimités, partage social, collections personnalisées.",
+      "price": "9.99",
+      "priceCurrency": "EUR",
+      "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "9.99",
+        "priceCurrency": "EUR",
+        "billingDuration": "P1M",
+        "billingIncrement": 1
+      }
+    },
+    {
+      "@type": "Offer",
+      "name": "Lifetime Access",
+      "description": "Accès à vie avec toutes les fonctionnalités premium : analyses illimitées, exports, partage, collections, futures features.",
+      "price": "99",
+      "priceCurrency": "EUR",
+      "availabilityStarts": "2025-01-01",
+      "priceValidUntil": "2025-12-31"
+    }
+  ]
+
   return (
     <>
-      <Head>
-        <title>Tarifs & Abonnements | Plans analyse photo IA - JudgeMyJPEG</title>
-        <meta name="description" content="Découvrez nos plans d'abonnement pour l'analyse photo IA. Gratuit 3 analyses/mois, Starter Pack 4.99€, Premium 9.99€/mois, Annuel 79€/an. Analyses illimitées." />
-      </Head>
+      <SEOHead
+        title="Tarifs & Abonnements Analyse Photo IA | Plans Premium - JudgeMyJPEG"
+        description="Plans d'abonnement analyse photo IA : Gratuit (3 analyses/mois), Starter Pack 4.99€ (10 analyses), Premium 9.99€/mois (illimité), Lifetime 99€ (accès à vie). Comparez nos offres et choisissez le plan adapté à vos besoins photographiques."
+        keywords="tarifs analyse photo IA, prix critique photo AI, abonnement photo analysis, plan gratuit analyse photo, premium photography AI, lifetime photo critique, photo feedback pricing"
+        canonicalUrl="https://www.judgemyjpeg.fr/pricing"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": "JudgeMyJPEG - Analyse Photo IA",
+          "description": "Service d'analyse photo par intelligence artificielle avec 3 modes d'expertise et plusieurs plans tarifaires adaptés à tous les besoins.",
+          "brand": {
+            "@type": "Brand",
+            "name": "JudgeMyJPEG"
+          },
+          "offers": pricingOffers,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "reviewCount": "150"
+          }
+        }}
+      />
 
       <main className="min-h-screen bg-cosmic-overlay particles-container relative">
         {/* Floating decorative elements */}

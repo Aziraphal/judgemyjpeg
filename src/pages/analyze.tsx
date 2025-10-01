@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import Head from 'next/head'
 import PhotoUpload from '@/components/PhotoUpload'
 import AnalysisResult from '@/components/AnalysisResult'
 import ToneSelector from '@/components/ToneSelector'
@@ -11,6 +10,7 @@ import InteractiveTutorial, { useTutorial } from '@/components/InteractiveTutori
 import ProgressiveDisclosure, { useProgressiveDisclosure, SkillLevelGroup } from '@/components/ProgressiveDisclosure'
 import ContextualTooltip, { RichTooltip } from '@/components/ContextualTooltip'
 import StarterPackModal from '@/components/StarterPackModal'
+import SEOHead from '@/components/SEOHead'
 import { PhotoAnalysis, AnalysisTone, AnalysisLanguage, PhotoType } from '@/types/analysis'
 import { trackPhotoAnalysis } from '@/lib/gtag'
 import { useAnalysisLimit } from '@/hooks/useAnalysisLimit'
@@ -176,11 +176,37 @@ export default function AnalyzePage() {
 
   return (
     <>
-      <Head>
-        <title>{t.analyze.title} | JudgeMyJPEG</title>
-        <meta name="description" content={t.analyze.subtitle} />
-        <link rel="canonical" href="https://www.judgemyjpeg.fr/analyze" />
-      </Head>
+      <SEOHead
+        title="Analyser Photo Gratuit IA | Upload & Critique Instantanée - JudgeMyJPEG"
+        description="Uploadez votre photo et obtenez une analyse IA instantanée. 3 modes d'expertise : Roast (créatif), Professional (technique), Learning (pédagogique). Notation détaillée, conseils personnalisés, export PDF. Gratuit : 3 analyses/mois."
+        keywords="upload photo analyse IA, analyser photo en ligne gratuit, critique photo instantanée, AI photo feedback, photo analysis tool, photography critique AI, improve photography skills, roast my photo, professional photo critique"
+        canonicalUrl="https://www.judgemyjpeg.fr/analyze"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          "name": "JudgeMyJPEG Photo Analyzer",
+          "applicationCategory": "PhotographyApplication",
+          "description": "Outil d'analyse photo par intelligence artificielle. Uploadez votre photo et recevez une critique détaillée avec 3 modes d'analyse : Roast, Professional, et Learning.",
+          "url": "https://www.judgemyjpeg.fr/analyze",
+          "featureList": [
+            "Analyse photo par IA en 3 modes distincts",
+            "Mode Roast : Critique créative et humoristique",
+            "Mode Professional : Conseils techniques experts (composition, exposition, lumière)",
+            "Mode Learning : Analyse pédagogique pour progresser",
+            "Notation sur 100 points avec détails",
+            "Support 6 langues : FR, EN, ES, DE, IT, PT",
+            "Types de photos spécialisés : Portrait, Paysage, Street, Macro, Architecture",
+            "Export PDF et partage social",
+            "3 analyses gratuites par mois"
+          ],
+          "potentialAction": {
+            "@type": "UseAction",
+            "name": "Analyser une photo",
+            "description": "Uploadez votre photo pour obtenir une analyse IA détaillée",
+            "target": "https://www.judgemyjpeg.fr/analyze"
+          }
+        }}
+      />
 
       <main className={`min-h-screen particles-container relative transition-all duration-1000 ${
         isUploading && selectedTone === 'roast' 

@@ -1,9 +1,9 @@
-import Head from 'next/head'
 import { useSession, signIn, signOut } from 'next-auth/react'
 import { useState, useEffect } from 'react'
 import { logger } from '@/lib/logger'
 import LocalizedHero from '@/components/LocalizedHero'
 import LanguageDebugger from '@/components/LanguageDebugger'
+import SEOHead from '@/components/SEOHead'
 
 export default function Home() {
   const { data: session, status } = useSession()
@@ -57,113 +57,56 @@ export default function Home() {
     )
   }
 
+  const faqSchema = [
+    {
+      "@type": "Question",
+      "name": "Comment analyser une photo avec une IA ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Uploadez votre photo sur JudgeMyJPEG, notre intelligence artificielle l'analyse en quelques secondes et vous donne une critique détaillée avec note sur 100 et conseils personnalisés. Choisissez entre 3 modes : Roast (critique créative), Professional (conseils techniques), ou Learning (analyse pédagogique)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Est-ce que l'analyse photo IA est gratuite ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oui, JudgeMyJPEG propose 3 analyses photo IA gratuites par mois. Aucune carte de crédit requise. Vous obtenez une critique professionnelle avec notation détaillée, analyse de composition, exposition, lumière et créativité."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Quels types de photos peut-on analyser ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Notre IA analyse tous types de photos : Portrait, Paysage, Street Photography, Macro, Architecture, et photographie générale. Formats supportés : JPG, PNG, WebP. L'analyse s'adapte au type de photo pour des conseils personnalisés."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Quels sont les 3 modes d'analyse IA disponibles ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "JudgeMyJPEG propose 3 personnalités IA uniques : 1) Roast Mode - critiques créatives et humoristiques, 2) Professional Mode - conseils techniques experts avec recommandations Lightroom/Photoshop, 3) Learning Mode - analyse pédagogique pour améliorer vos compétences photographiques progressivement."
+      }
+    }
+  ]
+
   return (
     <>
-      <Head>
-        <title>Analyser Photo IA Gratuit | Critique Photo Intelligence Artificielle - JudgeMyJPEG</title>
-        <meta name="description" content="Analysez vos photos gratuitement avec une IA experte ! Critique photo professionnelle, note sur 100, conseils techniques. Analyse photo instantanée en ligne." />
-        <meta name="keywords" content="analyser photo, analyse photo IA, critique photo, intelligence artificielle photo, analyser photo gratuit, critique photo IA, améliorer photo, analyse image IA" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        
-        {/* Open Graph */}
-        <meta property="og:title" content="Analyser Photo IA Gratuit | Critique Photo Intelligence Artificielle" />
-        <meta property="og:description" content="Analysez vos photos gratuitement avec une IA experte ! Critique photo professionnelle, note sur 100, conseils techniques instantanés." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.judgemyjpeg.fr" />
-        <meta property="og:image" content="https://www.judgemyjpeg.fr/og-image.svg" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:type" content="image/svg+xml" />
-        <meta property="og:locale" content="fr_FR" />
-        <meta property="og:site_name" content="JudgeMyJPEG" />
-        
-        {/* Twitter Card */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content="https://www.judgemyjpeg.fr" />
-        <meta name="twitter:title" content="Analyser Photo IA Gratuit | JudgeMyJPEG" />
-        <meta name="twitter:description" content="Analysez vos photos avec une IA experte ! Critique professionnelle, note sur 100, conseils personnalisés." />
-        <meta name="twitter:image" content="https://www.judgemyjpeg.fr/twitter-card.svg" />
-        <meta name="twitter:image:width" content="1200" />
-        <meta name="twitter:image:height" content="600" />
-        <meta name="twitter:creator" content="@judgemyjpeg" />
-        <meta name="twitter:site" content="@judgemyjpeg" />
-        
-        {/* Schema.org JSON-LD - Enhanced for SEO */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": ["WebSite", "WebApplication"],
-            "name": "JudgeMyJPEG - Analyser Photo IA",
-            "alternateName": ["Critique Photo IA", "Analyse Photo Intelligence Artificielle"],
-            "description": "Service gratuit d'analyse et critique photo par intelligence artificielle. Analysez vos photos avec une IA experte, obtenez une note sur 100 et des conseils personnalisés.",
-            "url": "https://www.judgemyjpeg.fr",
-            "applicationCategory": "PhotographyApplication",
-            "operatingSystem": "Web Browser",
-            "offers": {
-              "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "EUR",
-              "description": "Analyse photo gratuite par IA"
-            },
-            "potentialAction": [
-              {
-                "@type": "SearchAction",
-                "target": "https://www.judgemyjpeg.fr/analyze",
-                "query-input": "required name=photo"
-              },
-              {
-                "@type": "UseAction",
-                "name": "Analyser Photo IA",
-                "description": "Analysez gratuitement vos photos avec intelligence artificielle",
-                "target": "https://www.judgemyjpeg.fr/analyze"
-              }
-            ],
-            "provider": {
-              "@type": "Organization",
-              "name": "JudgeMyJPEG",
-              "url": "https://www.judgemyjpeg.fr",
-              "description": "Plateforme d'analyse photo par intelligence artificielle"
-            },
-            "keywords": "analyser photo, critique photo IA, intelligence artificielle photo, analyse photo gratuit, améliorer photo, conseils photo IA",
-            "inLanguage": ["fr", "en", "es", "de", "it", "pt"],
-            "isAccessibleForFree": true
-          })}
-        </script>
-        
-        {/* FAQ Schema for SEO */}
-        <script type="application/ld+json">
-          {JSON.stringify({
+      <SEOHead
+        title="Analyser Photo IA Gratuit | Critique Photo Intelligence Artificielle - JudgeMyJPEG"
+        description="Analysez vos photos gratuitement avec une IA experte ! 3 modes d'analyse (Roast/Professional/Learning), notation détaillée sur 100, conseils techniques personnalisés. Analyse photo instantanée en ligne avec intelligence artificielle spécialisée en photographie."
+        keywords="analyser photo IA, critique photo intelligence artificielle, analyse photo gratuit, améliorer photo IA, conseil photo automatique, note photo IA, composition photo IA, exposition photo analyse, AI photo critique, photography feedback AI"
+        canonicalUrl="https://www.judgemyjpeg.fr"
+        jsonLd={[
+          {
             "@context": "https://schema.org",
             "@type": "FAQPage",
-            "mainEntity": [
-              {
-                "@type": "Question",
-                "name": "Comment analyser une photo avec une IA ?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Uploadez votre photo sur JudgeMyJPEG, notre intelligence artificielle l'analyse en quelques secondes et vous donne une critique détaillée avec note sur 100 et conseils personnalisés."
-                }
-              },
-              {
-                "@type": "Question", 
-                "name": "Est-ce que l'analyse photo IA est gratuite ?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Oui, JudgeMyJPEG propose des analyses photo IA gratuites. Vous pouvez tester notre service sans inscription et obtenir une critique professionnelle de vos photos."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Quels types de photos peut-on analyser ?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Notre IA analyse tous types de photos : portraits, paysages, architecture, culinaire, macro, animalier, street photography. Formats supportés : JPG, PNG, WebP."
-                }
-              }
-            ]
-          })}
-        </script>
-      </Head>
+            "mainEntity": faqSchema
+          }
+        ]}
+      />
       
       <main className="min-h-screen bg-cosmic-overlay particles-container relative">
         {/* Floating orbs */}
