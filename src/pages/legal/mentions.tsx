@@ -99,10 +99,10 @@ export default function Mentions() {
                     <div>
                       <h3 className="text-lg font-semibold text-neon-pink mb-3">Base de Données</h3>
                       <div className="text-text-gray space-y-2">
-                        <p><strong>Prestataire :</strong> Neon Database</p>
-                        <p><strong>Localisation :</strong> Centres de données européens</p>
+                        <p><strong>Prestataire :</strong> Supabase</p>
+                        <p><strong>Localisation :</strong> Centres de données européens (EU)</p>
                         <p><strong>Type :</strong> PostgreSQL hébergé</p>
-                        <p><strong>Site web :</strong> <a href="https://neon.tech" className="text-neon-cyan hover:underline">neon.tech</a></p>
+                        <p><strong>Site web :</strong> <a href="https://supabase.com" className="text-neon-cyan hover:underline">supabase.com</a></p>
                       </div>
                     </div>
                   </div>

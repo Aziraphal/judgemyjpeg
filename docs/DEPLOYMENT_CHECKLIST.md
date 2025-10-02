@@ -67,7 +67,7 @@ openssl rand -base64 32
 ### Variables sensibles à vérifier :
 - [ ] Toutes les clés commencent par les bons préfixes
 - [ ] `STRIPE_SECRET_KEY` = `sk_live_...` (PAS sk_test_)
-- [ ] `DATABASE_URL` pointe vers Neon production
+- [ ] `DATABASE_URL` pointe vers Supabase production
 - [ ] `NEXTAUTH_URL` = `https://www.judgemyjpeg.fr`
 
 ---
@@ -198,7 +198,7 @@ railway variables set MAINTENANCE_MODE=true
 ### 🚨 **BLOQUANT PROD** (App ne marche pas) :
 1. Variables Stripe production (pas test)
 2. `NEXTAUTH_SECRET` + `NEXTAUTH_URL` corrects
-3. `DATABASE_URL` production Neon
+3. `DATABASE_URL` production Supabase
 4. `OPENAI_API_KEY` avec quota
 5. `ADMIN_SECRET` pour accès admin
 

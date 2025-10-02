@@ -19,7 +19,7 @@ NEXTAUTH_SECRET=VOTRE_SECRET_NEXTAUTH_32_CARACTERES_MINIMUM
 
 ### 🗄️ **DATABASE (Neon PostgreSQL)**
 ```bash
-DATABASE_URL=postgresql://neondb_owner:VOTRE_PASSWORD@ep-small-cake-a22hh7ll-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require
+DATABASE_URL=postgresql://YOUR_SUPABASE_CONNECTION_STRING?sslmode=require
 ```
 
 ### 🤖 **OPENAI (Analyses IA)**
