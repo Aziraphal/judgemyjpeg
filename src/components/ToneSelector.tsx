@@ -15,6 +15,7 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
   const toneOptions = {
     professional: {
       label: 'Mode Pro',
+      labelMobile: 'Pro',
       icon: '👔',
       description: 'Analyse technique et constructive',
       tooltip: 'Analyse professionnelle focalisée sur les aspects techniques : composition, exposition, netteté, etc.',
@@ -23,6 +24,7 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
     },
     roast: {
       label: 'Mode Cassant',
+      labelMobile: 'Cassant',
       icon: '🔥',
       description: 'Analyse brutalement honnête et fun',
       tooltip: 'Mode humoristique qui révèle les défauts avec humour tout en restant constructif',
@@ -31,6 +33,7 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
     },
     learning: {
       label: 'Mode Apprentissage',
+      labelMobile: 'Apprentissage',
       icon: '📚',
       description: 'Formation complète et pédagogique',
       tooltip: 'Analyse détaillée avec explications du pourquoi, conseils pratiques et exercices pour progresser',
@@ -113,14 +116,17 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
             key={tone}
             onClick={() => onToneChange(tone as AnalysisTone)}
             className={`p-2 sm:p-4 rounded-lg border-2 transition-all duration-300 hover:scale-105 w-full ${
-              selectedTone === tone 
-                ? config.selectedColor 
+              selectedTone === tone
+                ? config.selectedColor
                 : config.color + ' hover:border-opacity-75'
             }`}
           >
             <div className="text-center">
               <div className="text-2xl sm:text-3xl mb-1 sm:mb-2">{config.icon}</div>
-              <div className="text-text-white font-semibold mb-1 text-sm sm:text-base">{config.label}</div>
+              <div className="text-text-white font-semibold mb-1 text-xs sm:text-base">
+                <span className="sm:hidden">{config.labelMobile || config.label}</span>
+                <span className="hidden sm:inline">{config.label}</span>
+              </div>
               <div className="text-text-muted text-xs hidden sm:block">{config.description}</div>
             </div>
           </button>
