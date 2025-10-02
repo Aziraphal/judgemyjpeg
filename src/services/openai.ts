@@ -2,13 +2,19 @@ import OpenAI from 'openai'
 import { ExifData } from '@/types/exif'
 import { generateShootingConditionsSummary } from '@/utils/exifExtractor'
 import { logger } from '@/lib/logger'
-import { 
-  AnalysisTone, 
-  AnalysisLanguage, 
-  PhotoType, 
+import {
+  AnalysisTone,
+  AnalysisLanguage,
+  PhotoType,
   PhotoAnalysis,
-  PHOTO_TYPES_CONFIG 
+  PHOTO_TYPES_CONFIG
 } from '@/types/analysis'
+import {
+  generateImageEmbedding,
+  findSimilarAnalyses,
+  enrichPromptWithExamples,
+  storeAnalysis
+} from './rag'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
@@ -45,35 +51,55 @@ function recordSuccess(): void {
 }
 
 export async function analyzePhoto(
-  imageBase64: string, 
+  imageBase64: string,
   tone: AnalysisTone = 'professional',
   language: AnalysisLanguage = 'fr',
   exifData?: ExifData | null,
   photoType: PhotoType = 'general',
-  userId?: string
+  userId?: string,
+  photoId?: string // Pour stocker dans RAG
 ): Promise<PhotoAnalysis> {
   let imageData = imageBase64 // Copie locale pour cleanup
-  
+
   try {
     // Vérifier le circuit breaker
     if (isCircuitBreakerOpen()) {
-      logger.error('OpenAI circuit breaker open', { 
+      logger.error('OpenAI circuit breaker open', {
         userId,
         failureCount,
-        lastFailureTime 
+        lastFailureTime
       })
       throw new Error('Service IA temporairement indisponible. Veuillez réessayer dans quelques minutes.')
     }
-    
+
     // Log taille image pour monitoring memory
     const imageSizeKB = Math.round(imageData.length / 1024)
     if (imageSizeKB > 10000) { // 10MB
-      logger.warn('Large image processing', { 
+      logger.warn('Large image processing', {
         userId,
         imageSizeKB,
         tone,
-        photoType 
+        photoType
       })
+    }
+
+    // 🚀 RAG: Générer embedding et trouver analyses similaires
+    let similarAnalyses: any[] = []
+    let imageEmbedding: number[] | null = null
+
+    try {
+      logger.debug('Generating image embedding for RAG')
+      imageEmbedding = await generateImageEmbedding(imageData)
+
+      logger.debug('Finding similar analyses via RAG')
+      similarAnalyses = await findSimilarAnalyses(imageEmbedding, 3)
+
+      if (similarAnalyses.length > 0) {
+        logger.info(`RAG: Found ${similarAnalyses.length} similar analyses to enrich prompt`)
+      }
+    } catch (ragError) {
+      logger.warn('RAG enrichment failed, continuing without it:', ragError)
+      // Continue sans RAG si erreur
     }
     // Configuration des langues
     const languageConfig = {
@@ -251,8 +277,14 @@ ${photoTypeSection}
 RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
 
 
+    // 🚀 Enrichir le prompt avec exemples RAG
+    let basePrompt = analysisPrompt
+    if (similarAnalyses.length > 0) {
+      basePrompt = enrichPromptWithExamples(analysisPrompt, similarAnalyses)
+    }
+
     const fullPrompt = `
-    ${analysisPrompt}
+    ${basePrompt}
     
     CRITÈRES D'ÉVALUATION (sois précis et juste) :
     
@@ -524,10 +556,17 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
     
     // Enregistrer le succès pour circuit breaker
     recordSuccess()
-    
+
+    // 🚀 RAG: Stocker cette analyse pour futures recherches (async, non-blocking)
+    if (imageEmbedding && photoId && analysis.score >= 70) {
+      // Stocker uniquement les bonnes analyses (score >= 70)
+      storeAnalysis(photoId, imageEmbedding, analysis, photoType)
+        .catch(err => logger.error('Failed to store analysis in RAG:', err))
+    }
+
     // Cleanup memory
     imageData = ''
-    
+
     return analysis
 
   } catch (error) {

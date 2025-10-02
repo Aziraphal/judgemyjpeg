@@ -153,8 +153,11 @@ export default async function handler(
     const analysisPromises = images.map(async (image, index) => {
       try {
         logger.debug(`📸 Analyse ${index + 1}/${images.length}: ${image.filename}`)
-        
-        const analysis = await analyzePhoto(image.data, tone)
+
+        // Générer photoId temporaire pour RAG
+        const tempPhotoId = `batch_${Date.now()}_${index}_${Math.random().toString(36).substr(2, 9)}`
+
+        const analysis = await analyzePhoto(image.data, tone, 'fr', null, 'general', user.id, tempPhotoId)
         
         // Sauvegarder en base en parallèle
         const photoRecord = prisma.photo.create({

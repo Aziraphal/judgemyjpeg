@@ -271,9 +271,12 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     } else {
       // Upload vers Cloudinary seulement si pas en cache
       const uploadResult = await uploadPhoto(fileBuffer, file.originalFilename || 'photo')
-      
+
+      // Générer un photoId temporaire pour RAG (avant sauvegarde DB)
+      const tempPhotoId = `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+
       // Analyser avec OpenAI GPT-4o-mini avec le ton, type photo sélectionnés et EXIF si disponible
-      analysis = await analyzePhoto(base64Image, analysisTone, analysisLanguage, exifData, analysisPhotoType, user.id)
+      analysis = await analyzePhoto(base64Image, analysisTone, analysisLanguage, exifData, analysisPhotoType, user.id, tempPhotoId)
       
       // Mettre en cache le résultat (TTL: 24h)
       await cacheService.cacheAnalysis(imageHash, analysis, analysisTone, analysisLanguage, 86400)
