@@ -7,6 +7,7 @@ import { Pinecone } from '@pinecone-database/pinecone'
 import OpenAI from 'openai'
 import { PhotoAnalysis } from '@/types/analysis'
 import { logger } from '@/lib/logger'
+import { cacheEmbedding, getCachedEmbedding, generateImageHash } from '@/lib/redis-cache'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
@@ -36,14 +37,20 @@ function initPinecone() {
 }
 
 /**
- * Génère un embedding pour une image
+ * Génère un embedding pour une image (avec cache Redis)
  */
 export async function generateImageEmbedding(imageBase64: string): Promise<number[]> {
   try {
-    // OpenAI ne fait pas d'embeddings d'images directement
-    // On utilise une approche hybride : description text → embedding
+    // 1. Vérifier le cache Redis
+    const imageHash = generateImageHash(imageBase64)
+    const cachedEmbedding = await getCachedEmbedding(imageHash)
 
-    // 1. Générer une description concise de l'image
+    if (cachedEmbedding) {
+      logger.debug(`🎯 RAG: Embedding from Redis cache (${imageHash})`)
+      return cachedEmbedding
+    }
+
+    // 2. Générer une description concise de l'image
     const descriptionResponse = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
@@ -69,13 +76,19 @@ export async function generateImageEmbedding(imageBase64: string): Promise<numbe
 
     const description = descriptionResponse.choices[0]?.message?.content || ''
 
-    // 2. Générer embedding de cette description
+    // 3. Générer embedding de cette description
     const embeddingResponse = await openai.embeddings.create({
       model: "text-embedding-3-small", // 1536 dimensions, $0.02/1M tokens
       input: description,
     })
 
-    return embeddingResponse.data[0].embedding
+    const embedding = embeddingResponse.data[0].embedding
+
+    // 4. Cacher l'embedding dans Redis (7 jours)
+    await cacheEmbedding(imageHash, embedding, 604800)
+
+    logger.debug(`📦 RAG: Embedding generated and cached (${imageHash})`)
+    return embedding
 
   } catch (error) {
     logger.error('Error generating image embedding:', error)

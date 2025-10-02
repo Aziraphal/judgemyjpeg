@@ -12,6 +12,7 @@ import { readFileSync } from 'fs'
 import { validateUpload } from '@/lib/file-validation'
 import { AuditLogger } from '@/lib/audit-trail'
 import { cacheService } from '@/lib/cache-service'
+import * as RedisCache from '@/lib/redis-cache'
 import { moderateImage, ModerationResult } from '@/lib/moderation'
 import { recordAnalysisMetric } from '@/lib/business-metrics'
 import { rateLimit } from '@/lib/rate-limit'
@@ -255,33 +256,30 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     }
     
     // Générer hash unique pour cette image
-    const imageHash = cacheService.generateImageHash(fileBuffer)
-    
-    // Vérifier le cache d'abord
-    let analysis = await cacheService.getCachedAnalysis(imageHash, analysisTone, analysisLanguage)
+    const imageHash = RedisCache.generateImageHash(fileBuffer)
+
+    // Vérifier le cache Redis d'abord (plus rapide que l'ancien cache)
+    let analysis = await RedisCache.getCachedAnalysis(imageHash, analysisTone, analysisLanguage)
     let fromCache = false
-    
+
     if (analysis) {
       fromCache = true
-      logger.info('Analysis from cache', { 
+      logger.info('Analysis from Redis cache', {
         imageHash: imageHash,
         tone: analysisTone,
         language: analysisLanguage
       }, req.user.id, ip)
     } else {
-      // Upload vers Cloudinary seulement si pas en cache
-      const uploadResult = await uploadPhoto(fileBuffer, file.originalFilename || 'photo')
-
       // Générer un photoId temporaire pour RAG (avant sauvegarde DB)
       const tempPhotoId = `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
 
       // Analyser avec OpenAI GPT-4o-mini avec le ton, type photo sélectionnés et EXIF si disponible
       analysis = await analyzePhoto(base64Image, analysisTone, analysisLanguage, exifData, analysisPhotoType, user.id, tempPhotoId)
-      
-      // Mettre en cache le résultat (TTL: 24h)
-      await cacheService.cacheAnalysis(imageHash, analysis, analysisTone, analysisLanguage, 86400)
-      
-      logger.info('Analysis computed and cached', { 
+
+      // Mettre en cache Redis (TTL: 24h)
+      await RedisCache.cacheAnalysis(imageHash, analysis, analysisTone, analysisLanguage, 86400)
+
+      logger.info('Analysis computed and cached in Redis', {
         imageHash: imageHash,
         score: analysis.score,
         tone: analysisTone,
@@ -289,7 +287,7 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
       }, req.user.id, ip)
     }
 
-    // Upload vers Cloudinary (nécessaire pour sauvegarder même si analyse en cache)
+    // Upload vers Cloudinary (toujours nécessaire pour sauvegarder en DB)
     const uploadResult = await uploadPhoto(fileBuffer, file.originalFilename || 'photo')
 
     // Utilisateur déjà récupéré plus haut

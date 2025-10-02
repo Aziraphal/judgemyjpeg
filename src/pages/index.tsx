@@ -6,6 +6,7 @@ import LocalizedHero from '@/components/LocalizedHero'
 import OnboardingTutorial from '@/components/OnboardingTutorial'
 import LanguageDebugger from '@/components/LanguageDebugger'
 import SEOHead from '@/components/SEOHead'
+import { usePreloadRoutes, CRITICAL_ROUTES } from '@/components/PreloadLink'
 
 export default function Home() {
   const { data: session, status } = useSession()
@@ -13,6 +14,9 @@ export default function Home() {
   const [userPreferences, setUserPreferences] = useState<any>(null)
   const [topPhotos, setTopPhotos] = useState<any[]>([])
   const [loadingTopPhotos, setLoadingTopPhotos] = useState(false)
+
+  // 🚀 Preload critical routes for better performance
+  usePreloadRoutes(CRITICAL_ROUTES)
 
   useEffect(() => {
     if (session?.user?.id) {

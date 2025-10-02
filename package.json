@@ -34,6 +34,7 @@
     "@types/geoip-lite": "^1.4.4",
     "@types/nodemailer": "^6.4.17",
     "@types/qrcode": "^1.5.5",
+    "@upstash/redis": "^1.35.4",
     "archiver": "^7.0.1",
     "bcryptjs": "^3.0.2",
     "cloudinary": "^2.7.0",
