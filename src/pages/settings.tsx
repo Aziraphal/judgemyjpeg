@@ -727,6 +727,76 @@ export default function SettingsPage() {
                       </p>
                     </div>
 
+                    {/* Zone de danger - Suppression de compte */}
+                    <div className="glass-card p-4 sm:p-6 bg-red-900/10 border-2 border-red-500/50">
+                      <h3 className="text-base sm:text-lg font-semibold text-red-400 mb-4 flex items-center">
+                        <span className="text-xl mr-2">⚠️</span>
+                        <span className="hidden sm:inline">Zone de danger</span>
+                        <span className="sm:hidden">Danger</span>
+                      </h3>
+
+                      <div className="space-y-4">
+                        <div className="bg-red-950/30 border border-red-500/30 rounded-lg p-4">
+                          <h4 className="text-red-300 font-semibold mb-2 text-sm sm:text-base">
+                            🗑️ Supprimer mon compte définitivement
+                          </h4>
+                          <p className="text-red-200 text-xs sm:text-sm mb-4">
+                            Cette action est <strong>irréversible</strong>. Toutes vos données seront supprimées :
+                          </p>
+                          <ul className="text-red-200 text-xs space-y-1 mb-4 ml-4">
+                            <li>• Profil et informations personnelles</li>
+                            <li>• Photos et analyses</li>
+                            <li>• Collections et favoris</li>
+                            <li>• Abonnement Stripe (si actif)</li>
+                            <li>• Historique complet</li>
+                          </ul>
+
+                          <div className="bg-yellow-900/20 border border-yellow-500/30 rounded p-3 mb-4">
+                            <p className="text-yellow-200 text-xs">
+                              <strong>📋 Important :</strong> Conformément au RGPD (Article 17),
+                              vos données seront supprimées sous 30 jours. Les données de facturation
+                              seront conservées 10 ans pour conformité fiscale.
+                            </p>
+                          </div>
+
+                          <button
+                            onClick={async () => {
+                              // Double confirmation pour sécurité
+                              if (!confirm('⚠️ ATTENTION : Voulez-vous vraiment supprimer votre compte ?\n\nCette action est IRRÉVERSIBLE et supprimera :\n- Toutes vos photos\n- Toutes vos analyses\n- Toutes vos collections\n- Votre abonnement\n\nTapez OK pour confirmer.')) {
+                                return
+                              }
+
+                              if (!confirm('🚨 DERNIÈRE CONFIRMATION\n\nÊtes-vous absolument certain ?\n\nUne fois supprimé, vous ne pourrez JAMAIS récupérer vos données.\n\nTapez OK pour supprimer définitivement votre compte.')) {
+                                return
+                              }
+
+                              try {
+                                const response = await fetch('/api/user/delete-account', {
+                                  method: 'POST',
+                                  headers: { 'Content-Type': 'application/json' }
+                                })
+
+                                const data = await response.json()
+
+                                if (response.ok) {
+                                  alert('✅ Votre compte a été supprimé.\n\nVous allez être déconnecté.')
+                                  // Déconnexion et redirection
+                                  signOut({ callbackUrl: '/?deleted=true' })
+                                } else {
+                                  alert(`❌ Erreur : ${data.error || 'Impossible de supprimer le compte'}`)
+                                }
+                              } catch (error) {
+                                alert('❌ Erreur de connexion. Veuillez réessayer.')
+                              }
+                            }}
+                            className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg transition-colors border-2 border-red-500 shadow-lg text-sm sm:text-base"
+                          >
+                            🗑️ Je confirme vouloir supprimer mon compte
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
                     {/* Informations légales */}
                     <div className="glass-card p-4 sm:p-6 bg-cosmic-glass border border-yellow-400/30">
                       <h3 className="text-base sm:text-lg font-semibold text-yellow-400 mb-4 flex items-center">
