@@ -2,7 +2,7 @@ import { useSession, signIn, signOut } from 'next-auth/react'
 import { useState, useEffect } from 'react'
 import { logger } from '@/lib/logger'
 import LocalizedHero from '@/components/LocalizedHero'
-import TestimonialsSection from '@/components/TestimonialsSection'
+// import TestimonialsSection from '@/components/TestimonialsSection' // DÉSACTIVÉ - faux témoignages
 import OnboardingTutorial from '@/components/OnboardingTutorial'
 import LanguageDebugger from '@/components/LanguageDebugger'
 import SEOHead from '@/components/SEOHead'
@@ -358,12 +358,12 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Testimonials Section - Only for non-logged users */}
-          {!session && (
+          {/* Testimonials Section - DÉSACTIVÉ (faux témoignages) */}
+          {/* !session && (
             <div className="mt-20">
               <TestimonialsSection />
             </div>
-          )}
+          ) */}
 
           {/* SEO Content Section */}
           <div className="max-w-4xl mx-auto mt-16 glass-card p-8">
