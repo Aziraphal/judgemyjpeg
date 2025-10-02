@@ -33,7 +33,7 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
     },
     learning: {
       label: 'Mode Apprentissage',
-      labelMobile: 'Apprentissage',
+      labelMobile: 'Formation',
       icon: '📚',
       description: 'Formation complète et pédagogique',
       tooltip: 'Analyse détaillée avec explications du pourquoi, conseils pratiques et exercices pour progresser',
