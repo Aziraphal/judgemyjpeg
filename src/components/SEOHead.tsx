@@ -190,12 +190,51 @@ export default function SEOHead({
       <meta name="apple-mobile-web-app-title" content="JudgeMyJPEG" />
 
       {/* Structured Data - JSON-LD for AI Understanding */}
+      {/* Organization Schema */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(allSchemas)
+          __html: JSON.stringify(organizationSchema)
         }}
       />
+
+      {/* WebSite Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(websiteSchema)
+        }}
+      />
+
+      {/* SoftwareApplication Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(softwareSchema)
+        }}
+      />
+
+      {/* Additional Custom Schemas */}
+      {jsonLd && (
+        Array.isArray(jsonLd) ? (
+          jsonLd.map((schema, index) => (
+            <script
+              key={index}
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify(schema)
+              }}
+            />
+          ))
+        ) : (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(jsonLd)
+            }}
+          />
+        )
+      )}
 
       {/* AI Crawler Discovery */}
       <link rel="alternate" type="application/json+ai" href="https://www.judgemyjpeg.fr/ai.txt" />

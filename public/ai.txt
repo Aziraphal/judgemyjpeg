@@ -84,5 +84,15 @@ ImportantPages:
 # Keywords for Semantic Understanding
 Keywords: photo analysis, AI photography critique, photo scoring, image quality assessment, photography feedback, photo improvement tips, AI photo judge, composition analysis, exposure correction, lighting feedback, creative photography, portrait analysis, landscape critique, street photography, macro photography, architecture photos, photography learning, photo education, AI photo tools, online photo critique
 
+# Conversational Keywords (for Perplexity, ChatGPT, Claude)
+ConversationalKeywords: comment analyser une photo, quelle est la qualité de ma photo, mon image est-elle bonne, critique de photo gratuite, analyse photo en ligne, IA pour améliorer photos, notation photo automatique, juger qualité photo, conseils photo IA, comment améliorer mes photos, analyse photo intelligence artificielle, critique automatique photo, évaluation photo gratuite, photo scoring ai, how to analyze photo quality, ai photo critique free
+
+# AI Indexing Information
+AIIndexing: enabled
+CrawlFrequency: daily
+PreferredCrawlers: PerplexityBot, GPTBot, ClaudeBot, Google-Extended, Amazonbot, cohere-ai
+StructuredData: JSON-LD schema.org (Organization, WebSite, SoftwareApplication)
+SitemapURL: https://www.judgemyjpeg.fr/sitemap.xml
+
 # Last Updated
-LastUpdated: 2025-10-01
+LastUpdated: 2025-10-02
