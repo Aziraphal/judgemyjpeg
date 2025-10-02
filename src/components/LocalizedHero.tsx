@@ -320,7 +320,7 @@ export default function LocalizedHero({ forceLanguage }: LocalizedHeroProps) {
           </div>
         </div>
 
-        {/* CTA MASSIVE */}
+        {/* CTA MASSIVE - Leads to analyze page with signup screen */}
         <div className="mb-6">
           <Link
             href="/analyze"

@@ -71,4 +71,4 @@ tmp/
 # Claude artifacts and temp files
 *openai.ts.*
 *temp*openai*
-C:*openai*
+C:*openai*scripts/neon-export.json
