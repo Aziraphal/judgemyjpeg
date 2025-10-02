@@ -9,6 +9,7 @@ import Head from 'next/head'
 import TwoFactorManager from '@/components/TwoFactorManager'
 import ChangePasswordForm from '@/components/ChangePasswordForm'
 import SessionManager from '@/components/SessionManager'
+import SubscriptionManagement from '@/components/SubscriptionManagement'
 import { getUserDisplayName, getUserInitial } from '@/lib/user-display'
 import { logger } from '@/lib/logger'
 
@@ -176,6 +177,7 @@ export default function SettingsPage() {
   const tabs = [
     { id: 'profile', label: 'Profil', icon: '👤' },
     { id: 'preferences', label: 'Préférences', icon: '⚙️' },
+    { id: 'subscription', label: 'Abonnement', icon: '💳' },
     { id: 'security', label: 'Sécurité', icon: '🔐' },
     { id: 'privacy', label: 'Confidentialité', icon: '🔒' }
   ]
@@ -256,7 +258,12 @@ export default function SettingsPage() {
 
               {/* Content Area */}
               <div className="lg:col-span-3">
-                
+
+                {/* Subscription Tab */}
+                {activeTab === 'subscription' && (
+                  <SubscriptionManagement />
+                )}
+
                 {/* Security Tab */}
                 {activeTab === 'security' && (
                   <div className="space-y-8">
