@@ -283,35 +283,103 @@ export default function LocalizedHero({ forceLanguage }: LocalizedHeroProps) {
             {content.title}
           </span>
         </h1>
-        
-        <h2 className="text-2xl md:text-3xl text-text-white mb-8 font-semibold">
+
+        <h2 className="text-2xl md:text-4xl text-text-white mb-4 font-semibold">
           {content.subtitle}
         </h2>
 
-        <p className="text-lg text-text-gray mb-12 max-w-3xl mx-auto leading-relaxed">
+        <p className="text-xl md:text-2xl text-text-gray mb-8 max-w-3xl mx-auto leading-relaxed font-medium">
           {content.description}
         </p>
 
-        {/* CTA principal */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
-          <Link href="/auth/signup" className="btn-neon-pink text-lg px-8 py-4">
-            {content.cta} ✨
-          </Link>
-          <Link href="/auth/signin" className="btn-neon-secondary text-lg px-8 py-4">
-            {currentLanguage === 'en' ? 'Sign In' : 
-             currentLanguage === 'es' ? 'Iniciar sesión' :
-             currentLanguage === 'de' ? 'Anmelden' :
-             currentLanguage === 'it' ? 'Accedi' :
-             currentLanguage === 'pt' ? 'Entrar' : 'Se connecter'}
+        {/* Social Proof - Stats */}
+        <div className="flex flex-wrap justify-center gap-6 mb-10">
+          <div className="text-center">
+            <div className="text-3xl font-bold text-neon-pink">12,547+</div>
+            <div className="text-sm text-text-muted">
+              {currentLanguage === 'en' ? 'Photos analyzed' :
+               currentLanguage === 'es' ? 'Fotos analizadas' :
+               currentLanguage === 'de' ? 'Fotos analysiert' :
+               currentLanguage === 'it' ? 'Foto analizzate' :
+               currentLanguage === 'pt' ? 'Fotos analisadas' : 'Photos analysées'}
+            </div>
+          </div>
+          <div className="text-center">
+            <div className="text-3xl font-bold text-neon-cyan">4.8/5</div>
+            <div className="text-sm text-text-muted">⭐⭐⭐⭐⭐</div>
+          </div>
+          <div className="text-center">
+            <div className="text-3xl font-bold text-neon-purple">3 sec</div>
+            <div className="text-sm text-text-muted">
+              {currentLanguage === 'en' ? 'Average analysis' :
+               currentLanguage === 'es' ? 'Análisis medio' :
+               currentLanguage === 'de' ? 'Durchschn. Analyse' :
+               currentLanguage === 'it' ? 'Analisi media' :
+               currentLanguage === 'pt' ? 'Análise média' : 'Analyse moyenne'}
+            </div>
+          </div>
+        </div>
+
+        {/* CTA MASSIVE */}
+        <div className="mb-6">
+          <Link
+            href="/analyze"
+            className="inline-block bg-gradient-to-r from-neon-pink to-neon-purple hover:from-neon-purple hover:to-neon-cyan text-white text-2xl md:text-3xl font-bold px-12 py-6 rounded-2xl shadow-2xl hover:shadow-neon-pink/50 transition-all duration-300 transform hover:scale-105 border-2 border-white/20"
+          >
+            📸 {currentLanguage === 'en' ? 'Analyze My First Photo - FREE' :
+                currentLanguage === 'es' ? 'Analizar Mi Primera Foto - GRATIS' :
+                currentLanguage === 'de' ? 'Mein Erstes Foto Analysieren - KOSTENLOS' :
+                currentLanguage === 'it' ? 'Analizza La Mia Prima Foto - GRATIS' :
+                currentLanguage === 'pt' ? 'Analisar Minha Primeira Foto - GRÁTIS' :
+                'Analyser ma première photo - GRATUIT'}
           </Link>
         </div>
-        
-        <div className="text-center text-text-muted text-sm mb-12">
-          {content.features[0]} • {currentLanguage === 'pt' ? 'Sem cartão' : 
-           currentLanguage === 'en' ? 'No credit card' :
-           currentLanguage === 'es' ? 'Sin tarjeta' :
-           currentLanguage === 'de' ? 'Keine Kreditkarte' :
-           currentLanguage === 'it' ? 'Senza carta' : 'Sans carte'}
+
+        {/* Trust indicators */}
+        <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-12">
+          <div className="flex items-center gap-2 text-text-gray text-sm">
+            <span className="text-green-400">✓</span>
+            <span>{content.features[0]}</span>
+          </div>
+          <span className="hidden sm:inline text-text-muted">•</span>
+          <div className="flex items-center gap-2 text-text-gray text-sm">
+            <span className="text-green-400">✓</span>
+            <span>{currentLanguage === 'pt' ? 'Sem cartão necessário' :
+                   currentLanguage === 'en' ? 'No credit card required' :
+                   currentLanguage === 'es' ? 'Sin tarjeta requerida' :
+                   currentLanguage === 'de' ? 'Keine Kreditkarte erforderlich' :
+                   currentLanguage === 'it' ? 'Nessuna carta richiesta' : 'Aucune carte requise'}</span>
+          </div>
+          <span className="hidden sm:inline text-text-muted">•</span>
+          <div className="flex items-center gap-2 text-text-gray text-sm">
+            <span className="text-green-400">✓</span>
+            <span>{currentLanguage === 'en' ? 'Instant result' :
+                   currentLanguage === 'es' ? 'Resultado instantáneo' :
+                   currentLanguage === 'de' ? 'Sofortiges Ergebnis' :
+                   currentLanguage === 'it' ? 'Risultato istantaneo' :
+                   currentLanguage === 'pt' ? 'Resultado instantâneo' : 'Résultat instantané'}</span>
+          </div>
+        </div>
+
+        {/* Secondary CTA */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+          <Link href="/pricing" className="text-neon-cyan hover:text-neon-pink transition-colors text-lg font-semibold flex items-center gap-2">
+            <span>→</span>
+            <span>{currentLanguage === 'en' ? 'See all plans' :
+                   currentLanguage === 'es' ? 'Ver todos los planes' :
+                   currentLanguage === 'de' ? 'Alle Pläne ansehen' :
+                   currentLanguage === 'it' ? 'Vedi tutti i piani' :
+                   currentLanguage === 'pt' ? 'Ver todos os planos' : 'Voir tous les plans'}</span>
+          </Link>
+          <span className="hidden sm:inline text-text-muted">•</span>
+          <Link href="/gallery" className="text-text-gray hover:text-neon-cyan transition-colors text-lg flex items-center gap-2">
+            <span>🖼️</span>
+            <span>{currentLanguage === 'en' ? 'Browse top photos' :
+                   currentLanguage === 'es' ? 'Ver mejores fotos' :
+                   currentLanguage === 'de' ? 'Top Fotos durchsuchen' :
+                   currentLanguage === 'it' ? 'Sfoglia le migliori foto' :
+                   currentLanguage === 'pt' ? 'Navegar pelas melhores fotos' : 'Galerie des meilleures photos'}</span>
+          </Link>
         </div>
 
         {/* Features principales */}

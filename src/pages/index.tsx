@@ -2,6 +2,8 @@ import { useSession, signIn, signOut } from 'next-auth/react'
 import { useState, useEffect } from 'react'
 import { logger } from '@/lib/logger'
 import LocalizedHero from '@/components/LocalizedHero'
+import TestimonialsSection from '@/components/TestimonialsSection'
+import OnboardingTutorial from '@/components/OnboardingTutorial'
 import LanguageDebugger from '@/components/LanguageDebugger'
 import SEOHead from '@/components/SEOHead'
 
@@ -356,6 +358,13 @@ export default function Home() {
             </div>
           </div>
 
+          {/* Testimonials Section - Only for non-logged users */}
+          {!session && (
+            <div className="mt-20">
+              <TestimonialsSection />
+            </div>
+          )}
+
           {/* SEO Content Section */}
           <div className="max-w-4xl mx-auto mt-16 glass-card p-8">
             <h2 className="text-2xl font-bold text-center mb-6 text-transparent bg-gradient-to-r from-neon-pink to-neon-cyan bg-clip-text">
@@ -365,16 +374,16 @@ export default function Home() {
               <div>
                 <h3 className="text-lg font-semibold text-white mb-3">🎨 Critique photo experte</h3>
                 <p className="text-sm">
-                  Notre <strong className="text-neon-cyan">intelligence artificielle</strong> analyse la composition, 
-                  l'exposition, les couleurs et la netteté de vos photos pour vous donner une 
+                  Notre <strong className="text-neon-cyan">intelligence artificielle</strong> analyse la composition,
+                  l'exposition, les couleurs et la netteté de vos photos pour vous donner une
                   <strong className="text-white"> critique photo IA</strong> détaillée.
                 </p>
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-white mb-3">📈 Améliorez vos photos</h3>
                 <p className="text-sm">
-                  Recevez des <strong className="text-neon-pink">conseils personnalisés</strong> pour 
-                  <strong className="text-white"> améliorer vos photos</strong> et développer vos 
+                  Recevez des <strong className="text-neon-pink">conseils personnalisés</strong> pour
+                  <strong className="text-white"> améliorer vos photos</strong> et développer vos
                   compétences en photographie.
                 </p>
               </div>
@@ -382,6 +391,9 @@ export default function Home() {
           </div>
         </div>
       </main>
+
+      {/* Onboarding Tutorial - Only for first-time visitors */}
+      {!session && <OnboardingTutorial />}
 
       {/* Composant de debug localisation (dev only) */}
       {process.env.NODE_ENV === 'development' && <LanguageDebugger />}
