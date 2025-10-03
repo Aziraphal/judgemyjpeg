@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { AnalysisLanguage } from '@/types/analysis'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface LanguageSelectorProps {
   selectedLanguage: AnalysisLanguage
@@ -7,6 +8,7 @@ interface LanguageSelectorProps {
 }
 
 export default function LanguageSelector({ selectedLanguage, onLanguageChange }: LanguageSelectorProps) {
+  const { t } = useLanguage()
   const [isExpanded, setIsExpanded] = useState(false)
 
   const languageOptions = {
@@ -52,13 +54,13 @@ export default function LanguageSelector({ selectedLanguage, onLanguageChange }:
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-bold text-text-white flex items-center">
           <span className="text-2xl mr-2">🌍</span>
-          Langue de l'analyse
+          {t.languageSelector.title}
         </h3>
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           className="btn-neon-secondary text-sm"
         >
-          {isExpanded ? '▼' : '▶'} Voir toutes
+          {isExpanded ? '▼' : '▶'} {t.languageSelector.seeAll}
         </button>
       </div>
 
@@ -111,7 +113,7 @@ export default function LanguageSelector({ selectedLanguage, onLanguageChange }:
           <div className="glass-card p-4 border border-neon-cyan/30">
             <div className="flex items-center mb-2">
               <span className="text-xl mr-2">{languageOptions[selectedLanguage].flag}</span>
-              <span className="text-neon-cyan font-semibold">Exemple en {languageOptions[selectedLanguage].label}</span>
+              <span className="text-neon-cyan font-semibold">{t.languageSelector.exampleIn} {languageOptions[selectedLanguage].label}</span>
             </div>
             <p className="text-text-gray text-sm italic">
               "{languageOptions[selectedLanguage].example}"
@@ -130,12 +132,12 @@ export default function LanguageSelector({ selectedLanguage, onLanguageChange }:
                 {languageOptions[selectedLanguage].label}
               </div>
               <div className="text-text-muted text-sm">
-                L'IA répondra dans cette langue
+                {t.languageSelector.aiWillRespond}
               </div>
             </div>
           </div>
           <div className="text-neon-cyan text-sm font-semibold">
-            ✓ Sélectionné
+            ✓ {t.languageSelector.selected}
           </div>
         </div>
       </div>

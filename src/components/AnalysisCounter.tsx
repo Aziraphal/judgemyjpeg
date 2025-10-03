@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
-import { useTranslations } from '@/hooks/useTranslations'
+import { useLanguage } from '@/contexts/LanguageContext'
 import { logger } from '@/lib/logger'
 
 declare global {
@@ -30,13 +30,13 @@ interface SubscriptionData {
   }
 }
 
-export default function AnalysisCounter({ 
-  onLimitReached, 
+export default function AnalysisCounter({
+  onLimitReached,
   className = "",
-  showUpgradeButton = false 
+  showUpgradeButton = false
 }: AnalysisCounterProps) {
   const { data: session } = useSession()
-  const { t } = useTranslations()
+  const { t } = useLanguage()
   const [subscription, setSubscription] = useState<SubscriptionData | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -106,10 +106,10 @@ export default function AnalysisCounter({
           <span className="text-2xl">🎯</span>
           <div>
             <p className="text-sm font-semibold text-neon-cyan">
-              {t('nav.login')} {t('analyze.title').toLowerCase()}
+              {t.counter.freePlan}
             </p>
             <p className="text-xs text-text-muted">
-              {t('analyze.free_analyses', { count: '3' })}/mois
+              3/mois
             </p>
           </div>
         </div>
@@ -135,10 +135,10 @@ export default function AnalysisCounter({
           </span>
           <div>
             <p className="text-sm font-semibold text-neon-pink">
-              {t('analyze.analyses_unlimited')}
+              {t.counter.unlimitedAnalyses}
             </p>
             <p className="text-xs text-text-muted">
-              {t('pricing.current_plan')} {subscription.subscriptionStatus === 'annual' ? t('pricing.annual_plan') : t('pricing.premium_plan')}
+              {t.counter.currentPlan}
             </p>
           </div>
         </div>
@@ -155,12 +155,12 @@ export default function AnalysisCounter({
             <span className="text-2xl">⚠️</span>
             <div>
               <p className="text-sm font-semibold text-red-400">
-                {t('analyze.limit_reached')}
+                {t.counter.monthlyAnalyses} (0/{subscription.maxMonthlyAnalyses})
               </p>
               <p className="text-xs text-text-muted">
-                {subscription.daysUntilReset ? 
-                  `Reset dans ${subscription.daysUntilReset} jour${subscription.daysUntilReset > 1 ? 's' : ''}` :
-                  'Reset bientôt'
+                {subscription.daysUntilReset ?
+                  `${t.counter.resetIn} ${subscription.daysUntilReset} ${t.counter.days}` :
+                  `${t.counter.resetIn} 0 ${t.counter.days}`
                 }
               </p>
             </div>
@@ -170,13 +170,13 @@ export default function AnalysisCounter({
               onClick={() => window.location.href = '/pricing'}
               className="text-xs px-2 py-1 bg-neon-pink/20 text-neon-pink rounded-md hover:bg-neon-pink/30 transition-colors"
             >
-              {t('analyze.upgrade')}
+              {t.counter.upgrade}
             </button>
           )}
         </div>
         {subscription.daysUntilReset && (
           <div className="mt-2 text-xs text-center text-text-muted">
-            Reset dans {subscription.daysUntilReset} jour{subscription.daysUntilReset > 1 ? 's' : ''}
+            {t.counter.resetIn} {subscription.daysUntilReset} {t.counter.days}
           </div>
         )}
       </div>
@@ -192,12 +192,12 @@ export default function AnalysisCounter({
             <span className="text-2xl">🔔</span>
             <div>
               <p className="text-sm font-semibold text-yellow-400">
-                {t('analyze.last_analysis')}
+                {t.counter.monthlyAnalyses} (1/{subscription.maxMonthlyAnalyses})
               </p>
               <p className="text-xs text-text-muted">
-                {subscription.starterPack.hasStarterPack ? 
-                  `${subscription.starterPack.analysisCount} du Starter Pack` :
-                  `${remainingAnalyses} analyse mensuelle`
+                {subscription.starterPack.hasStarterPack ?
+                  `${subscription.starterPack.analysisCount} ${t.counter.starterPack}` :
+                  t.counter.freePlan
                 }
               </p>
             </div>
@@ -207,7 +207,7 @@ export default function AnalysisCounter({
               onClick={() => window.location.href = '/pricing'}
               className="text-xs px-2 py-1 bg-neon-pink/20 text-neon-pink rounded-md hover:bg-neon-pink/30 transition-colors"
             >
-              {t('analyze.upgrade')}
+              {t.counter.upgrade}
             </button>
           )}
         </div>
@@ -225,16 +225,16 @@ export default function AnalysisCounter({
           <span className="text-2xl">✨</span>
           <div>
             <p className="text-sm font-semibold text-neon-cyan">
-              {t('analyze.analyses_remaining', { count: totalAvailable.toString() })}
+              {t.counter.monthlyAnalyses} ({subscription.monthlyAnalysisCount}/{subscription.maxMonthlyAnalyses})
             </p>
             <div className="text-xs text-text-muted">
               {subscription.starterPack.hasStarterPack ? (
                 <span>
-                  {remainingAnalyses} mensuelles + {subscription.starterPack.analysisCount} Starter Pack
+                  {remainingAnalyses} + {subscription.starterPack.analysisCount} {t.counter.starterPack}
                 </span>
               ) : (
                 <span>
-                  Plan gratuit • Reset dans {subscription.daysUntilReset} jour{subscription.daysUntilReset && subscription.daysUntilReset > 1 ? 's' : ''}
+                  {t.counter.freePlan} • {t.counter.resetIn} {subscription.daysUntilReset} {t.counter.days}
                 </span>
               )}
             </div>
@@ -245,7 +245,7 @@ export default function AnalysisCounter({
             onClick={() => window.location.href = '/pricing'}
             className="text-xs px-2 py-1 bg-neon-pink/20 text-neon-pink rounded-md hover:bg-neon-pink/30 transition-colors"
           >
-            Upgrade
+            {t.counter.upgrade}
           </button>
         )}
       </div>

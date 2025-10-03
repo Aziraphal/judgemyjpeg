@@ -7,8 +7,10 @@ import OnboardingTutorial from '@/components/OnboardingTutorial'
 import LanguageDebugger from '@/components/LanguageDebugger'
 import SEOHead from '@/components/SEOHead'
 import { usePreloadRoutes, CRITICAL_ROUTES } from '@/components/PreloadLink'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function Home() {
+  const { t } = useLanguage()
   const { data: session, status } = useSession()
   const [userSubscription, setUserSubscription] = useState<any>(null)
   const [userPreferences, setUserPreferences] = useState<any>(null)
@@ -125,24 +127,24 @@ export default function Home() {
           {session && (
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 space-y-3 sm:space-y-0">
               <div className="text-sm text-text-gray">
-                Bonjour, <span className="font-semibold text-neon-cyan">
+                {t.home.hello}, <span className="font-semibold text-neon-cyan">
                   {session.user?.nickname || userPreferences?.nickname || userPreferences?.displayName || session.user?.name}
                   {(userSubscription?.subscriptionStatus === 'lifetime') && ' ✨'}
                   {(userSubscription?.subscriptionStatus === 'premium') && ' 💎'}
                 </span>
               </div>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
-                <button 
+                <button
                   onClick={() => window.location.href = '/dashboard'}
                   className="btn-neon-secondary text-sm px-3 py-2 flex items-center justify-center"
                 >
-                  📊 <span className="ml-1">Dashboard</span>
+                  📊 <span className="ml-1">{t.home.dashboard}</span>
                 </button>
-                <button 
+                <button
                   onClick={() => window.location.href = '/settings'}
                   className="btn-neon-secondary text-sm px-3 py-2 flex items-center justify-center"
                 >
-                  ⚙️ <span className="ml-1 hidden sm:inline">Paramètres</span><span className="ml-1 sm:hidden">Réglages</span>
+                  ⚙️ <span className="ml-1">{t.home.settings}</span>
                 </button>
                 <button
                   onClick={async () => {
@@ -178,7 +180,7 @@ export default function Home() {
                   }}
                   className="btn-neon-secondary text-sm px-3 py-2 flex items-center justify-center"
                 >
-                  🚪 <span className="ml-1 hidden sm:inline">Déconnexion</span><span className="ml-1 sm:hidden">Sortie</span>
+                  🚪 <span className="ml-1">{t.home.logout}</span>
                 </button>
               </div>
             </div>
@@ -195,48 +197,48 @@ export default function Home() {
                 </span>
               </h1>
               <p className="text-xl text-text-gray mb-8 max-w-2xl mx-auto">
-                <span className="text-neon-cyan">Analysez vos photos</span> avec une <span className="text-neon-pink">intelligence artificielle experte</span>
+                {t.home.aiPhotoAnalysisDesc}
               </p>
-              
+
               <div className="space-y-6">
-                <button 
+                <button
                   onClick={() => window.location.href = '/analyze'}
                   className="btn-neon-pink text-xl px-12 py-4 hover-glow"
                 >
-                  📸 Analyser une photo
+                  📸 {t.home.analyzePhoto}
                 </button>
-                
+
                 {/* Actions secondaires */}
                 <div className="flex flex-wrap justify-center gap-3 max-w-2xl mx-auto">
-                  <button 
+                  <button
                     onClick={() => window.location.href = '/batch'}
                     className="btn-neon-secondary text-sm px-4 py-2"
                   >
-                    📊 Analyse en lot
+                    📊 {t.home.batchAnalysis}
                   </button>
-                  <button 
+                  <button
                     onClick={() => window.location.href = '/gallery'}
                     className="btn-neon-secondary text-sm px-4 py-2"
                   >
-                    🏆 Top Photos
+                    🏆 {t.home.topPhotos}
                   </button>
-                  <button 
+                  <button
                     onClick={() => window.location.href = '/collections'}
                     className="btn-neon-secondary text-sm px-4 py-2"
                   >
-                    📁 Collections
+                    📁 {t.footer.collections}
                   </button>
-                  <button 
+                  <button
                     onClick={() => window.location.href = '/blog'}
                     className="btn-neon-secondary text-sm px-4 py-2"
                   >
-                    📚 Guides Photo
+                    📚 {t.home.guides}
                   </button>
-                  <button 
+                  <button
                     onClick={() => window.location.href = '/pricing'}
                     className="btn-neon-cyan text-sm px-4 py-2"
                   >
-                    💎 Upgrade Pro
+                    💎 {t.home.upgradePro}
                   </button>
                 </div>
               </div>
@@ -248,10 +250,10 @@ export default function Home() {
             <div className="max-w-4xl mx-auto mb-16">
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold mb-3 text-transparent bg-gradient-to-r from-neon-pink to-neon-cyan bg-clip-text">
-                  🏆 Vos Meilleures Photos
+                  🏆 {t.home.bestPhotos}
                 </h2>
                 <p className="text-text-gray">
-                  Vos 3 photos les mieux notées par l'IA
+                  {t.home.bestPhotosDesc}
                 </p>
               </div>
               
@@ -304,11 +306,11 @@ export default function Home() {
               
               {/* Call to action */}
               <div className="text-center mt-6">
-                <button 
+                <button
                   onClick={() => window.location.href = '/gallery'}
                   className="btn-neon-secondary text-sm px-6 py-2"
                 >
-                  🏆 Voir toutes vos photos
+                  🏆 {t.home.seeAllPhotos}
                 </button>
               </div>
             </div>
@@ -320,16 +322,16 @@ export default function Home() {
               <div className="glass-card p-8">
                 <div className="text-4xl mb-4">📸</div>
                 <h3 className="text-lg font-bold mb-3 text-neon-cyan">
-                  Commencez votre collection
+                  {t.home.startCollection}
                 </h3>
                 <p className="text-text-gray mb-6">
-                  Analysez vos premières photos pour créer votre galerie personnelle !
+                  {t.home.analyzeFirstPhoto}
                 </p>
-                <button 
+                <button
                   onClick={() => window.location.href = '/analyze'}
                   className="btn-neon-pink px-6 py-3"
                 >
-                  📸 Analyser ma première photo
+                  📸 {t.home.analyzeFirstPhoto}
                 </button>
               </div>
             </div>
@@ -339,25 +341,25 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             <div className="glass-card p-6 text-center">
               <div className="text-4xl mb-4">📸</div>
-              <h3 className="text-lg font-bold mb-3 text-neon-cyan">Analyse Photo IA</h3>
+              <h3 className="text-lg font-bold mb-3 text-neon-cyan">{t.home.aiPhotoAnalysis}</h3>
               <p className="text-text-gray text-sm">
-                <strong className="text-white">Analysez vos photos</strong> avec une <span className="text-neon-pink">intelligence artificielle spécialisée</span>
+                {t.home.aiPhotoAnalysisDesc}
               </p>
             </div>
-            
+
             <div className="glass-card p-6 text-center">
               <div className="text-4xl mb-4">⚡</div>
-              <h3 className="text-lg font-bold mb-3 text-neon-pink">Critique Instantanée</h3>
+              <h3 className="text-lg font-bold mb-3 text-neon-pink">{t.home.instantCritique}</h3>
               <p className="text-text-gray text-sm">
-                <strong className="text-white">Critique photo IA</strong> en <span className="text-neon-cyan">quelques secondes</span>
+                {t.home.instantCritiqueDesc}
               </p>
             </div>
-            
+
             <div className="glass-card p-6 text-center">
               <div className="text-4xl mb-4">🎯</div>
-              <h3 className="text-lg font-bold mb-3 text-neon-cyan">Analyse Précise</h3>
+              <h3 className="text-lg font-bold mb-3 text-neon-cyan">{t.home.preciseAnalysis}</h3>
               <p className="text-text-gray text-sm">
-                <strong className="text-white">Analyse technique</strong> et <span className="text-neon-pink">conseils personnalisés</span>
+                {t.home.preciseAnalysisDesc}
               </p>
             </div>
           </div>
@@ -372,23 +374,19 @@ export default function Home() {
           {/* SEO Content Section */}
           <div className="max-w-4xl mx-auto mt-16 glass-card p-8">
             <h2 className="text-2xl font-bold text-center mb-6 text-transparent bg-gradient-to-r from-neon-pink to-neon-cyan bg-clip-text">
-              Pourquoi analyser ses photos avec une IA ?
+              {t.home.whyAnalyze}
             </h2>
             <div className="grid md:grid-cols-2 gap-6 text-text-gray">
               <div>
-                <h3 className="text-lg font-semibold text-white mb-3">🎨 Critique photo experte</h3>
+                <h3 className="text-lg font-semibold text-white mb-3">🎨 {t.home.expertCritique}</h3>
                 <p className="text-sm">
-                  Notre <strong className="text-neon-cyan">intelligence artificielle</strong> analyse la composition,
-                  l'exposition, les couleurs et la netteté de vos photos pour vous donner une
-                  <strong className="text-white"> critique photo IA</strong> détaillée.
+                  {t.home.expertCritiqueDesc}
                 </p>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white mb-3">📈 Améliorez vos photos</h3>
+                <h3 className="text-lg font-semibold text-white mb-3">📈 {t.home.improvePhotos}</h3>
                 <p className="text-sm">
-                  Recevez des <strong className="text-neon-pink">conseils personnalisés</strong> pour
-                  <strong className="text-white"> améliorer vos photos</strong> et développer vos
-                  compétences en photographie.
+                  {t.home.improvePhotosDesc}
                 </p>
               </div>
             </div>

@@ -1,6 +1,8 @@
 import Link from 'next/link'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function Footer() {
+  const { t } = useLanguage()
   const currentYear = new Date().getFullYear()
 
   return (
@@ -18,7 +20,7 @@ export default function Footer() {
               </span>
             </h3>
             <p className="text-text-muted text-sm">
-              L'IA qui analyse vos photos avec expertise et créativité
+              {t.footer.tagline}
             </p>
             <div className="flex space-x-4 mt-4">
               <a href="mailto:contact.judgemyjpeg@gmail.com" className="text-text-muted hover:text-neon-cyan transition-colors" title="Contactez-moi">
@@ -35,31 +37,31 @@ export default function Footer() {
 
           {/* Colonne 2 : Produit */}
           <div>
-            <h4 className="text-text-white font-semibold mb-4">Produit</h4>
+            <h4 className="text-text-white font-semibold mb-4">{t.footer.productTitle}</h4>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/analyze" className="text-text-muted hover:text-neon-cyan transition-colors">
-                  Analyser une photo
+                  {t.footer.analyzePhoto}
                 </Link>
               </li>
               <li>
                 <Link href="/gallery" className="text-text-muted hover:text-neon-cyan transition-colors">
-                  Top Photos
+                  {t.footer.topPhotos}
                 </Link>
               </li>
               <li>
                 <Link href="/collections" className="text-text-muted hover:text-neon-cyan transition-colors">
-                  Collections
+                  {t.footer.collections}
                 </Link>
               </li>
               <li>
                 <Link href="/dashboard" className="text-text-muted hover:text-neon-cyan transition-colors">
-                  Dashboard
+                  {t.footer.dashboard}
                 </Link>
               </li>
               <li>
                 <Link href="/insights" className="text-text-muted hover:text-neon-cyan transition-colors">
-                  Insights
+                  {t.footer.insights}
                 </Link>
               </li>
             </ul>
@@ -67,36 +69,36 @@ export default function Footer() {
 
           {/* Colonne 3 : Support */}
           <div>
-            <h4 className="text-text-white font-semibold mb-4">Support</h4>
+            <h4 className="text-text-white font-semibold mb-4">{t.footer.supportTitle}</h4>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/faq" className="text-text-muted hover:text-neon-cyan transition-colors">
-                  FAQ
+                  {t.footer.faq}
                 </Link>
               </li>
               <li>
                 <Link href="/contact" className="text-text-muted hover:text-neon-cyan transition-colors">
-                  Contact
+                  {t.footer.contact}
                 </Link>
               </li>
               <li>
                 <Link href="/pricing" className="text-text-muted hover:text-neon-cyan transition-colors">
-                  Tarifs
+                  {t.footer.pricing}
                 </Link>
               </li>
               <li>
                 <Link href="/glossaire" className="text-text-muted hover:text-neon-cyan transition-colors">
-                  📚 Glossaire Photo
+                  📚 {t.footer.glossary}
                 </Link>
               </li>
               <li>
                 <Link href="/ressources" className="text-text-muted hover:text-neon-cyan transition-colors">
-                  Ressources Gratuites
+                  {t.footer.resourcesTitle}
                 </Link>
               </li>
               <li>
                 <Link href="/partenariats" className="text-text-muted hover:text-neon-cyan transition-colors">
-                  Partenariats
+                  {t.footer.partnerships}
                 </Link>
               </li>
             </ul>
@@ -104,31 +106,31 @@ export default function Footer() {
 
           {/* Colonne 4 : SEO Français */}
           <div>
-            <h4 className="text-text-white font-semibold mb-4">Analyse Photo</h4>
+            <h4 className="text-text-white font-semibold mb-4">{t.footer.analysisTitle}</h4>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/analyser-photo-gratuit" className="text-text-muted hover:text-neon-cyan transition-colors">
-                  Analyser Photo Gratuit
+                  {t.footer.analyzeFree}
                 </Link>
               </li>
               <li>
                 <Link href="/critique-photo-ia" className="text-text-muted hover:text-neon-cyan transition-colors">
-                  Critique Photo IA
+                  {t.footer.aiCritique}
                 </Link>
               </li>
               <li>
                 <Link href="/analyse-lot" className="text-text-muted hover:text-neon-cyan transition-colors">
-                  Analyse en Lot
+                  {t.footer.batchAnalysis}
                 </Link>
               </li>
               <li>
                 <Link href="/collections-photos" className="text-text-muted hover:text-neon-cyan transition-colors">
-                  Collections Photos
+                  {t.footer.photoCollections}
                 </Link>
               </li>
               <li>
                 <Link href="/toutes-mes-photos" className="text-text-muted hover:text-neon-cyan transition-colors">
-                  Toutes mes Photos
+                  {t.footer.allMyPhotos}
                 </Link>
               </li>
             </ul>
@@ -136,26 +138,26 @@ export default function Footer() {
 
           {/* Colonne 5 : Légal */}
           <div>
-            <h4 className="text-text-white font-semibold mb-4">Légal</h4>
+            <h4 className="text-text-white font-semibold mb-4">{t.footer.legalTitle}</h4>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/legal/terms" className="text-text-muted hover:text-neon-cyan transition-colors">
-                  Conditions d'utilisation
+                  {t.footer.terms}
                 </Link>
               </li>
               <li>
                 <Link href="/legal/privacy" className="text-text-muted hover:text-neon-cyan transition-colors">
-                  Politique de confidentialité
+                  {t.footer.privacy}
                 </Link>
               </li>
               <li>
                 <Link href="/legal/mentions" className="text-text-muted hover:text-neon-cyan transition-colors">
-                  Mentions légales
+                  {t.footer.legalNotice}
                 </Link>
               </li>
               <li>
                 <Link href="/legal/cookies" className="text-text-muted hover:text-neon-cyan transition-colors">
-                  Politique de cookies
+                  {t.footer.cookies}
                 </Link>
               </li>
             </ul>
@@ -169,28 +171,28 @@ export default function Footer() {
             
             {/* Copyright */}
             <div className="text-text-muted text-sm mb-4 md:mb-0">
-              © {currentYear} CodeCraft Plus. Tous droits réservés.
+              © {currentYear} CodeCraft Plus. {t.footer.allRightsReserved}.
             </div>
 
             {/* Liens rapides légaux */}
             <div className="flex flex-wrap justify-center gap-4 text-sm">
               <Link href="/legal/terms" className="text-text-muted hover:text-neon-cyan transition-colors">
-                CGU
+                {t.footer.terms}
               </Link>
               <Link href="/legal/privacy" className="text-text-muted hover:text-neon-cyan transition-colors">
-                Confidentialité
+                {t.footer.privacy}
               </Link>
               <Link href="/legal/mentions" className="text-text-muted hover:text-neon-cyan transition-colors">
-                Mentions légales
+                {t.footer.legalNotice}
               </Link>
               <Link href="/legal/cookies" className="text-text-muted hover:text-neon-cyan transition-colors">
-                Cookies
+                {t.footer.cookies}
               </Link>
               <Link href="/faq" className="text-text-muted hover:text-neon-cyan transition-colors">
-                FAQ
+                {t.footer.faq}
               </Link>
               <Link href="/contact" className="text-text-muted hover:text-neon-cyan transition-colors">
-                Contact
+                {t.footer.contact}
               </Link>
               <button
                 onClick={() => {
@@ -205,9 +207,9 @@ export default function Footer() {
                   }
                 }}
                 className="text-text-muted hover:text-neon-cyan transition-colors"
-                title="Gérer les préférences cookies"
+                title={t.footer.cookiePreferences}
               >
-                🍪 Préférences cookies
+                🍪 {t.footer.cookiePreferences}
               </button>
             </div>
 

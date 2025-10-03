@@ -6,6 +6,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { logger } from '@/lib/logger'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface CookiePreferences {
   necessary: boolean
@@ -15,6 +16,7 @@ interface CookiePreferences {
 }
 
 export default function CookieConsent() {
+  const { t } = useLanguage()
   const [showBanner, setShowBanner] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
   const [preferences, setPreferences] = useState<CookiePreferences>({
@@ -174,16 +176,10 @@ export default function CookieConsent() {
                   <span className="text-xl sm:text-2xl flex-shrink-0">🍪</span>
                   <div className="flex-1 min-w-0">
                     <h3 className="text-base sm:text-lg font-semibold text-white mb-1 sm:mb-2">
-                      🍪 Respect de votre vie privée
+                      🍪 {t.cookies.title}
                     </h3>
                     <p className="text-xs sm:text-sm text-gray-200">
-                      JudgeMyJPEG utilise uniquement quelques cookies pour assurer le bon fonctionnement 
-                      et améliorer votre expérience. <strong className="text-white">Nous respectons vos choix.</strong>
-                    </p>
-                    <p className="text-xs text-gray-300 mt-1 sm:mt-2">
-                      ✓ Cookies nécessaires seulement par défaut • 
-                      ✓ Analytics anonymisés (optionnel) • 
-                      ✓ Aucun tracking publicitaire
+                      {t.cookies.description}
                     </p>
                   </div>
                 </div>
@@ -195,19 +191,19 @@ export default function CookieConsent() {
                   onClick={() => setShowSettings(true)}
                   className="px-3 sm:px-4 py-2 text-xs sm:text-sm text-white bg-gray-600 hover:bg-gray-500 border border-gray-500 rounded transition-colors whitespace-nowrap"
                 >
-                  ⚙️ Personnaliser
+                  ⚙️ {t.cookies.customize}
                 </button>
                 <button
                   onClick={rejectOptional}
                   className="px-3 sm:px-4 py-2 text-xs sm:text-sm bg-gray-600 text-white border border-gray-500 rounded hover:bg-gray-500 transition-colors whitespace-nowrap"
                 >
-                  🛡️ Nécessaires uniquement
+                  🛡️ {t.cookies.necessaryOnly}
                 </button>
                 <button
                   onClick={acceptAll}
                   className="px-4 sm:px-6 py-2 text-xs sm:text-sm bg-green-600 text-white border border-green-500 rounded hover:bg-green-700 transition-colors font-semibold whitespace-nowrap"
                 >
-                  ✅ J'accepte
+                  ✅ {t.cookies.acceptAll}
                 </button>
               </div>
             </div>
@@ -223,9 +219,9 @@ export default function CookieConsent() {
             {/* Header */}
             <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-600">
               <div>
-                <h2 className="text-xl font-bold text-white">Paramètres des cookies</h2>
+                <h2 className="text-xl font-bold text-white">{t.cookies.settingsTitle}</h2>
                 <p className="text-sm text-gray-300">
-                  Choisissez les cookies que vous souhaitez autoriser
+                  {t.cookies.description}
                 </p>
               </div>
               <button
@@ -242,29 +238,20 @@ export default function CookieConsent() {
               {/* Cookies Nécessaires */}
               <div className="bg-gray-700/50 p-4 rounded-lg border border-gray-600">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-semibold text-white">🔧 Cookies Nécessaires</h3>
+                  <h3 className="font-semibold text-white">🔧 {t.cookies.necessary}</h3>
                   <div className="bg-green-600/20 text-green-300 px-3 py-1 rounded-full text-xs">
-                    Toujours activé
+                    {t.cookies.necessaryAlways}
                   </div>
                 </div>
                 <p className="text-sm text-gray-200 mb-2">
-                  Ces cookies sont essentiels au fonctionnement du site et ne peuvent pas être désactivés.
+                  {t.cookies.necessaryDesc}
                 </p>
-                <details className="text-xs text-gray-300">
-                  <summary className="cursor-pointer hover:text-gray-200">Voir les détails</summary>
-                  <ul className="mt-2 ml-4 space-y-1">
-                    <li>• Session utilisateur et authentification</li>
-                    <li>• Protection CSRF et sécurité</li>
-                    <li>• Panier d'achat et processus de paiement</li>
-                    <li>• Préférences essentielles (langue, accessibilité)</li>
-                  </ul>
-                </details>
               </div>
 
               {/* Cookies Analytics */}
               <div className="bg-gray-700/50 p-4 rounded-lg border border-gray-600">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-semibold text-white">📊 Cookies Analytiques</h3>
+                  <h3 className="font-semibold text-white">📊 {t.cookies.analytics}</h3>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input
                       type="checkbox"
@@ -276,23 +263,14 @@ export default function CookieConsent() {
                   </label>
                 </div>
                 <p className="text-sm text-gray-200 mb-2">
-                  Aident à comprendre comment vous utilisez le site pour l'améliorer.
+                  {t.cookies.analyticsDesc}
                 </p>
-                <details className="text-xs text-gray-300">
-                  <summary className="cursor-pointer hover:text-gray-200">Voir les détails</summary>
-                  <ul className="mt-2 ml-4 space-y-1">
-                    <li>• Google Analytics (données anonymisées)</li>
-                    <li>• Statistiques de pages visitées</li>
-                    <li>• Métriques de performance</li>
-                    <li>• Analytics internes JudgeMyJPEG</li>
-                  </ul>
-                </details>
               </div>
 
               {/* Cookies Personnalisation */}
               <div className="bg-gray-700/50 p-4 rounded-lg border border-gray-600">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-semibold text-white">🎨 Cookies de Personnalisation</h3>
+                  <h3 className="font-semibold text-white">🎨 {t.cookies.personalization}</h3>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input
                       type="checkbox"
@@ -304,23 +282,14 @@ export default function CookieConsent() {
                   </label>
                 </div>
                 <p className="text-sm text-gray-200 mb-2">
-                  Mémorisent vos préférences pour personnaliser votre expérience.
+                  {t.cookies.personalizationDesc}
                 </p>
-                <details className="text-xs text-gray-300">
-                  <summary className="cursor-pointer hover:text-gray-200">Voir les détails</summary>
-                  <ul className="mt-2 ml-4 space-y-1">
-                    <li>• Mode d'analyse préféré (Pro/Cassant)</li>
-                    <li>• Langue d'interface</li>
-                    <li>• Thème et préférences visuelles</li>
-                    <li>• Recommandations personnalisées</li>
-                  </ul>
-                </details>
               </div>
 
               {/* Cookies Réseaux Sociaux */}
               <div className="bg-gray-700/50 p-4 rounded-lg border border-gray-600">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-semibold text-white">📱 Cookies Réseaux Sociaux</h3>
+                  <h3 className="font-semibold text-white">📱 {t.cookies.social}</h3>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input
                       type="checkbox"
@@ -332,28 +301,13 @@ export default function CookieConsent() {
                   </label>
                 </div>
                 <p className="text-sm text-gray-200 mb-2">
-                  Permettent le partage de contenu sur les réseaux sociaux.
+                  {t.cookies.socialDesc}
                 </p>
-                <details className="text-xs text-gray-300">
-                  <summary className="cursor-pointer hover:text-gray-200">Voir les détails</summary>
-                  <ul className="mt-2 ml-4 space-y-1">
-                    <li>• Boutons de partage Twitter/X</li>
-                    <li>• Intégrations Facebook</li>
-                    <li>• Partage LinkedIn</li>
-                    <li>• Widgets sociaux intégrés</li>
-                  </ul>
-                </details>
               </div>
 
               {/* Information importante */}
               <div className="bg-blue-800/30 border border-blue-500 rounded-lg p-4">
-                <h4 className="font-semibold text-blue-300 mb-2">ℹ️ Information importante</h4>
-                <ul className="text-xs text-gray-200 space-y-1">
-                  <li>• Vos préférences sont conservées 13 mois</li>
-                  <li>• Vous pouvez les modifier à tout moment</li>
-                  <li>• La désactivation peut limiter certaines fonctionnalités</li>
-                  <li>• Les données sont traitées conformément au RGPD</li>
-                </ul>
+                <h4 className="font-semibold text-blue-300 mb-2">ℹ️ {t.cookies.importantInfo}</h4>
               </div>
 
             </div>
@@ -362,7 +316,7 @@ export default function CookieConsent() {
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-4 border-t border-gray-600">
               <div className="text-xs text-gray-300">
                 <Link href="/legal/cookies" className="text-blue-400 hover:underline">
-                  Politique complète des cookies
+                  {t.footer.cookies}
                 </Link>
               </div>
               <div className="flex gap-3">
@@ -370,13 +324,13 @@ export default function CookieConsent() {
                   onClick={rejectOptional}
                   className="px-4 py-2 text-sm bg-red-600 text-white border border-red-500 rounded hover:bg-red-700 transition-colors"
                 >
-                  Refuser optionnels
+                  {t.cookies.necessaryOnly}
                 </button>
                 <button
                   onClick={saveCustomPreferences}
                   className="px-6 py-2 text-sm bg-blue-600 text-white border border-blue-500 rounded hover:bg-blue-700 transition-colors font-semibold"
                 >
-                  Enregistrer mes choix
+                  {t.cookies.save}
                 </button>
               </div>
             </div>

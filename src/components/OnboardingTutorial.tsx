@@ -5,6 +5,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface Step {
   id: number
@@ -13,44 +14,50 @@ interface Step {
   icon: string
   action?: string
   actionLabel?: string
+  visualHint: string
 }
 
-const steps: Step[] = [
-  {
-    id: 1,
-    title: "Bienvenue sur JudgeMyJPEG ! 👋",
-    description: "Votre coach photo IA qui analyse vos images en 3 secondes et vous aide à progresser.",
-    icon: "🎉"
-  },
-  {
-    id: 2,
-    title: "Choisissez votre mode d'analyse 🎭",
-    description: "3 personnalités IA : Pro (technique), Cassant (fun), ou Formation (apprentissage).",
-    icon: "🎯",
-    action: "/analyze",
-    actionLabel: "Voir les modes"
-  },
-  {
-    id: 3,
-    title: "Uploadez votre photo 📸",
-    description: "Formats JPG, PNG, WebP acceptés. L'IA s'adapte au type : portrait, paysage, street...",
-    icon: "⬆️"
-  },
-  {
-    id: 4,
-    title: "Recevez votre analyse complète 📊",
-    description: "Note /100, conseils détaillés, suggestions d'amélioration, et tips Lightroom/Photoshop !",
-    icon: "✨",
-    action: "/analyze",
-    actionLabel: "Essayer maintenant"
-  }
-]
-
 export default function OnboardingTutorial() {
+  const { t } = useLanguage()
   const [isVisible, setIsVisible] = useState(false)
   const [currentStep, setCurrentStep] = useState(0)
   const [hasSeenTutorial, setHasSeenTutorial] = useState(false)
   const router = useRouter()
+
+  const steps: Step[] = [
+    {
+      id: 1,
+      title: t.onboarding.welcome,
+      description: t.onboarding.welcomeDesc,
+      icon: "🎉",
+      visualHint: t.onboarding.welcome
+    },
+    {
+      id: 2,
+      title: t.onboarding.chooseMode,
+      description: t.onboarding.chooseModeDesc,
+      icon: "🎯",
+      action: "/analyze",
+      actionLabel: t.onboarding.next,
+      visualHint: t.onboarding.chooseModeDesc
+    },
+    {
+      id: 3,
+      title: t.onboarding.uploadPhoto,
+      description: t.onboarding.uploadDesc,
+      icon: "⬆️",
+      visualHint: t.onboarding.uploadDesc
+    },
+    {
+      id: 4,
+      title: t.onboarding.getAnalysis,
+      description: t.onboarding.getAnalysisDesc,
+      icon: "✨",
+      action: "/analyze",
+      actionLabel: t.onboarding.finish,
+      visualHint: t.onboarding.getAnalysisDesc
+    }
+  ]
 
   useEffect(() => {
     // Vérifier si l'utilisateur a déjà vu le tutorial
@@ -118,14 +125,14 @@ export default function OnboardingTutorial() {
               <div className="text-5xl">{step.icon}</div>
               <div>
                 <h3 className="text-2xl font-bold text-text-white">{step.title}</h3>
-                <p className="text-text-muted text-sm">Étape {currentStep + 1}/{steps.length}</p>
+                <p className="text-text-muted text-sm">{currentStep + 1}/{steps.length}</p>
               </div>
             </div>
             <button
               onClick={handleSkip}
               className="text-text-muted hover:text-text-white transition-colors text-sm"
             >
-              Passer ✕
+              {t.onboarding.skip} ✕
             </button>
           </div>
 
@@ -152,10 +159,7 @@ export default function OnboardingTutorial() {
                 {currentStep === 3 && '💯'}
               </div>
               <div className="flex-1 text-sm text-text-muted">
-                {currentStep === 0 && 'Une IA spécialisée en photographie, formée sur des milliers d\'images'}
-                {currentStep === 1 && 'Pro = Technique | Cassant = Fun | Formation = Pédagogique'}
-                {currentStep === 2 && 'Glissez-déposez ou cliquez pour sélectionner'}
-                {currentStep === 3 && 'Composition • Exposition • Lumière • Créativité • Technique'}
+                {step.visualHint}
               </div>
             </div>
           </div>
@@ -167,7 +171,7 @@ export default function OnboardingTutorial() {
                 onClick={() => setCurrentStep(currentStep - 1)}
                 className="btn-neon-secondary flex-1"
               >
-                ← Précédent
+                ← {t.onboarding.previous}
               </button>
             )}
 
@@ -176,14 +180,14 @@ export default function OnboardingTutorial() {
                 onClick={handleAction}
                 className="btn-gradient-pink flex-1 text-lg"
               >
-                {step.actionLabel || 'Continuer'} →
+                {step.actionLabel} →
               </button>
             ) : (
               <button
                 onClick={handleNext}
                 className="btn-neon-pink flex-1"
               >
-                {currentStep === steps.length - 1 ? 'Terminer 🎉' : 'Suivant →'}
+                {currentStep === steps.length - 1 ? t.onboarding.finish : `${t.onboarding.next} →`}
               </button>
             )}
           </div>
@@ -191,7 +195,7 @@ export default function OnboardingTutorial() {
           {/* Tips */}
           <div className="mt-6 text-center">
             <p className="text-text-muted text-xs">
-              💡 Astuce : Vous avez <span className="text-neon-cyan font-semibold">3 analyses gratuites</span> par mois sans inscription
+              💡 {t.onboarding.freeAnalyses}
             </p>
           </div>
         </div>

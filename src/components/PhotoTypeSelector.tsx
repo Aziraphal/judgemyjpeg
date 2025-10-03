@@ -1,6 +1,7 @@
 import { PhotoType, PHOTO_TYPES_CONFIG } from '@/types/analysis'
 import { useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface PhotoTypeSelectorProps {
   selectedType: PhotoType
@@ -9,12 +10,13 @@ interface PhotoTypeSelectorProps {
   className?: string
 }
 
-export default function PhotoTypeSelector({ 
-  selectedType, 
-  onTypeChange, 
-  disabled = false, 
-  className = '' 
+export default function PhotoTypeSelector({
+  selectedType,
+  onTypeChange,
+  disabled = false,
+  className = ''
 }: PhotoTypeSelectorProps) {
+  const { t } = useLanguage()
   const [isOpen, setIsOpen] = useState(false)
 
   const selectedConfig = PHOTO_TYPES_CONFIG[selectedType]
@@ -32,7 +34,7 @@ export default function PhotoTypeSelector({
               rounded-lg hover:shadow-neon-cyan transition-all duration-300 text-left
               ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-neon-cyan/50 cursor-pointer'}
             `}
-            aria-label="Sélectionner le type de photo"
+            aria-label={t.photoType.select}
           >
             <div className="flex items-center space-x-3">
               <span className="text-2xl" aria-hidden="true">
@@ -66,7 +68,7 @@ export default function PhotoTypeSelector({
             {/* En-tête informatif */}
             <div className="px-4 py-3 border-b border-cosmic-glassborder bg-cosmic-glass">
               <p className="text-sm text-text-white font-bold">
-                🎯 Sélectionnez le type pour une analyse IA spécialisée
+                🎯 {t.photoType.selectForAI}
               </p>
             </div>
             
