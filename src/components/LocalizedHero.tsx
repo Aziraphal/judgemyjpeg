@@ -5,6 +5,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { signIn } from 'next-auth/react'
 import { useAutoLocalization } from '@/hooks/useAutoLocalization'
 import type { AnalysisLanguage } from '@/types/analysis'
 
@@ -359,6 +360,21 @@ export default function LocalizedHero({ forceLanguage }: LocalizedHeroProps) {
                    currentLanguage === 'it' ? 'Risultato istantaneo' :
                    currentLanguage === 'pt' ? 'Resultado instantâneo' : 'Résultat instantané'}</span>
           </div>
+        </div>
+
+        {/* Login link for existing users */}
+        <div className="mb-8">
+          <button
+            onClick={() => signIn()}
+            className="text-text-gray hover:text-neon-cyan transition-colors text-base underline decoration-dotted underline-offset-4"
+          >
+            {currentLanguage === 'en' ? 'Already have an account? Sign in' :
+             currentLanguage === 'es' ? '¿Ya tienes una cuenta? Iniciar sesión' :
+             currentLanguage === 'de' ? 'Bereits ein Konto? Anmelden' :
+             currentLanguage === 'it' ? 'Hai già un account? Accedi' :
+             currentLanguage === 'pt' ? 'Já tem uma conta? Entrar' :
+             'Déjà un compte ? Connectez-vous'}
+          </button>
         </div>
 
         {/* Secondary CTA */}
