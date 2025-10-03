@@ -288,12 +288,6 @@ docker build -t judgemyjpeg .
 2. Connecter à Railway
 3. Ajouter variables d'env
 4. Deploy automatique !
-
-**Railway alternative :**
-```bash
-npm install -g vercel
-vercel --prod
-```
 </details>
 
 ### **💡 Optimisations recommandées**
