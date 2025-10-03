@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import * as Popover from '@radix-ui/react-popover'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export type AnalysisTone = 'professional' | 'roast' | 'learning'
 
@@ -11,34 +12,38 @@ interface ToneSelectorProps {
 
 export default function ToneSelector({ selectedTone, onToneChange }: ToneSelectorProps) {
   const [isExpanded, setIsExpanded] = useState(false)
+  const { t } = useLanguage()
 
   const toneOptions = {
     professional: {
-      label: 'Mode Pro',
-      labelMobile: 'Pro',
+      label: t.toneSelector.professional.label,
+      labelMobile: t.toneSelector.professional.labelMobile,
       icon: '👔',
-      description: 'Analyse technique et constructive',
-      tooltip: 'Analyse professionnelle focalisée sur les aspects techniques : composition, exposition, netteté, etc.',
+      description: t.toneSelector.professional.description,
       color: 'border-neon-cyan/50 bg-neon-cyan/10',
-      selectedColor: 'border-neon-cyan bg-neon-cyan/20'
+      selectedColor: 'border-neon-cyan bg-neon-cyan/20',
+      example: t.toneSelector.professional.example,
+      exampleText: t.toneSelector.professional.exampleText
     },
     roast: {
-      label: 'Mode Cassant',
-      labelMobile: 'Cassant',
+      label: t.toneSelector.roast.label,
+      labelMobile: t.toneSelector.roast.labelMobile,
       icon: '🔥',
-      description: 'Analyse brutalement honnête et fun',
-      tooltip: 'Mode humoristique qui révèle les défauts avec humour tout en restant constructif',
+      description: t.toneSelector.roast.description,
       color: 'border-neon-pink/50 bg-neon-pink/10',
-      selectedColor: 'border-neon-pink bg-neon-pink/20'
+      selectedColor: 'border-neon-pink bg-neon-pink/20',
+      example: t.toneSelector.roast.example,
+      exampleText: t.toneSelector.roast.exampleText
     },
     learning: {
-      label: 'Mode Apprentissage',
-      labelMobile: 'Formation',
+      label: t.toneSelector.learning.label,
+      labelMobile: t.toneSelector.learning.labelMobile,
       icon: '📚',
-      description: 'Formation complète et pédagogique',
-      tooltip: 'Analyse détaillée avec explications du pourquoi, conseils pratiques et exercices pour progresser',
+      description: t.toneSelector.learning.description,
       color: 'border-green-400/50 bg-green-400/10',
-      selectedColor: 'border-green-400 bg-green-400/20'
+      selectedColor: 'border-green-400 bg-green-400/20',
+      example: t.toneSelector.learning.example,
+      exampleText: t.toneSelector.learning.exampleText
     }
   }
 
@@ -47,21 +52,21 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
       <div className="flex items-center justify-between mb-3 sm:mb-4">
         <h3 className="text-base sm:text-lg font-bold text-text-white flex items-center">
           <span className="text-xl sm:text-2xl mr-2">🎭</span>
-          <span className="hidden sm:inline">Choisissez le ton de l'analyse</span>
-          <span className="sm:hidden">Ton d'analyse</span>
+          <span className="hidden sm:inline">{t.toneSelector.title}</span>
+          <span className="sm:hidden">{t.toneSelector.titleMobile}</span>
         </h3>
         <div className="flex items-center space-x-2">
           <Popover.Root>
             <Popover.Trigger asChild>
               <button
                 className="btn-neon-secondary text-xs sm:text-sm px-2 sm:px-3 flex items-center space-x-1 hover:scale-105 transition-transform"
-                title="Aide et ressources"
+                title={t.toneSelector.help}
               >
                 <span>❓</span>
-                <span className="hidden sm:inline">Aide</span>
+                <span className="hidden sm:inline">{t.toneSelector.help}</span>
               </button>
             </Popover.Trigger>
-            
+
             {/* Menu dropdown avec Popover */}
             <Popover.Portal>
               <Popover.Content
@@ -71,40 +76,40 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
                 collisionPadding={16}
               >
                 <div className="p-2">
-                  <Link 
+                  <Link
                     href="/glossaire"
                     target="_blank"
                     className="flex items-center space-x-2 w-full p-2 text-left text-sm text-text-white hover:bg-cosmic-glassborder rounded transition-colors"
                   >
                     <span>📚</span>
-                    <span>Glossaire photographique</span>
+                    <span>{t.toneSelector.glossary}</span>
                   </Link>
-                  <a 
+                  <a
                     href="/faq"
                     target="_blank"
                     className="flex items-center space-x-2 w-full p-2 text-left text-sm text-text-white hover:bg-cosmic-glassborder rounded transition-colors"
                   >
                     <span>❓</span>
-                    <span>Questions fréquentes</span>
+                    <span>{t.toneSelector.faq}</span>
                   </a>
-                  <a 
+                  <a
                     href="/contact"
                     target="_blank"
                     className="flex items-center space-x-2 w-full p-2 text-left text-sm text-text-white hover:bg-cosmic-glassborder rounded transition-colors"
                   >
                     <span>💌</span>
-                    <span>Nous contacter</span>
+                    <span>{t.toneSelector.contact}</span>
                   </a>
                 </div>
               </Popover.Content>
             </Popover.Portal>
           </Popover.Root>
-          
+
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="btn-neon-secondary text-xs sm:text-sm px-2 sm:px-3"
           >
-            {isExpanded ? '▼' : '▶'} <span className="hidden sm:inline">Personnaliser</span>
+            {isExpanded ? '▼' : '▶'} <span className="hidden sm:inline">{t.toneSelector.customize}</span>
           </button>
         </div>
       </div>
@@ -124,7 +129,7 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
             <div className="text-center">
               <div className="text-2xl sm:text-3xl mb-1 sm:mb-2">{config.icon}</div>
               <div className="text-text-white font-semibold mb-1 text-xs sm:text-base">
-                <span className="sm:hidden">{config.labelMobile || config.label}</span>
+                <span className="sm:hidden">{config.labelMobile}</span>
                 <span className="hidden sm:inline">{config.label}</span>
               </div>
               <div className="text-text-muted text-xs hidden sm:block">{config.description}</div>
@@ -141,14 +146,12 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
             <div className="glass-card p-4 border border-neon-cyan/30">
               <div className="flex items-center mb-3">
                 <span className="text-xl mr-2">👔</span>
-                <span className="text-neon-cyan font-semibold">Mode Pro</span>
+                <span className="text-neon-cyan font-semibold">{toneOptions.professional.label}</span>
               </div>
               <div className="text-text-gray text-sm space-y-2">
-                <p><strong>Exemple :</strong></p>
+                <p><strong>{toneOptions.professional.example}</strong></p>
                 <p className="italic">
-                  "Excellente composition selon la règle des tiers. 
-                  L'exposition pourrait être améliorée de +1 stop. 
-                  Très bon travail sur la profondeur de champ."
+                  "{toneOptions.professional.exampleText}"
                 </p>
               </div>
             </div>
@@ -157,14 +160,12 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
             <div className="glass-card p-4 border border-neon-pink/30">
               <div className="flex items-center mb-3">
                 <span className="text-xl mr-2">🔥</span>
-                <span className="text-neon-pink font-semibold">Mode Cassant</span>
+                <span className="text-neon-pink font-semibold">{toneOptions.roast.label}</span>
               </div>
               <div className="text-text-gray text-sm space-y-2">
-                <p><strong>Exemple :</strong></p>
+                <p><strong>{toneOptions.roast.example}</strong></p>
                 <p className="italic">
-                  "Cette exposition ressemble à un vampire qui a peur 
-                  de la lumière... +2 stops arrangeraient les choses. 
-                  Le cadrage ? L'appareil a eu le hoquet ! 📸💀"
+                  "{toneOptions.roast.exampleText}"
                 </p>
               </div>
             </div>
@@ -173,14 +174,12 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
             <div className="glass-card p-4 border border-green-400/30">
               <div className="flex items-center mb-3">
                 <span className="text-xl mr-2">📚</span>
-                <span className="text-green-400 font-semibold">Mode Apprentissage</span>
+                <span className="text-green-400 font-semibold">{toneOptions.learning.label}</span>
               </div>
               <div className="text-text-gray text-sm space-y-2">
-                <p><strong>Exemple :</strong></p>
+                <p><strong>{toneOptions.learning.example}</strong></p>
                 <p className="italic">
-                  "Excellente composition ! Voici pourquoi : la règle des tiers 
-                  guide l'œil. Pour progresser, essaie f/8 pour plus de netteté. 
-                  Exercice : varie tes angles de vue demain."
+                  "{toneOptions.learning.exampleText}"
                 </p>
               </div>
             </div>
@@ -204,7 +203,7 @@ export default function ToneSelector({ selectedTone, onToneChange }: ToneSelecto
             </div>
           </div>
           <div className="text-neon-cyan text-xs sm:text-sm font-semibold">
-            ✓ <span className="hidden sm:inline">Sélectionné</span>
+            ✓ <span className="hidden sm:inline">{t.toneSelector.selected}</span>
           </div>
         </div>
       </div>

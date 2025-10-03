@@ -1,6 +1,7 @@
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import { SessionProvider } from 'next-auth/react'
+import { LanguageProvider } from '@/contexts/LanguageContext'
 import SecurityStatusBar from '@/components/SecurityStatusBar'
 import CookieConsent from '@/components/CookieConsent'
 import FeedbackButton from '@/components/FeedbackButton'
@@ -170,21 +171,23 @@ export default function App({
       )}
       
       <SessionProvider session={session}>
-        {/* Monitoring de sécurité contre les injections */}
-        <SecurityMonitor />
-        
-        {/* SecurityStatusBar désactivé par défaut - trop invasif pour l'utilisateur final */}
-        {process.env.NODE_ENV === 'development' && !hideSecurityBar && <SecurityStatusBar compact position="top" />}
-        <Component {...pageProps} />
-        <CookieConsent />
-        
-        {/* Bouton feedback flottant sur toutes les pages (sauf admin) */}
-        {!router.pathname.startsWith('/admin') && !router.pathname.startsWith('/auth') && (
-          <FeedbackButton variant="floating" size="md" />
-        )}
-        
-        {/* Footer avec mentions légales OBLIGATOIRES sur toutes les pages */}
-        <Footer />
+        <LanguageProvider>
+          {/* Monitoring de sécurité contre les injections */}
+          <SecurityMonitor />
+
+          {/* SecurityStatusBar désactivé par défaut - trop invasif pour l'utilisateur final */}
+          {process.env.NODE_ENV === 'development' && !hideSecurityBar && <SecurityStatusBar compact position="top" />}
+          <Component {...pageProps} />
+          <CookieConsent />
+
+          {/* Bouton feedback flottant sur toutes les pages (sauf admin) */}
+          {!router.pathname.startsWith('/admin') && !router.pathname.startsWith('/auth') && (
+            <FeedbackButton variant="floating" size="md" />
+          )}
+
+          {/* Footer avec mentions légales OBLIGATOIRES sur toutes les pages */}
+          <Footer />
+        </LanguageProvider>
       </SessionProvider>
     </>
   )

@@ -7,6 +7,7 @@ import { extractExifData } from '@/utils/exifExtractor'
 import { ExifData } from '@/types/exif'
 import { logger } from '@/lib/logger'
 import AdvancedLoadingAnimation from './AdvancedLoadingAnimation'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 // Type pour la fonction de refresh du compteur
 declare global {
@@ -27,6 +28,7 @@ interface PhotoUploadProps {
 }
 
 export default function PhotoUpload({ onAnalysisComplete, tone, language, testMode = false, onUploadStateChange, onAnalysisLimitReached, photoType = 'general', onPhotoTypeChange }: PhotoUploadProps) {
+  const { t } = useLanguage()
   const [isUploading, setIsUploading] = useState(false)
   const [dragActive, setDragActive] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -40,7 +42,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
 
   const handleFile = async (file: File) => {
     if (!file.type.startsWith('image/')) {
-      setErrorMessage('Veuillez sélectionner un fichier image valide (JPG, PNG, WebP)')
+      setErrorMessage(t.analyze.invalidFile)
       return
     }
 
@@ -275,7 +277,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
       }
       
       // Message d'erreur plus précis
-      let errorMessage = 'Erreur lors de l\'analyse de la photo'
+      let errorMessage = t.analyze.analysisError
       
       if (error instanceof Error) {
         if (error.name === 'TimeoutError' || error.message.includes('timeout')) {
@@ -283,7 +285,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
         } else if (error.message.includes('Upload interrompu')) {
           errorMessage = 'Upload interrompu - essayez avec un fichier plus petit'
         } else if (error.message.includes('connexion')) {
-          errorMessage = 'Erreur de connexion - vérifiez votre réseau'
+          errorMessage = t.analyze.networkError
         } else if (error.message) {
           errorMessage = error.message
         }
@@ -444,15 +446,15 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
                   tone === 'roast' ? '🔥 ' : 
                   tone === 'learning' ? '📚 ' : '🚀 '
                 }</span>
-                {tone === 'roast' ? 'Analyse critique en cours...' : 
-                 tone === 'learning' ? 'Formation pédagogique en cours...' : 'Analyse IA en cours...'}
+                {tone === 'roast' ? t.analyze.loadingRoast :
+                 tone === 'learning' ? t.analyze.loadingLearning : t.analyze.loadingProfessional}
               </p>
               <p className="text-sm sm:text-base text-text-gray">
-                {tone === 'roast' 
-                  ? 'L\'IA prépare une critique sans concession'
+                {tone === 'roast'
+                  ? t.analyze.loadingSubRoast
                   : tone === 'learning'
-                  ? 'Apprentissage avec explications détaillées...' 
-                  : 'GPT-4 Vision analyse votre photo avec précision'
+                  ? t.analyze.loadingSubLearning
+                  : t.analyze.loadingSubProfessional
                 }
               </p>
               
@@ -463,15 +465,15 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
                 {/* Messages thématiques centrés */}
                 <div className="text-center space-y-2">
                   <h3 className="text-lg font-bold text-glow">
-                    {tone === 'roast' ? '🔥 Préparation du châtiment' : 
-                     tone === 'learning' ? '🎨 Vision artistique' : '⚡ Analyse en cours'}
+                    {tone === 'roast' ? t.analyze.loadingTitleRoast :
+                     tone === 'learning' ? t.analyze.loadingTitleLearning : t.analyze.loadingTitleProfessional}
                   </h3>
                   <p className="text-sm text-text-muted">
-                    {tone === 'roast' 
-                      ? "L'IA prépare une critique sans concession..." 
+                    {tone === 'roast'
+                      ? t.analyze.loadingSubRoast
                       : tone === 'learning'
-                      ? "Analyse selon l'histoire de l'art photographique..."
-                      : "L'IA examine chaque détail de votre photo..."
+                      ? t.analyze.loadingSubLearning
+                      : t.analyze.loadingSubProfessional
                     }
                   </p>
                 </div>
@@ -488,20 +490,14 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
           <div className="space-y-4 sm:space-y-6">
             <div className="text-4xl sm:text-6xl md:text-8xl animate-float" aria-hidden="true">📸</div>
             <div className="space-y-2 sm:space-y-4" id="upload-instructions">
-              <h3 className="text-lg sm:text-xl md:text-3xl font-bold text-glow">
-                Glissez votre photo ici
+              <h3 className="text-lg sm:text-xl md:text-3xl font-bold text-glow text-center px-4">
+                {t.analyze.dragDrop}
               </h3>
-              <p className="text-sm sm:text-base md:text-xl text-text-gray px-2 sm:px-4">
-                ou{' '}
-                <span className="text-neon-cyan font-semibold cursor-pointer hover:text-neon-pink transition-colors">
-                  cliquez pour sélectionner
-                </span>
-              </p>
             </div>
             
             <RichTooltip
-              title="Spécifications techniques"
-              description="Formats optimisés pour l'analyse IA : JPEG pour rapidité, PNG pour qualité, WebP pour compression avancée"
+              title={t.analyze.uploadSpecs}
+              description={t.analyze.uploadSpecsDescription}
               icon="⚙️"
             >
               <div className="glass-card p-3 sm:p-4 max-w-xs sm:max-w-md mx-auto cursor-help" id="file-constraints">
@@ -509,16 +505,16 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
                   <div className="flex items-center justify-center space-x-2 sm:space-x-4 text-xs sm:text-sm text-text-muted">
                     <div className="flex items-center space-x-1">
                       <span className="text-neon-pink" aria-hidden="true">✓</span>
-                      <span>Formats: JPG, PNG, WebP</span>
+                      <span>{t.analyze.fileFormats}</span>
                     </div>
                     <div className="w-1 h-1 bg-text-muted rounded-full" aria-hidden="true"></div>
                     <div className="flex items-center space-x-1">
                       <span className="text-green-400" aria-hidden="true">⚡</span>
-                      <span>Photos illimitées</span>
+                      <span>{t.analyze.unlimitedPhotos}</span>
                     </div>
                   </div>
                   <p className="text-xs text-green-400/80">
-                    📱 Photos jusqu'à 20MB • Qualité originale préservée • Railway Pro
+                    {t.analyze.photosUpTo} • {t.analyze.qualityPreserved} • {t.analyze.railwayPro}
                   </p>
                 </div>
               </div>
@@ -526,8 +522,8 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
             
             <ContextualTooltip content="Analyse GPT-4 Vision avec traitement optimisé">
               <div className="text-xs text-text-muted cursor-help">
-                Powered by{' '}
-                <span className="text-neon-pink font-semibold">Intelligence Artificielle</span> ✨
+                {t.analyze.poweredBy}{' '}
+                <span className="text-neon-pink font-semibold">{t.analyze.aiPowered}</span> ✨
               </div>
             </ContextualTooltip>
             
@@ -535,7 +531,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
             {debugInfo.length > 0 && (
               <div className="glass-card p-3 mt-4 text-left">
                 <h4 className="text-xs font-semibold text-neon-cyan mb-2 flex items-center">
-                  Activité récente
+                  {t.analyze.recentActivity}
                   <button 
                     onClick={() => setDebugInfo([])} 
                     className="ml-auto text-xs text-text-muted hover:text-white"
