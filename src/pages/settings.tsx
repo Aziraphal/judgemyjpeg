@@ -24,7 +24,7 @@ export default function SettingsPage() {
   const [userPreferences, setUserPreferences] = useState({
     displayName: session?.user?.name || '',
     nickname: '',
-    preferredAnalysisMode: 'professional' as 'professional' | 'roast' | 'artcritic',
+    preferredAnalysisMode: 'professional' as 'professional' | 'roast' | 'learning',
     defaultExportFormat: 'pdf',
     theme: 'cosmic',
     language: 'fr',
@@ -508,7 +508,7 @@ export default function SettingsPage() {
                             {[
                               { id: 'professional', label: 'Mode Pro', icon: '👔', desc: 'Analyse constructive' },
                               { id: 'roast', label: 'Mode Cassant', icon: '🔥', desc: 'Critique sarcastique' },
-                              { id: 'artcritic', label: 'Critique d\'Art', icon: '🎨', desc: 'Vision artistique' }
+                              { id: 'learning', label: 'Apprentissage', icon: '📚', desc: 'Analyse pédagogique' }
                             ].map((mode) => (
                               <label key={mode.id} className="flex items-center cursor-pointer">
                                 <input
