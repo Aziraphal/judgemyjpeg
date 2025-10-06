@@ -91,6 +91,15 @@ export default function PricingPage() {
     )
   }
 
+  const returnPolicy = {
+    "@type": "MerchantReturnPolicy",
+    "applicableCountry": "FR",
+    "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+    "merchantReturnDays": 14,
+    "returnMethod": "https://schema.org/ReturnByMail",
+    "returnFees": "https://schema.org/FreeReturn"
+  }
+
   const pricingOffers = [
     {
       "@type": "Offer",
@@ -100,6 +109,7 @@ export default function PricingPage() {
       "priceCurrency": "EUR",
       "availability": "https://schema.org/InStock",
       "priceValidUntil": "2026-12-31",
+      "hasMerchantReturnPolicy": returnPolicy,
       "eligibleQuantity": {
         "@type": "QuantitativeValue",
         "value": "3",
@@ -114,6 +124,7 @@ export default function PricingPage() {
       "priceCurrency": "EUR",
       "availability": "https://schema.org/InStock",
       "priceValidUntil": "2026-12-31",
+      "hasMerchantReturnPolicy": returnPolicy,
       "eligibleQuantity": {
         "@type": "QuantitativeValue",
         "value": "10",
@@ -128,6 +139,7 @@ export default function PricingPage() {
       "priceCurrency": "EUR",
       "availability": "https://schema.org/InStock",
       "priceValidUntil": "2026-12-31",
+      "hasMerchantReturnPolicy": returnPolicy,
       "priceSpecification": {
         "@type": "UnitPriceSpecification",
         "price": "9.99",
@@ -144,7 +156,8 @@ export default function PricingPage() {
       "priceCurrency": "EUR",
       "availability": "https://schema.org/InStock",
       "availabilityStarts": "2025-01-01",
-      "priceValidUntil": "2026-12-31"
+      "priceValidUntil": "2026-12-31",
+      "hasMerchantReturnPolicy": returnPolicy
     }
   ]
 
@@ -160,6 +173,7 @@ export default function PricingPage() {
           "@type": "Product",
           "name": "JudgeMyJPEG - Analyse Photo IA",
           "description": "Service d'analyse photo par intelligence artificielle avec 3 modes d'expertise et plusieurs plans tarifaires adaptés à tous les besoins.",
+          "image": "https://www.judgemyjpeg.fr/og-image.svg",
           "brand": {
             "@type": "Brand",
             "name": "JudgeMyJPEG"
