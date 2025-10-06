@@ -98,6 +98,8 @@ export default function PricingPage() {
       "description": "3 analyses photo IA par mois avec tous les modes d'analyse (Roast, Professional, Learning). Idéal pour découvrir le service.",
       "price": "0",
       "priceCurrency": "EUR",
+      "availability": "https://schema.org/InStock",
+      "priceValidUntil": "2026-12-31",
       "eligibleQuantity": {
         "@type": "QuantitativeValue",
         "value": "3",
@@ -110,6 +112,8 @@ export default function PricingPage() {
       "description": "10 analyses photo + 3 exports PDF + 3 partages sociaux. Paiement unique sans abonnement.",
       "price": "4.99",
       "priceCurrency": "EUR",
+      "availability": "https://schema.org/InStock",
+      "priceValidUntil": "2026-12-31",
       "eligibleQuantity": {
         "@type": "QuantitativeValue",
         "value": "10",
@@ -122,6 +126,8 @@ export default function PricingPage() {
       "description": "Analyses photo IA illimitées, tous les modes, exports PDF illimités, partage social, collections personnalisées.",
       "price": "9.99",
       "priceCurrency": "EUR",
+      "availability": "https://schema.org/InStock",
+      "priceValidUntil": "2026-12-31",
       "priceSpecification": {
         "@type": "UnitPriceSpecification",
         "price": "9.99",
@@ -136,8 +142,9 @@ export default function PricingPage() {
       "description": "Accès à vie avec toutes les fonctionnalités premium : analyses illimitées, exports, partage, collections, futures features.",
       "price": "99",
       "priceCurrency": "EUR",
+      "availability": "https://schema.org/InStock",
       "availabilityStarts": "2025-01-01",
-      "priceValidUntil": "2025-12-31"
+      "priceValidUntil": "2026-12-31"
     }
   ]
 
