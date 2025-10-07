@@ -231,16 +231,21 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
         const rawExifData = Array.isArray(fields.exifData) ? fields.exifData[0] : fields.exifData
         const parsedExifData = JSON.parse(rawExifData) as ExifData
         exifData = parsedExifData
-        logger.info('EXIF data received for Expert analysis', {
+        logger.info('✅ EXIF data received from client', {
           hasCamera: !!parsedExifData.camera,
+          camera: parsedExifData.camera,
           hasISO: !!parsedExifData.iso,
+          iso: parsedExifData.iso,
           hasAperture: !!parsedExifData.aperture,
+          aperture: parsedExifData.aperture,
           keys: Object.keys(parsedExifData)
         }, req.user.id, ip)
       } catch (parseError) {
-        logger.warn('Failed to parse EXIF data', parseError, req.user.id, ip)
+        logger.warn('❌ Failed to parse EXIF data', parseError, req.user.id, ip)
         exifData = null
       }
+    } else {
+      logger.warn('⚠️ No EXIF data sent by client', null, req.user.id, ip)
     }
 
     const base64Image = fileBuffer.toString('base64')
