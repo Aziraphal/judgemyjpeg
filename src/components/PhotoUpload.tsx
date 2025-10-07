@@ -106,10 +106,36 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
     
     const originalSizeMB = Math.round(file.size / 1024 / 1024 * 100) / 100
     logger.debug(`PhotoUpload: Original file size ${originalSizeMB}MB, type: ${file.type}`)
-    
+
     // Logs internes uniquement (non visibles)
     logger.debug(`Analysis mode: ${tone}, file size: ${originalSizeMB}MB`)
-    
+
+    // 📸 EXTRACTION EXIF AVANT COMPRESSION (crucial!)
+    // Extraire les métadonnées depuis le fichier ORIGINAL avant toute transformation
+    let exifData: ExifData | null = null
+    let isLikelyAIGenerated = false
+
+    try {
+      exifData = await extractExifData(file) // ⚠️ Important: file ORIGINAL, pas processedFile
+      if (exifData) {
+        logger.debug('✅ EXIF extracted successfully:', exifData.camera || 'Unknown camera')
+      } else {
+        // Pas de métadonnées du tout = suspect
+        logger.warn('⚠️ No EXIF metadata found - possible AI-generated image')
+        isLikelyAIGenerated = true
+      }
+    } catch (exifError) {
+      logger.warn('⚠️ EXIF extraction failed:', exifError)
+      exifData = null
+      isLikelyAIGenerated = true
+    }
+
+    // 🤖 Détecter si l'image est potentiellement générée par IA
+    if (!exifData?.camera && !exifData?.lens && !exifData?.iso) {
+      logger.warn('🤖 Suspicious: no camera, lens or ISO data - likely AI-generated')
+      isLikelyAIGenerated = true
+    }
+
     // ✅ RAILWAY: Pas de limite cachée ! Upload direct possible
     let processedFile = file
 
@@ -267,28 +293,26 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
       // Upload standard avec fichier compressé si nécessaire
       const finalSizeMB = Math.round(processedFile.size / 1024 / 1024 * 100) / 100
       logger.debug(`Processing file for ${tone} analysis...`)
-      
-      // Extraire les données EXIF pour le mode Art Critic
-      let exifData: ExifData | null = null
-      if (tone === 'learning') {
-        try {
-          exifData = await extractExifData(processedFile)
-        } catch (exifError) {
-          logger.warn('⚠️ EXIF extraction failed:', exifError)
-          // Continue sans EXIF - ne pas faire planter l'analyse
-          exifData = null
-        }
-      }
-      
+
+      // ✅ Les données EXIF ont déjà été extraites AVANT compression (ligne 117)
+      // Pas besoin de les réextraire ici
+
       const formData = new FormData()
       formData.append('photo', processedFile)
       formData.append('tone', tone)
       formData.append('language', language)
       formData.append('photoType', photoType)
-      
-      // Ajouter les données EXIF si disponibles
+
+      // Ajouter les données EXIF si disponibles (extraites AVANT compression)
       if (exifData) {
         formData.append('exifData', JSON.stringify(exifData))
+        logger.debug('📸 EXIF data included in request:', exifData.camera)
+      }
+
+      // Ajouter le flag de détection IA
+      if (isLikelyAIGenerated) {
+        formData.append('isLikelyAIGenerated', 'true')
+        logger.debug('🤖 Flagged as potentially AI-generated')
       }
 
       // URL absolue pour éviter les problèmes DNS mobile
