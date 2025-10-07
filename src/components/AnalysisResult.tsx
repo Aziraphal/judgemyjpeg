@@ -164,11 +164,6 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
                 orientation={analysis.exifData?.orientation}
               />
             </div>
-            
-            {/* Affichage des données EXIF pour le mode Art Critic */}
-            {tone === 'learning' && analysis.hasExifData && analysis.exifData && (
-              <ExifDisplay exifData={analysis.exifData} className="mt-4" />
-            )}
           </div>
           
           <div className="space-y-4 sm:space-y-6">
@@ -419,6 +414,11 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
           </div>
         </div>
       </div>
+
+      {/* Données EXIF (affichées pour tous les modes si disponibles) */}
+      {analysis.hasExifData && analysis.exifData && (
+        <ExifDisplay exifData={analysis.exifData} />
+      )}
 
       {/* Version simplifiée (Mode Pro) */}
       {analysis.summary && analysis.keyInsights ? (
