@@ -32,6 +32,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
   const [isUploading, setIsUploading] = useState(false)
   const [dragActive, setDragActive] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [brightnessWarning, setBrightnessWarning] = useState<string | null>(null)
   const [debugInfo, setDebugInfo] = useState<string[]>([])
   const addDebugInfo = (info: string) => {
     setDebugInfo(prev => [...prev.slice(-4), `[${new Date().toLocaleTimeString()}] ${info}`])
@@ -39,6 +40,34 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // SUPPRIMÉ: Fonctions de compression Canvas (plus nécessaires avec Railway)
+
+  // 🎨 Fonction pour calculer la luminosité moyenne d'une image
+  const calculateAverageBrightness = (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): number => {
+    try {
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+      const data = imageData.data
+      let totalBrightness = 0
+
+      // Parcourir les pixels (r, g, b, a) - sauter alpha
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i]
+        const g = data[i + 1]
+        const b = data[i + 2]
+        // Formule de luminance relative (perception humaine)
+        const brightness = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+        totalBrightness += brightness
+      }
+
+      const pixelCount = data.length / 4
+      const averageBrightness = totalBrightness / pixelCount
+
+      logger.debug(`Average brightness: ${Math.round(averageBrightness * 100)}%`)
+      return averageBrightness
+    } catch (e) {
+      logger.warn('Failed to calculate brightness, using default quality')
+      return 0.5 // Luminosité moyenne par défaut
+    }
+  }
 
   const handleFile = async (file: File) => {
     if (!file.type.startsWith('image/')) {
@@ -80,11 +109,10 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
           img.onload = () => {
             clearTimeout(timeout)
             try {
-              // Compression INTELLIGENTE: garder qualité max sous 4.4MB
+              // Compression ADAPTATIVE selon luminosité
               let { width, height } = img
-              let quality = 0.9 // Commencer avec haute qualité
-              const targetSize = 4.4 * 1024 * 1024 // 4.4MB cible
-              
+              const targetSize = 8 * 1024 * 1024 // 🎯 8MB cible (augmenté de 4.4MB)
+
               // Réduire dimensions seulement si nécessaire (très grosse image)
               if (width * height > 4000000) { // >4MP
                 const ratio = Math.sqrt(4000000 / (width * height))
@@ -92,10 +120,29 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
                 height = Math.round(height * ratio)
                 logger.debug(`Resized: ${img.width}x${img.height} → ${width}x${height}`)
               }
-              
+
               canvas.width = width
               canvas.height = height
               ctx.drawImage(img, 0, 0, width, height)
+
+              // 🌓 Calculer luminosité et adapter qualité
+              const averageBrightness = calculateAverageBrightness(canvas, ctx)
+              let quality: number
+
+              if (averageBrightness < 0.3) {
+                quality = 0.92 // Photo très sombre (nuit) → haute qualité
+                logger.debug('Dark photo detected → quality 92%')
+                // ⚠️ Avertir l'utilisateur
+                setBrightnessWarning('📷 Votre photo semble très sombre — la qualité de l\'analyse peut être réduite. Pour une meilleure analyse, essayez d\'augmenter la luminosité.')
+              } else if (averageBrightness < 0.5) {
+                quality = 0.85 // Photo moyennement sombre → qualité moyenne-haute
+                logger.debug('Medium brightness → quality 85%')
+                setBrightnessWarning(null)
+              } else {
+                quality = 0.75 // Photo lumineuse → compression standard
+                logger.debug('Bright photo → quality 75%')
+                setBrightnessWarning(null)
+              }
               
               // Fonction récursive pour ajuster la qualité
               const compressWithQuality = (q: number) => {
@@ -373,7 +420,7 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
       )}
 
       {errorMessage && (
-        <div className="p-3 bg-red-900/30 border border-red-500/30 rounded-lg text-red-300">
+        <div className="p-3 bg-red-900/30 border border-red-500/30 rounded-lg text-red-300 mb-4">
           <div className="flex items-center justify-between">
             <div className="flex-1">{errorMessage}</div>
             <button
@@ -385,6 +432,21 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
           </div>
         </div>
       )}
+
+      {brightnessWarning && (
+        <div className="p-3 bg-yellow-900/30 border border-yellow-500/30 rounded-lg text-yellow-300 mb-4">
+          <div className="flex items-center justify-between">
+            <div className="flex-1 text-sm">{brightnessWarning}</div>
+            <button
+              onClick={() => setBrightnessWarning(null)}
+              className="ml-4 px-3 py-1 bg-yellow-600/30 hover:bg-yellow-600/50 rounded text-sm"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
+
       <div
         className={`
           relative glass-card p-4 sm:p-6 md:p-12 text-center cursor-pointer
