@@ -172,13 +172,13 @@ export function analyzeImageMetadata(metadata: any): boolean {
  * Valide les dimensions d'image pour éviter les contenus problématiques
  */
 export function validateImageDimensions(width: number, height: number): boolean {
-  // Rejeter images trop petites (potentiels pixels espions)
-  if (width < 100 || height < 100) return false;
-  
-  // Rejeter ratios extrêmes (potentielles bannières inappropriées)
+  // Rejeter images minuscules (< 50px = potentiels pixels espions ou images corrompues)
+  if (width < 50 || height < 50) return false;
+
+  // Rejeter ratios extrêmes (> 20:1 = potentielles bannières inappropriées)
   const ratio = Math.max(width, height) / Math.min(width, height);
-  if (ratio > 10) return false;
-  
+  if (ratio > 20) return false;
+
   return true;
 }
 
