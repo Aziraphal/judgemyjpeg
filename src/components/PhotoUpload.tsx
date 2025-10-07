@@ -115,24 +115,33 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
     let exifData: ExifData | null = null
     let isLikelyAIGenerated = false
 
+    logger.debug(`📸 Extracting EXIF from file: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB, type: ${file.type})`)
+
     try {
       exifData = await extractExifData(file) // ⚠️ Important: file ORIGINAL, pas processedFile
       if (exifData) {
-        logger.debug('✅ EXIF extracted successfully:', exifData.camera || 'Unknown camera')
+        logger.debug('✅ EXIF extracted successfully:', {
+          camera: exifData.camera,
+          lens: exifData.lens,
+          iso: exifData.iso,
+          aperture: exifData.aperture,
+          shutterSpeed: exifData.shutterSpeed,
+          allKeys: Object.keys(exifData)
+        })
       } else {
         // Pas de métadonnées du tout = suspect
-        logger.warn('⚠️ No EXIF metadata found - possible AI-generated image')
+        logger.warn('⚠️ No EXIF metadata found - possible AI-generated image or stripped metadata')
         isLikelyAIGenerated = true
       }
     } catch (exifError) {
-      logger.warn('⚠️ EXIF extraction failed:', exifError)
+      logger.error('⚠️ EXIF extraction failed:', exifError)
       exifData = null
       isLikelyAIGenerated = true
     }
 
     // 🤖 Détecter si l'image est potentiellement générée par IA
     if (!exifData?.camera && !exifData?.lens && !exifData?.iso) {
-      logger.warn('🤖 Suspicious: no camera, lens or ISO data - likely AI-generated')
+      logger.warn('🤖 Suspicious: no camera, lens or ISO data - likely AI-generated or processed image')
       isLikelyAIGenerated = true
     }
 

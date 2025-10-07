@@ -37,6 +37,7 @@
     "@upstash/redis": "^1.35.4",
     "archiver": "^7.0.1",
     "bcryptjs": "^3.0.2",
+    "browser-image-compression": "^2.0.2",
     "cloudinary": "^2.7.0",
     "exifreader": "^4.31.1",
     "formidable": "^3.5.4",

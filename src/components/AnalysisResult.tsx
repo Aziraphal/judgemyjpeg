@@ -29,6 +29,15 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false)
   const [showHelpBanner, setShowHelpBanner] = useState(true)
 
+  // Debug EXIF
+  useEffect(() => {
+    logger.debug('📊 EXIF Debug:', {
+      hasExifData: analysis.hasExifData,
+      exifDataPresent: !!analysis.exifData,
+      exifKeys: analysis.exifData ? Object.keys(analysis.exifData) : []
+    })
+  }, [analysis])
+
   // Vérifier localStorage pour masquer le bandeau après première visite
   useEffect(() => {
     const hasSeenGlossaryHelp = localStorage.getItem('hasSeenGlossaryHelp')
