@@ -553,7 +553,14 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
         sessionId: `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
       }
     }
-    
+
+    // Debug EXIF dans la réponse
+    logger.debug('📊 Analysis object EXIF status:', {
+      hasExifData: analysis.hasExifData,
+      exifDataKeys: analysis.exifData ? Object.keys(analysis.exifData) : [],
+      camera: analysis.exifData?.camera
+    })
+
     // Enregistrer le succès pour circuit breaker
     recordSuccess()
 
