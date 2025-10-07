@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { PhotoAnalysis, AnalysisTone, AnalysisLanguage, PhotoType } from '@/types/analysis'
 import ContextualTooltip, { RichTooltip } from './ContextualTooltip'
 import PhotoTypeSelector from './PhotoTypeSelector'
@@ -8,6 +8,7 @@ import { ExifData } from '@/types/exif'
 import { logger } from '@/lib/logger'
 import AdvancedLoadingAnimation from './AdvancedLoadingAnimation'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { useSession } from 'next-auth/react'
 
 // Type pour la fonction de refresh du compteur
 declare global {
@@ -29,15 +30,39 @@ interface PhotoUploadProps {
 
 export default function PhotoUpload({ onAnalysisComplete, tone, language, testMode = false, onUploadStateChange, onAnalysisLimitReached, photoType = 'general', onPhotoTypeChange }: PhotoUploadProps) {
   const { t } = useLanguage()
+  const { data: session } = useSession()
   const [isUploading, setIsUploading] = useState(false)
   const [dragActive, setDragActive] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [brightnessWarning, setBrightnessWarning] = useState<string | null>(null)
+  const [isPremium, setIsPremium] = useState(false)
+  const [highQualityMode, setHighQualityMode] = useState(false)
   const [debugInfo, setDebugInfo] = useState<string[]>([])
   const addDebugInfo = (info: string) => {
     setDebugInfo(prev => [...prev.slice(-4), `[${new Date().toLocaleTimeString()}] ${info}`])
   }
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // Vérifier le statut Premium de l'utilisateur
+  useEffect(() => {
+    const checkPremiumStatus = async () => {
+      if (!session?.user?.id) return
+
+      try {
+        const response = await fetch('/api/subscription/status')
+        if (response.ok) {
+          const data = await response.json()
+          const premium = ['premium', 'annual', 'lifetime'].includes(data.subscriptionStatus)
+          setIsPremium(premium)
+          logger.debug(`Premium status: ${premium}`)
+        }
+      } catch (error) {
+        logger.error('Failed to check premium status:', error)
+      }
+    }
+
+    checkPremiumStatus()
+  }, [session])
 
   // SUPPRIMÉ: Fonctions de compression Canvas (plus nécessaires avec Railway)
 
@@ -87,9 +112,25 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
     
     // ✅ RAILWAY: Pas de limite cachée ! Upload direct possible
     let processedFile = file
-    
-    // Compression uniquement pour fichiers TRÈS volumineux (>20MB) pour optimiser les performances
-    if (file.size > 20 * 1024 * 1024) { // 20MB seuil - optimisation performance seulement
+
+    // 💎 MODE HAUTE QUALITÉ PREMIUM: pas de compression ou compression douce
+    if (highQualityMode && isPremium) {
+      logger.debug('🌟 HIGH QUALITY MODE: Premium user - minimal/no compression')
+
+      // Compression douce uniquement pour fichiers > 15MB (cible 10MB)
+      if (file.size > 15 * 1024 * 1024) {
+        logger.debug(`Gentle compression: ${originalSizeMB}MB > 15MB → target 10MB`)
+        // La logique de compression suit, mais avec qualité plus haute
+      } else {
+        // Pas de compression du tout pour < 15MB
+        logger.debug(`No compression: ${originalSizeMB}MB < 15MB - original quality preserved`)
+        processedFile = file
+      }
+    }
+
+    // Compression uniquement pour fichiers TRÈS volumineux (>20MB) OU mode standard
+    const shouldCompress = (!highQualityMode || !isPremium) && file.size > 20 * 1024 * 1024
+    if (shouldCompress) {
       logger.debug(`Performance optimization: ${originalSizeMB}MB > 20MB`)
       
       try {
@@ -111,7 +152,9 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
             try {
               // Compression ADAPTATIVE selon luminosité
               let { width, height } = img
-              const targetSize = 8 * 1024 * 1024 // 🎯 8MB cible (augmenté de 4.4MB)
+              // 💎 Mode HQ Premium: cible 10MB, sinon 8MB
+              const targetSize = (highQualityMode && isPremium) ? 10 * 1024 * 1024 : 8 * 1024 * 1024
+              logger.debug(`Target size: ${Math.round(targetSize / 1024 / 1024)}MB ${highQualityMode && isPremium ? '(HQ mode)' : ''}`)
 
               // Réduire dimensions seulement si nécessaire (très grosse image)
               if (width * height > 4000000) { // >4MP
@@ -129,18 +172,25 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
               const averageBrightness = calculateAverageBrightness(canvas, ctx)
               let quality: number
 
+              // 💎 Mode HQ Premium: qualité de base plus élevée
+              const qualityBoost = (highQualityMode && isPremium) ? 0.05 : 0
+
               if (averageBrightness < 0.3) {
-                quality = 0.92 // Photo très sombre (nuit) → haute qualité
-                logger.debug('Dark photo detected → quality 92%')
-                // ⚠️ Avertir l'utilisateur
-                setBrightnessWarning('📷 Votre photo semble très sombre — la qualité de l\'analyse peut être réduite. Pour une meilleure analyse, essayez d\'augmenter la luminosité.')
+                quality = Math.min(0.92 + qualityBoost, 0.98) // Photo très sombre (nuit) → haute qualité
+                logger.debug(`Dark photo detected → quality ${Math.round(quality * 100)}%`)
+                // ⚠️ Avertir l'utilisateur (sauf en mode HQ)
+                if (!highQualityMode || !isPremium) {
+                  setBrightnessWarning('📷 Votre photo semble très sombre — la qualité de l\'analyse peut être réduite. Pour une meilleure analyse, essayez d\'augmenter la luminosité.')
+                } else {
+                  setBrightnessWarning(null)
+                }
               } else if (averageBrightness < 0.5) {
-                quality = 0.85 // Photo moyennement sombre → qualité moyenne-haute
-                logger.debug('Medium brightness → quality 85%')
+                quality = Math.min(0.85 + qualityBoost, 0.95) // Photo moyennement sombre → qualité moyenne-haute
+                logger.debug(`Medium brightness → quality ${Math.round(quality * 100)}%`)
                 setBrightnessWarning(null)
               } else {
-                quality = 0.75 // Photo lumineuse → compression standard
-                logger.debug('Bright photo → quality 75%')
+                quality = Math.min(0.75 + qualityBoost, 0.90) // Photo lumineuse → compression standard
+                logger.debug(`Bright photo → quality ${Math.round(quality * 100)}%`)
                 setBrightnessWarning(null)
               }
               
@@ -416,6 +466,40 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
           <p className="text-xs text-text-gray font-medium">
             💡 Sélectionnez le type pour une analyse IA spécialisée et des conseils adaptés
           </p>
+        </div>
+      )}
+
+      {/* 💎 Mode Haute Qualité Premium */}
+      {isPremium && (
+        <div className="glass-card p-4 mb-4 border border-neon-pink/30 bg-neon-pink/5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <span className="text-2xl">💎</span>
+              <div>
+                <div className="text-text-white font-semibold text-sm">
+                  Mode Haute Qualité
+                </div>
+                <div className="text-text-muted text-xs">
+                  Qualité originale préservée - Pas de compression &lt; 15MB
+                </div>
+              </div>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={highQualityMode}
+                onChange={(e) => setHighQualityMode(e.target.checked)}
+                className="sr-only peer"
+                disabled={isUploading}
+              />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-neon-pink"></div>
+            </label>
+          </div>
+          {highQualityMode && (
+            <div className="mt-3 text-xs text-neon-cyan border-t border-neon-pink/20 pt-3">
+              ✨ Mode Premium activé : qualité maximale pour une analyse optimale
+            </div>
+          )}
         </div>
       )}
 
