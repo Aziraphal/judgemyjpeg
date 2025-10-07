@@ -11,23 +11,33 @@ export async function extractExifData(file: File): Promise<ExifData | null> {
   try {
     // Vérifier si le fichier est valide
     if (!file || file.size === 0) {
+      logger.error('❌ EXIF: Invalid file (null or empty)')
       return null
     }
 
+    logger.debug(`📸 EXIF: Converting file to ArrayBuffer (${file.size} bytes)`)
+
     // Convertir le fichier en ArrayBuffer pour ExifReader
     const arrayBuffer = await file.arrayBuffer()
-    
+
     if (!arrayBuffer || arrayBuffer.byteLength === 0) {
+      logger.error('❌ EXIF: ArrayBuffer is empty')
       return null
     }
-    
+
+    logger.debug(`📸 EXIF: ArrayBuffer ready (${arrayBuffer.byteLength} bytes), loading tags...`)
+
     // Extraire les tags EXIF avec protection supplémentaire
     const tags = ExifReader.load(arrayBuffer, {
       expanded: true,
       includeUnknown: false
     }) as RawExifTags
-    
+
+    logger.debug(`📸 EXIF: Tags loaded, found ${Object.keys(tags).length} tags`)
+    logger.debug('📸 EXIF: Tag keys:', Object.keys(tags).slice(0, 20)) // Premiers 20 tags
+
     if (!tags || Object.keys(tags).length === 0) {
+      logger.warn('⚠️ EXIF: No tags found in image')
       return null
     }
     
