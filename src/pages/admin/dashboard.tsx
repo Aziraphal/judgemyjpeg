@@ -799,22 +799,16 @@ export default function AdminDashboard() {
                   <h3 className="text-lg font-semibold text-text-white mb-4">📋 Actions rapides</h3>
                   <div className="space-y-3">
                     <button
-                      onClick={() => router.push('/admin/security?tab=events')}
+                      onClick={() => loadDashboardData()}
                       className="w-full bg-blue-600/20 text-blue-300 px-4 py-2 rounded hover:bg-blue-600/30 transition-colors text-left"
                     >
-                      📋 Événements de sécurité
+                      🔄 Actualiser les données
                     </button>
                     <button
-                      onClick={() => router.push('/admin/security?tab=alerts')}
+                      onClick={() => router.push('/admin/users')}
                       className="w-full bg-yellow-600/20 text-yellow-300 px-4 py-2 rounded hover:bg-yellow-600/30 transition-colors text-left"
                     >
-                      🚨 Alertes en temps réel
-                    </button>
-                    <button
-                      onClick={() => router.push('/admin/security?tab=analytics')}
-                      className="w-full bg-green-600/20 text-green-300 px-4 py-2 rounded hover:bg-green-600/30 transition-colors text-left"
-                    >
-                      📊 Analytics de sécurité
+                      👥 Gestion utilisateurs
                     </button>
                     <button
                       onClick={() => router.push('/admin/metrics')}
