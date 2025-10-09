@@ -830,7 +830,7 @@ export default function AdminDashboard() {
               <SecurityActionsPanel
                 suspiciousSessionsList={securityStats?.suspiciousSessionsList}
                 recentSecurityEvents={securityStats?.recentSecurityEvents}
-                onActionComplete={() => fetchData()}
+                onActionComplete={() => loadDashboardData()}
               />
             </div>
           )}
