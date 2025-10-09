@@ -166,6 +166,14 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
       }
     }
 
+    logger.info('📊 Security stats response:', {
+      totalUsers,
+      suspiciousSessionsCount: suspiciousSessions.length,
+      eventsCount: recentSecurityEvents.length,
+      alertsCount: criticalAlerts.length,
+      systemStatus
+    }, req.user.id, ip)
+
     res.status(200).json({ success: true, data })
   } catch (error) {
     logger.error('Security stats error:', error, req.user.id, ip)
