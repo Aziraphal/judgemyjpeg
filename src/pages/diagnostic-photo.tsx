@@ -50,7 +50,8 @@ export default function DiagnosticPhoto() {
                   "price": "0",
                   "priceCurrency": "EUR",
                   "description": "Diagnostic photo gratuit illimité",
-                  "availability": "https://schema.org/InStock"
+                  "availability": "https://schema.org/InStock",
+                  "priceValidUntil": "2099-12-31"
                 }
               }
             })

@@ -50,7 +50,8 @@ export default function AnalyseImageGratuite() {
                   "price": "0",
                   "priceCurrency": "EUR",
                   "description": "Analyse d'image gratuite illimitée",
-                  "availability": "https://schema.org/InStock"
+                  "availability": "https://schema.org/InStock",
+                  "priceValidUntil": "2099-12-31"
                 }
               }
             })

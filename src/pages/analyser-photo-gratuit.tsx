@@ -49,7 +49,8 @@ export default function AnalyserPhotoGratuit() {
                   "price": "0",
                   "priceCurrency": "EUR",
                   "description": "Analyse photo gratuite par IA",
-                  "availability": "https://schema.org/InStock"
+                  "availability": "https://schema.org/InStock",
+                  "priceValidUntil": "2099-12-31"
                 }
               }
             })

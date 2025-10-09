@@ -49,7 +49,8 @@ export default function CritiquePhotoIA() {
                   "price": "0",
                   "priceCurrency": "EUR",
                   "description": "Critique photo gratuite par IA",
-                  "availability": "https://schema.org/InStock"
+                  "availability": "https://schema.org/InStock",
+                  "priceValidUntil": "2099-12-31"
                 }
               }
             })
