@@ -315,3 +315,17 @@ model ApiUsage {
   @@index([endpoint, timestamp])
   @@index([success])
 }
+
+model BannedIP {
+  id          String    @id @default(cuid())
+  ipAddress   String    @unique
+  reason      String
+  bannedBy    String    // Admin user ID
+  bannedAt    DateTime  @default(now())
+  expiresAt   DateTime? // null = permanent ban
+  isActive    Boolean   @default(true)
+  metadata    String?   // JSON: {attempts, lastSeen, etc}
+
+  @@index([ipAddress, isActive])
+  @@index([expiresAt])
+}

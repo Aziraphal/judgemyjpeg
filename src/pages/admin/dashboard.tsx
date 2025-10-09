@@ -9,12 +9,14 @@ import Head from 'next/head'
 import { logger } from '@/lib/logger'
 import { withAdminProtection } from '@/lib/withAdminProtection'
 import UserActionsModal from '@/components/admin/UserActionsModal'
+import SecurityActionsPanel from '@/components/admin/SecurityActionsPanel'
 
 interface SecurityStats {
   totalUsers: number
   activeUsers: number
   totalSessions: number
   suspiciousSessions: number
+  suspiciousSessionsList?: any[]
   recentSecurityEvents: any[]
   criticalAlerts: any[]
   systemHealth: {
@@ -823,6 +825,13 @@ export default function AdminDashboard() {
                   </div>
                 </div>
               </div>
+
+              {/* Panel d'actions de sécurité */}
+              <SecurityActionsPanel
+                suspiciousSessionsList={securityStats?.suspiciousSessionsList}
+                recentSecurityEvents={securityStats?.recentSecurityEvents}
+                onActionComplete={() => fetchData()}
+              />
             </div>
           )}
 
