@@ -51,9 +51,8 @@ export default function AdminSessionsPage() {
   })
 
   useEffect(() => {
-    checkAuth()
     loadSessions()
-    
+
     // Actualisation automatique toutes les 30 secondes
     const interval = setInterval(loadSessions, 30000)
     return () => clearInterval(interval)
@@ -63,19 +62,9 @@ export default function AdminSessionsPage() {
     applyFilters()
   }, [sessions, filters])
 
-  const checkAuth = () => {
-    const token = sessionStorage.getItem('admin_token')
-    if (!token) {
-      router.push('/admin/login')
-    }
-  }
-
   const loadSessions = async () => {
     try {
-      const token = sessionStorage.getItem('admin_token')
-      const response = await fetch('/api/admin/sessions', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      })
+      const response = await fetch('/api/admin/sessions')
 
       if (!response.ok) {
         throw new Error('Failed to load sessions')
@@ -124,12 +113,10 @@ export default function AdminSessionsPage() {
   const invalidateSession = async (sessionId: string) => {
     try {
       setActionLoading(sessionId)
-      const token = sessionStorage.getItem('admin_token')
-      
+
       const response = await fetch('/api/admin/sessions', {
         method: 'DELETE',
-        headers: { 
-          'Authorization': `Bearer ${token}`,
+        headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ sessionId })
@@ -157,15 +144,13 @@ export default function AdminSessionsPage() {
 
     try {
       setActionLoading('bulk')
-      const token = sessionStorage.getItem('admin_token')
-      
+
       const response = await fetch('/api/admin/sessions/bulk', {
         method: 'DELETE',
-        headers: { 
-          'Authorization': `Bearer ${token}`,
+        headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           sessionIds: Array.from(selectedSessions)
         })
       })

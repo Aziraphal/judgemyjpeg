@@ -70,22 +70,13 @@ export default function AdminUsersPage() {
   const [showUserModal, setShowUserModal] = useState(false)
 
   useEffect(() => {
-    checkAuth()
     loadUsers()
   }, [filters])
-
-  const checkAuth = () => {
-    const token = sessionStorage.getItem('admin_token')
-    if (!token) {
-      router.push('/admin/login')
-    }
-  }
 
   const loadUsers = async () => {
     try {
       setLoading(true)
-      const token = sessionStorage.getItem('admin_token')
-      
+
       const params = new URLSearchParams({
         page: filters.page.toString(),
         limit: '20',
@@ -94,9 +85,7 @@ export default function AdminUsersPage() {
         ...(filters.subscription && { subscription: filters.subscription })
       })
 
-      const response = await fetch(`/api/admin/users?${params}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      })
+      const response = await fetch(`/api/admin/users?${params}`)
 
       if (!response.ok) {
         throw new Error('Failed to load users')
@@ -115,12 +104,9 @@ export default function AdminUsersPage() {
 
   const handleUserAction = async (userId: string, action: string, data?: any) => {
     try {
-      const token = sessionStorage.getItem('admin_token')
-      
       const response = await fetch('/api/admin/users', {
         method: 'PATCH',
-        headers: { 
-          'Authorization': `Bearer ${token}`,
+        headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ userId, action, data })
