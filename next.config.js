@@ -150,6 +150,17 @@ const nextConfig = {
         destination: '/glossaire',
         permanent: true,
       },
+      // Redirections variantes "analyse gratuite" (SEO: 125 impressions)
+      {
+        source: '/analyse-gratuite-en-ligne',
+        destination: '/analyser-photo-gratuit',
+        permanent: true,
+      },
+      {
+        source: '/analyse-photo-en-ligne',
+        destination: '/analyser-photo-gratuit',
+        permanent: true,
+      },
       // Redirection www supprimée - Railway doit être configuré pour www uniquement
     ]
   },
