@@ -31,6 +31,8 @@ module.exports = {
     { loc: '/analyser-photo-gratuit', priority: 0.5, changefreq: 'monthly' },
     { loc: '/analyse-image-gratuite', priority: 0.5, changefreq: 'monthly' },
     { loc: '/critique-photo-ia', priority: 0.5, changefreq: 'monthly' },
+    { loc: '/diagnostic-photo', priority: 0.5, changefreq: 'monthly' },
+    { loc: '/ia-analyse-photo', priority: 0.5, changefreq: 'monthly' },
     
     // Pages légales
     { loc: '/legal/terms', priority: 0.5, changefreq: 'monthly' },

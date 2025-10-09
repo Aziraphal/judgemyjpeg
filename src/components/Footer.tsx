@@ -119,6 +119,16 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/diagnostic-photo" className="text-text-muted hover:text-neon-cyan transition-colors">
+                  Diagnostic photo
+                </Link>
+              </li>
+              <li>
+                <Link href="/ia-analyse-photo" className="text-text-muted hover:text-neon-cyan transition-colors">
+                  IA analyse photo
+                </Link>
+              </li>
+              <li>
                 <Link href="/critique-photo-ia" className="text-text-muted hover:text-neon-cyan transition-colors">
                   {t.footer.aiCritique}
                 </Link>
