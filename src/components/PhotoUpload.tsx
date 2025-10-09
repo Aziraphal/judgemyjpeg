@@ -529,8 +529,21 @@ export default function PhotoUpload({ onAnalysisComplete, tone, language, testMo
             </label>
           </div>
           {highQualityMode && (
-            <div className="mt-3 text-xs text-neon-cyan border-t border-neon-pink/20 pt-3">
-              ✨ Mode Premium activé : qualité maximale pour une analyse optimale
+            <div className="mt-3 text-xs border-t border-neon-pink/20 pt-3">
+              {isPremium ? (
+                <div className="text-neon-cyan">
+                  ✨ Mode Premium activé : qualité maximale pour une analyse optimale
+                </div>
+              ) : (
+                <div className="text-yellow-400">
+                  🔒 Mode haute qualité réservé aux abonnés Premium
+                  <div className="mt-1 text-xs text-text-muted">
+                    <a href="/pricing" className="text-neon-pink hover:underline">
+                      Passer à Premium
+                    </a> pour préserver la qualité originale de vos photos
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
