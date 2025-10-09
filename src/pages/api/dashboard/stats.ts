@@ -178,6 +178,10 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
     res.status(200).json({ stats })
   } catch (error) {
     logger.error('Dashboard stats failed', error, req.user.id, ip)
-    res.status(500).json({ error: 'Erreur serveur' })
+    console.error('[DASHBOARD STATS ERROR]', error)
+    res.status(500).json({
+      error: 'Erreur serveur',
+      details: process.env.NODE_ENV === 'development' ? String(error) : undefined
+    })
   }
 })
