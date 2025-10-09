@@ -114,6 +114,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/analyse-image-gratuite" className="text-text-muted hover:text-neon-cyan transition-colors">
+                  Analyse image gratuite
+                </Link>
+              </li>
+              <li>
                 <Link href="/critique-photo-ia" className="text-text-muted hover:text-neon-cyan transition-colors">
                   {t.footer.aiCritique}
                 </Link>

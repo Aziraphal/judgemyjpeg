@@ -26,6 +26,11 @@ module.exports = {
     // Pages importantes
     { loc: '/ressources', priority: 0.9, changefreq: 'weekly' },
     { loc: '/partenariats', priority: 0.8, changefreq: 'weekly' },
+
+    // Pages SEO françaises ciblées (ne redirigent PAS, contenu unique)
+    { loc: '/analyser-photo-gratuit', priority: 0.5, changefreq: 'monthly' },
+    { loc: '/analyse-image-gratuite', priority: 0.5, changefreq: 'monthly' },
+    { loc: '/critique-photo-ia', priority: 0.5, changefreq: 'monthly' },
     
     // Pages légales
     { loc: '/legal/terms', priority: 0.5, changefreq: 'monthly' },
