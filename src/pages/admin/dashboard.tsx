@@ -811,6 +811,12 @@ export default function AdminDashboard() {
                       👥 Gestion utilisateurs
                     </button>
                     <button
+                      onClick={() => router.push('/admin/user-analytics')}
+                      className="w-full bg-purple-600/20 text-purple-300 px-4 py-2 rounded hover:bg-purple-600/30 transition-colors text-left"
+                    >
+                      📊 User Analytics (Onboarding)
+                    </button>
+                    <button
                       onClick={() => router.push('/admin/metrics')}
                       className="w-full bg-neon-cyan/20 text-neon-cyan px-4 py-2 rounded hover:bg-neon-cyan/30 transition-colors text-left"
                     >
