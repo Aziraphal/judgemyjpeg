@@ -1,9 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { withAuth, AuthenticatedRequest } from '@/lib/auth-middleware'
 import { getClientIP, logger } from '@/lib/logger'
-import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { prisma } from '@/lib/prisma'
 
 export default withAuth(async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
@@ -178,7 +176,5 @@ export default withAuth(async function handler(req: AuthenticatedRequest, res: N
   } catch (error) {
     logger.error('Security stats error:', error, req.user.id, ip)
     res.status(500).json({ error: 'Erreur serveur' })
-  } finally {
-    await prisma.$disconnect()
   }
 })

@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { PrismaClient } from '@prisma/client'
 import { getClientIP, logger } from '@/lib/logger'
-
-const prisma = new PrismaClient()
+import { prisma } from '@/lib/prisma'
 
 /**
  * Middleware pour vérifier si l'IP est bannie
@@ -57,8 +55,6 @@ export async function checkBannedIP(req: NextApiRequest, res: NextApiResponse): 
     logger.error('Error checking banned IP:', error)
     // En cas d'erreur, laisser passer (fail-open pour ne pas bloquer le service)
     return true
-  } finally {
-    await prisma.$disconnect()
   }
 }
 
@@ -75,12 +71,10 @@ export async function cleanupExpiredBans() {
       data: { isActive: false }
     })
 
-    logger.info(`🧹 Nettoyage bans expirés: ${result.count} IPs déb annies`)
+    logger.info(`🧹 Nettoyage bans expirés: ${result.count} IPs débannies`)
     return result.count
   } catch (error) {
     logger.error('Error cleaning up expired bans:', error)
     return 0
-  } finally {
-    await prisma.$disconnect()
   }
 }
