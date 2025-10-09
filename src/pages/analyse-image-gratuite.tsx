@@ -51,11 +51,6 @@ export default function AnalyseImageGratuite() {
                   "priceCurrency": "EUR",
                   "description": "Analyse d'image gratuite illimitée",
                   "availability": "https://schema.org/InStock"
-                },
-                "aggregateRating": {
-                  "@type": "AggregateRating",
-                  "ratingValue": "4.8",
-                  "reviewCount": "156"
                 }
               }
             })
