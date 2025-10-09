@@ -38,12 +38,10 @@ export default function SEOHead({
       "width": 512,
       "height": 512
     },
-    "description": "Plateforme SaaS d'analyse photo par intelligence artificielle avec 3 personnalités IA distinctes",
+    "description": "Plateforme SaaS d'analyse photo par intelligence artificielle avec 3 modes d'analyse distincts : Roast, Professional, et Learning",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "9 Allée de la Meilleraie",
       "addressLocality": "Les Sables-d'Olonne",
-      "postalCode": "85340",
       "addressCountry": "FR"
     },
     "contactPoint": {
@@ -123,11 +121,13 @@ export default function SEOHead({
     "featureList": [
       "Analyse photo par IA en 3 modes (Roast/Professional/Learning)",
       "Notation sur 100 points avec détails par critère",
-      "Support multilingue (6 langues)",
+      "Support multilingue (6 langues : français, anglais, espagnol, allemand, italien, portugais)",
       "Export PDF et partage social",
       "Types spécialisés : Portrait, Paysage, Street, Macro, Architecture",
-      "Collections personnalisées",
-      "Dashboard avec statistiques"
+      "Collections personnalisées pour organiser vos photos",
+      "Dashboard avec statistiques de progression",
+      "Glossaire photographique complet",
+      "Guides et ressources pour photographes"
     ]
   }
 

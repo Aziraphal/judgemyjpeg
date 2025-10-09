@@ -66,13 +66,13 @@ export default function RessourcesPage() {
   return (
     <>
       <Head>
-        <title>Ressources Photo Gratuites - Guides, Templates & Outils IA | JudgeMyJPEG</title>
-        <meta name="description" content="Accédez à nos ressources photographiques gratuites : guides d'amélioration, templates Lightroom, études de cas et formations pour perfectionner vos photos." />
-        <meta name="keywords" content="ressources photo gratuites, guides photographie, templates Lightroom, formation photo, outils IA photographie" />
-        
+        <title>Ressources Photo Gratuites - Guides & Outils IA | JudgeMyJPEG</title>
+        <meta name="description" content="Accédez à nos ressources photographiques gratuites : blog photo, glossaire complet, FAQ, et analyse IA gratuite pour améliorer vos photos." />
+        <meta name="keywords" content="ressources photo gratuites, guides photographie, glossaire photo, blog photographie, outils IA photographie" />
+
         {/* Open Graph */}
         <meta property="og:title" content="Ressources Photo Gratuites - JudgeMyJPEG" />
-        <meta property="og:description" content="Guides, templates et outils gratuits pour améliorer vos photos avec l'aide de l'intelligence artificielle." />
+        <meta property="og:description" content="Guides, glossaire et outils IA gratuits pour améliorer vos photos avec l'intelligence artificielle." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.judgemyjpeg.fr/ressources" />
         
