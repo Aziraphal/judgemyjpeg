@@ -129,6 +129,27 @@ const nextConfig = {
         destination: '/pricing',
         permanent: true,
       },
+      // Redirections lexique/vocabulaire vers glossaire (SEO: 33 impressions)
+      {
+        source: '/lexique-photographie',
+        destination: '/glossaire',
+        permanent: true,
+      },
+      {
+        source: '/lexique-photo',
+        destination: '/glossaire',
+        permanent: true,
+      },
+      {
+        source: '/vocabulaire-photographie',
+        destination: '/glossaire',
+        permanent: true,
+      },
+      {
+        source: '/vocabulaire-photo',
+        destination: '/glossaire',
+        permanent: true,
+      },
       // Redirection www supprimée - Railway doit être configuré pour www uniquement
     ]
   },

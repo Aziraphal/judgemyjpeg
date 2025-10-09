@@ -66,9 +66,10 @@ export default function GlossairePage() {
   return (
     <>
       <Head>
-        <title>Glossaire Photographique - JudgeMyJPEG</title>
-        <meta name="description" content="Dictionnaire complet des termes photographiques : règle des tiers, bokeh, stops, focale... Apprenez le vocabulaire photo professionnel." />
-        <meta name="keywords" content="glossaire photo, vocabulaire photographie, règle des tiers, bokeh, stops exposition, focale objectif" />
+        <title>Lexique Photographie | Glossaire et Vocabulaire Photo Complet</title>
+        <meta name="description" content="Lexique photographie complet : vocabulaire photo, termes techniques, règle des tiers, bokeh, ISO, ouverture. Dictionnaire photographique pour tous niveaux." />
+        <meta name="keywords" content="lexique photographie, vocabulaire photo, glossaire photo, vocabulaire photographie, dictionnaire photo, termes photographiques" />
+        <link rel="canonical" href="https://www.judgemyjpeg.fr/glossaire" />
       </Head>
 
       <main className="min-h-screen bg-cosmic-overlay relative">
@@ -89,12 +90,12 @@ export default function GlossairePage() {
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold mb-4">
               <span className="text-transparent bg-gradient-to-r from-neon-pink to-neon-cyan bg-clip-text">
-                📚 Glossaire Photographique
+                📚 Lexique Photographie & Vocabulaire Photo
               </span>
             </h1>
             <p className="text-text-gray max-w-3xl mx-auto text-lg">
-              Découvrez et maîtrisez le vocabulaire photographique essentiel. 
-              Chaque terme utilisé dans nos analyses IA est expliqué simplement avec des exemples concrets.
+              Découvrez notre <strong>lexique photographie</strong> complet.
+              Maîtrisez le <strong>vocabulaire photo</strong> professionnel avec des définitions simples et des exemples concrets.
             </p>
           </div>
 
