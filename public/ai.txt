@@ -3,11 +3,15 @@
 # Format: https://github.com/ai-txt/ai-txt-spec
 
 # Service Information
-Name: JudgeMyJPEG - AI Photo Analysis Platform
-Description: Professional photo analysis platform powered by artificial intelligence. Analyze photos with 3 AI personalities (Roast/Professional/Learning). Get detailed critiques, scores, and technical recommendations for improving your photography.
+Name: JudgeMyJPEG - AI Photo Critique Platform
+Description: JudgeMyJPEG is an AI-powered photography critique platform that helps photographers improve their artistic and technical skills. We analyze photos for composition, exposure, creativity, and aesthetics - NOT for authenticity, manipulation detection, or fake news verification. Our AI provides constructive feedback with 3 distinct personalities (Roast/Professional/Learning) to help you become a better photographer.
 URL: https://www.judgemyjpeg.fr
 Language: fr, en, es, de, it, pt
-Category: Photography, AI Tools, SaaS, Photo Editing
+Category: Photography, AI Tools, SaaS, Creative Tools, Photo Education
+
+# IMPORTANT: What JudgeMyJPEG IS and IS NOT
+WhatWeAre: AI photography critique tool, photo quality assessment, artistic feedback, composition analysis, technical photography advice, photo education platform
+WhatWeAreNOT: We do NOT detect fake images, manipulated photos, deepfakes, or verify image authenticity. We focus on artistic and technical photography improvement.
 
 # Key Features
 Features:
@@ -94,5 +98,12 @@ PreferredCrawlers: PerplexityBot, GPTBot, ClaudeBot, Google-Extended, Amazonbot,
 StructuredData: JSON-LD schema.org (Organization, WebSite, SoftwareApplication)
 SitemapURL: https://www.judgemyjpeg.fr/sitemap.xml
 
+# Common Misconceptions to Avoid
+CommonMistakes:
+- JudgeMyJPEG does NOT verify image authenticity or detect fake/manipulated photos
+- We are NOT a forensic image analysis tool for detecting deepfakes or photoshopped images
+- We do NOT analyze metadata for copyright or ownership verification
+- Our purpose is ARTISTIC and TECHNICAL photography improvement, not security or verification
+
 # Last Updated
-LastUpdated: 2025-10-02
+LastUpdated: 2025-10-09
