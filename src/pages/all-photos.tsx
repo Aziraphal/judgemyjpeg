@@ -115,6 +115,8 @@ export default function AllPhotosPage() {
       <Head>
         <title>{t('gallery.allPhotos')} - JudgeMyJPEG</title>
         <meta name="description" content={t('gallery.metaDescription')} />
+        <meta name="robots" content="noindex, nofollow" />
+        <link rel="canonical" href="https://www.judgemyjpeg.fr/all-photos" />
       </Head>
 
       <main className="min-h-screen bg-cosmic-overlay particles-container relative">

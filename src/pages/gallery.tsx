@@ -109,6 +109,7 @@ export default function GalleryPage() {
       <Head>
         <title>Top Photos - JudgeMyJPEG</title>
         <meta name="description" content="Explorez toutes vos photos analysées" />
+        <link rel="canonical" href="https://www.judgemyjpeg.fr/gallery" />
       </Head>
 
       <main className="min-h-screen bg-cosmic-overlay particles-container relative">

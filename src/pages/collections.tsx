@@ -120,6 +120,7 @@ export default function CollectionsPage() {
       <Head>
         <title>Collections - Photo Judge</title>
         <meta name="description" content="Organisez vos photos en collections personnalisées" />
+        <link rel="canonical" href="https://www.judgemyjpeg.fr/collections" />
       </Head>
 
       <main className="min-h-screen bg-cosmic-overlay particles-container relative">
