@@ -69,7 +69,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           },
           take: 1
         },
-        sessions: {
+        userSessions: {
           select: {
             lastActivity: true,
             deviceName: true,
@@ -96,9 +96,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       monthlyAnalysisCount: user.monthlyAnalysisCount,
       totalPhotos: user.photos.length,
       provider: user.accounts[0]?.provider || null,
-      lastActivity: user.sessions[0]?.lastActivity?.toISOString() || null,
-      deviceInfo: user.sessions[0]
-        ? `${user.sessions[0].deviceName} - ${user.sessions[0].browser} (${user.sessions[0].os})`
+      lastActivity: user.userSessions[0]?.lastActivity?.toISOString() || null,
+      deviceInfo: user.userSessions[0]
+        ? `${user.userSessions[0].deviceName} - ${user.userSessions[0].browser} (${user.userSessions[0].os})`
         : null
     }))
 

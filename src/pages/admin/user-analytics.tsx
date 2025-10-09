@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { withAdminProtection } from '@/lib/withAdminProtection'
@@ -16,8 +15,7 @@ interface UserAnalytic {
   deviceInfo: string | null
 }
 
-function UserAnalyticsPage() {
-  const { data: session } = useSession()
+export default function UserAnalyticsPage() {
   const router = useRouter()
   const [analytics, setAnalytics] = useState<UserAnalytic[]>([])
   const [loading, setLoading] = useState(true)
@@ -261,4 +259,5 @@ function UserAnalyticsPage() {
   )
 }
 
-export default withAdminProtection(UserAnalyticsPage)
+// Protection admin via getServerSideProps
+export const getServerSideProps = withAdminProtection()
