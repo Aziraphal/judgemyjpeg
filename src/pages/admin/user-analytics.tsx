@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
-import { withAdminProtection } from '@/lib/admin-middleware'
+import { withAdminProtection } from '@/lib/withAdminProtection'
 
 interface UserAnalytic {
   id: string
