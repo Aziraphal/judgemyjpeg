@@ -4,6 +4,9 @@ export default function Document() {
   return (
     <Html lang="fr">
       <Head>
+        {/* Viewport Meta Tag - CRITIQUE pour mobile */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes" />
+
         {/* CSP forcé dans HTML - Bypass Railway */}
         <meta
           httpEquiv="Content-Security-Policy"
