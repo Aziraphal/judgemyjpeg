@@ -140,9 +140,9 @@ ${photoTypeConfig.focusAreas.map(area => `• ${area}`).join('\n')}
 - DONNE des conseils adaptés à cette spécialité
 `
     
-    // Construire la section EXIF pour le prompt Art Critic  
-    const exifSection = exifData && tone === 'learning' ? `
-    
+    // Construire les sections EXIF adaptées à chaque mode
+    const exifSectionLearning = exifData ? `
+
 📊 DONNÉES TECHNIQUES RÉELLES EXTRAITES DE L'IMAGE :
 ${exifData.camera ? `• Appareil : ${exifData.camera}` : ''}
 ${exifData.lens ? `• Objectif : ${exifData.lens}` : ''}
@@ -164,12 +164,46 @@ ${shootingConditions ? `• Conditions déduites : ${shootingConditions}` : ''}
 - FOCUS sur l'intention créative derrière les choix techniques
 ` : ''
 
-    const analysisPrompt = tone === 'roast' 
+    const exifSectionProfessional = exifData ? `
+
+📸 INFORMATIONS TECHNIQUES DISPONIBLES :
+${exifData.camera ? `• Appareil : ${exifData.camera}` : ''}
+${exifData.lens ? `• Objectif : ${exifData.lens}` : ''}
+${exifData.iso ? `• ISO : ${exifData.iso}` : ''}
+${exifData.aperture ? `• Ouverture : ${exifData.aperture}` : ''}
+${exifData.shutterSpeed ? `• Vitesse : ${exifData.shutterSpeed}` : ''}
+${exifData.focalLength ? `• Focale : ${exifData.focalLength}` : ''}
+${shootingConditions ? `• ${shootingConditions}` : ''}
+
+💡 UTILISE CES DONNÉES POUR :
+- Conseiller sur l'adéquation réglages/résultat visuel
+- Suggérer des ajustements techniques pertinents
+- Valoriser les bons choix de réglages
+` : ''
+
+    const exifSectionRoast = exifData ? `
+
+📸 DONNÉES TECHNIQUES (pour mieux roaster) :
+${exifData.camera ? `• Appareil : ${exifData.camera}` : ''}
+${exifData.iso ? `• ISO : ${exifData.iso}` : ''}
+${exifData.aperture ? `• Ouverture : ${exifData.aperture}` : ''}
+${exifData.shutterSpeed ? `• Vitesse : ${exifData.shutterSpeed}` : ''}
+${exifData.focalLength ? `• Focale : ${exifData.focalLength}` : ''}
+
+🔥 ROASTE LES CHOIX TECHNIQUES :
+- Si ISO trop élevé : "ISO ${exifData.iso} ? Tu photographiais dans une grotte ?"
+- Si ouverture inadaptée : commente avec humour
+- Si réglages incohérents : moque gentiment
+- Utilise ces infos pour des punchlines techniques précises
+` : ''
+
+    const analysisPrompt = tone === 'roast'
       ? `🔥 MODE ROAST - CRITIQUE PHOTO IMPITOYABLE 🔥
 
-Tu es un CRITIQUE PHOTOGRAPHIQUE qui adore roaster les photos avec intelligence et humour noir. 
+Tu es un CRITIQUE PHOTOGRAPHIQUE qui adore roaster les photos avec intelligence et humour noir.
 Ton job : analyser cette photo avec PRÉCISION TECHNIQUE mais un TON SARCASTIQUE et CRÉATIF.
 ${photoTypeSection}
+${exifSectionRoast}
 🎯 STYLE ROAST REQUIS :
 ✅ Sois MÉCHANT mais JUSTE dans tes évaluations
 ✅ Utilise des MÉTAPHORES CRÉATIVES et des comparaisons hilarantes
@@ -250,12 +284,13 @@ ${photoTypeSection}
 5. Encouragement et motivation
 
 AIDE CETTE PERSONNE À PROGRESSER AVEC BIENVEILLANCE ET PRÉCISION.
-${exifSection}
+${exifSectionLearning}
 RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
       : `👨‍🎓 MODE PRO - CONSEILS CONSTRUCTIFS SIMPLIFIÉS
 
 Tu es un COACH PHOTO qui donne des conseils CLAIRS et MOTIVANTS. Analyse cette photo avec PÉDAGOGIE et encourage l'apprentissage.
 ${photoTypeSection}
+${exifSectionProfessional}
 🎯 STYLE PRO SIMPLIFIÉ :
 ✅ Langage ACCESSIBLE et encourageant
 ✅ Maximum 4-5 conseils ESSENTIELS (pas plus)
