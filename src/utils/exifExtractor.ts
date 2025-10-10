@@ -36,6 +36,15 @@ export async function extractExifData(file: File): Promise<ExifData | null> {
     logger.debug(`📸 EXIF: Tags loaded, found ${Object.keys(tags).length} tags`)
     logger.debug('📸 EXIF: Tag keys:', Object.keys(tags).slice(0, 20)) // Premiers 20 tags
 
+    // Log complet pour debug
+    if (Object.keys(tags).length > 0) {
+      logger.debug('📸 EXIF: All tag keys:', Object.keys(tags))
+      logger.debug('📸 EXIF: Make =', tags.Make)
+      logger.debug('📸 EXIF: Model =', tags.Model)
+      logger.debug('📸 EXIF: ISO =', tags.ISO || tags.ISOSpeedRatings)
+      logger.debug('📸 EXIF: LensModel =', tags.LensModel)
+    }
+
     if (!tags || Object.keys(tags).length === 0) {
       logger.warn('⚠️ EXIF: No tags found in image')
       return null
