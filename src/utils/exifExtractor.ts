@@ -26,6 +26,7 @@ export async function extractExifData(file: File): Promise<ExifData | null> {
     }
 
     logger.debug(`📸 EXIF: ArrayBuffer ready (${arrayBuffer.byteLength} bytes), loading tags...`)
+    console.log(`📸 EXIF: ArrayBuffer ready (${arrayBuffer.byteLength} bytes), loading tags...`)
 
     // Extraire les tags EXIF avec protection supplémentaire
     const tags = ExifReader.load(arrayBuffer, {
@@ -33,16 +34,28 @@ export async function extractExifData(file: File): Promise<ExifData | null> {
       includeUnknown: false
     }) as RawExifTags
 
-    logger.debug(`📸 EXIF: Tags loaded, found ${Object.keys(tags).length} tags`)
-    logger.debug('📸 EXIF: Tag keys:', Object.keys(tags).slice(0, 20)) // Premiers 20 tags
+    const tagCount = Object.keys(tags).length
+    logger.debug(`📸 EXIF: Tags loaded, found ${tagCount} tags`)
+    console.log(`📸 EXIF: Tags loaded, found ${tagCount} tags`)
+
+    logger.debug('📸 EXIF: Tag keys:', Object.keys(tags).slice(0, 20))
+    console.log('📸 EXIF: First 20 tag keys:', Object.keys(tags).slice(0, 20))
 
     // Log complet pour debug
-    if (Object.keys(tags).length > 0) {
+    if (tagCount > 0) {
+      console.log('📸 EXIF: ALL tag keys:', Object.keys(tags))
+      console.log('📸 EXIF: Make =', tags.Make)
+      console.log('📸 EXIF: Model =', tags.Model)
+      console.log('📸 EXIF: ISO =', tags.ISO || tags.ISOSpeedRatings)
+      console.log('📸 EXIF: LensModel =', tags.LensModel)
+
       logger.debug('📸 EXIF: All tag keys:', Object.keys(tags))
       logger.debug('📸 EXIF: Make =', tags.Make)
       logger.debug('📸 EXIF: Model =', tags.Model)
       logger.debug('📸 EXIF: ISO =', tags.ISO || tags.ISOSpeedRatings)
       logger.debug('📸 EXIF: LensModel =', tags.LensModel)
+    } else {
+      console.log('📸 EXIF: NO TAGS FOUND!')
     }
 
     if (!tags || Object.keys(tags).length === 0) {
