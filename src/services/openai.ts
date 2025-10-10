@@ -560,17 +560,9 @@ RESPOND ENTIRELY IN ${currentLang.name.toUpperCase()}.`
     const technicalScore = partialScores.composition + partialScores.lighting + partialScores.focus + partialScores.exposure // /60
     const artisticScore = partialScores.creativity + partialScores.emotion + partialScores.storytelling // /40
     
-    // Pondération selon le mode d'analyse - calcul correct sur base 100
-    let calculatedScore: number
-    if (tone === 'learning') {
-      // Art Critic: 40% technique (60 pts), 60% artistique (40 pts)
-      // Formule: (tech/60 * 40) + (art/40 * 60) = score sur 100
-      calculatedScore = Math.round((technicalScore / 60 * 40) + (artisticScore / 40 * 60))
-    } else {
-      // Professional & Roast: 60% technique (60 pts), 40% artistique (40 pts)
-      // Formule: (tech/60 * 60) + (art/40 * 40) = score sur 100
-      calculatedScore = Math.round((technicalScore / 60 * 60) + (artisticScore / 40 * 40))
-    }
+    // Pondération pour TOUS les modes : 60% technique (60 pts), 40% artistique (40 pts)
+    // Formule: (tech/60 * 60) + (art/40 * 40) = score sur 100
+    const calculatedScore = Math.round((technicalScore / 60 * 60) + (artisticScore / 40 * 40))
     
     // Générer l'analyse EXIF si données disponibles
     const exifAnalysisData = exifData ? generateExifAnalysis(exifData) : undefined
