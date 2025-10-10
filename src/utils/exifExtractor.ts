@@ -29,8 +29,9 @@ export async function extractExifData(file: File): Promise<ExifData | null> {
     console.log(`📸 EXIF: ArrayBuffer ready (${arrayBuffer.byteLength} bytes), loading tags...`)
 
     // Extraire les tags EXIF avec protection supplémentaire
+    // IMPORTANT: expanded: false pour avoir les tags à plat (tags.Make au lieu de tags.exif.Make)
     const tags = ExifReader.load(arrayBuffer, {
-      expanded: true,
+      expanded: false,
       includeUnknown: false
     }) as RawExifTags
 
