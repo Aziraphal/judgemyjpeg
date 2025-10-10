@@ -227,8 +227,6 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
                 <div>
                   <h5 className="text-sm font-medium text-neon-cyan mb-2">
                     Technique (/60)
-                    {tone === 'learning' && <span className="text-xs text-text-muted ml-1">(40% du score final)</span>}
-                    {tone !== 'learning' && <span className="text-xs text-text-muted ml-1">(60% du score final)</span>}
                   </h5>
                   <div className="space-y-2 text-xs">
                     {(() => {
@@ -269,8 +267,6 @@ export default function AnalysisResult({ photo, analysis, tone = 'professional',
                 <div>
                   <h5 className="text-sm font-medium text-neon-pink mb-2">
                     Artistique (/40)
-                    {tone === 'learning' && <span className="text-xs text-text-muted ml-1">(60% du score final)</span>}
-                    {tone !== 'learning' && <span className="text-xs text-text-muted ml-1">(40% du score final)</span>}
                   </h5>
                   <div className="space-y-2 text-xs">
                     {(() => {
