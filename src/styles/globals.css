@@ -5,8 +5,16 @@
 @layer base {
   html {
     font-family: system-ui, sans-serif;
+    font-size: 16px; /* Base font size pour lisibilité mobile */
   }
-  
+
+  /* Augmenter légèrement la taille de base sur mobile pour meilleure lisibilité */
+  @media (max-width: 640px) {
+    html {
+      font-size: 17px;
+    }
+  }
+
   body {
     @apply bg-cosmic-gradient min-h-screen text-text-white overflow-x-hidden;
   }
