@@ -53,6 +53,7 @@ export default function DashboardPage() {
   const router = useRouter()
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
   const [collectionModalPhoto, setCollectionModalPhoto] = useState<any>(null)
   const [selectedPhoto, setSelectedPhoto] = useState<any>(null)
 
@@ -69,12 +70,20 @@ export default function DashboardPage() {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch('/api/dashboard/stats')
+      const response = await fetch('/api/dashboard/stats', {
+        headers: { 'Cache-Control': 'no-cache' }
+      })
+
       if (response.ok) {
         const data = await response.json()
         setStats(data.stats)
+        setError(false)
+      } else {
+        setError(true)
+        logger.error('Erreur chargement stats:', { status: response.status })
       }
     } catch (error) {
+      setError(true)
       logger.error('Erreur chargement stats:', error)
     } finally {
       setLoading(false)
@@ -91,6 +100,37 @@ export default function DashboardPage() {
     return (
       <div className="flex justify-center items-center min-h-screen particles-container">
         <div className="spinner-neon w-12 h-12"></div>
+      </div>
+    )
+  }
+
+  // Erreur de chargement - afficher message élégant au lieu de page vide
+  if (error) {
+    return (
+      <div className="flex flex-col justify-center items-center min-h-screen particles-container px-4">
+        <div className="glass-card p-8 max-w-md text-center">
+          <div className="text-6xl mb-4">⚠️</div>
+          <h2 className="text-2xl font-bold text-white mb-4">
+            Problème de connexion
+          </h2>
+          <p className="text-text-gray mb-6">
+            Impossible de charger vos statistiques pour le moment. Cela peut être temporaire.
+          </p>
+          <div className="space-y-3">
+            <button
+              onClick={fetchStats}
+              className="btn-neon-primary w-full"
+            >
+              🔄 Réessayer
+            </button>
+            <button
+              onClick={() => router.push('/all-photos')}
+              className="btn-neon-secondary w-full"
+            >
+              📸 Voir mes photos
+            </button>
+          </div>
+        </div>
       </div>
     )
   }
